@@ -33,12 +33,9 @@ else:
 
 def printf(format, *values):
     print(format % values )
-frgfilename="azurerm_resource_group.json"
-frg=open(frgfilename, 'w')
-fresfilename="data.json"
-fres=open(fresfilename, 'w')
-fnsgfilename="azurerm_network_security_group.json"
-fnsg=open(fnsgfilename, 'w')
+
+
+
 
 #with open(filename, 'w') as f:
     #print >> f, 'Filename:'
@@ -77,15 +74,18 @@ else:
 bt=bt2.rstrip('\n')
 print "Subscription:",sub
 
+frgfilename="azurerm_resource_group.json"
+frg=open(frgfilename, 'w')
 url="https://management.azure.com/subscriptions/" + sub + "/resourceGroups"
 headers = {'Authorization': 'Bearer ' + bt, 'Content-Type': 'application/json'}
 params = {'api-version': '2014-04-01'}
-
 r = requests.get(url, headers=headers, params=params)
 rgs= r.json()["value"]
 frg.write(json.dumps(rgs, indent=4, separators=(',', ': ')))
 frg.close()
 
+fresfilename="data.json"
+fres=open(fresfilename, 'w')
 url="https://management.azure.com/subscriptions/" + sub + "/resources"
 params = {'api-version': '2018-11-01'}
 r = requests.get(url, headers=headers, params=params)
@@ -93,7 +93,8 @@ res= r.json()["value"]
 fres.write(json.dumps(res, indent=4, separators=(',', ': ')))
 fres.close()
 
-
+fnsgfilename="azurerm_network_security_group.json"
+fnsg=open(fnsgfilename, 'w')
 url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/networkSecurityGroups"
 params = {'api-version': '2018-07-01'}
 r = requests.get(url, headers=headers, params=params)
@@ -129,16 +130,19 @@ for j in range(0, count):
     #elif:
     #elif:
     #else:
-    
-#sorted(set(input))
+    np.write(prov + "\n" noprovider.txt
+
 fr.close()
+np.close()
+
+# sort unique and fileter for Resource Group
 rfilename="resources2.txt"
 fr=open(rfilename, 'w')
 with open('resources.txt', 'r') as r:
     for line in sorted(set(r)):
         trg=line.split(":")[0]
         print trg
-        if crg is not None:
+        if crg is not None:   # Resource Group Filter
             if trg == crg :
                 fr.write(line,)
         else:
