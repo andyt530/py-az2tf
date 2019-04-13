@@ -1,12 +1,29 @@
-from azure.common.client_factory import get_client_from_cli_profile
-from azure.mgmt.compute import ComputeManagementClient
-from azure.mgmt.resource import ResourceManagementClient
+#from azure.common.client_factory import get_client_from_cli_profile
+#from azure.mgmt.compute import ComputeManagementClient
+#from azure.mgmt.resource import ResourceManagementClient
 import subprocess
 import requests
 import adal
 import os
 import json
 import sys
+
+import argparse
+
+parser = argparse.ArgumentParser(description='terraform sub rg')
+parser.add_argument('-s', help='Subscription Id')
+parser.add_argument('-r', help='Resource Group')
+args = parser.parse_args()
+csub=args.s
+crg=args.r
+
+if csub is not None:
+    print "sub=" + csub 
+    # validate sub
+if crg is not None:
+    print "resource group=" + crg
+    # validate rg
+
 
 if sys.version_info[0] > 2:
     #raise Exception("Must be using Python 2")
@@ -52,7 +69,11 @@ for line in p.stdout.readlines():
         tk2=tk.replace(",", "")
         sub2=tk2.replace('"', '')
 retval = p.wait()
-sub=sub2.rstrip('\n')
+if csub is not None:
+    sub=csub
+else:
+    sub=sub2.rstrip('\n')
+
 bt=bt2.rstrip('\n')
 print "Subscription:",sub
 
@@ -94,6 +115,9 @@ for j in range(0, count):
     rg=id.split("/")[4]
     loc=res[j]['location']
     rtype=res[j]['type']
+
+
+
     #print j, rtype
     #print (json.dumps(t1, indent=4, separators=(',', ': ')))
     if rtype == "Microsoft.Compute/availabilitySets":
@@ -112,7 +136,13 @@ rfilename="resources2.txt"
 fr=open(rfilename, 'w')
 with open('resources.txt', 'r') as r:
     for line in sorted(set(r)):
-        fr.write(line,)
+        trg=line.split(":")[0]
+        print trg
+        if crg is not None:
+            if trg == crg :
+                fr.write(line,)
+        else:
+            fr.write(line,)
 r.close()
 fr.close()
 
