@@ -74,6 +74,17 @@ else:
 bt=bt2.rstrip('\n')
 print "Subscription:",sub
 
+fresfilename="data.json"
+fres=open(fresfilename, 'w')
+url="https://management.azure.com/subscriptions/" + sub + "/resources"
+params = {'api-version': '2018-11-01'}
+r = requests.get(url, headers=headers, params=params)
+res= r.json()["value"]
+fres.write(json.dumps(res, indent=4, separators=(',', ': ')))
+fres.close()
+
+
+
 frgfilename="azurerm_resource_group.json"
 frg=open(frgfilename, 'w')
 url="https://management.azure.com/subscriptions/" + sub + "/resourceGroups"
@@ -84,14 +95,6 @@ rgs= r.json()["value"]
 frg.write(json.dumps(rgs, indent=4, separators=(',', ': ')))
 frg.close()
 
-fresfilename="data.json"
-fres=open(fresfilename, 'w')
-url="https://management.azure.com/subscriptions/" + sub + "/resources"
-params = {'api-version': '2018-11-01'}
-r = requests.get(url, headers=headers, params=params)
-res= r.json()["value"]
-fres.write(json.dumps(res, indent=4, separators=(',', ': ')))
-fres.close()
 
 fnsgfilename="azurerm_network_security_group.json"
 fnsg=open(fnsgfilename, 'w')
@@ -103,9 +106,11 @@ nsg= r.json()["value"]
 fnsg.write(json.dumps(nsg, indent=4, separators=(',', ': ')))
 fnsg.close()
 
-
-rfilename="resources.txt"
+rfilename="resources2.txt"
 fr=open(rfilename, 'w')
+nprfilename="noprovider2.txt"
+np=open(nprfilename, 'w')
+
 
 count=len(res)-1
 print count
@@ -114,13 +119,15 @@ for j in range(0, count):
     name=res[j]['name']
     id=res[j]['id']
     rg=id.split("/")[4]
+    try:
+        isext=id.split("/")[9]
+    except IndexError:
+        isext=""
+
     loc=res[j]['location']
     rtype=res[j]['type']
+    print rtype
 
-
-
-    #print j, rtype
-    #print (json.dumps(t1, indent=4, separators=(',', ': ')))
     if rtype == "Microsoft.Compute/availabilitySets":
         prov="azurerm_availability_set"
         fr.write(rg + ":" + prov + "\n")
@@ -128,7 +135,7 @@ for j in range(0, count):
         prov="azurerm_network_security_group"
         fr.write(rg + ":" + prov + "\n")
 
-    elif rtype =="Microsoft.Storage/storageAccounts": 
+    elif rtype == "Microsoft.Storage/storageAccounts": 
         prov="azurerm_storage_account"
         fr.write(rg + ":" + prov + "\n")
         prov="azurerm_storage_share"
@@ -142,11 +149,10 @@ for j in range(0, count):
 
     elif rtype == "Microsoft.Compute/virtualMachines": 
         #echo $isext
-        if [ "$isext" != "extensions" ]; then
+        if isext != "extensions":
             prov="azurerm_virtual_machine"
             fr.write(rg + ":" + prov + "\n")
-        fi
-            
+                
     elif rtype == "Microsoft.Network/networkInterfaces": 
         prov="azurerm_network_interface"
         fr.write(rg + ":" + prov + "\n")
@@ -244,11 +250,11 @@ for j in range(0, count):
         fr.write(rg + ":" + prov + "\n")
             
     elif rtype == "Microsoft.Network/applicationSecurityGroups":
-         prov="azurerm_application_security_group"
+        prov="azurerm_application_security_group"
         fr.write(rg + ":" + prov + "\n")
             
     elif rtype == "Microsoft.ContainerInstance/containerGroups":
-         prov="azurerm_container_group"
+        prov="azurerm_container_group"
         fr.write(rg + ":" + prov + "\n")
             
     elif rtype == "Microsoft.Network/applicationGateways": 
@@ -312,18 +318,17 @@ for j in range(0, count):
         fr.write(rg + ":" + prov + "\n")
             
     else:
-        np.write(prov + "\n" noprovider.txt
+        np.write(rtype + "\n")
 
 fr.close()
 np.close()
 
 # sort unique and fileter for Resource Group
-rfilename="resources2.txt"
+rfilename="resources.txt"
 fr=open(rfilename, 'w')
-with open('resources.txt', 'r') as r:
+with open('resources2.txt', 'r') as r:
     for line in sorted(set(r)):
         trg=line.split(":")[0]
-        print trg
         if crg is not None:   # Resource Group Filter
             if trg == crg :
                 fr.write(line,)
@@ -331,6 +336,24 @@ with open('resources.txt', 'r') as r:
             fr.write(line,)
 r.close()
 fr.close()
+
+# sort unique and fileter for Resource Group
+rfilename="noprovider.txt"
+fr=open(rfilename, 'w')
+with open('noprovider2.txt', 'r') as r:
+    for line in sorted(set(r)):
+        fr.write(line,)
+
+r.close()
+fr.close()
+
+# handle resource groups
+
+count=len(res)-1
+print count
+for j in range(0, count):
+    print rgs[j]
+
 
 exit()
 
