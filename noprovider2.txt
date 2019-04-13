@@ -19,17 +19,6 @@ Microsoft.Compute/virtualMachines/extensions
 Microsoft.Compute/virtualMachines/extensions
 Microsoft.Compute/virtualMachines/extensions
 Microsoft.Compute/virtualMachines/extensions
-Microsoft.Compute/virtualMachines/extensions
-Microsoft.Compute/virtualMachines/extensions
-Microsoft.Compute/virtualMachines/extensions
-Microsoft.Compute/virtualMachines/extensions
-Microsoft.Compute/virtualMachines/extensions
-Microsoft.Compute/virtualMachines/extensions
-Microsoft.Compute/virtualMachines/extensions
-Microsoft.Compute/virtualMachines/extensions
-Microsoft.Compute/virtualMachines/extensions
-Microsoft.Compute/virtualMachines/extensions
-Microsoft.Compute/virtualMachines/extensions
 microsoft.insights/actiongroups
 microsoft.insights/actiongroups
 microsoft.insights/activityLogAlerts

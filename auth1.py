@@ -18,18 +18,18 @@ csub=args.s
 crg=args.r
 
 if csub is not None:
-    print "sub=" + csub 
+    print("sub=" + csub) 
     # validate sub
 if crg is not None:
-    print "resource group=" + crg
+    print("resource group=" + crg)
     # validate rg
 
 
 if sys.version_info[0] > 2:
     #raise Exception("Must be using Python 2")
-    print "Python version ", sys.version_info[0]
+    print("Python version ", sys.version_info[0])
 else:
-    print "Python version ", sys.version_info[0]
+    print("Python version ", sys.version_info[0])
 
 def printf(format, *values):
     print(format % values )
@@ -73,6 +73,8 @@ else:
 
 bt=bt2.rstrip('\n')
 print "Subscription:",sub
+headers = {'Authorization': 'Bearer ' + bt, 'Content-Type': 'application/json'}
+
 
 fresfilename="data.json"
 fres=open(fresfilename, 'w')
@@ -88,7 +90,7 @@ fres.close()
 frgfilename="azurerm_resource_group.json"
 frg=open(frgfilename, 'w')
 url="https://management.azure.com/subscriptions/" + sub + "/resourceGroups"
-headers = {'Authorization': 'Bearer ' + bt, 'Content-Type': 'application/json'}
+
 params = {'api-version': '2014-04-01'}
 r = requests.get(url, headers=headers, params=params)
 rgs= r.json()["value"]
@@ -126,7 +128,7 @@ for j in range(0, count):
 
     loc=res[j]['location']
     rtype=res[j]['type']
-    print rtype
+    #print rtype
 
     if rtype == "Microsoft.Compute/availabilitySets":
         prov="azurerm_availability_set"
@@ -347,14 +349,46 @@ with open('noprovider2.txt', 'r') as r:
 r.close()
 fr.close()
 
-# handle resource groups
 
-count=len(res)-1
+tfrm=open("tf-staterm.sh", 'a')
+tfim=open("tf-stateimp.sh", 'a')
+
+# handle resource groups
+tfp="azurerm_resource_group"
+count=len(rgs)-1
 print count
 for j in range(0, count):
-    print rgs[j]
+    name=rgs[j]["name"]
+    rname=name.replace(".","-")
+    prefix=tfp+"__"+rname
+    
+    rfilename=prefix+".tf"
+    fr=open(rfilename, 'w')
+    fr.write("")
+    fr.write('resource ' + tfp + ' ' + rname + ' {\n')
+    fr.write('\t name = "' + name + '"\n')
+    fr.write('\t location = "'+ loc + '"\n')
+    fr.write('}\n')  
 
+# tags block
+    try:
+        mtags=rgs[j]["tags"]
+    except:
+        mtags="{}"
+    tcount=len(mtags)-1
+    if tcount > 1 :
+        fr.write('tags { \n')
+        print tcount
+        for key in mtags.keys():
+            tval=mtags[key]
+            fr.write('\t "' + key + '"="' + tval + '"\n')
+        #print(json.dumps(rgs[j], indent=4, separators=(',', ': ')))
+        print(json.dumps(mtags, indent=4, separators=(',', ': ')))
+        fr.write('} \n')
+    fr.close()
 
+tfrm.close()
+tfim.close()
 exit()
 
 rclient = get_client_from_cli_profile(ResourceManagementClient)

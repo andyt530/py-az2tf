@@ -760,180 +760,6 @@
         "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/infabdm-sandbox/providers/Microsoft.Network/networkSecurityGroups/infadbsrv1-nsg"
     },
     {
-        "name": "dwp-cdh-db-001.cdh.localNSG",
-        "tags": {},
-        "properties": {
-            "defaultSecurityRules": [
-                {
-                    "properties": {
-                        "sourceAddressPrefixes": [],
-                        "priority": 65000,
-                        "direction": "Inbound",
-                        "protocol": "*",
-                        "description": "Allow inbound traffic from all VMs in VNET",
-                        "destinationPortRanges": [],
-                        "access": "Allow",
-                        "destinationAddressPrefixes": [],
-                        "destinationPortRange": "*",
-                        "sourcePortRange": "*",
-                        "sourcePortRanges": [],
-                        "destinationAddressPrefix": "VirtualNetwork",
-                        "sourceAddressPrefix": "VirtualNetwork",
-                        "provisioningState": "Succeeded"
-                    },
-                    "etag": "W/\"05faa7cf-93c2-4b1e-a9b4-2783364da441\"",
-                    "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
-                    "name": "AllowVnetInBound",
-                    "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-db-001.cdh.localNSG/defaultSecurityRules/AllowVnetInBound"
-                },
-                {
-                    "properties": {
-                        "sourceAddressPrefixes": [],
-                        "priority": 65001,
-                        "direction": "Inbound",
-                        "protocol": "*",
-                        "description": "Allow inbound traffic from azure load balancer",
-                        "destinationPortRanges": [],
-                        "access": "Allow",
-                        "destinationAddressPrefixes": [],
-                        "destinationPortRange": "*",
-                        "sourcePortRange": "*",
-                        "sourcePortRanges": [],
-                        "destinationAddressPrefix": "*",
-                        "sourceAddressPrefix": "AzureLoadBalancer",
-                        "provisioningState": "Succeeded"
-                    },
-                    "etag": "W/\"05faa7cf-93c2-4b1e-a9b4-2783364da441\"",
-                    "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
-                    "name": "AllowAzureLoadBalancerInBound",
-                    "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-db-001.cdh.localNSG/defaultSecurityRules/AllowAzureLoadBalancerInBound"
-                },
-                {
-                    "properties": {
-                        "sourceAddressPrefixes": [],
-                        "priority": 65500,
-                        "direction": "Inbound",
-                        "protocol": "*",
-                        "description": "Deny all inbound traffic",
-                        "destinationPortRanges": [],
-                        "access": "Deny",
-                        "destinationAddressPrefixes": [],
-                        "destinationPortRange": "*",
-                        "sourcePortRange": "*",
-                        "sourcePortRanges": [],
-                        "destinationAddressPrefix": "*",
-                        "sourceAddressPrefix": "*",
-                        "provisioningState": "Succeeded"
-                    },
-                    "etag": "W/\"05faa7cf-93c2-4b1e-a9b4-2783364da441\"",
-                    "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
-                    "name": "DenyAllInBound",
-                    "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-db-001.cdh.localNSG/defaultSecurityRules/DenyAllInBound"
-                },
-                {
-                    "properties": {
-                        "sourceAddressPrefixes": [],
-                        "priority": 65000,
-                        "direction": "Outbound",
-                        "protocol": "*",
-                        "description": "Allow outbound traffic from all VMs to all VMs in VNET",
-                        "destinationPortRanges": [],
-                        "access": "Allow",
-                        "destinationAddressPrefixes": [],
-                        "destinationPortRange": "*",
-                        "sourcePortRange": "*",
-                        "sourcePortRanges": [],
-                        "destinationAddressPrefix": "VirtualNetwork",
-                        "sourceAddressPrefix": "VirtualNetwork",
-                        "provisioningState": "Succeeded"
-                    },
-                    "etag": "W/\"05faa7cf-93c2-4b1e-a9b4-2783364da441\"",
-                    "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
-                    "name": "AllowVnetOutBound",
-                    "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-db-001.cdh.localNSG/defaultSecurityRules/AllowVnetOutBound"
-                },
-                {
-                    "properties": {
-                        "sourceAddressPrefixes": [],
-                        "priority": 65001,
-                        "direction": "Outbound",
-                        "protocol": "*",
-                        "description": "Allow outbound traffic from all VMs to Internet",
-                        "destinationPortRanges": [],
-                        "access": "Allow",
-                        "destinationAddressPrefixes": [],
-                        "destinationPortRange": "*",
-                        "sourcePortRange": "*",
-                        "sourcePortRanges": [],
-                        "destinationAddressPrefix": "Internet",
-                        "sourceAddressPrefix": "*",
-                        "provisioningState": "Succeeded"
-                    },
-                    "etag": "W/\"05faa7cf-93c2-4b1e-a9b4-2783364da441\"",
-                    "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
-                    "name": "AllowInternetOutBound",
-                    "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-db-001.cdh.localNSG/defaultSecurityRules/AllowInternetOutBound"
-                },
-                {
-                    "properties": {
-                        "sourceAddressPrefixes": [],
-                        "priority": 65500,
-                        "direction": "Outbound",
-                        "protocol": "*",
-                        "description": "Deny all outbound traffic",
-                        "destinationPortRanges": [],
-                        "access": "Deny",
-                        "destinationAddressPrefixes": [],
-                        "destinationPortRange": "*",
-                        "sourcePortRange": "*",
-                        "sourcePortRanges": [],
-                        "destinationAddressPrefix": "*",
-                        "sourceAddressPrefix": "*",
-                        "provisioningState": "Succeeded"
-                    },
-                    "etag": "W/\"05faa7cf-93c2-4b1e-a9b4-2783364da441\"",
-                    "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
-                    "name": "DenyAllOutBound",
-                    "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-db-001.cdh.localNSG/defaultSecurityRules/DenyAllOutBound"
-                }
-            ],
-            "resourceGuid": "3eb870c6-622a-4712-9422-8fd9552ff28b",
-            "networkInterfaces": [
-                {
-                    "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkInterfaces/dwp-cdh-db-001.cdh.localVMNic"
-                }
-            ],
-            "securityRules": [
-                {
-                    "properties": {
-                        "sourceAddressPrefixes": [],
-                        "priority": 1000,
-                        "direction": "Inbound",
-                        "protocol": "Tcp",
-                        "destinationPortRanges": [],
-                        "access": "Allow",
-                        "destinationAddressPrefixes": [],
-                        "destinationPortRange": "22",
-                        "sourcePortRange": "*",
-                        "sourcePortRanges": [],
-                        "destinationAddressPrefix": "*",
-                        "sourceAddressPrefix": "*",
-                        "provisioningState": "Succeeded"
-                    },
-                    "etag": "W/\"05faa7cf-93c2-4b1e-a9b4-2783364da441\"",
-                    "type": "Microsoft.Network/networkSecurityGroups/securityRules",
-                    "name": "default-allow-ssh",
-                    "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-db-001.cdh.localNSG/securityRules/default-allow-ssh"
-                }
-            ],
-            "provisioningState": "Succeeded"
-        },
-        "etag": "W/\"05faa7cf-93c2-4b1e-a9b4-2783364da441\"",
-        "location": "uksouth",
-        "type": "Microsoft.Network/networkSecurityGroups",
-        "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-db-001.cdh.localNSG"
-    },
-    {
         "name": "dwp-cdh-man-001.cdh.localNSG",
         "tags": {},
         "properties": {
@@ -955,7 +781,7 @@
                         "sourceAddressPrefix": "VirtualNetwork",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"79badf2c-da9c-46d8-b64b-fc65f692fd8d\"",
+                    "etag": "W/\"ed1218d3-8e13-4e7a-b6c9-bd5ef29ba456\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowVnetInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-man-001.cdh.localNSG/defaultSecurityRules/AllowVnetInBound"
@@ -977,7 +803,7 @@
                         "sourceAddressPrefix": "AzureLoadBalancer",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"79badf2c-da9c-46d8-b64b-fc65f692fd8d\"",
+                    "etag": "W/\"ed1218d3-8e13-4e7a-b6c9-bd5ef29ba456\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowAzureLoadBalancerInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-man-001.cdh.localNSG/defaultSecurityRules/AllowAzureLoadBalancerInBound"
@@ -999,7 +825,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"79badf2c-da9c-46d8-b64b-fc65f692fd8d\"",
+                    "etag": "W/\"ed1218d3-8e13-4e7a-b6c9-bd5ef29ba456\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "DenyAllInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-man-001.cdh.localNSG/defaultSecurityRules/DenyAllInBound"
@@ -1021,7 +847,7 @@
                         "sourceAddressPrefix": "VirtualNetwork",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"79badf2c-da9c-46d8-b64b-fc65f692fd8d\"",
+                    "etag": "W/\"ed1218d3-8e13-4e7a-b6c9-bd5ef29ba456\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowVnetOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-man-001.cdh.localNSG/defaultSecurityRules/AllowVnetOutBound"
@@ -1043,7 +869,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"79badf2c-da9c-46d8-b64b-fc65f692fd8d\"",
+                    "etag": "W/\"ed1218d3-8e13-4e7a-b6c9-bd5ef29ba456\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowInternetOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-man-001.cdh.localNSG/defaultSecurityRules/AllowInternetOutBound"
@@ -1065,18 +891,13 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"79badf2c-da9c-46d8-b64b-fc65f692fd8d\"",
+                    "etag": "W/\"ed1218d3-8e13-4e7a-b6c9-bd5ef29ba456\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "DenyAllOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-man-001.cdh.localNSG/defaultSecurityRules/DenyAllOutBound"
                 }
             ],
             "resourceGuid": "6e2a272c-a44b-4ec7-818f-ae73127ad6c0",
-            "networkInterfaces": [
-                {
-                    "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkInterfaces/dwp-cdh-man-001.cdh.localVMNic"
-                }
-            ],
             "securityRules": [
                 {
                     "properties": {
@@ -1094,7 +915,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"79badf2c-da9c-46d8-b64b-fc65f692fd8d\"",
+                    "etag": "W/\"ed1218d3-8e13-4e7a-b6c9-bd5ef29ba456\"",
                     "type": "Microsoft.Network/networkSecurityGroups/securityRules",
                     "name": "default-allow-ssh",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-man-001.cdh.localNSG/securityRules/default-allow-ssh"
@@ -1102,7 +923,7 @@
             ],
             "provisioningState": "Succeeded"
         },
-        "etag": "W/\"79badf2c-da9c-46d8-b64b-fc65f692fd8d\"",
+        "etag": "W/\"ed1218d3-8e13-4e7a-b6c9-bd5ef29ba456\"",
         "location": "uksouth",
         "type": "Microsoft.Network/networkSecurityGroups",
         "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-man-001.cdh.localNSG"
@@ -1129,7 +950,7 @@
                         "sourceAddressPrefix": "VirtualNetwork",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"1e06a198-cb61-4194-afb9-7e30dfa28129\"",
+                    "etag": "W/\"7e86dfa7-9a95-4720-a8ae-453e0d7f91dc\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowVnetInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mas-002.sdp.localNSG/defaultSecurityRules/AllowVnetInBound"
@@ -1151,7 +972,7 @@
                         "sourceAddressPrefix": "AzureLoadBalancer",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"1e06a198-cb61-4194-afb9-7e30dfa28129\"",
+                    "etag": "W/\"7e86dfa7-9a95-4720-a8ae-453e0d7f91dc\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowAzureLoadBalancerInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mas-002.sdp.localNSG/defaultSecurityRules/AllowAzureLoadBalancerInBound"
@@ -1173,7 +994,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"1e06a198-cb61-4194-afb9-7e30dfa28129\"",
+                    "etag": "W/\"7e86dfa7-9a95-4720-a8ae-453e0d7f91dc\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "DenyAllInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mas-002.sdp.localNSG/defaultSecurityRules/DenyAllInBound"
@@ -1195,7 +1016,7 @@
                         "sourceAddressPrefix": "VirtualNetwork",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"1e06a198-cb61-4194-afb9-7e30dfa28129\"",
+                    "etag": "W/\"7e86dfa7-9a95-4720-a8ae-453e0d7f91dc\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowVnetOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mas-002.sdp.localNSG/defaultSecurityRules/AllowVnetOutBound"
@@ -1217,7 +1038,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"1e06a198-cb61-4194-afb9-7e30dfa28129\"",
+                    "etag": "W/\"7e86dfa7-9a95-4720-a8ae-453e0d7f91dc\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowInternetOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mas-002.sdp.localNSG/defaultSecurityRules/AllowInternetOutBound"
@@ -1239,18 +1060,13 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"1e06a198-cb61-4194-afb9-7e30dfa28129\"",
+                    "etag": "W/\"7e86dfa7-9a95-4720-a8ae-453e0d7f91dc\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "DenyAllOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mas-002.sdp.localNSG/defaultSecurityRules/DenyAllOutBound"
                 }
             ],
             "resourceGuid": "8ecc82e3-cde0-4ee8-8cf1-88a4874cfb27",
-            "networkInterfaces": [
-                {
-                    "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkInterfaces/dwp-cdh-mas-002.sdp.localVMNic"
-                }
-            ],
             "securityRules": [
                 {
                     "properties": {
@@ -1268,7 +1084,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"1e06a198-cb61-4194-afb9-7e30dfa28129\"",
+                    "etag": "W/\"7e86dfa7-9a95-4720-a8ae-453e0d7f91dc\"",
                     "type": "Microsoft.Network/networkSecurityGroups/securityRules",
                     "name": "default-allow-ssh",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mas-002.sdp.localNSG/securityRules/default-allow-ssh"
@@ -1276,7 +1092,7 @@
             ],
             "provisioningState": "Succeeded"
         },
-        "etag": "W/\"1e06a198-cb61-4194-afb9-7e30dfa28129\"",
+        "etag": "W/\"7e86dfa7-9a95-4720-a8ae-453e0d7f91dc\"",
         "location": "uksouth",
         "type": "Microsoft.Network/networkSecurityGroups",
         "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mas-002.sdp.localNSG"
@@ -1303,7 +1119,7 @@
                         "sourceAddressPrefix": "VirtualNetwork",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"d1f4a878-bd66-4778-807e-dca652ba7f02\"",
+                    "etag": "W/\"ee80b351-bb25-43a2-9e30-95982e676f9f\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowVnetInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mas-003.sdp.localNSG/defaultSecurityRules/AllowVnetInBound"
@@ -1325,7 +1141,7 @@
                         "sourceAddressPrefix": "AzureLoadBalancer",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"d1f4a878-bd66-4778-807e-dca652ba7f02\"",
+                    "etag": "W/\"ee80b351-bb25-43a2-9e30-95982e676f9f\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowAzureLoadBalancerInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mas-003.sdp.localNSG/defaultSecurityRules/AllowAzureLoadBalancerInBound"
@@ -1347,7 +1163,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"d1f4a878-bd66-4778-807e-dca652ba7f02\"",
+                    "etag": "W/\"ee80b351-bb25-43a2-9e30-95982e676f9f\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "DenyAllInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mas-003.sdp.localNSG/defaultSecurityRules/DenyAllInBound"
@@ -1369,7 +1185,7 @@
                         "sourceAddressPrefix": "VirtualNetwork",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"d1f4a878-bd66-4778-807e-dca652ba7f02\"",
+                    "etag": "W/\"ee80b351-bb25-43a2-9e30-95982e676f9f\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowVnetOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mas-003.sdp.localNSG/defaultSecurityRules/AllowVnetOutBound"
@@ -1391,7 +1207,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"d1f4a878-bd66-4778-807e-dca652ba7f02\"",
+                    "etag": "W/\"ee80b351-bb25-43a2-9e30-95982e676f9f\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowInternetOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mas-003.sdp.localNSG/defaultSecurityRules/AllowInternetOutBound"
@@ -1413,18 +1229,13 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"d1f4a878-bd66-4778-807e-dca652ba7f02\"",
+                    "etag": "W/\"ee80b351-bb25-43a2-9e30-95982e676f9f\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "DenyAllOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mas-003.sdp.localNSG/defaultSecurityRules/DenyAllOutBound"
                 }
             ],
             "resourceGuid": "f15a11d6-5a1a-4c9a-a975-cc7f4d076dd9",
-            "networkInterfaces": [
-                {
-                    "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkInterfaces/dwp-cdh-mas-003.sdp.localVMNic"
-                }
-            ],
             "securityRules": [
                 {
                     "properties": {
@@ -1442,7 +1253,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"d1f4a878-bd66-4778-807e-dca652ba7f02\"",
+                    "etag": "W/\"ee80b351-bb25-43a2-9e30-95982e676f9f\"",
                     "type": "Microsoft.Network/networkSecurityGroups/securityRules",
                     "name": "default-allow-ssh",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mas-003.sdp.localNSG/securityRules/default-allow-ssh"
@@ -1450,7 +1261,7 @@
             ],
             "provisioningState": "Succeeded"
         },
-        "etag": "W/\"d1f4a878-bd66-4778-807e-dca652ba7f02\"",
+        "etag": "W/\"ee80b351-bb25-43a2-9e30-95982e676f9f\"",
         "location": "uksouth",
         "type": "Microsoft.Network/networkSecurityGroups",
         "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mas-003.sdp.localNSG"
@@ -1477,7 +1288,7 @@
                         "sourceAddressPrefix": "VirtualNetwork",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"648d9bbe-8044-42e5-882f-8ce559f186a7\"",
+                    "etag": "W/\"4ca181ac-2bce-4b49-a598-a3f12088150d\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowVnetInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mst-001.cdh.localNSG/defaultSecurityRules/AllowVnetInBound"
@@ -1499,7 +1310,7 @@
                         "sourceAddressPrefix": "AzureLoadBalancer",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"648d9bbe-8044-42e5-882f-8ce559f186a7\"",
+                    "etag": "W/\"4ca181ac-2bce-4b49-a598-a3f12088150d\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowAzureLoadBalancerInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mst-001.cdh.localNSG/defaultSecurityRules/AllowAzureLoadBalancerInBound"
@@ -1521,7 +1332,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"648d9bbe-8044-42e5-882f-8ce559f186a7\"",
+                    "etag": "W/\"4ca181ac-2bce-4b49-a598-a3f12088150d\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "DenyAllInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mst-001.cdh.localNSG/defaultSecurityRules/DenyAllInBound"
@@ -1543,7 +1354,7 @@
                         "sourceAddressPrefix": "VirtualNetwork",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"648d9bbe-8044-42e5-882f-8ce559f186a7\"",
+                    "etag": "W/\"4ca181ac-2bce-4b49-a598-a3f12088150d\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowVnetOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mst-001.cdh.localNSG/defaultSecurityRules/AllowVnetOutBound"
@@ -1565,7 +1376,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"648d9bbe-8044-42e5-882f-8ce559f186a7\"",
+                    "etag": "W/\"4ca181ac-2bce-4b49-a598-a3f12088150d\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowInternetOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mst-001.cdh.localNSG/defaultSecurityRules/AllowInternetOutBound"
@@ -1587,18 +1398,13 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"648d9bbe-8044-42e5-882f-8ce559f186a7\"",
+                    "etag": "W/\"4ca181ac-2bce-4b49-a598-a3f12088150d\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "DenyAllOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mst-001.cdh.localNSG/defaultSecurityRules/DenyAllOutBound"
                 }
             ],
             "resourceGuid": "69625d12-2a41-4cd9-b8b4-7f6f33e24363",
-            "networkInterfaces": [
-                {
-                    "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkInterfaces/dwp-cdh-mst-001.cdh.localVMNic"
-                }
-            ],
             "securityRules": [
                 {
                     "properties": {
@@ -1616,7 +1422,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"648d9bbe-8044-42e5-882f-8ce559f186a7\"",
+                    "etag": "W/\"4ca181ac-2bce-4b49-a598-a3f12088150d\"",
                     "type": "Microsoft.Network/networkSecurityGroups/securityRules",
                     "name": "default-allow-ssh",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mst-001.cdh.localNSG/securityRules/default-allow-ssh"
@@ -1624,7 +1430,7 @@
             ],
             "provisioningState": "Succeeded"
         },
-        "etag": "W/\"648d9bbe-8044-42e5-882f-8ce559f186a7\"",
+        "etag": "W/\"4ca181ac-2bce-4b49-a598-a3f12088150d\"",
         "location": "uksouth",
         "type": "Microsoft.Network/networkSecurityGroups",
         "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-mst-001.cdh.localNSG"
@@ -1999,7 +1805,7 @@
                         "sourceAddressPrefix": "VirtualNetwork",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"8b7dbeb0-16ba-4083-9e31-91c3f72d7fbf\"",
+                    "etag": "W/\"36387c7a-a2af-4c82-9aac-1573f3f02423\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowVnetInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-001.sdp.localNSG/defaultSecurityRules/AllowVnetInBound"
@@ -2021,7 +1827,7 @@
                         "sourceAddressPrefix": "AzureLoadBalancer",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"8b7dbeb0-16ba-4083-9e31-91c3f72d7fbf\"",
+                    "etag": "W/\"36387c7a-a2af-4c82-9aac-1573f3f02423\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowAzureLoadBalancerInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-001.sdp.localNSG/defaultSecurityRules/AllowAzureLoadBalancerInBound"
@@ -2043,7 +1849,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"8b7dbeb0-16ba-4083-9e31-91c3f72d7fbf\"",
+                    "etag": "W/\"36387c7a-a2af-4c82-9aac-1573f3f02423\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "DenyAllInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-001.sdp.localNSG/defaultSecurityRules/DenyAllInBound"
@@ -2065,7 +1871,7 @@
                         "sourceAddressPrefix": "VirtualNetwork",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"8b7dbeb0-16ba-4083-9e31-91c3f72d7fbf\"",
+                    "etag": "W/\"36387c7a-a2af-4c82-9aac-1573f3f02423\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowVnetOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-001.sdp.localNSG/defaultSecurityRules/AllowVnetOutBound"
@@ -2087,7 +1893,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"8b7dbeb0-16ba-4083-9e31-91c3f72d7fbf\"",
+                    "etag": "W/\"36387c7a-a2af-4c82-9aac-1573f3f02423\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowInternetOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-001.sdp.localNSG/defaultSecurityRules/AllowInternetOutBound"
@@ -2109,18 +1915,13 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"8b7dbeb0-16ba-4083-9e31-91c3f72d7fbf\"",
+                    "etag": "W/\"36387c7a-a2af-4c82-9aac-1573f3f02423\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "DenyAllOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-001.sdp.localNSG/defaultSecurityRules/DenyAllOutBound"
                 }
             ],
             "resourceGuid": "dde33d5a-e55e-4913-a998-280c1f5da9aa",
-            "networkInterfaces": [
-                {
-                    "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkInterfaces/dwp-cdh-wor-001.sdp.localVMNic"
-                }
-            ],
             "securityRules": [
                 {
                     "properties": {
@@ -2138,7 +1939,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"8b7dbeb0-16ba-4083-9e31-91c3f72d7fbf\"",
+                    "etag": "W/\"36387c7a-a2af-4c82-9aac-1573f3f02423\"",
                     "type": "Microsoft.Network/networkSecurityGroups/securityRules",
                     "name": "default-allow-ssh",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-001.sdp.localNSG/securityRules/default-allow-ssh"
@@ -2146,7 +1947,7 @@
             ],
             "provisioningState": "Succeeded"
         },
-        "etag": "W/\"8b7dbeb0-16ba-4083-9e31-91c3f72d7fbf\"",
+        "etag": "W/\"36387c7a-a2af-4c82-9aac-1573f3f02423\"",
         "location": "uksouth",
         "type": "Microsoft.Network/networkSecurityGroups",
         "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-001.sdp.localNSG"
@@ -2173,7 +1974,7 @@
                         "sourceAddressPrefix": "VirtualNetwork",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"de22ffaa-8c06-4a76-b995-a91f9883000a\"",
+                    "etag": "W/\"9c16cc09-fd85-4fbf-b1b9-aeab56ef488e\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowVnetInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-002.cdh.localNSG/defaultSecurityRules/AllowVnetInBound"
@@ -2195,7 +1996,7 @@
                         "sourceAddressPrefix": "AzureLoadBalancer",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"de22ffaa-8c06-4a76-b995-a91f9883000a\"",
+                    "etag": "W/\"9c16cc09-fd85-4fbf-b1b9-aeab56ef488e\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowAzureLoadBalancerInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-002.cdh.localNSG/defaultSecurityRules/AllowAzureLoadBalancerInBound"
@@ -2217,7 +2018,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"de22ffaa-8c06-4a76-b995-a91f9883000a\"",
+                    "etag": "W/\"9c16cc09-fd85-4fbf-b1b9-aeab56ef488e\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "DenyAllInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-002.cdh.localNSG/defaultSecurityRules/DenyAllInBound"
@@ -2239,7 +2040,7 @@
                         "sourceAddressPrefix": "VirtualNetwork",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"de22ffaa-8c06-4a76-b995-a91f9883000a\"",
+                    "etag": "W/\"9c16cc09-fd85-4fbf-b1b9-aeab56ef488e\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowVnetOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-002.cdh.localNSG/defaultSecurityRules/AllowVnetOutBound"
@@ -2261,7 +2062,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"de22ffaa-8c06-4a76-b995-a91f9883000a\"",
+                    "etag": "W/\"9c16cc09-fd85-4fbf-b1b9-aeab56ef488e\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowInternetOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-002.cdh.localNSG/defaultSecurityRules/AllowInternetOutBound"
@@ -2283,18 +2084,13 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"de22ffaa-8c06-4a76-b995-a91f9883000a\"",
+                    "etag": "W/\"9c16cc09-fd85-4fbf-b1b9-aeab56ef488e\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "DenyAllOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-002.cdh.localNSG/defaultSecurityRules/DenyAllOutBound"
                 }
             ],
             "resourceGuid": "1a622437-93dc-4d9d-87fa-a8ed8bf3ac28",
-            "networkInterfaces": [
-                {
-                    "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkInterfaces/dwp-cdh-wor-002.cdh.localVMNic"
-                }
-            ],
             "securityRules": [
                 {
                     "properties": {
@@ -2312,7 +2108,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"de22ffaa-8c06-4a76-b995-a91f9883000a\"",
+                    "etag": "W/\"9c16cc09-fd85-4fbf-b1b9-aeab56ef488e\"",
                     "type": "Microsoft.Network/networkSecurityGroups/securityRules",
                     "name": "default-allow-ssh",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-002.cdh.localNSG/securityRules/default-allow-ssh"
@@ -2320,7 +2116,7 @@
             ],
             "provisioningState": "Succeeded"
         },
-        "etag": "W/\"de22ffaa-8c06-4a76-b995-a91f9883000a\"",
+        "etag": "W/\"9c16cc09-fd85-4fbf-b1b9-aeab56ef488e\"",
         "location": "uksouth",
         "type": "Microsoft.Network/networkSecurityGroups",
         "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-002.cdh.localNSG"
@@ -2347,7 +2143,7 @@
                         "sourceAddressPrefix": "VirtualNetwork",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"0da5eab2-0359-4582-94e5-7265196a498d\"",
+                    "etag": "W/\"0825384f-8b15-44af-91d9-0382cc7474c8\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowVnetInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-003.sdp.localNSG/defaultSecurityRules/AllowVnetInBound"
@@ -2369,7 +2165,7 @@
                         "sourceAddressPrefix": "AzureLoadBalancer",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"0da5eab2-0359-4582-94e5-7265196a498d\"",
+                    "etag": "W/\"0825384f-8b15-44af-91d9-0382cc7474c8\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowAzureLoadBalancerInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-003.sdp.localNSG/defaultSecurityRules/AllowAzureLoadBalancerInBound"
@@ -2391,7 +2187,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"0da5eab2-0359-4582-94e5-7265196a498d\"",
+                    "etag": "W/\"0825384f-8b15-44af-91d9-0382cc7474c8\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "DenyAllInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-003.sdp.localNSG/defaultSecurityRules/DenyAllInBound"
@@ -2413,7 +2209,7 @@
                         "sourceAddressPrefix": "VirtualNetwork",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"0da5eab2-0359-4582-94e5-7265196a498d\"",
+                    "etag": "W/\"0825384f-8b15-44af-91d9-0382cc7474c8\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowVnetOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-003.sdp.localNSG/defaultSecurityRules/AllowVnetOutBound"
@@ -2435,7 +2231,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"0da5eab2-0359-4582-94e5-7265196a498d\"",
+                    "etag": "W/\"0825384f-8b15-44af-91d9-0382cc7474c8\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowInternetOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-003.sdp.localNSG/defaultSecurityRules/AllowInternetOutBound"
@@ -2457,18 +2253,13 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"0da5eab2-0359-4582-94e5-7265196a498d\"",
+                    "etag": "W/\"0825384f-8b15-44af-91d9-0382cc7474c8\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "DenyAllOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-003.sdp.localNSG/defaultSecurityRules/DenyAllOutBound"
                 }
             ],
             "resourceGuid": "a3dc1fed-9297-4878-a15e-179aa4d6354a",
-            "networkInterfaces": [
-                {
-                    "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkInterfaces/dwp-cdh-wor-003.sdp.localVMNic"
-                }
-            ],
             "securityRules": [
                 {
                     "properties": {
@@ -2486,7 +2277,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"0da5eab2-0359-4582-94e5-7265196a498d\"",
+                    "etag": "W/\"0825384f-8b15-44af-91d9-0382cc7474c8\"",
                     "type": "Microsoft.Network/networkSecurityGroups/securityRules",
                     "name": "default-allow-ssh",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-003.sdp.localNSG/securityRules/default-allow-ssh"
@@ -2494,7 +2285,7 @@
             ],
             "provisioningState": "Succeeded"
         },
-        "etag": "W/\"0da5eab2-0359-4582-94e5-7265196a498d\"",
+        "etag": "W/\"0825384f-8b15-44af-91d9-0382cc7474c8\"",
         "location": "uksouth",
         "type": "Microsoft.Network/networkSecurityGroups",
         "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-003.sdp.localNSG"
@@ -2521,7 +2312,7 @@
                         "sourceAddressPrefix": "VirtualNetwork",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"d05aba3c-0f21-4ee9-8420-7ba2575a66dd\"",
+                    "etag": "W/\"f2129408-29bb-473d-a60b-3d23a21ab8d3\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowVnetInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-004.sdp.localNSG/defaultSecurityRules/AllowVnetInBound"
@@ -2543,7 +2334,7 @@
                         "sourceAddressPrefix": "AzureLoadBalancer",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"d05aba3c-0f21-4ee9-8420-7ba2575a66dd\"",
+                    "etag": "W/\"f2129408-29bb-473d-a60b-3d23a21ab8d3\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowAzureLoadBalancerInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-004.sdp.localNSG/defaultSecurityRules/AllowAzureLoadBalancerInBound"
@@ -2565,7 +2356,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"d05aba3c-0f21-4ee9-8420-7ba2575a66dd\"",
+                    "etag": "W/\"f2129408-29bb-473d-a60b-3d23a21ab8d3\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "DenyAllInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-004.sdp.localNSG/defaultSecurityRules/DenyAllInBound"
@@ -2587,7 +2378,7 @@
                         "sourceAddressPrefix": "VirtualNetwork",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"d05aba3c-0f21-4ee9-8420-7ba2575a66dd\"",
+                    "etag": "W/\"f2129408-29bb-473d-a60b-3d23a21ab8d3\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowVnetOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-004.sdp.localNSG/defaultSecurityRules/AllowVnetOutBound"
@@ -2609,7 +2400,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"d05aba3c-0f21-4ee9-8420-7ba2575a66dd\"",
+                    "etag": "W/\"f2129408-29bb-473d-a60b-3d23a21ab8d3\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowInternetOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-004.sdp.localNSG/defaultSecurityRules/AllowInternetOutBound"
@@ -2631,18 +2422,13 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"d05aba3c-0f21-4ee9-8420-7ba2575a66dd\"",
+                    "etag": "W/\"f2129408-29bb-473d-a60b-3d23a21ab8d3\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "DenyAllOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-004.sdp.localNSG/defaultSecurityRules/DenyAllOutBound"
                 }
             ],
             "resourceGuid": "f3fd96ce-3dd5-4e48-95bf-946cfb90de5e",
-            "networkInterfaces": [
-                {
-                    "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkInterfaces/dwp-cdh-wor-004.sdp.localVMNic"
-                }
-            ],
             "securityRules": [
                 {
                     "properties": {
@@ -2660,7 +2446,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"d05aba3c-0f21-4ee9-8420-7ba2575a66dd\"",
+                    "etag": "W/\"f2129408-29bb-473d-a60b-3d23a21ab8d3\"",
                     "type": "Microsoft.Network/networkSecurityGroups/securityRules",
                     "name": "default-allow-ssh",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-004.sdp.localNSG/securityRules/default-allow-ssh"
@@ -2668,7 +2454,7 @@
             ],
             "provisioningState": "Succeeded"
         },
-        "etag": "W/\"d05aba3c-0f21-4ee9-8420-7ba2575a66dd\"",
+        "etag": "W/\"f2129408-29bb-473d-a60b-3d23a21ab8d3\"",
         "location": "uksouth",
         "type": "Microsoft.Network/networkSecurityGroups",
         "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-004.sdp.localNSG"
@@ -2695,7 +2481,7 @@
                         "sourceAddressPrefix": "VirtualNetwork",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"4f9cabc3-cdb8-404b-9fdf-ba1897ed48c1\"",
+                    "etag": "W/\"aabbe837-5a89-4785-9f9e-f64b519f4b4b\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowVnetInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-005.sdp.localNSG/defaultSecurityRules/AllowVnetInBound"
@@ -2717,7 +2503,7 @@
                         "sourceAddressPrefix": "AzureLoadBalancer",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"4f9cabc3-cdb8-404b-9fdf-ba1897ed48c1\"",
+                    "etag": "W/\"aabbe837-5a89-4785-9f9e-f64b519f4b4b\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowAzureLoadBalancerInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-005.sdp.localNSG/defaultSecurityRules/AllowAzureLoadBalancerInBound"
@@ -2739,7 +2525,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"4f9cabc3-cdb8-404b-9fdf-ba1897ed48c1\"",
+                    "etag": "W/\"aabbe837-5a89-4785-9f9e-f64b519f4b4b\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "DenyAllInBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-005.sdp.localNSG/defaultSecurityRules/DenyAllInBound"
@@ -2761,7 +2547,7 @@
                         "sourceAddressPrefix": "VirtualNetwork",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"4f9cabc3-cdb8-404b-9fdf-ba1897ed48c1\"",
+                    "etag": "W/\"aabbe837-5a89-4785-9f9e-f64b519f4b4b\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowVnetOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-005.sdp.localNSG/defaultSecurityRules/AllowVnetOutBound"
@@ -2783,7 +2569,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"4f9cabc3-cdb8-404b-9fdf-ba1897ed48c1\"",
+                    "etag": "W/\"aabbe837-5a89-4785-9f9e-f64b519f4b4b\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "AllowInternetOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-005.sdp.localNSG/defaultSecurityRules/AllowInternetOutBound"
@@ -2805,18 +2591,13 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"4f9cabc3-cdb8-404b-9fdf-ba1897ed48c1\"",
+                    "etag": "W/\"aabbe837-5a89-4785-9f9e-f64b519f4b4b\"",
                     "type": "Microsoft.Network/networkSecurityGroups/defaultSecurityRules",
                     "name": "DenyAllOutBound",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-005.sdp.localNSG/defaultSecurityRules/DenyAllOutBound"
                 }
             ],
             "resourceGuid": "b8e87657-1bfe-40f0-ba0f-fb2c25fc8ce8",
-            "networkInterfaces": [
-                {
-                    "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkInterfaces/dwp-cdh-wor-005.sdp.localVMNic"
-                }
-            ],
             "securityRules": [
                 {
                     "properties": {
@@ -2834,7 +2615,7 @@
                         "sourceAddressPrefix": "*",
                         "provisioningState": "Succeeded"
                     },
-                    "etag": "W/\"4f9cabc3-cdb8-404b-9fdf-ba1897ed48c1\"",
+                    "etag": "W/\"aabbe837-5a89-4785-9f9e-f64b519f4b4b\"",
                     "type": "Microsoft.Network/networkSecurityGroups/securityRules",
                     "name": "default-allow-ssh",
                     "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-005.sdp.localNSG/securityRules/default-allow-ssh"
@@ -2842,7 +2623,7 @@
             ],
             "provisioningState": "Succeeded"
         },
-        "etag": "W/\"4f9cabc3-cdb8-404b-9fdf-ba1897ed48c1\"",
+        "etag": "W/\"aabbe837-5a89-4785-9f9e-f64b519f4b4b\"",
         "location": "uksouth",
         "type": "Microsoft.Network/networkSecurityGroups",
         "id": "/subscriptions/3f695f89-fbc0-44c3-846c-55c939f57dc6/resourceGroups/rg-dwp-cloudera-sbox-da-test/providers/Microsoft.Network/networkSecurityGroups/dwp-cdh-wor-005.sdp.localNSG"
