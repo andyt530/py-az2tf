@@ -386,6 +386,8 @@ for j in range(0, count):
         print(json.dumps(mtags, indent=4, separators=(',', ': ')))
         fr.write('} \n')
     fr.close()
+    tfrm.write('terraform state rm '+tfp+'.'+rname + '\n')
+    tfim.write('terraform state import '+tfp+'.'+rname+' '+id+ '\n')
 
 tfrm.close()
 tfim.close()
