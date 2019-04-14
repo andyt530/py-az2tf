@@ -1,0 +1,2 @@
+variable "rgtarget" {}
+variable "loctarget" {}

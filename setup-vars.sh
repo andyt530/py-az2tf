@@ -1,0 +1,7 @@
+echo "Setting environment variables for Terraform"
+#export ARM_CLIENT_ID="38a1e417-4088-4913-8a44-f6d8112355b0"
+#export ARM_CLIENT_SECRET="Zy+TY41fZ01k0k7d0e81DXlVd6SBJYPqsXKE3xa2AFA="
+#export ARM_TENANT_ID="96f1f6e9-1057-4117-ac28-80cdfe86f8c3"
+#export ARM_SUBSCRIPTION_ID="304e776d-6a37-425c-9304-cd3a77e4c6fe"
+#export TF_VAR_rgtarget="rg-Packer1"
+export TF_VAR_loctarget="UK South"

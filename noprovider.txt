@@ -1,9 +1,0 @@
-Microsoft.Compute/galleries
-Microsoft.Compute/galleries/images
-Microsoft.Compute/galleries/images/versions
-Microsoft.Compute/virtualMachines/extensions
-Microsoft.Insights/components
-microsoft.insights/actiongroups
-microsoft.insights/activityLogAlerts
-microsoft.insights/alertrules
-microsoft.insights/scheduledqueryrules

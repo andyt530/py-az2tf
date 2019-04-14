@@ -1,0 +1,19 @@
+# File auto generate by az2tf see https://github.com/andyt530/az2tf
+resource "azurerm_network_security_group" "nsg-be01" {
+	 name = "nsg-dwp-${var.env}-${var.director}-${var.depd}-be01"  
+	 location = "${var.location}"
+	 resource_group_name = "rg-dwp-${var.env}-${var.director}-${var.depd}-core"
+	 tags { 
+		billingIdentifier = "NOTSET" 
+		commissionedDate = "" 
+		dataProfile = "NOTSET" 
+		department = "CH-PNS" 
+		environmentIdentifier = "TEST" 
+		environmentVersion = "NOTSET" 
+		expirationDate = "NOTSET" 
+		projectIdentifier = "NOTSET" 
+		serviceName = "NOTSET" 
+		serviceOwner = "" 
+		serviceWindow = "NOTSET" 
+	}
+}
