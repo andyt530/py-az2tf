@@ -3,3 +3,5 @@
 *.txt
 tf*.sh
 *.log
+terraform*
+generated

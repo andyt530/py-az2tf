@@ -91,15 +91,7 @@ fres.close()
 
 
 
-frgfilename="azurerm_resource_group.json"
-frg=open(frgfilename, 'w')
-url="https://management.azure.com/subscriptions/" + sub + "/resourceGroups"
 
-params = {'api-version': '2014-04-01'}
-r = requests.get(url, headers=headers, params=params)
-rgs= r.json()["value"]
-frg.write(json.dumps(rgs, indent=4, separators=(',', ': ')))
-frg.close()
 
 
 fnsgfilename="azurerm_network_security_group.json"
@@ -336,7 +328,7 @@ with open('resources2.txt', 'r') as r:
     for line in sorted(set(r)):
         trg=line.split(":")[0]
         trt=line.split(":")[1]
-        print trt
+        #print trt
         if crg is not None:   # Resource Group Filter
             if trg == crg :
                 if crf is not None:   # Resource Filter
@@ -370,8 +362,20 @@ if os.path.exists("tf-stateimp.sh"):
 tfrm=open("tf-staterm.sh", 'a')
 tfim=open("tf-stateimp.sh", 'a')
 
+#
 # handle resource groups
+#
 tfp="azurerm_resource_group"
+print tfp,
+frgfilename=tfp+".json"
+frg=open(frgfilename, 'w')
+url="https://management.azure.com/subscriptions/" + sub + "/resourceGroups"
+params = {'api-version': '2014-04-01'}
+r = requests.get(url, headers=headers, params=params)
+rgs= r.json()["value"]
+frg.write(json.dumps(rgs, indent=4, separators=(',', ': ')))
+frg.close()
+
 tffile=tfp+"*.tf"
 fileList = glob.glob(tffile) 
 # Iterate over the list of filepaths & remove each file.
@@ -386,7 +390,8 @@ print count
 for j in range(0, count):
     
     name=rgs[j]["name"]
-    
+    loc=rgs[j]["location"]
+    id=rgs[j]["id"]
     if crg is not None:
         if name != crg:
             continue
@@ -423,16 +428,88 @@ for j in range(0, count):
     tfrm.write('terraform state rm '+tfp+'.'+rname + '\n')
     tfim.write('terraform import '+tfp+'.'+rname+' '+id+ '\n')
 # end for
-tfrm.close()
-tfim.close()
+#tfrm.close()
+#tfim.close()
 
-# resource filter
+#
+# handle management locks
+#
 
 p = subprocess.Popen('az lock list -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 output, errors = p.communicate()
-print output
-print "....................."
-#print(json.dumps(output, indent=4, separators=(',', ': ')))
+azr=json.loads(output)
+#print(json.dumps(st1, indent=4, separators=(',', ': ')))
+
+tfp="azurerm_management_lock"
+print tfp,
+tffile=tfp+"*.tf"
+fileList = glob.glob(tffile) 
+# Iterate over the list of filepaths & remove each file.
+for filePath in fileList:
+    try:
+        os.remove(filePath)
+    except:
+        print("Error while deleting file : ", filePath)
+
+count=len(azr)-1
+print count
+for j in range(0, count):
+    
+    name=azr[j]["name"]
+    #loc=azr[j]["location"]
+    id=azr[j]["id"]
+    level=azr[j]["level"]
+    notes=azr[j]["notes"]
+    scope1=id.split("/Microsoft.Authorization")[0].rstrip("providers")
+    scope2=scope1.rstrip("/")
+    scope=scope2
+    #tk=line.split(":")[1].strip(' ",')
+    #tk2=tk.replace(",", "")
+    #print "scope1="+scope1
+    #print "scope2="+scope2
+
+    print "id="+id
+    if crg is not None:
+        if name != crg:
+            continue  # back to for
+    
+    rname=name.replace(".","-")
+    prefix=tfp+"__"+rname
+    
+    rfilename=prefix+".tf"
+    fr=open(rfilename, 'w')
+    fr.write("")
+    fr.write('resource ' + tfp + ' ' + rname + ' {\n')
+    fr.write('\t name = "' + name + '"\n')
+    #fr.write('\t location = "'+ loc + '"\n')
+    fr.write('\t lock_level = "'+ level + '"\n')   
+    fr.write('\t notes = "'+ notes + '"\n') 
+    fr.write('\t scope = "'+ scope + '"\n')
+# tags block
+    try:
+        mtags=azr[j]["tags"]
+    except:
+        mtags="{}"
+    tcount=len(mtags)-1
+    if tcount > 1 :
+        fr.write('tags { \n')
+        print tcount
+        for key in mtags.keys():
+            tval=mtags[key]
+            fr.write('\t "' + key + '"="' + tval + '"\n')
+        #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
+        fr.write('}\n')
+    
+    fr.write('}\n') 
+    fr.close()
+
+    tfrm.write('terraform state rm '+tfp+'.'+rname + '\n')
+    tfim.write('terraform import '+tfp+'.'+rname+' '+id+ '\n')
+# end for
+tfrm.close()
+tfim.close()
+
+
 exit()
 
 rclient = get_client_from_cli_profile(ResourceManagementClient)
