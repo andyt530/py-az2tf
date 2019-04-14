@@ -2,3 +2,4 @@
 *.tf
 *.txt
 tf*.sh
+*.log
