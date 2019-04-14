@@ -10,6 +10,7 @@ import sys
 import glob
 import argparse
 
+
 parser = argparse.ArgumentParser(description='terraform sub rg')
 parser.add_argument('-s', help='Subscription Id')
 parser.add_argument('-g', help='Resource Group')
@@ -53,7 +54,7 @@ def printf(format, *values):
 #url = 'https://management.azure.com/' + 'subscriptions'
 #r = requests.get(url, headers=headers, params=params)
 #print(json.dumps(r.json(), indent=4, separators=(',', ': ')))
-
+print "Access Token"
 p = subprocess.Popen('az account get-access-token -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 c=0
 for line in p.stdout.readlines():
@@ -74,7 +75,7 @@ else:
 bt=bt2.rstrip('\n')
 print "Subscription:",sub
 headers = {'Authorization': 'Bearer ' + bt, 'Content-Type': 'application/json'}
-
+print "REST Resources"
 
 fresfilename="data.json"
 fres=open(fresfilename, 'w')
@@ -93,7 +94,7 @@ fres.close()
 
 
 
-
+print "REST NSG"
 fnsgfilename="azurerm_network_security_group.json"
 fnsg=open(fnsgfilename, 'w')
 url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/networkSecurityGroups"
@@ -322,7 +323,8 @@ for j in range(0, count):
 fr.close()
 np.close()
 
-# sort unique and fileter for Resource Group
+print "Opumizing Resources"
+# sort unique and filter for Resource Group
 rfilename="resources.txt"
 fr=open(rfilename, 'w')
 with open('resources2.txt', 'r') as r:
@@ -368,8 +370,8 @@ if os.path.exists("tf-stateimp.sh"):
 
 tfp="azurerm_resource_group"
 print tfp,
-tfrmf="001"+tfp+"-staterm.sh"
-tfimf="001"+tfp+"-stateimp.sh"
+tfrmf="001-"+tfp+"-staterm.sh"
+tfimf="001-"+tfp+"-stateimp.sh"
 tfrm=open(tfrmf, 'a')
 tfim=open(tfimf, 'a')
 frgfilename=tfp+".json"
@@ -431,12 +433,15 @@ for j in range(0, count):
     fr.write('}\n') 
     fr.close()
 
+    tfcomm='terraform import '+tfp+'.'+rname+' '+id+'\n'
     tfrm.write('terraform state rm '+tfp+'.'+rname + '\n')
-    tfim.write('terraform import '+tfp+'.'+rname+' '+id+ '\n')
+    tfim.write(tfcomm)
+
 # end for
 tfrm.close()
 tfim.close()
 #end resource group
+
 
 #
 # handle management locks
@@ -447,8 +452,8 @@ azr=json.loads(output)
 #print(json.dumps(st1, indent=4, separators=(',', ': ')))
 
 tfp="azurerm_management_lock"
-tfrmf="002"+tfp+"-staterm.sh"
-tfimf="002"+tfp+"-stateimp.sh"
+tfrmf="002-"+tfp+"-staterm.sh"
+tfimf="002-"+tfp+"-stateimp.sh"
 tfrm=open(tfrmf, 'a')
 tfim=open(tfimf, 'a')
 print tfp,
@@ -501,9 +506,10 @@ for j in range(0, count):
     
     fr.write('}\n') 
     fr.close()
+    tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+    tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+    tfim.write(tfcomm)  
 
-    tfrm.write('terraform state rm '+tfp+'.'+rname + '\n')
-    tfim.write('terraform import '+tfp+'.'+rg+'__'+rname+' '+id+ '\n')
 # end for
 tfrm.close()
 tfim.close()

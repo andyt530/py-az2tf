@@ -110,6 +110,9 @@ rm -f terraform*.backup
 rm -f tf*.sh
 cp ../../stub/*.tf .
 
+echo "terraform init"
+terraform init 2>&1 | tee -a import.log
+
 pyc1="python2 ../../scripts/resources.py -s $mysub "
 if [ "$g" != "" ]; then
     pyc2=" -g $g "
@@ -132,9 +135,10 @@ eval $pyc
 #
 # uncomment following line if you want to use an SPN login
 #../../setup-env.sh
+chmod 755 00*state*.sh
+./001*stateimp.sh
+./002*stateimp.sh
 
-echo "terraform init"
-terraform init 2>&1 | tee -a import.log
 
 # subscription level stuff - roles & policies
 if [ "$p" = "yes" ]; then
@@ -150,6 +154,7 @@ if [ "$p" = "yes" ]; then
 fi
 
 date
+exit
 
 echo loop through providers
 
