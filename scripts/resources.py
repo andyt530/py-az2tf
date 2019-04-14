@@ -359,14 +359,18 @@ if os.path.exists("tf-staterm.sh"):
 if os.path.exists("tf-stateimp.sh"):
     os.remove('tf-stateimp.sh')
 
-tfrm=open("tf-staterm.sh", 'a')
-tfim=open("tf-stateimp.sh", 'a')
+
 
 #
 # handle resource groups
 #
+
 tfp="azurerm_resource_group"
 print tfp,
+tfrmf=tfp+"-staterm.sh"
+tfimf=tfp+"-stateimp.sh"
+tfrm=open(tfrmf, 'a')
+tfim=open(tfimf, 'a')
 frgfilename=tfp+".json"
 frg=open(frgfilename, 'w')
 url="https://management.azure.com/subscriptions/" + sub + "/resourceGroups"
@@ -390,10 +394,11 @@ print count
 for j in range(0, count):
     
     name=rgs[j]["name"]
+    rg=name
     loc=rgs[j]["location"]
     id=rgs[j]["id"]
     if crg is not None:
-        if name != crg:
+        if rg != crg:
             continue
     
     rname=name.replace(".","-")
@@ -428,29 +433,24 @@ for j in range(0, count):
     tfrm.write('terraform state rm '+tfp+'.'+rname + '\n')
     tfim.write('terraform import '+tfp+'.'+rname+' '+id+ '\n')
 # end for
-#tfrm.close()
-#tfim.close()
+tfrm.close()
+tfim.close()
+#end resource group
 
 #
 # handle management locks
 #
-
 p = subprocess.Popen('az lock list -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 output, errors = p.communicate()
 azr=json.loads(output)
 #print(json.dumps(st1, indent=4, separators=(',', ': ')))
 
 tfp="azurerm_management_lock"
+tfrmf=tfp+"-staterm.sh"
+tfimf=tfp+"-stateimp.sh"
+tfrm=open(tfrmf, 'a')
+tfim=open(tfimf, 'a')
 print tfp,
-tffile=tfp+"*.tf"
-#fileList = glob.glob(tffile) 
-# Iterate over the list of filepaths & remove each file.
-#for filePath in fileList:
-#    try:
-#        os.remove(filePath)
-#    except:
-#        print("Error while deleting file : ", filePath)
-
 count=len(azr)-1
 print count
 for j in range(0, count):
@@ -458,24 +458,21 @@ for j in range(0, count):
     name=azr[j]["name"]
     #loc=azr[j]["location"]
     id=azr[j]["id"]
+    rg=azr[j]["resourceGroup"]
     level=azr[j]["level"]
     notes=azr[j]["notes"]
     scope1=id.split("/Microsoft.Authorization")[0].rstrip("providers")
-    scope2=scope1.rstrip("/")
-    scope=scope2
-    #tk=line.split(":")[1].strip(' ",')
-    #tk2=tk.replace(",", "")
-    #print "scope1="+scope1
-    #print "scope2="+scope2
+    scope=scope1.rstrip("/")
 
-    print "id="+id
+    print "name=" + name + " crg=" +crg
     if crg is not None:
-        if name != crg:
+        if range != crg:
             continue  # back to for
     
+
     rname=name.replace(".","-")
     prefix=tfp+"__"+rname
-    
+    print prefix
     rfilename=prefix+".tf"
     fr=open(rfilename, 'w')
     fr.write("")
@@ -508,7 +505,7 @@ for j in range(0, count):
 # end for
 tfrm.close()
 tfim.close()
-
+#end management locks
 
 exit()
 
