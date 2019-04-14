@@ -336,16 +336,17 @@ with open('resources2.txt', 'r') as r:
     for line in sorted(set(r)):
         trg=line.split(":")[0]
         trt=line.split(":")[1]
+        print trt
         if crg is not None:   # Resource Group Filter
             if trg == crg :
                 if crf is not None:   # Resource Filter
-                    if trt == crt :
+                    if crf in trt:
                         fr.write(line,)
                 else:
                     fr.write(line,)
         else:
             if crf is not None:   # Resource Filter
-                if trt == crt :
+                if crf in trt :
                     fr.write(line,)
             else:
                 fr.write(line,)

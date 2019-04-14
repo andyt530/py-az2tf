@@ -85,9 +85,6 @@ echo "Extract Key Vault Secrets to .tf files (insecure) = ${x}"
 echo "Fast Forward = ${f}"
 echo " "
 
-
-pfx[1]="az group list"
-res[1]="azurerm_resource_group"
 pfx[2]="az lock list"
 res[2]="azurerm_management_lock"
 
@@ -95,7 +92,6 @@ res[51]="azurerm_role_definition"
 res[52]="azurerm_role_assignment"
 res[53]="azurerm_policy_definition"
 res[54]="azurerm_policy_assignment"
-
 
 mkdir -p generated/tf.$mysub
 cd generated/tf.$mysub
@@ -127,7 +123,6 @@ pyc=`printf "%s %s %s %s" "$pyc1" "$pyc2" "$pyc3" "$pyc9"`
 echo $pyc
 
 eval $pyc
-exit
 #
 # uncomment following line if you want to use an SPN login
 #../../setup-env.sh
@@ -141,7 +136,7 @@ cp ../../stub/*.tf .
 echo "terraform init"
 terraform init 2>&1 | tee -a import.log
 
-
+exit
 # subscription level stuff - roles & policies
 if [ "$p" = "yes" ]; then
     for j in `seq 51 54`; do
