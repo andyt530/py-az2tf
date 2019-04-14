@@ -138,7 +138,6 @@ pwd
 echo "terraform init"
 terraform init 2>&1 | tee -a import.log
 
-exit
 # subscription level stuff - roles & policies
 if [ "$p" = "yes" ]; then
     for j in `seq 51 54`; do
@@ -152,54 +151,7 @@ if [ "$p" = "yes" ]; then
     done
 fi
 
-
-#echo $myrg
-#../scripts/193_azurerm_application_gateway.sh $myrg
-
 date
-
-# top level stuff - resource groups
-if [ "$f" = "no" ]; then
-    echo "resource groups"
-
-    date
-
-# 2 - management locks
-    for j in `seq 2 2`; do
-    if [ "$r" = "" ]; then
-        c1=`echo ${pfx[${j}]}`
-        gr=`printf "%s-" ${res[$j]}`
-        #echo c1=$c1 gr=$gr
-        comm=`printf "%s --query '[].resourceGroup' -o json | jq '.[]' | sort -u" "$c1"`
-        comm2=`printf "%s --query '[].resourceGroup' -o json | jq '.[]' | sort -u | wc -l" "$c1"`
-        #echo comm=$comm2
-        tc=`eval $comm2`
-        #echo tc=$tc
-        tc=`echo $tc | tr -d ' '`
-        trgs=`eval $comm`
-        count=`echo ${#trgs}`
-        if [ "$g" != "" ]; then
-            ../../scripts/${res[$j]}.sh $g
-        else
-            if [ "$count" -gt "0" ]; then
-                c5="1"
-                for j2 in `echo $trgs`; do
-                    echo -n "$c5 of $tc "
-                    docomm="../../scripts/${res[$j]}.sh $j2"
-                    echo "$docomm"
-                    eval $docomm 2>&1 | tee -a import.log
-                    c5=`expr $c5 + 1`
-                    if grep -q Error: import.log ; then
-                        echo "Error in log file exiting ...."
-                        exit
-                    fi
-                done
-            fi
-        fi
-    fi
-    done
-fi
-
 
 echo loop through providers
 
@@ -207,12 +159,12 @@ for com in `ls ../../scripts/*_azurerm*.sh | cut -d'/' -f4 | sort -g`; do
     gr=`echo $com | awk -F 'azurerm_' '{print $2}' | awk -F '.sh' '{print $1}'`
     echo $gr
     lc="1"
-    tc2=`cat resources2.txt | grep $gr | wc -l`
-    for l in `cat resources2.txt | grep $gr` ; do
+    tc2=`cat resources.txt | grep $gr | wc -l`
+    for l in `cat resources.txt | grep $gr` ; do
         echo -n $lc of $tc2 " "
         myrg=`echo $l | cut -d':' -f1`
         prov=`echo $l | cut -d':' -f2`
-        #echo "debug $j prov=$prov  res=${res[$j]}"
+        echo "debug $j prov=$prov rg=$myrg"
         docomm="../../scripts/$com $myrg"
         echo "$docomm"
         if [ "$f" = "no" ]; then

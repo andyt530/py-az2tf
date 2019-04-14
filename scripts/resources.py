@@ -377,13 +377,13 @@ frg.write(json.dumps(rgs, indent=4, separators=(',', ': ')))
 frg.close()
 
 tffile=tfp+"*.tf"
-fileList = glob.glob(tffile) 
+#fileList = glob.glob(tffile) 
 # Iterate over the list of filepaths & remove each file.
-for filePath in fileList:
-    try:
-        os.remove(filePath)
-    except:
-        print("Error while deleting file : ", filePath)
+#for filePath in fileList:
+#    try:
+#        os.remove(filePath)
+#    except:
+#        print("Error while deleting file : ", filePath)
 
 count=len(rgs)-1
 print count
@@ -443,13 +443,13 @@ azr=json.loads(output)
 tfp="azurerm_management_lock"
 print tfp,
 tffile=tfp+"*.tf"
-fileList = glob.glob(tffile) 
+#fileList = glob.glob(tffile) 
 # Iterate over the list of filepaths & remove each file.
-for filePath in fileList:
-    try:
-        os.remove(filePath)
-    except:
-        print("Error while deleting file : ", filePath)
+#for filePath in fileList:
+#    try:
+#        os.remove(filePath)
+#    except:
+#        print("Error while deleting file : ", filePath)
 
 count=len(azr)-1
 print count
