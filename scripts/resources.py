@@ -12,10 +12,12 @@ import argparse
 
 parser = argparse.ArgumentParser(description='terraform sub rg')
 parser.add_argument('-s', help='Subscription Id')
-parser.add_argument('-r', help='Resource Group')
+parser.add_argument('-g', help='Resource Group')
+parser.add_argument('-r', help='Filter azurerm resource')
 args = parser.parse_args()
 csub=args.s
-crg=args.r
+crg=args.g
+crf=args.r
 
 if csub is not None:
     print("sub=" + csub) 

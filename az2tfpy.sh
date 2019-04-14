@@ -110,20 +110,20 @@ fi
 
 pyc1="python2 ../../scripts/resources.py -s $mysub "
 if [ "$g" != "" ]; then
-    pyc2="-g $g "
+    pyc2=" -g $g "
 else
-    pyc2=""
+    pyc2=" "
 fi
 if [ "$r" != "" ]; then
     lcr=`echo $r | awk '{print tolower($0)}'`
-    pyc3="-r $lcr "
+    pyc3=" -r $lcr "
 else
-    pyc3=""
+    pyc3=" "
 fi
 
-pyc9="2>&1 | tee -a import.log"
+pyc9=" 2>&1 | tee -a import.log"
+pyc=`printf "%s %s %s %s" $pyc1 $pyc2 $pyc3 "$pyc9"`
 
-pyc=pyc1+pyc2+pyc3+pyc9
 echo $pyc
 exit
 eval $pyc
