@@ -1,0 +1,7 @@
+sub=3f695f89-fbc0-44c3-846c-55c939f57dc6
+Subscription: 3f695f89-fbc0-44c3-846c-55c939f57dc6
+320
+Traceback (most recent call last):
+  File "../../scripts/resources.py", line 364, in <module>
+    os.remove('tf-staterm.sh')
+OSError: [Errno 2] No such file or directory: 'tf-staterm.sh'

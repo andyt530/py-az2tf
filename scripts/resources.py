@@ -25,7 +25,9 @@ if csub is not None:
 if crg is not None:
     print("resource group=" + crg)
     # validate rg
-
+if crf is not None:
+    print("resource filter=" + crf)
+    # validate rg
 
 if sys.version_info[0] > 2:
     #raise Exception("Must be using Python 2")
@@ -333,11 +335,20 @@ fr=open(rfilename, 'w')
 with open('resources2.txt', 'r') as r:
     for line in sorted(set(r)):
         trg=line.split(":")[0]
+        trt=line.split(":")[1]
         if crg is not None:   # Resource Group Filter
             if trg == crg :
-                fr.write(line,)
+                if crf is not None:   # Resource Filter
+                    if trt == crt :
+                        fr.write(line,)
+                else:
+                    fr.write(line,)
         else:
-            fr.write(line,)
+            if crf is not None:   # Resource Filter
+                if trt == crt :
+                    fr.write(line,)
+            else:
+                fr.write(line,)
 r.close()
 fr.close()
 
@@ -350,8 +361,10 @@ with open('noprovider2.txt', 'r') as r:
 
 r.close()
 fr.close()
-os.remove('tf-staterm.sh')
-os.remove('tf-stateimp.sh')
+if os.path.exists("tf-staterm.sh"):
+    os.remove('tf-staterm.sh')
+if os.path.exists("tf-stateimp.sh"):
+    os.remove('tf-stateimp.sh')
 tfrm=open("tf-staterm.sh", 'a')
 tfim=open("tf-stateimp.sh", 'a')
 
@@ -407,6 +420,11 @@ for j in range(0, count):
 
 tfrm.close()
 tfim.close()
+
+# resource filter
+
+
+
 exit()
 
 rclient = get_client_from_cli_profile(ResourceManagementClient)

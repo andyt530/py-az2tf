@@ -122,12 +122,12 @@ else
 fi
 
 pyc9=" 2>&1 | tee -a import.log"
-pyc=`printf "%s %s %s %s" $pyc1 $pyc2 $pyc3 "$pyc9"`
+pyc=`printf "%s %s %s %s" "$pyc1" "$pyc2" "$pyc3" "$pyc9"`
 
 echo $pyc
-exit
-eval $pyc
 
+eval $pyc
+exit
 #
 # uncomment following line if you want to use an SPN login
 #../../setup-env.sh
