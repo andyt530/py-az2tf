@@ -7,7 +7,7 @@ import adal
 import os
 import json
 import sys
-
+import glob
 import argparse
 
 parser = argparse.ArgumentParser(description='terraform sub rg')
@@ -27,15 +27,11 @@ if crg is not None:
 
 if sys.version_info[0] > 2:
     #raise Exception("Must be using Python 2")
-    print("Python version ", sys.version_info[0])
-else:
-    print("Python version ", sys.version_info[0])
+    print("Python version ", sys.version_info[0], " version 2 required, Exiting")
+    exit()
 
 def printf(format, *values):
     print(format % values )
-
-
-
 
 #with open(filename, 'w') as f:
     #print >> f, 'Filename:'
@@ -80,8 +76,12 @@ fresfilename="data.json"
 fres=open(fresfilename, 'w')
 url="https://management.azure.com/subscriptions/" + sub + "/resources"
 params = {'api-version': '2018-11-01'}
-r = requests.get(url, headers=headers, params=params)
-res= r.json()["value"]
+try: 
+    r = requests.get(url, headers=headers, params=params)
+    res= r.json()["value"]
+except KeyError:
+    print "Error getting resources"
+    exit()
 fres.write(json.dumps(res, indent=4, separators=(',', ': ')))
 fres.close()
 
@@ -348,17 +348,32 @@ with open('noprovider2.txt', 'r') as r:
 
 r.close()
 fr.close()
-
-
+os.remove('tf-staterm.sh')
+os.remove('tf-stateimp.sh')
 tfrm=open("tf-staterm.sh", 'a')
 tfim=open("tf-stateimp.sh", 'a')
 
 # handle resource groups
 tfp="azurerm_resource_group"
+tffile=tfp+"*.tf"
+fileList = glob.glob(tffile) 
+# Iterate over the list of filepaths & remove each file.
+for filePath in fileList:
+    try:
+        os.remove(filePath)
+    except:
+        print("Error while deleting file : ", filePath)
+
 count=len(rgs)-1
 print count
 for j in range(0, count):
+    
     name=rgs[j]["name"]
+    
+    if crg is not None:
+        if name != crg:
+            continue
+    
     rname=name.replace(".","-")
     prefix=tfp+"__"+rname
     
