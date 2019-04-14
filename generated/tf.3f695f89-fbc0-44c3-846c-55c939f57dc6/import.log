@@ -1,5 +1,4 @@
 sub=3f695f89-fbc0-44c3-846c-55c939f57dc6
-resource filter=image
 Subscription: 3f695f89-fbc0-44c3-846c-55c939f57dc6
 320
 azurerm_log_analytics_workspace
@@ -196,3 +195,20 @@ azurerm_virtual_network_peering
 
 22
 2
+[]
+
+"[]\n"
+
+[0m[1mInitializing provider plugins...[0m
+- Checking for available provider plugins on https://releases.hashicorp.com...
+- Downloading plugin for provider "azurerm" (1.24.0)...
+
+[0m[1m[32mTerraform has been successfully initialized![0m[32m[0m
+[0m[32m
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.[0m

@@ -104,6 +104,12 @@ else
     cp pt.txt processed.txt
 fi
 
+# cleanup from any previous runs
+rm -f terraform*.backup
+#rm -f terraform.tfstate
+rm -f tf*.sh
+cp ../../stub/*.tf .
+
 pyc1="python2 ../../scripts/resources.py -s $mysub "
 if [ "$g" != "" ]; then
     pyc2=" -g $g "
@@ -128,11 +134,7 @@ eval $pyc
 #../../setup-env.sh
 
 
-# cleanup from any previous runs
-rm -f terraform*.backup
-#rm -f terraform.tfstate
-rm -f tf*.sh
-cp ../../stub/*.tf .
+pwd
 echo "terraform init"
 terraform init 2>&1 | tee -a import.log
 

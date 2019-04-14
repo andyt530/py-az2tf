@@ -366,6 +366,7 @@ if os.path.exists("tf-staterm.sh"):
     os.remove('tf-staterm.sh')
 if os.path.exists("tf-stateimp.sh"):
     os.remove('tf-stateimp.sh')
+
 tfrm=open("tf-staterm.sh", 'a')
 tfim=open("tf-stateimp.sh", 'a')
 
@@ -399,7 +400,7 @@ for j in range(0, count):
     fr.write('resource ' + tfp + ' ' + rname + ' {\n')
     fr.write('\t name = "' + name + '"\n')
     fr.write('\t location = "'+ loc + '"\n')
-    fr.write('}\n')  
+ 
 
 # tags block
     try:
@@ -414,18 +415,24 @@ for j in range(0, count):
             tval=mtags[key]
             fr.write('\t "' + key + '"="' + tval + '"\n')
         #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
-        fr.write('} \n')
+        fr.write('}\n')
+    
+    fr.write('}\n') 
     fr.close()
-    tfrm.write('terraform state rm '+tfp+'.'+rname + '\n')
-    tfim.write('terraform state import '+tfp+'.'+rname+' '+id+ '\n')
 
+    tfrm.write('terraform state rm '+tfp+'.'+rname + '\n')
+    tfim.write('terraform import '+tfp+'.'+rname+' '+id+ '\n')
+# end for
 tfrm.close()
 tfim.close()
 
 # resource filter
 
-
-
+p = subprocess.Popen('az lock list -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+output, errors = p.communicate()
+print output
+print "....................."
+#print(json.dumps(output, indent=4, separators=(',', ': ')))
 exit()
 
 rclient = get_client_from_cli_profile(ResourceManagementClient)
