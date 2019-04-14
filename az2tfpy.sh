@@ -95,10 +95,10 @@ res[54]="azurerm_policy_assignment"
 
 mkdir -p generated/tf.$mysub
 cd generated/tf.$mysub
-rm -rf .terraform
+rm -rf .terraform 
 if [ "$f" = "no" ]; then
     rm -f import.log resources*.txt
-    rm -f processed.txt
+    rm -f processed.txt terraform* *.tf 
 else
     sort -u processed.txt > pt.txt
     cp pt.txt processed.txt

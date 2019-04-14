@@ -116,7 +116,7 @@ for j in range(0, count):
     t1=res[j]
     name=res[j]['name']
     id=res[j]['id']
-    rg=id.split("/")[4]
+    rg1=id.split("/")[4]
     try:
         isext=id.split("/")[9]
     except IndexError:
@@ -124,6 +124,7 @@ for j in range(0, count):
 
     loc=res[j]['location']
     rtype=res[j]['type']
+    rg=rg1.replace(".","-")
     #print rtype
 
     if rtype == "Microsoft.Compute/availabilitySets":
@@ -367,8 +368,8 @@ if os.path.exists("tf-stateimp.sh"):
 
 tfp="azurerm_resource_group"
 print tfp,
-tfrmf=tfp+"-staterm.sh"
-tfimf=tfp+"-stateimp.sh"
+tfrmf="001"+tfp+"-staterm.sh"
+tfimf="001"+tfp+"-stateimp.sh"
 tfrm=open(tfrmf, 'a')
 tfim=open(tfimf, 'a')
 frgfilename=tfp+".json"
@@ -402,7 +403,7 @@ for j in range(0, count):
             continue
     
     rname=name.replace(".","-")
-    prefix=tfp+"__"+rname
+    prefix=tfp+"."+rname
     
     rfilename=prefix+".tf"
     fr=open(rfilename, 'w')
@@ -446,8 +447,8 @@ azr=json.loads(output)
 #print(json.dumps(st1, indent=4, separators=(',', ': ')))
 
 tfp="azurerm_management_lock"
-tfrmf=tfp+"-staterm.sh"
-tfimf=tfp+"-stateimp.sh"
+tfrmf="002"+tfp+"-staterm.sh"
+tfimf="002"+tfp+"-stateimp.sh"
 tfrm=open(tfrmf, 'a')
 tfim=open(tfimf, 'a')
 print tfp,
@@ -464,19 +465,20 @@ for j in range(0, count):
     scope1=id.split("/Microsoft.Authorization")[0].rstrip("providers")
     scope=scope1.rstrip("/")
 
-    print "name=" + name + " crg=" +crg
+
     if crg is not None:
-        if range != crg:
+        print "rgname=" + rg + " crg=" + crg
+        if rg != crg:
             continue  # back to for
     
 
     rname=name.replace(".","-")
-    prefix=tfp+"__"+rname
+    prefix=tfp+"."+rg+'__'+rname
     print prefix
     rfilename=prefix+".tf"
     fr=open(rfilename, 'w')
     fr.write("")
-    fr.write('resource ' + tfp + ' ' + rname + ' {\n')
+    fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
     fr.write('\t name = "' + name + '"\n')
     #fr.write('\t location = "'+ loc + '"\n')
     fr.write('\t lock_level = "'+ level + '"\n')   
@@ -501,11 +503,17 @@ for j in range(0, count):
     fr.close()
 
     tfrm.write('terraform state rm '+tfp+'.'+rname + '\n')
-    tfim.write('terraform import '+tfp+'.'+rname+' '+id+ '\n')
+    tfim.write('terraform import '+tfp+'.'+rg+'__'+rname+' '+id+ '\n')
 # end for
 tfrm.close()
 tfim.close()
 #end management locks
+
+
+
+
+
+
 
 exit()
 
