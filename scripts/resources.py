@@ -91,20 +91,6 @@ fres.write(json.dumps(res, indent=4, separators=(',', ': ')))
 fres.close()
 
 
-
-
-
-print "REST NSG"
-fnsgfilename="azurerm_network_security_group.json"
-fnsg=open(fnsgfilename, 'w')
-url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/networkSecurityGroups"
-params = {'api-version': '2018-07-01'}
-r = requests.get(url, headers=headers, params=params)
-nsg= r.json()["value"]
-#print (json.dumps(nsg, indent=4, separators=(',', ': ')))
-fnsg.write(json.dumps(nsg, indent=4, separators=(',', ': ')))
-fnsg.close()
-
 rfilename="resources2.txt"
 fr=open(rfilename, 'w')
 nprfilename="noprovider2.txt"
@@ -515,15 +501,86 @@ tfrm.close()
 tfim.close()
 #end management locks
 
+exit()
 
 
+#  050 NSG's
+print "REST NSG"
+fnsgfilename="azurerm_network_security_group.json"
+fnsg=open(fnsgfilename, 'w')
+url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/networkSecurityGroups"
+params = {'api-version': '2018-07-01'}
+r = requests.get(url, headers=headers, params=params)
+azr= r.json()["value"]
+#print (json.dumps(nsg, indent=4, separators=(',', ': ')))
+fnsg.write(json.dumps(nsg, indent=4, separators=(',', ': ')))
+fnsg.close()
 
 
+tfp="azurerm_network_security_group"
+tfrmf="050-"+tfp+"-staterm.sh"
+tfimf="050-"+tfp+"-stateimp.sh"
+tfrm=open(tfrmf, 'a')
+tfim=open(tfimf, 'a')
+print tfp,
+count=len(azr)-1
+print count
+for j in range(0, count):
+    
+    name=azr[j]["name"]
+    loc=azr[j]["location"]
+    id=azr[j]["id"]
+    rg=azr[j]["resourceGroup"]
 
+    #scope1=id.split("/Microsoft.Authorization")[0].rstrip("providers")
+    #scope=scope1.rstrip("/")
+
+
+    if crg is not None:
+        print "rgname=" + rg + " crg=" + crg
+        if rg != crg:
+            continue  # back to for
+    
+
+    rname=name.replace(".","-")
+    prefix=tfp+"."+rg+'__'+rname
+    print prefix
+    rfilename=prefix+".tf"
+    fr=open(rfilename, 'w')
+    fr.write("")
+    fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+    fr.write('\t name = "' + name + '"\n')
+    fr.write('\t location = "'+ loc + '"\n')
+
+# tags block
+
+    try:
+        mtags=azr[j]["tags"]
+    except:
+        mtags="{}"
+    tcount=len(mtags)-1
+    if tcount > 1 :
+        fr.write('tags { \n')
+        print tcount
+        for key in mtags.keys():
+            tval=mtags[key]
+            fr.write('\t "' + key + '"="' + tval + '"\n')
+        #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
+        fr.write('}\n')
+    
+    fr.write('}\n') 
+    fr.close()
+    tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+    tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+    tfim.write(tfcomm)  
+
+# end for
+tfrm.close()
+tfim.close()
+#end NSG
 
 exit()
 
-rclient = get_client_from_cli_profile(ResourceManagementClient)
-
-for resource_group in rclient.resource_groups.list():
-    print(resource_group.name)
+#rclient = get_client_from_cli_profile(ResourceManagementClient)
+#for resource_group in rclient.resource_groups.list():
+#    print(resource_group.name)
