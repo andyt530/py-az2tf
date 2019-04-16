@@ -525,16 +525,16 @@ tfim=open(tfimf, 'a')
 print tfp,
 count=len(azr)-1
 print count
-for j in range(0, count):
+for i in range(0, count):
     
-    name=azr[j]["name"]
-    loc=azr[j]["location"]
-    id=azr[j]["id"]
-    rg=azr[j]["resourceGroup"]
+    name=azr[i]["name"]
+    loc=azr[i]["location"]
+    id=azr[i]["id"]
+    rg=azr[i]["resourceGroup"]
+    srules=azr[i]["securityRules"]
 
     #scope1=id.split("/Microsoft.Authorization")[0].rstrip("providers")
     #scope=scope1.rstrip("/")
-
 
     if crg is not None:
         print "rgname=" + rg + " crg=" + crg
@@ -551,6 +551,29 @@ for j in range(0, count):
     fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
     fr.write('\t name = "' + name + '"\n')
     fr.write('\t location = "'+ loc + '"\n')
+    fr.write('\t resource_group_name = "'+ rg + '"\n')   
+    #
+    # Security Rules
+    #
+    scount=len(srules)-1
+    for j in range(0, scount):              
+        fr.write('\t security_rule { \n" >> $outfile
+        srname=azr[i]["securityRules"][j]["name"]  
+        echo "Security Rule $srname   $j of $scount"                     
+        fr.write('\t\t name = "' + srname  + '"\n')
+        srdesc=azr[i]["securityRules"][j]["description"]                       
+        if srdesc != "null" :
+            fr.write('\t\t description ="' + srdesc 
+            
+        sraccess=azr[(${i})].securityRules[(${j})].access"]                       
+        fr.write('\t\t access = "' + sraccess + '"\n')
+        srpri=azr[(${i})].securityRules[(${j})].priority"] 
+        fr.write('\t\t priority ="' srpri + '"\n')
+        srproto=azr[(${i})].securityRules[(${j})].protocol"] 
+        fr.write('\t\t protocol ="' srproto + '"\n')
+        srdir=azr[(${i})].securityRules[(${j})].direction"] 
+        fr.write('\t\t direction = "' + srdir + '"\n')
+
 
 # tags block
 
