@@ -5,3 +5,4 @@ tf*.sh
 *.log
 terraform*
 generated
+*.bak
