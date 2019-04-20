@@ -97,7 +97,7 @@ nprfilename="noprovider2.txt"
 np=open(nprfilename, 'w')
 
 
-count=len(res)-1
+count=len(res)
 print count
 for j in range(0, count):
     t1=res[j]
@@ -378,7 +378,7 @@ tffile=tfp+"*.tf"
 #    except:
 #        print("Error while deleting file : ", filePath)
 
-count=len(rgs)-1
+count=len(rgs)
 print count
 for j in range(0, count):
     
@@ -443,7 +443,7 @@ tfimf="002-"+tfp+"-stateimp.sh"
 tfrm=open(tfrmf, 'a')
 tfim=open(tfimf, 'a')
 print tfp,
-count=len(azr)-1
+count=len(azr)
 print count
 for j in range(0, count):
     
@@ -525,7 +525,7 @@ print tfp,
 count=len(azr)
 print count
 for i in range(0, count):
-    print i
+    #print i
     name=azr[i]["name"]
     loc=azr[i]["location"]
     id=azr[i]["id"]
@@ -555,7 +555,7 @@ for i in range(0, count):
     #print srules
     scount=len(srules)
     for j in range(0, scount):  
-        print "j=" + str(j)            
+        #print "j=" + str(j)            
         fr.write('\t security_rule {'  + '\n')
         srname=srules[j]["name"]  
         print "Security Rule " + srname                   
@@ -592,11 +592,10 @@ for i in range(0, count):
             pass
             
         srsaps=str(srules[j]["properties"]["sourceAddressPrefixes"]) 
-        print srsaps
+        #print srsaps
         if srsaps != "[]" :
             fr.write('\t\t source_address_prefixes = "' + srsaps + '"\n')
-        if j == 4 :
-            print srules[j]["properties"]["sourceApplicationSecurityGroups"]
+
 # source asg's
         try:
             srsasgs=srules[j]["properties"]["sourceApplicationSecurityGroups"]
@@ -604,12 +603,10 @@ for i in range(0, count):
         except KeyError:
             kcount=0
 
-        print "kcount=" + str(kcount)
         for k in range(0, kcount):
-            print "in k k=" + str(k)
+            #print "in k k=" + str(k)
             asgnam=srules[j]["properties"]["sourceApplicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
             asgrg=srules[j]["properties"]["sourceApplicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-")    
-            print asgnam
             fr.write('\t\t source_application_security_group_ids = "{azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}' + '"\n')
                 
 # destination asg's
@@ -621,7 +618,6 @@ for i in range(0, count):
         for k in range(0, kcount):
             asgnam=srules[j]["properties"]["destinationApplicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
             asgrg=srules[j]["properties"]["destinationApplicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-")    
-            print asgnam
             fr.write('\t\t destination_application_security_group_ids = "{azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}' + '"\n')
                   
         fr.write('\t}' + '\n')
