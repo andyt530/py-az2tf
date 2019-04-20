@@ -417,7 +417,7 @@ for j in range(0, count):
         fr.write('}\n')
     
     fr.write('}\n') 
-    fr.close()
+    fr.close()  # close .tf file
 
     tfcomm='terraform import '+tfp+'.'+rname+' '+id+'\n'
     tfrm.write('terraform state rm '+tfp+'.'+rname + '\n')
@@ -491,7 +491,8 @@ for j in range(0, count):
         fr.write('}\n')
     
     fr.write('}\n') 
-    fr.close()
+    fr.close()  # close .tf file
+
     tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
     tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
     tfim.write(tfcomm)  
@@ -518,6 +519,7 @@ fnsg.close()
 
 
 tfp="azurerm_network_security_group"
+print tfp
 tfrmf="050-"+tfp+"-staterm.sh"
 tfimf="050-"+tfp+"-stateimp.sh"
 tfrm=open(tfrmf, 'a')
@@ -557,22 +559,63 @@ for i in range(0, count):
     #
     scount=len(srules)-1
     for j in range(0, scount):              
-        fr.write('\t security_rule { \n" >> $outfile
+        fr.write('\t security_rule {'  + '\n')
         srname=azr[i]["securityRules"][j]["name"]  
-        echo "Security Rule $srname   $j of $scount"                     
-        fr.write('\t\t name = "' + srname  + '"\n')
-        srdesc=azr[i]["securityRules"][j]["description"]                       
-        if srdesc != "null" :
-            fr.write('\t\t description ="' + srdesc 
+        print "Security Rule" + srname + " " + j + "of " + scount                    
+        fr.write('\t\t name = "' +  srname + '"\n')
+        srdesc=azr[i]["securityRules"][j]["description"]                    
+        if srdesc != "null":
+            fr.write('\t\t description = "' + srdesc + '"\n')
+
+        sraccess=azr[i]["securityRules"][j]["access"]                       
+        fr.write('\t\t access = "' +  sraccess + '"\n')
+        srpri=azr[i]["securityRules"][j]["priority"] 
+        fr.write('\t\t priority = "' +  srpri + '"\n')
+        srproto=azr[i]["securityRules"][j]["protocol"]
+        fr.write('\t\t protocol = "' + srproto + '"\n')
+        srdir=azr[i]["securityRules"][j]["direction"] 
+        fr.write('\t\t direction = "' +  srdir + '"\n')
+#source address block
+        srsp=azr[i]["securityRules"][j]["sourcePortRange"]
+        if srsp != "null" :
+            fr.write('\t\t source_port_range = "' + srsp + '"\n')
             
-        sraccess=azr[(${i})].securityRules[(${j})].access"]                       
-        fr.write('\t\t access = "' + sraccess + '"\n')
-        srpri=azr[(${i})].securityRules[(${j})].priority"] 
-        fr.write('\t\t priority ="' srpri + '"\n')
-        srproto=azr[(${i})].securityRules[(${j})].protocol"] 
-        fr.write('\t\t protocol ="' srproto + '"\n')
-        srdir=azr[(${i})].securityRules[(${j})].direction"] 
-        fr.write('\t\t direction = "' + srdir + '"\n')
+        srsps=azr[i]["securityRules"][j]["sourcePortRanges"] 
+        if srsps != "[]" :
+            fr.write('\t\t source_port_ranges = "' + srsps + '"\n')
+            
+        srsap=azr[i]["securityRules"][j]["sourceAddressPrefix"] 
+        if srsap != "null" :
+            fr.write('\t\t source_address_prefix = "'+ srsap + '"\n')
+            
+        srsaps=azr[i]["securityRules"][j]["sourceAddressPrefixes"] 
+        if srsaps != "[]" :
+            fr.write('\t\t source_address_prefixes = "' + srsaps + '"\n')
+            
+# source asg's
+        srsasgs=azr[i]["securityRules"][j]["sourceApplicationSecurityGroups"]
+        kcount=len(srsasgs)-1
+        for k in range (0, kcount):
+            asgnam=azr[i]["securityRules"][j]["sourceApplicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
+            asgrg=azr[i]["securityRules"][j]["sourceApplicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-")    
+            fr.write('\t\t source_application_security_group_ids = "{azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}"' + '"\n')
+                
+            
+
+# destination asg's
+        srdasgs=azr[i]["securityRules"][j]["destinationApplicationSecurityGroups"]
+        kcount=len(srdasgs)-1
+        for k in range(0, kcount):
+            asgnam=azr[i]["securityRules"][j]["destinationApplicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
+            asgrg=azr[i]["securityRules"][j]["destinationApplicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-")    
+            fr.write('\t\t destination_application_security_group_ids = "{azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}"' + '"\n')
+                  
+        fr.write('\t}' + '\n')
+        
+    # end for j loop   
+
+
+
 
 
 # tags block
@@ -592,12 +635,14 @@ for i in range(0, count):
         fr.write('}\n')
     
     fr.write('}\n') 
-    fr.close()
-    tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+    fr.close()   # close .tf file
+
     tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+    tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
     tfim.write(tfcomm)  
 
-# end for
+# end for i loop
+
 tfrm.close()
 tfim.close()
 #end NSG

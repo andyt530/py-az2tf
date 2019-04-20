@@ -135,7 +135,8 @@ eval $pyc
 #
 # uncomment following line if you want to use an SPN login
 #../../setup-env.sh
-chmod 755 00*state*.sh
+exit
+chmod 755 *state*.sh
 ./001*stateimp.sh
 ./002*stateimp.sh
 
