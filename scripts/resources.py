@@ -465,7 +465,7 @@ for j in range(0, count):
 
     rname=name.replace(".","-")
     prefix=tfp+"."+rg+'__'+rname
-    print prefix
+    #print prefix
     rfilename=prefix+".tf"
     fr=open(rfilename, 'w')
     fr.write("")
@@ -502,8 +502,6 @@ tfrm.close()
 tfim.close()
 #end management locks
 
-exit()
-
 
 #  050 NSG's
 print "REST NSG"
@@ -514,36 +512,31 @@ params = {'api-version': '2018-07-01'}
 r = requests.get(url, headers=headers, params=params)
 azr= r.json()["value"]
 #print (json.dumps(nsg, indent=4, separators=(',', ': ')))
-fnsg.write(json.dumps(nsg, indent=4, separators=(',', ': ')))
+fnsg.write(json.dumps(azr, indent=4, separators=(',', ': ')))
 fnsg.close()
 
 
 tfp="azurerm_network_security_group"
-print tfp
 tfrmf="050-"+tfp+"-staterm.sh"
 tfimf="050-"+tfp+"-stateimp.sh"
 tfrm=open(tfrmf, 'a')
 tfim=open(tfimf, 'a')
 print tfp,
-count=len(azr)-1
+count=len(azr)
 print count
 for i in range(0, count):
-    
+    print i
     name=azr[i]["name"]
     loc=azr[i]["location"]
     id=azr[i]["id"]
-    rg=azr[i]["resourceGroup"]
-    srules=azr[i]["securityRules"]
-
-    #scope1=id.split("/Microsoft.Authorization")[0].rstrip("providers")
-    #scope=scope1.rstrip("/")
+#    rg=azr[i]["resourceGroup"]
+    rg=id.split("/")[4].replace(".","-")
+    #print rg
 
     if crg is not None:
-        print "rgname=" + rg + " crg=" + crg
         if rg != crg:
             continue  # back to for
     
-
     rname=name.replace(".","-")
     prefix=tfp+"."+rg+'__'+rname
     print prefix
@@ -557,66 +550,85 @@ for i in range(0, count):
     #
     # Security Rules
     #
-    scount=len(srules)-1
-    for j in range(0, scount):              
+    #try:
+    srules=azr[i]["properties"]["securityRules"]
+    #print srules
+    scount=len(srules)
+    for j in range(0, scount):  
+        print "j=" + str(j)            
         fr.write('\t security_rule {'  + '\n')
-        srname=azr[i]["securityRules"][j]["name"]  
-        print "Security Rule" + srname + " " + j + "of " + scount                    
+        srname=srules[j]["name"]  
+        print "Security Rule " + srname                   
         fr.write('\t\t name = "' +  srname + '"\n')
-        srdesc=azr[i]["securityRules"][j]["description"]                    
-        if srdesc != "null":
+        try:
+            srdesc=srules[j]["properties"]["description"]                    
             fr.write('\t\t description = "' + srdesc + '"\n')
+        except KeyError:
+            pass
 
-        sraccess=azr[i]["securityRules"][j]["access"]                       
+        sraccess=srules[j]["properties"]["access"]                       
         fr.write('\t\t access = "' +  sraccess + '"\n')
-        srpri=azr[i]["securityRules"][j]["priority"] 
-        fr.write('\t\t priority = "' +  srpri + '"\n')
-        srproto=azr[i]["securityRules"][j]["protocol"]
+        srpri=str(srules[j]["properties"]["priority"])
+        fr.write('\t\t priority = "' + srpri + '"\n')
+        srproto=srules[j]["properties"]["protocol"]
         fr.write('\t\t protocol = "' + srproto + '"\n')
-        srdir=azr[i]["securityRules"][j]["direction"] 
+        srdir=srules[j]["properties"]["direction"] 
         fr.write('\t\t direction = "' +  srdir + '"\n')
 #source address block
-        srsp=azr[i]["securityRules"][j]["sourcePortRange"]
-        if srsp != "null" :
+        try:
+            srsp=str(srules[j]["properties"]["sourcePortRange"])
             fr.write('\t\t source_port_range = "' + srsp + '"\n')
+        except KeyError:
+            pass
             
-        srsps=azr[i]["securityRules"][j]["sourcePortRanges"] 
+        srsps=str(srules[j]["properties"]["sourcePortRanges"])
         if srsps != "[]" :
             fr.write('\t\t source_port_ranges = "' + srsps + '"\n')
             
-        srsap=azr[i]["securityRules"][j]["sourceAddressPrefix"] 
-        if srsap != "null" :
+        try:
+            srsap=srules[j]["properties"]["sourceAddressPrefix"] 
             fr.write('\t\t source_address_prefix = "'+ srsap + '"\n')
+        except KeyError:
+            pass
             
-        srsaps=azr[i]["securityRules"][j]["sourceAddressPrefixes"] 
+        srsaps=str(srules[j]["properties"]["sourceAddressPrefixes"]) 
+        print srsaps
         if srsaps != "[]" :
             fr.write('\t\t source_address_prefixes = "' + srsaps + '"\n')
-            
+        if j == 4 :
+            print srules[j]["properties"]["sourceApplicationSecurityGroups"]
 # source asg's
-        srsasgs=azr[i]["securityRules"][j]["sourceApplicationSecurityGroups"]
-        kcount=len(srsasgs)-1
-        for k in range (0, kcount):
-            asgnam=azr[i]["securityRules"][j]["sourceApplicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
-            asgrg=azr[i]["securityRules"][j]["sourceApplicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-")    
-            fr.write('\t\t source_application_security_group_ids = "{azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}"' + '"\n')
-                
-            
+        try:
+            srsasgs=srules[j]["properties"]["sourceApplicationSecurityGroups"]
+            kcount=len(srsasgs)
+        except KeyError:
+            kcount=0
 
-# destination asg's
-        srdasgs=azr[i]["securityRules"][j]["destinationApplicationSecurityGroups"]
-        kcount=len(srdasgs)-1
+        print "kcount=" + str(kcount)
         for k in range(0, kcount):
-            asgnam=azr[i]["securityRules"][j]["destinationApplicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
-            asgrg=azr[i]["securityRules"][j]["destinationApplicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-")    
-            fr.write('\t\t destination_application_security_group_ids = "{azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}"' + '"\n')
+            print "in k k=" + str(k)
+            asgnam=srules[j]["properties"]["sourceApplicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
+            asgrg=srules[j]["properties"]["sourceApplicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-")    
+            print asgnam
+            fr.write('\t\t source_application_security_group_ids = "{azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}' + '"\n')
+                
+# destination asg's
+        try:
+            srdasgs=srules[j]["properties"]["destinationApplicationSecurityGroups"]
+            kcount=len(srdasgs)
+        except KeyError:
+            kcount=0
+        for k in range(0, kcount):
+            asgnam=srules[j]["properties"]["destinationApplicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
+            asgrg=srules[j]["properties"]["destinationApplicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-")    
+            print asgnam
+            fr.write('\t\t destination_application_security_group_ids = "{azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}' + '"\n')
                   
         fr.write('\t}' + '\n')
         
-    # end for j loop   
-
-
-
-
+        # end for j loop   
+    #except KeyError:
+    #    print "No security rules"
 
 # tags block
 
