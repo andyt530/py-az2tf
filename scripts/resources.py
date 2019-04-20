@@ -309,7 +309,7 @@ for j in range(0, count):
 fr.close()
 np.close()
 
-print "Opumizing Resources"
+print "Optimizing Resources ..."
 # sort unique and filter for Resource Group
 rfilename="resources.txt"
 fr=open(rfilename, 'w')
@@ -539,7 +539,7 @@ for i in range(0, count):
     
     rname=name.replace(".","-")
     prefix=tfp+"."+rg+'__'+rname
-    print prefix
+    #print prefix
     rfilename=prefix+".tf"
     fr=open(rfilename, 'w')
     fr.write("")
@@ -558,7 +558,7 @@ for i in range(0, count):
         #print "j=" + str(j)            
         fr.write('\t security_rule {'  + '\n')
         srname=srules[j]["name"]  
-        print "Security Rule " + srname                   
+        #print "Security Rule " + srname                   
         fr.write('\t\t name = "' +  srname + '"\n')
         try:
             srdesc=srules[j]["properties"]["description"]                    
@@ -627,20 +627,18 @@ for i in range(0, count):
     #    print "No security rules"
 
 # tags block
-
+    print i
     try:
-        mtags=azr[j]["tags"]
-    except:
-        mtags="{}"
-    tcount=len(mtags)-1
-    if tcount > 1 :
+        mtags=azr[i]["tags"]
         fr.write('tags { \n')
-        print tcount
         for key in mtags.keys():
             tval=mtags[key]
             fr.write('\t "' + key + '"="' + tval + '"\n')
+            print tval
         #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
         fr.write('}\n')
+    except KeyError:
+        pass
     
     fr.write('}\n') 
     fr.close()   # close .tf file
@@ -660,3 +658,6 @@ exit()
 #rclient = get_client_from_cli_profile(ResourceManagementClient)
 #for resource_group in rclient.resource_groups.list():
 #    print(resource_group.name)
+
+
+
