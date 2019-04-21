@@ -110,8 +110,7 @@ rm -f terraform*.backup
 rm -f tf*.sh
 cp ../../stub/*.tf .
 
-echo "terraform init"
-terraform init 2>&1 | tee -a import.log
+
 
 pyc1="python2 ../../scripts/resources.py -s $mysub "
 if [ "$g" != "" ]; then
@@ -136,8 +135,13 @@ eval $pyc
 # uncomment following line if you want to use an SPN login
 #../../setup-env.sh
 
+
+echo "terraform init"
+terraform init 2>&1 | tee -a import.log
+
 chmod 755 *state*.sh
 for com in `ls *stateimp*.sh | sort -g`; do
+echo $com
 comm=`printf "./%s" $com`
 echo $comm
 eval $comm

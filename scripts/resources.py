@@ -424,8 +424,9 @@ for j in range(0, count):
     fr.write('}\n') 
     fr.close()  # close .tf file
 
-    tfcomm='terraform import '+tfp+'.'+rname+' '+id+'\n'
     tfrm.write('terraform state rm '+tfp+'.'+rname + '\n')
+    tfim.write('echo "importing ' + str(j) + ' of ' + str(count) + '"' + '\n')
+    tfcomm='terraform import '+tfp+'.'+rname+' '+id+'\n'
     tfim.write(tfcomm)
 
 # end for
@@ -498,8 +499,10 @@ for j in range(0, count):
     fr.write('}\n') 
     fr.close()  # close .tf file
 
-    tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
     tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+    
+    tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+    tfim.write('echo "importing ' + str(j) + ' of ' + str(count) + '"' + '\n')
     tfim.write(tfcomm)  
 
 # end for
@@ -575,7 +578,7 @@ if crf in tfp:
 
         tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
             
-        tfim.write('echo "importing ' + str(i) + ' of ' + str(count) + '"')
+        tfim.write('echo "importing ' + str(i) + ' of ' + str(count) + '"' + '\n')
         tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
         tfim.write(tfcomm)  
 
@@ -583,16 +586,7 @@ if crf in tfp:
 
     tfrm.close()
     tfim.close()
-    #end NSG
-
-
-
-
-
-
-
-
-
+#end ASG
 
 #  050 NSG's
 tfp="azurerm_network_security_group"
@@ -686,9 +680,29 @@ if crf in tfp:
                 pass
                 
             srsaps=str(srules[j]["properties"]["sourceAddressPrefixes"]) 
-            #print srsaps
             if srsaps != "[]" :
                 fr.write('\t\t source_address_prefixes = "' + srsaps + '"\n')
+                    
+#destination address block
+            try:
+                srdp=str(srules[j]["properties"]["destinationPortRange"]) 
+                fr.write('\t\t destination_port_range = "' + srdp + '"\n')
+            except KeyError:
+                pass
+            
+            srdps=srules["properties"]["destinationPortRanges"]
+            if srdps != "[]" :
+                fr.write('\t\t destination_port_ranges = "' + srdps + '"\n')
+
+            try:
+                srdap=srules[j]["properties"]["destinationAddressPrefix"]
+                fr.write('\t\t destination_address_prefix = "'+ srdap + '"\n')
+            except KeyError:
+                pass
+            
+            srdaps=srules[j]["properties"]["destinationAddressPrefixes"] 
+            if srdaps != "[]" :
+                fr.write('\t\t source_address_prefixes = "' + srdaps + '"\n')
 
     # source asg's
             try:
@@ -739,7 +753,7 @@ if crf in tfp:
 
         tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
-        tfim.write('echo "importing ' + str(i) + ' of ' + str(count) + '"')
+        tfim.write('echo "importing ' + str(i) + ' of ' + str(count) + '"' + '\n')
         tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
         tfim.write(tfcomm)  
 
