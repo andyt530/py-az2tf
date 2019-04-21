@@ -159,7 +159,7 @@ exit
 
 echo loop through providers
 
-for com in `ls ../../scripts/*_azurerm*.* | cut -d'/' -f4 | sort -g`; do
+for com in `ls ../../scripts/*_azurerm*.sh | cut -d'/' -f4 | sort -g`; do
     gr=`echo $com | awk -F 'azurerm_' '{print $2}' | awk -F '.sh' '{print $1}'`
     echo $gr
     lc="1"
