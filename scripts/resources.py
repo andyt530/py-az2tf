@@ -334,6 +334,11 @@ with open('resources2.txt', 'r') as r:
 r.close()
 fr.close()
 
+
+if crf is None:
+    crf="azurerm"
+
+
 # sort unique and fileter for Resource Group
 rfilename="noprovider.txt"
 fr=open(rfilename, 'w')
@@ -396,7 +401,7 @@ for j in range(0, count):
     rfilename=prefix+".tf"
     fr=open(rfilename, 'w')
     fr.write("")
-    fr.write('resource ' + tfp + ' ' + rname + ' {\n')
+    fr.write('resource "' + tfp + '" "' + rname + '" {\n')
     fr.write('\t name = "' + name + '"\n')
     fr.write('\t location = "'+ loc + '"\n')
  
@@ -502,156 +507,247 @@ tfrm.close()
 tfim.close()
 #end management locks
 
+#  040 ASG's
+tfp="azurerm_application_security_group"
+if crf in tfp:
+
+    print "REST ASG"
+    fnsgfilename="azurerm_application_security_group.json"
+    fnsg=open(fnsgfilename, 'w')
+    url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/applicationSecurityGroups"
+    params = {'api-version': '2018-07-01'}
+    r = requests.get(url, headers=headers, params=params)
+    azr= r.json()["value"]
+    #print (json.dumps(nsg, indent=4, separators=(',', ': ')))
+    fnsg.write(json.dumps(azr, indent=4, separators=(',', ': ')))
+    fnsg.close()
+
+
+
+    tfrmf="040-"+tfp+"-staterm.sh"
+    tfimf="040-"+tfp+"-stateimp.sh"
+    tfrm=open(tfrmf, 'a')
+    tfim=open(tfimf, 'a')
+    print tfp,
+    count=len(azr)
+    print count
+    for i in range(0, count):
+
+        name=azr[i]["name"]
+        loc=azr[i]["location"]
+        id=azr[i]["id"]
+    #    rg=azr[i]["resourceGroup"]
+        rg=id.split("/")[4].replace(".","-")
+        #print rg
+
+        if crg is not None:
+            if rg != crg:
+                continue  # back to for
+        
+        rname=name.replace(".","-")
+        prefix=tfp+"."+rg+'__'+rname
+        #print prefix
+        rfilename=prefix+".tf"
+        fr=open(rfilename, 'w')
+        fr.write("")
+        fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+        fr.write('\t name = "' + name + '"\n')
+        fr.write('\t location = "'+ loc + '"\n')
+        fr.write('\t resource_group_name = "'+ rg + '"\n')   
+        
+
+    # tags block
+        
+        try:
+            mtags=azr[i]["tags"]
+            fr.write('tags { \n')
+            for key in mtags.keys():
+                tval=mtags[key]
+                fr.write('\t "' + key + '"="' + tval + '"\n')
+                #print tval
+            #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
+            fr.write('}\n')
+        except KeyError:
+            pass
+        
+        fr.write('}\n') 
+        fr.close()   # close .tf file
+
+        tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+            
+        tfim.write('echo "importing ' + str(i) + ' of ' + str(count) + '"')
+        tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+        tfim.write(tfcomm)  
+
+    # end for i loop
+
+    tfrm.close()
+    tfim.close()
+    #end NSG
+
+
+
+
+
+
+
+
+
 
 #  050 NSG's
-print "REST NSG"
-fnsgfilename="azurerm_network_security_group.json"
-fnsg=open(fnsgfilename, 'w')
-url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/networkSecurityGroups"
-params = {'api-version': '2018-07-01'}
-r = requests.get(url, headers=headers, params=params)
-azr= r.json()["value"]
-#print (json.dumps(nsg, indent=4, separators=(',', ': ')))
-fnsg.write(json.dumps(azr, indent=4, separators=(',', ': ')))
-fnsg.close()
-
-
 tfp="azurerm_network_security_group"
-tfrmf="050-"+tfp+"-staterm.sh"
-tfimf="050-"+tfp+"-stateimp.sh"
-tfrm=open(tfrmf, 'a')
-tfim=open(tfimf, 'a')
-print tfp,
-count=len(azr)
-print count
-for i in range(0, count):
-    #print i
-    name=azr[i]["name"]
-    loc=azr[i]["location"]
-    id=azr[i]["id"]
-#    rg=azr[i]["resourceGroup"]
-    rg=id.split("/")[4].replace(".","-")
-    #print rg
+if crf in tfp:
 
-    if crg is not None:
-        if rg != crg:
-            continue  # back to for
-    
-    rname=name.replace(".","-")
-    prefix=tfp+"."+rg+'__'+rname
-    #print prefix
-    rfilename=prefix+".tf"
-    fr=open(rfilename, 'w')
-    fr.write("")
-    fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
-    fr.write('\t name = "' + name + '"\n')
-    fr.write('\t location = "'+ loc + '"\n')
-    fr.write('\t resource_group_name = "'+ rg + '"\n')   
-    #
-    # Security Rules
-    #
-    #try:
-    srules=azr[i]["properties"]["securityRules"]
-    #print srules
-    scount=len(srules)
-    for j in range(0, scount):  
-        #print "j=" + str(j)            
-        fr.write('\t security_rule {'  + '\n')
-        srname=srules[j]["name"]  
-        #print "Security Rule " + srname                   
-        fr.write('\t\t name = "' +  srname + '"\n')
-        try:
-            srdesc=srules[j]["properties"]["description"]                    
-            fr.write('\t\t description = "' + srdesc + '"\n')
-        except KeyError:
-            pass
+    print "REST NSG"
+    fnsgfilename="azurerm_network_security_group.json"
+    fnsg=open(fnsgfilename, 'w')
+    url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/networkSecurityGroups"
+    params = {'api-version': '2018-07-01'}
+    r = requests.get(url, headers=headers, params=params)
+    azr= r.json()["value"]
+    #print (json.dumps(nsg, indent=4, separators=(',', ': ')))
+    fnsg.write(json.dumps(azr, indent=4, separators=(',', ': ')))
+    fnsg.close()
 
-        sraccess=srules[j]["properties"]["access"]                       
-        fr.write('\t\t access = "' +  sraccess + '"\n')
-        srpri=str(srules[j]["properties"]["priority"])
-        fr.write('\t\t priority = "' + srpri + '"\n')
-        srproto=srules[j]["properties"]["protocol"]
-        fr.write('\t\t protocol = "' + srproto + '"\n')
-        srdir=srules[j]["properties"]["direction"] 
-        fr.write('\t\t direction = "' +  srdir + '"\n')
-#source address block
-        try:
-            srsp=str(srules[j]["properties"]["sourcePortRange"])
-            fr.write('\t\t source_port_range = "' + srsp + '"\n')
-        except KeyError:
-            pass
-            
-        srsps=str(srules[j]["properties"]["sourcePortRanges"])
-        if srsps != "[]" :
-            fr.write('\t\t source_port_ranges = "' + srsps + '"\n')
-            
-        try:
-            srsap=srules[j]["properties"]["sourceAddressPrefix"] 
-            fr.write('\t\t source_address_prefix = "'+ srsap + '"\n')
-        except KeyError:
-            pass
-            
-        srsaps=str(srules[j]["properties"]["sourceAddressPrefixes"]) 
-        #print srsaps
-        if srsaps != "[]" :
-            fr.write('\t\t source_address_prefixes = "' + srsaps + '"\n')
 
-# source asg's
-        try:
-            srsasgs=srules[j]["properties"]["sourceApplicationSecurityGroups"]
-            kcount=len(srsasgs)
-        except KeyError:
-            kcount=0
 
-        for k in range(0, kcount):
-            #print "in k k=" + str(k)
-            asgnam=srules[j]["properties"]["sourceApplicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
-            asgrg=srules[j]["properties"]["sourceApplicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-")    
-            fr.write('\t\t source_application_security_group_ids = "{azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}' + '"\n')
-                
-# destination asg's
-        try:
-            srdasgs=srules[j]["properties"]["destinationApplicationSecurityGroups"]
-            kcount=len(srdasgs)
-        except KeyError:
-            kcount=0
-        for k in range(0, kcount):
-            asgnam=srules[j]["properties"]["destinationApplicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
-            asgrg=srules[j]["properties"]["destinationApplicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-")    
-            fr.write('\t\t destination_application_security_group_ids = "{azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}' + '"\n')
-                  
-        fr.write('\t}' + '\n')
+    tfrmf="050-"+tfp+"-staterm.sh"
+    tfimf="050-"+tfp+"-stateimp.sh"
+    tfrm=open(tfrmf, 'a')
+    tfim=open(tfimf, 'a')
+    print tfp,
+    count=len(azr)
+    print count
+    for i in range(0, count):
+
+        name=azr[i]["name"]
+        loc=azr[i]["location"]
+        id=azr[i]["id"]
+    #    rg=azr[i]["resourceGroup"]
+        rg=id.split("/")[4].replace(".","-")
+        #print rg
+
+        if crg is not None:
+            if rg != crg:
+                continue  # back to for
         
-        # end for j loop   
-    #except KeyError:
-    #    print "No security rules"
+        rname=name.replace(".","-")
+        prefix=tfp+"."+rg+'__'+rname
+        #print prefix
+        rfilename=prefix+".tf"
+        fr=open(rfilename, 'w')
+        fr.write("")
+        fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+        fr.write('\t name = "' + name + '"\n')
+        fr.write('\t location = "'+ loc + '"\n')
+        fr.write('\t resource_group_name = "'+ rg + '"\n')   
+        #
+        # Security Rules
+        #
+        #try:
+        srules=azr[i]["properties"]["securityRules"]
+        #print srules
+        scount=len(srules)
+        for j in range(0, scount):  
+            #print "j=" + str(j)            
+            fr.write('\t security_rule {'  + '\n')
+            srname=srules[j]["name"]  
+            #print "Security Rule " + srname                   
+            fr.write('\t\t name = "' +  srname + '"\n')
+            try:
+                srdesc=srules[j]["properties"]["description"]                    
+                fr.write('\t\t description = "' + srdesc + '"\n')
+            except KeyError:
+                pass
 
-# tags block
-    print i
-    try:
-        mtags=azr[i]["tags"]
-        fr.write('tags { \n')
-        for key in mtags.keys():
-            tval=mtags[key]
-            fr.write('\t "' + key + '"="' + tval + '"\n')
-            print tval
-        #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
-        fr.write('}\n')
-    except KeyError:
-        pass
-    
-    fr.write('}\n') 
-    fr.close()   # close .tf file
+            sraccess=srules[j]["properties"]["access"]                       
+            fr.write('\t\t access = "' +  sraccess + '"\n')
+            srpri=str(srules[j]["properties"]["priority"])
+            fr.write('\t\t priority = "' + srpri + '"\n')
+            srproto=srules[j]["properties"]["protocol"]
+            fr.write('\t\t protocol = "' + srproto + '"\n')
+            srdir=srules[j]["properties"]["direction"] 
+            fr.write('\t\t direction = "' +  srdir + '"\n')
+    #source address block
+            try:
+                srsp=str(srules[j]["properties"]["sourcePortRange"])
+                fr.write('\t\t source_port_range = "' + srsp + '"\n')
+            except KeyError:
+                pass
+                
+            srsps=str(srules[j]["properties"]["sourcePortRanges"])
+            if srsps != "[]" :
+                fr.write('\t\t source_port_ranges = "' + srsps + '"\n')
+                
+            try:
+                srsap=srules[j]["properties"]["sourceAddressPrefix"] 
+                fr.write('\t\t source_address_prefix = "'+ srsap + '"\n')
+            except KeyError:
+                pass
+                
+            srsaps=str(srules[j]["properties"]["sourceAddressPrefixes"]) 
+            #print srsaps
+            if srsaps != "[]" :
+                fr.write('\t\t source_address_prefixes = "' + srsaps + '"\n')
 
-    tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
-    tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
-    tfim.write(tfcomm)  
+    # source asg's
+            try:
+                srsasgs=srules[j]["properties"]["sourceApplicationSecurityGroups"]
+                kcount=len(srsasgs)
+            except KeyError:
+                kcount=0
 
-# end for i loop
+            for k in range(0, kcount):
+                #print "in k k=" + str(k)
+                asgnam=srules[j]["properties"]["sourceApplicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
+                asgrg=srules[j]["properties"]["sourceApplicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-")    
+                fr.write('\t\t source_application_security_group_ids = ["${azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}"]' + '\n')
+                    
+    # destination asg's
+            try:
+                srdasgs=srules[j]["properties"]["destinationApplicationSecurityGroups"]
+                kcount=len(srdasgs)
+            except KeyError:
+                kcount=0
+            for k in range(0, kcount):
+                asgnam=srules[j]["properties"]["destinationApplicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
+                asgrg=srules[j]["properties"]["destinationApplicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-")    
+                fr.write('\t\t destination_application_security_group_ids = ["${azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}"]' + '\n')
+                    
+            fr.write('\t}' + '\n')
+            
+            # end for j loop   
+        #except KeyError:
+        #    print "No security rules"
 
-tfrm.close()
-tfim.close()
-#end NSG
+    # tags block
+        
+        try:
+            mtags=azr[i]["tags"]
+            fr.write('tags { \n')
+            for key in mtags.keys():
+                tval=mtags[key]
+                fr.write('\t "' + key + '"="' + tval + '"\n')
+                #print tval
+            #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
+            fr.write('}\n')
+        except KeyError:
+            pass
+        
+        fr.write('}\n') 
+        fr.close()   # close .tf file
+
+        tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+
+        tfim.write('echo "importing ' + str(i) + ' of ' + str(count) + '"')
+        tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+        tfim.write(tfcomm)  
+
+    # end for i loop
+
+    tfrm.close()
+    tfim.close()
+    #end NSG
 
 exit()
 

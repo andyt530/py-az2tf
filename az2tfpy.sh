@@ -135,12 +135,16 @@ eval $pyc
 #
 # uncomment following line if you want to use an SPN login
 #../../setup-env.sh
-exit
+
 chmod 755 *state*.sh
-./001*stateimp.sh
-./002*stateimp.sh
+for com in `ls *stateimp*.sh | sort -g`; do
+comm=`printf "./%s" $com`
+echo $comm
+eval $comm
+done
 
 
+exit
 # subscription level stuff - roles & policies
 if [ "$p" = "yes" ]; then
     for j in `seq 51 54`; do
@@ -155,7 +159,7 @@ if [ "$p" = "yes" ]; then
 fi
 
 date
-exit
+
 
 echo loop through providers
 
