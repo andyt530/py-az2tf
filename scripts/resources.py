@@ -662,6 +662,26 @@ if crf in tfp:
 #end Avail Set
 
 
+#  030 Route Table
+tfp="azurerm_route_table"
+if crf in tfp:
+
+    print "REST ASG"
+    fnsgfilename=tfp + ".json"
+    fnsg=open(fnsgfilename, 'w')
+    url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/routeTables"
+    params = {'api-version': '2018-07-01'}
+    r = requests.get(url, headers=headers, params=params)
+    azr= r.json()["value"]
+    #print (json.dumps(nsg, indent=4, separators=(',', ': ')))
+    fnsg.write(json.dumps(azr, indent=4, separators=(',', ': ')))
+    fnsg.close()
+
+#############
+
+
+
+
 #  040 ASG's
 tfp="azurerm_application_security_group"
 if crf in tfp:
@@ -912,6 +932,36 @@ if crf in tfp:
     tfrm.close()
     tfim.close()
     #end NSG
+
+#  060 Virtual Networks
+tfp="azurerm_virtual_network"
+if crf in tfp:
+
+    print "REST VNets"
+    fnsgfilename=tfp + ".json"
+    fnsg=open(fnsgfilename, 'w')
+    url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworks"
+    params = {'api-version': '2018-07-01'}
+    r = requests.get(url, headers=headers, params=params)
+    azr= r.json()["value"]
+    fnsg.write(json.dumps(azr, indent=4, separators=(',', ': ')))
+    fnsg.close()
+
+#############
+#  070 subnets
+tfp="azurerm_subnet"
+# in vnet
+
+#############
+#  080 vnet peering
+tfp="azurerm_virtual_network_peering"
+# in vnet
+
+#############
+#  090 key vault
+tfp="azurerm_key_vault"
+# in vnet
+
 
 exit()
 
