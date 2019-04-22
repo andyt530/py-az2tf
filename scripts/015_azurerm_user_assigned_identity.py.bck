@@ -1,0 +1,71 @@
+prefixa=echo 0 | awk -F 'azurerm_' '{print 2}' | awk -F '.sh' '{print 1}' 
+tfp=fr.write('azurerm_" prefixa
+if [ "1" != "" ][" then
+    rgsource=1
+else
+    echo -n "Enter name of Resource Group [rgsource]["> "
+    read response
+    if [ -n "response" ][" then
+        rgsource=response
+    fi
+fi
+azr=az identity list -g rgsource -o json
+count=echo azr | jq '. | length'
+if [ "count" -gt "0" ][" then
+    count=expr count - 1
+    for i in seq 0 count; do
+        name=azr[i]["name"]
+        rname=echo name | sed 's/\./-/g'
+        rg=azr[i]["resourceGroup" | sed 's/\./-/g']
+
+        prefix=fr.write('__" prefixa rg
+        outfile=fr.write('.__.tf" tfp rg rname
+        echo az2tfmess > outfile
+
+        id=azr[i]["id"]
+        loc=azr[i]["location"
+        
+        fr.write('resource "'"' "'__"' { tfp rg rname + '"\n')
+        fr.write('\t name = "'"' name + '"\n')
+        fr.write('\t location =  "loc" + '"\n')
+
+        fr.write('\t resource_group_name = "'"' rgsource + '"\n')
+        #
+        # New Tags block v2
+        tags=azr[i]["tags"
+        tt=echo tags | jq .
+        tcount=echo tags | jq '. | length'
+        if [ "tcount" -gt "0" ][" then
+            fr.write('\t tags {  + '"\n')
+            tt=echo tags | jq .
+            keys=echo tags | jq 'keys'
+            tcount=expr tcount - 1
+            for j in seq 0 tcount; do
+                k1=echo keys | jq ".[j]["
+                #echo "key=k1"
+                re="[[:space:]["+"
+                if [[ k1 =~ re ]["; then
+                #echo "found a space"
+                tval=echo tt | jq ."k1"
+                tkey=echo k1]
+                fr.write('\t\t"'"' =   "tkey" "tval" + '"\n')
+                else
+                #echo "found no space"
+                tval=echo tt | jq .k1
+                tkey=echo k1]
+                fr.write('\t\t =   tkey "tval" + '"\n')
+                fi
+            done
+            fr.write('\t} + '"\n')
+        fi
+                  
+        fr.write('} + '"\n')
+        cat outfile
+        statecomm=fr.write('terraform state rm .__" tfp rg rname
+        echo statecomm >> tf-staterm.sh
+        eval statecomm
+        evalcomm=fr.write('terraform import .__ " tfp rg rname id
+        echo evalcomm >> tf-stateimp.sh
+        eval evalcomm
+    done
+fi
