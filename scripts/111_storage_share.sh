@@ -4,15 +4,7 @@
 prefixa=`echo $0 | awk -F 'azurerm_' '{print $2}' | cut -f1 -d'.'`
 tfp=`printf "azurerm_%s" $prefixa`
 
-if [ "$1" != "" ]; then
-    rgsource=$1
-else
-    echo -n "Enter name of Resource Group [$rgsource] > "
-    read response
-    if [ -n "$response" ]; then
-        rgsource=$response
-    fi
-fi
+
 azr=`az storage account list -g $rgsource -o json`
 count=`echo $azr | jq '. | length'`
 if [ "$count" -gt "0" ]; then

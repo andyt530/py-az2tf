@@ -1,7 +1,7 @@
 
     
 
-azr=az network route-table list -g rgsource -o json
+azr="az network route-table list -g rgsource -o json"
 count=print azr | jq '. | length'
 if count" != "0" :
     count=expr count - 1

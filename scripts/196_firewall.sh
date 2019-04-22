@@ -1,14 +1,4 @@
-prefixa=`echo $0 | awk -F 'azurerm_' '{print $2}' | awk -F '.sh' '{print $1}' `
-tfp=`printf "azurerm_%s" $prefixa`
-if [ "$1" != "" ]; then
-    rgsource=$1
-else
-    echo -n "Enter name of Resource Group [$rgsource] > "
-    read response
-    if [ -n "$response" ]; then
-        rgsource=$response
-    fi
-fi
+
 azr=`az network lb list -g $rgsource -o json`
 count=`echo $azr | jq '. | length'`
 if [ "$count" -gt "0" ]; then
@@ -72,13 +62,6 @@ if [ "$count" -gt "0" ]; then
         
         
         printf "}\n" >> $outfile
-        #
-        cat $outfile
-        statecomm=`printf "terraform state rm %s.%s__%s" $tfp $rg $rname`
-        echo $statecomm >> tf-staterm.sh
-        eval $statecomm
-        evalcomm=`printf "terraform import %s.%s__%s %s" $tfp $rg $rname $id`
-        echo $evalcomm >> tf-stateimp.sh
-        eval $evalcomm
+
     done
 fi
