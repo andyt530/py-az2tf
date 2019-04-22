@@ -67,36 +67,14 @@ if [ "$count" -gt "0" ]; then
                     printf "\t\t vault_uri=\"%s\"\n" $kvuri >> $prefix-$rname-$secid2.tf
                     printf "\t\t value=\"%s\"\n" $value >> $prefix-$rname-$secid2.tf
                     
-                    #
-                    # New Tags block
-                    tags=`echo $asec | jq ".tags"`
-                    tt=`echo $tags | jq .`
-                    tcount=`echo $tags | jq '. | length'`
-                    if [ "$tcount" -gt "0" ]; then
-                        printf "\t tags { \n" >> $prefix-$rname-$secid2.tf
-                        tt=`echo $tags | jq .`
-                        keys=`echo $tags | jq 'keys'`
-                        tcount=`expr $tcount - 1`
-                        for j in `seq 0 $tcount`; do
-                            k1=`echo $keys | jq ".[(${j})]"`
-                            tval=`echo $tt | jq .$k1`
-                            tkey=`echo $k1 | tr -d '"'`
-                            printf "\t\t%s = %s \n" $tkey "$tval" >> $prefix-$rname-$secid2.tf
-                        done
-                        printf "\t}\n" >> $prefix-$rname-$secid2.tf
-                    fi
+
                     
                     
                     printf "\t}\n" >> $prefix-$rname-$secid2.tf
                     
                     
                     cat $prefix-$rname-$secid2.tf
-                    statecomm=`printf "terraform state rm %s.%s__%s" $tfp $rg $rname-$secid2`
-                    echo $statecomm >> tf-staterm.sh
-                    eval $statecomm
-                    evalcomm=`printf "terraform import %s.%s__%s %s" $tfp $rg $rname-$secid2 $id`
-                    echo $evalcomm >> tf-stateimp.sh
-                    eval $evalcomm
+
                 fi
             done
         fi

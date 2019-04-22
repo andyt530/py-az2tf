@@ -76,16 +76,8 @@ if [ "$count2" -gt "0" ]; then
 # tags cause errors                
                 
                 printf "}\n" >> $outfile
-                cat $outfile
-                
-                statecomm=`printf "terraform state rm %s.%s__%s" $tfp $rg '$rname'`
-                echo $statecomm
-                echo $statecomm >> tf-staterm.sh
-                eval $statecomm
-                evalcomm=`printf "terraform import %s.%s__%s \"%s\"" $tfp $rg $rname $id`
-                echo $evalcomm
-                echo $evalcomm >> tf-stateimp.sh
-                eval $evalcomm
+          
+
             fi
             
             #done

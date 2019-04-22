@@ -50,43 +50,11 @@ if [ "$count2" -gt "0" ]; then
                 printf "\t retention_in_days = %s \n" "$rdays" >> $outfile
             fi
             
-            # New Tags block v2
-            tags=`echo $azr | jq ".tags"`
-            tt=`echo $tags | jq .`
-            tcount=`echo $tags | jq '. | length'`
-            if [ "$tcount" -gt "0" ]; then
-                printf "\t tags { \n" >> $outfile
-                tt=`echo $tags | jq .`
-                keys=`echo $tags | jq 'keys'`
-                tcount=`expr $tcount - 1`
-                for j in `seq 0 $tcount`; do
-                    k1=`echo $keys | jq ".[(${j})]"`
-                    #echo "key=$k1"
-                    re="[[:space:]]+"
-                    if [[ $k1 =~ $re ]]; then
-                        #echo "found a space"
-                        tval=`echo $tt | jq ."$k1"`
-                        tkey=`echo $k1 | tr -d '"'`
-                        printf "\t\t\"%s\" = %s \n" "$tkey" "$tval" >> $outfile
-                    else
-                        #echo "found no space"
-                        tval=`echo $tt | jq .$k1`
-                        tkey=`echo $k1 | tr -d '"'`
-                        printf "\t\t%s = %s \n" $tkey "$tval" >> $outfile
-                    fi
-                done
-                printf "\t}\n" >> $outfile
-            fi
+
             
             
             printf "}\n" >> $outfile
-            cat $outfile
-            statecomm=`printf "terraform state rm %s.%s__%s" $tfp $rg $rname`
-            echo $statecomm >> tf-staterm.sh
-            eval $statecomm
-            evalcomm=`printf "terraform import %s.%s__%s %s" $tfp $rg $rname $id`
-            echo $evalcomm >> tf-stateimp.sh
-            eval $evalcomm
+
             
             #done
         fi
