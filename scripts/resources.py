@@ -960,7 +960,7 @@ tfp="azurerm_virtual_network_peering"
 #############
 #  090 key vault
 tfp="azurerm_key_vault"
-# in vnet
+
 
 
 exit()
