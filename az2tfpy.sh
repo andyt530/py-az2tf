@@ -73,7 +73,7 @@ if [ "$g" != "" ]; then
     if  ! $exists ; then
         echo "Resource Group $g does not exists in subscription $mysub  Exit ....."
         exit
-    fi    
+    fi
 fi
 
 echo " "
@@ -85,9 +85,6 @@ echo "Extract Key Vault Secrets to .tf files (insecure) = ${x}"
 echo "Fast Forward = ${f}"
 echo " "
 
-pfx[2]="az lock list"
-res[2]="azurerm_management_lock"
-
 res[51]="azurerm_role_definition"
 res[52]="azurerm_role_assignment"
 res[53]="azurerm_policy_definition"
@@ -95,7 +92,7 @@ res[54]="azurerm_policy_assignment"
 
 mkdir -p generated/tf.$mysub
 cd generated/tf.$mysub
-rm -rf .terraform 
+rm -rf .terraform
 if [ "$f" = "no" ]; then
     rm -f import.log *.txt
     rm -f terraform* *.tf *.sh
@@ -137,21 +134,29 @@ fi
 #
 # uncomment following line if you want to use an SPN login
 #../../setup-env.sh
+echo "Terraform fmt ..."
+terraform fmt
 
-exit
 echo "terraform init"
 terraform init 2>&1 | tee -a import.log
 
 chmod 755 *state*.sh
 for com in `ls *stateimp*.sh | sort -g`; do
-echo $com
-comm=`printf "./%s" $com`
-echo $comm
-eval $comm
+    echo $com
+    comm=`printf "./%s" $com`
+    echo $comm
+    eval $comm
 done
 
 
+echo "Terraform Plan ..."
+terraform plan .
+echo "---------------------------------------------------------------------------"
+echo "az2tf output files are in generated/tf.$mysub"
+echo "---------------------------------------------------------------------------"
 exit
+
+
 # subscription level stuff - roles & policies
 if [ "$p" = "yes" ]; then
     for j in `seq 51 54`; do
@@ -192,13 +197,13 @@ for com in `ls ../../scripts/*_azurerm*.sh | cut -d'/' -f4 | sort -g`; do
                 eval $docomm 2>&1 | tee -a import.log
             fi
         fi
-
+        
         lc=`expr $lc + 1`
         if grep Error: import.log; then
             echo "Error in log file exiting ...."
             exit
         else
-        echo "$docomm" >> processed.txt
+            echo "$docomm" >> processed.txt
         fi
     done
     rm -f terraform*.backup
@@ -218,8 +223,7 @@ echo "Cleanup Cloud Shell"
 #echo $states
 #terraform state rm $states
 #
-echo "Terraform fmt ..."
-terraform fmt
+
 echo "Terraform Plan ..."
 terraform plan .
 echo "---------------------------------------------------------------------------"
