@@ -434,10 +434,7 @@ tfrm.close()
 tfim.close()
 #end resource group
 
-
-#
-# handle management locks
-#
+# management locks
 p = subprocess.Popen('az lock list -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 output, errors = p.communicate()
 azr=json.loads(output)
@@ -510,6 +507,161 @@ tfrm.close()
 tfim.close()
 #end management locks
 
+# 015 user assigned identity
+p = subprocess.Popen('az identity list -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+output, errors = p.communicate()
+azr=json.loads(output)
+
+tfp="azurerm_user_assigned_identity"
+tfrmf="015-"+tfp+"-staterm.sh"
+tfimf="015-"+tfp+"-stateimp.sh"
+tfrm=open(tfrmf, 'a')
+tfim=open(tfimf, 'a')
+print tfp,
+count=len(azr)
+print count
+for j in range(0, count):
+    
+    name=azr[j]["name"]
+    loc=azr[j]["location"]
+    id=azr[j]["id"]
+    rg=azr[j]["resourceGroup"]
+
+    if crg is not None:
+        print "rgname=" + rg + " crg=" + crg
+        if rg != crg:
+            continue  # back to for
+    
+    rname=name.replace(".","-")
+    prefix=tfp+"."+rg+'__'+rname
+    #print prefix
+    rfilename=prefix+".tf"
+    fr=open(rfilename, 'w')
+    fr.write("")
+    fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+    fr.write('\t name = "' + name + '"\n')
+    fr.write('\t location = "'+ loc + '"\n')
+    fr.write('\t resource_group_name = "' + rg + '"\n')
+# tags block
+    try:
+        mtags=azr[j]["tags"]
+    except:
+        mtags="{}"
+    tcount=len(mtags)-1
+    if tcount > 1 :
+        fr.write('tags { \n')
+        print tcount
+        for key in mtags.keys():
+            tval=mtags[key]
+            fr.write('\t "' + key + '"="' + tval + '"\n')
+        #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
+        fr.write('}\n')
+    
+    fr.write('}\n') 
+    fr.close()  # close .tf file
+
+    tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+    
+    tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+    tfim.write('echo "importing ' + str(j) + ' of ' + str(count-1) + '"' + '\n')
+    tfim.write(tfcomm)  
+
+# end for
+tfrm.close()
+tfim.close()
+#end user assigned identity
+
+
+
+
+#  020 ASG's
+tfp="azurerm_availability_set"
+if crf in tfp:
+
+    print "REST Avail Set"
+    fnsgfilename=tfp + ".json"
+    fnsg=open(fnsgfilename, 'w')
+    url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/availabilitySets"
+    params = {'api-version': '2018-10-01'}
+    r = requests.get(url, headers=headers, params=params)
+    azr= r.json()["value"]
+    #print (json.dumps(nsg, indent=4, separators=(',', ': ')))
+    fnsg.write(json.dumps(azr, indent=4, separators=(',', ': ')))
+    fnsg.close()
+
+
+
+    tfrmf="020-"+tfp+"-staterm.sh"
+    tfimf="020-"+tfp+"-stateimp.sh"
+    tfrm=open(tfrmf, 'a')
+    tfim=open(tfimf, 'a')
+    print tfp,
+    count=len(azr)
+    print count
+    for i in range(0, count):
+
+        name=azr[i]["name"]
+        loc=azr[i]["location"]
+        id=azr[i]["id"]
+        #rg=azr[i]["resourceGroup"]
+        rg=id.split("/")[4].replace(".","-")
+        fd=str(azr[i]["properties"]["platformFaultDomainCount"])
+        ud=str(azr[i]["properties"]["platformUpdateDomainCount"])
+        #avm=azr[i]["virtualMachines"]
+        skuname=azr[i]["sku"]["name"]
+        rmtype="false"
+        if "Aligned" in skuname:
+            #print "skuname is true"
+            rmtype="true"
+
+        if crg is not None:
+            if rg != crg:
+                continue  # back to for
+        
+        rname=name.replace(".","-")
+        prefix=tfp+"."+rg+'__'+rname
+        #print prefix
+        rfilename=prefix+".tf"
+        fr=open(rfilename, 'w')
+        fr.write("")
+        fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+        fr.write('\t name = "' + name + '"\n')
+        fr.write('\t location = "'+ loc + '"\n')
+        fr.write('\t resource_group_name = "'+ rg + '"\n')   
+        fr.write('\t platform_fault_domain_count = "' + fd + '"\n')
+        fr.write('\t platform_update_domain_count = "' + ud + '"\n')
+        fr.write('\t managed = "' + rmtype + '"\n')
+
+    # tags block
+        
+        try:
+            mtags=azr[i]["tags"]
+            fr.write('tags { \n')
+            for key in mtags.keys():
+                tval=mtags[key]
+                fr.write('\t "' + key + '"="' + tval + '"\n')
+                #print tval
+            #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
+            fr.write('}\n')
+        except KeyError:
+            pass
+        
+        fr.write('}\n') 
+        fr.close()   # close .tf file
+
+        tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+            
+        tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+        tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+        tfim.write(tfcomm)  
+
+    # end for i loop
+
+    tfrm.close()
+    tfim.close()
+#end Avail Set
+
+
 #  040 ASG's
 tfp="azurerm_application_security_group"
 if crf in tfp:
@@ -524,8 +676,6 @@ if crf in tfp:
     #print (json.dumps(nsg, indent=4, separators=(',', ': ')))
     fnsg.write(json.dumps(azr, indent=4, separators=(',', ': ')))
     fnsg.close()
-
-
 
     tfrmf="040-"+tfp+"-staterm.sh"
     tfimf="040-"+tfp+"-stateimp.sh"

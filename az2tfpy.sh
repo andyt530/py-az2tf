@@ -131,11 +131,14 @@ pyc=`printf "%s %s %s %s" "$pyc1" "$pyc2" "$pyc3" "$pyc9"`
 echo $pyc
 
 eval $pyc
+if [ $? -ne 0 ]; then
+    exit
+fi
 #
 # uncomment following line if you want to use an SPN login
 #../../setup-env.sh
 
-
+exit
 echo "terraform init"
 terraform init 2>&1 | tee -a import.log
 
