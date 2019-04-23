@@ -75,7 +75,7 @@ else:
 bt=bt2.rstrip('\n')
 print "Subscription:",sub
 headers = {'Authorization': 'Bearer ' + bt, 'Content-Type': 'application/json'}
-print "REST Resources"
+print "REST Resources ",
 
 fresfilename="data.json"
 fres=open(fresfilename, 'w')
@@ -435,12 +435,15 @@ tfim.close()
 #end resource group
 
 # management locks
+
+
+tfp="azurerm_management_lock"
+azr=""
+
 p = subprocess.Popen('az lock list -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 output, errors = p.communicate()
 azr=json.loads(output)
-#print(json.dumps(st1, indent=4, separators=(',', ': ')))
 
-tfp="azurerm_management_lock"
 tfrmf="002-"+tfp+"-staterm.sh"
 tfimf="002-"+tfp+"-stateimp.sh"
 tfrm=open(tfrmf, 'a')
@@ -508,11 +511,13 @@ tfim.close()
 #end management locks
 
 # 015 user assigned identity
+tfp="azurerm_user_assigned_identity"
+azr=""
+
 p = subprocess.Popen('az identity list -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 output, errors = p.communicate()
 azr=json.loads(output)
 
-tfp="azurerm_user_assigned_identity"
 tfrmf="015-"+tfp+"-staterm.sh"
 tfimf="015-"+tfp+"-stateimp.sh"
 tfrm=open(tfrmf, 'a')
@@ -576,6 +581,7 @@ tfim.close()
 
 #  020 ASG's
 tfp="azurerm_availability_set"
+azr=""
 if crf in tfp:
 
     print "REST Avail Set"
@@ -664,30 +670,108 @@ if crf in tfp:
 
 #  030 Route Table
 tfp="azurerm_route_table"
+azr=""
 if crf in tfp:
-
+    # REST
     print "REST ASG"
     fnsgfilename=tfp + ".json"
     fnsg=open(fnsgfilename, 'w')
     url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/routeTables"
     params = {'api-version': '2018-07-01'}
-    r = requests.get(url, headers=headers, params=params)
-    azr= r.json()["value"]
-    #print (json.dumps(nsg, indent=4, separators=(',', ': ')))
+    r=requests.get(url, headers=headers, params=params)
+    azr=r.json()["value"]
     fnsg.write(json.dumps(azr, indent=4, separators=(',', ': ')))
     fnsg.close()
 
 #############
+    tfrmf="030-"+tfp+"-staterm.sh"
+    tfimf="030-"+tfp+"-stateimp.sh"
+    tfrm=open(tfrmf, 'a')
+    tfim=open(tfimf, 'a')
+    print tfp,
+    count=len(azr)
+    print count
+    for i in range(0, count):
 
+        name=azr[i]["name"]
+        loc=azr[i]["location"]
+        id=azr[i]["id"]
+        rg=id.split("/")[4].replace(".","-")
+  
+        if crg is not None:
+            if rg != crg:
+                continue  # back to for
+        
+        rname=name.replace(".","-")
+        prefix=tfp+"."+rg+'__'+rname
+        #print prefix
+        rfilename=prefix+".tf"
+        fr=open(rfilename, 'w')
+        fr.write("")
+        fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+        fr.write('\t name = "' + name + '"\n')
+        fr.write('\t location = "'+ loc + '"\n')
+        fr.write('\t resource_group_name = "'+ rg + '"\n')   
+
+       #
+        # Interate routes
+        #
+        routes=azr[i]["properties"]["routes"]
+        rcount=len(routes)
+        for j in range(0, rcount):
+            rtname=routes[j]["name"]
+            adpr=routes[j]["properties"]["addressPrefix"]
+            nhtype=routes[j]["properties"]["nextHopType"]
+
+            fr.write('\t route {' + '\n')
+            fr.write('\t\t name = "' + rtname + '"\n')
+            fr.write('\t\t address_prefix = "' + adpr + '"\n')
+            fr.write('\t\t next_hop_type = "' + nhtype + '"\n')
+            try:
+                nhaddr=routes[j]["properties"]["nextHopIpAddress"]
+                fr.write('\t\t next_hop_in_ip_address = "' +  nhaddr + '"\n')
+            except KeyError:
+                pass             
+            fr.write('\t }' + '\n')
+
+    # tags block
+        
+        try:
+            mtags=azr[i]["tags"]
+            fr.write('tags { \n')
+            for key in mtags.keys():
+                tval=mtags[key]
+                fr.write('\t "' + key + '"="' + tval + '"\n')
+                #print tval
+            #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
+            fr.write('}\n')
+        except KeyError:
+            pass
+        
+        fr.write('}\n') 
+        fr.close()   # close .tf file
+
+        tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+            
+        tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+        tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+        tfim.write(tfcomm)  
+
+    # end for i loop
+
+    tfrm.close()
+    tfim.close()
+#end route table
 
 
 
 #  040 ASG's
 tfp="azurerm_application_security_group"
+azr=""
 if crf in tfp:
-
+    # REST
     print "REST ASG"
-    fnsgfilename="azurerm_application_security_group.json"
+    fnsgfilename=tfp + ".json"
     fnsg=open(fnsgfilename, 'w')
     url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/applicationSecurityGroups"
     params = {'api-version': '2018-07-01'}
@@ -760,10 +844,11 @@ if crf in tfp:
 
 #  050 NSG's
 tfp="azurerm_network_security_group"
+azr=""
 if crf in tfp:
-
+    # REST
     print "REST NSG"
-    fnsgfilename="azurerm_network_security_group.json"
+    fnsgfilename=tfp + ".json"
     fnsg=open(fnsgfilename, 'w')
     url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/networkSecurityGroups"
     params = {'api-version': '2018-07-01'}
@@ -935,8 +1020,9 @@ if crf in tfp:
 
 #  060 Virtual Networks
 tfp="azurerm_virtual_network"
+azr=""
 if crf in tfp:
-
+    # REST
     print "REST VNets"
     fnsgfilename=tfp + ".json"
     fnsg=open(fnsgfilename, 'w')
@@ -1002,9 +1088,7 @@ if crf in tfp:
 #  070 subnets
 tfp="azurerm_subnet"
 if crf in tfp:
-# REST
 # subnet in vnet
-
     tfrmf="070-"+tfp+"-staterm.sh"
     tfimf="070-"+tfp+"-stateimp.sh"
     tfrm=open(tfrmf, 'a')
@@ -1013,39 +1097,41 @@ if crf in tfp:
     count=len(azr)
     print count
     for i in range(0, count):
+        subs=azr[i]["properties"]["subnets"]
+        vnetname=azr[i]["name"]
+        jcount=len(subs)
+        for j in range(0, jcount):
+            name=subs[i]["name"]
+            #loc=subs[i]["location"] subnets don't have location
+            id=subs[i]["id"]
+            rg=id.split("/")[4].replace(".","-")
 
-        name=azr[i]["name"]
-        loc=azr[i]["location"]
-        id=azr[i]["id"]
-        rg=id.split("/")[4].replace(".","-")
+            if crg is not None:
+                if rg != crg:
+                    continue  # back to for
+            
+            rname=name.replace(".","-")
+            prefix=tfp+"."+rg+'__'+rname
+            #print prefix
+            rfilename=prefix+".tf"
+            fr=open(rfilename, 'w')
+            fr.write("")
+            fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+            fr.write('\t name = "' + name + '"\n')
+            fr.write('\t resource_group_name = "'+ rg + '"\n')
 
-        if crg is not None:
-            if rg != crg:
-                continue  # back to for
-        
-        rname=name.replace(".","-")
-        prefix=tfp+"."+rg+'__'+rname
-        #print prefix
-        rfilename=prefix+".tf"
-        fr=open(rfilename, 'w')
-        fr.write("")
-        fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
-        fr.write('\t name = "' + name + '"\n')
-        fr.write('\t location = "'+ loc + '"\n')
-        fr.write('\t resource_group_name = "'+ rg + '"\n')
+    ###############
+    # specific code
+    ###############
 
-###############
-# specific code
-###############
+            fr.write('}\n') 
+            fr.close()   # close .tf file
 
-        fr.write('}\n') 
-        fr.close()   # close .tf file
+            tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
-        tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
-
-        tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
-        tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
-        tfim.write(tfcomm)  
+            tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+            tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+            tfim.write(tfcomm)  
 
     # end for i loop
 
@@ -1054,16 +1140,11 @@ if crf in tfp:
 #end subnet
 
 
-
-
-
 #############
 #  080 vnet peering
 tfp="azurerm_virtual_network_peering"
-if crf in tfp:
-# REST or cli
+if crf in tfp: 
 # peering in vnet
-
     tfrmf="080-"+tfp+"-staterm.sh"
     tfimf="080-"+tfp+"-stateimp.sh"
     tfrm=open(tfrmf, 'a')
@@ -1072,40 +1153,41 @@ if crf in tfp:
     count=len(azr)
     print count
     for i in range(0, count):
+        peers=azr[i]["properties"]["virtualNetworkPeerings"]
+        jcount=len(peers)
+        for j in range(0, jcount):
+            name=peers[j]["name"]
+            #loc=peers[j]["location"] peers don't have a location
+            id=peers[j]["id"]
+            rg=id.split("/")[4].replace(".","-")
 
-        name=azr[i]["name"]
-        loc=azr[i]["location"]
-        id=azr[i]["id"]
-        rg=id.split("/")[4].replace(".","-")
+            if crg is not None:
+                if rg != crg:
+                    continue  # back to for
+                
+            rname=name.replace(".","-")
+            prefix=tfp+"."+rg+'__'+rname
+                
+            rfilename=prefix+".tf"
+            fr=open(rfilename, 'w')
+            fr.write("")
+            fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+            fr.write('\t name = "' + name + '"\n')
+            fr.write('\t resource_group_name = "'+ rg + '"\n')
 
-        if crg is not None:
-            if rg != crg:
-                continue  # back to for
-        
-        rname=name.replace(".","-")
-        prefix=tfp+"."+rg+'__'+rname
-        #print prefix
-        rfilename=prefix+".tf"
-        fr=open(rfilename, 'w')
-        fr.write("")
-        fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
-        fr.write('\t name = "' + name + '"\n')
-        fr.write('\t location = "'+ loc + '"\n')
-        fr.write('\t resource_group_name = "'+ rg + '"\n')
+        ###############
+        # specific code
+        ###############
 
-###############
-# specific code
-###############
+            fr.write('}\n') 
+            fr.close()   # close .tf file
 
-        fr.write('}\n') 
-        fr.close()   # close .tf file
+            tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
-        tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
-
-        tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
-        tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
-        tfim.write(tfcomm)  
-
+            tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+            tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+            tfim.write(tfcomm)  
+        # end for j loop
     # end for i loop
 
     tfrm.close()
@@ -1115,9 +1197,12 @@ if crf in tfp:
 #############
 #  090 key vault
 tfp="azurerm_key_vault"
+azr=""
 if crf in tfp:
-# REST or cli
-# peering in vnet
+    # REST or cli
+    p = subprocess.Popen('az identity list -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    output, errors = p.communicate()
+    azr=json.loads(output)
 
     tfrmf="090-"+tfp+"-staterm.sh"
     tfimf="090-"+tfp+"-stateimp.sh"
@@ -1171,8 +1256,22 @@ if crf in tfp:
 #############
 #  100 managed disk
 tfp="azurerm_managed_disk"
+azr=""
 if crf in tfp:
 # REST or cli
+    print "REST Managed Disk"
+    fnsgfilename=tfp + ".json"
+    fnsg=open(fnsgfilename, 'w')
+    url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/disks"
+    params = {'api-version': '2017-03-30'}
+    r = requests.get(url, headers=headers, params=params)
+    azr= r.json()["value"]
+    #print (json.dumps(nsg, indent=4, separators=(',', ': ')))
+    fnsg.write(json.dumps(azr, indent=4, separators=(',', ': ')))
+    fnsg.close()
+
+
+
 # peering in vnet
 
     tfrmf="100-"+tfp+"-staterm.sh"

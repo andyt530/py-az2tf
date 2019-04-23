@@ -134,15 +134,19 @@ fi
 #
 # uncomment following line if you want to use an SPN login
 #../../setup-env.sh
-echo "Terraform fmt ..."
-terraform fmt
+
 
 echo "terraform init"
 terraform init 2>&1 | tee -a import.log
 
+
+
+echo "Terraform fmt ..."
+terraform fmt
+
+
 chmod 755 *state*.sh
 for com in `ls *stateimp*.sh | sort -g`; do
-    echo $com
     comm=`printf "./%s" $com`
     echo $comm
     eval $comm
