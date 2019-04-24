@@ -1066,14 +1066,9 @@ if crf in tfp:
         fr.write('\t location = "'+ loc + '"\n')
         fr.write('\t resource_group_name = "'+ rg + '"\n')
 
-###############
-# specific code
-###############
-
-
-        addsp=azr[i]["properties"]["addressSpace"]["addressPrexes"]
+        addsp=str(azr[i]["properties"]["addressSpace"]["addressPrefixes"])
         try:
-            dns=azr[i]["properties"]["dhcpOptions"]["dnsServers"]
+            dns=str(azr[i]["properties"]["dhcpOptions"]["dnsServers"])
             fr.write('\t dns_servers =  "' + dns + '"\n')
         except KeyError:
             pass        
@@ -1092,7 +1087,7 @@ if crf in tfp:
             fr.write('\t\t name = "'+ snname + '"\n')
             fr.write('\t\t address_prefix = "' + snaddr + '"\n')
             try:
-                snnsgid=subs[j]["networkSecurityGroup.id"]
+                snnsgid=subs[j]["properties"]["networkSecurityGroup.id"]
                 nsgnam=snnsgid.split("/")[8].replace(".","-")
                 nsgrg=snnsgid.split("/")[4].replace(".","-")          
                 fr.write('\t\t security_group = ["${azurerm_network_security_group.' + nsgrg + '__' + nsgnam + '.id}"]' + '\n')
@@ -1116,8 +1111,6 @@ if crf in tfp:
     tfim.close()
 #end VNET
 #############
-
-
 
 
 #  070 subnets
@@ -1150,23 +1143,121 @@ if crf in tfp:
             #print prefix
             rfilename=prefix+".tf"
             fr=open(rfilename, 'w')
-            fr.write("")
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
-            fr.write('\t resource_group_name = "'+ rg + '"\n')
+            fr.write('\t virtual_network_name = "' + vnetname + '"\n') 
+            fr.write('\t resource_group_name = "' +  rg + '"\n')
 
     ###############
     # specific code
     ###############
 
+
+            sprefix=subs[i]["properties"]["addressPrefix"]
+            fr.write('\t address_prefix = "' +  sprefix + '"\n')
+
+            sep="null"
+            rtbid="null"
+            try:
+                seps=subs[i]["properties"]["serviceEndpoints"]
+                kcount=len(seps)
+                print kcount
+                print seps
+      
+                if "[]" not in seps:
+                    sep="["
+                    for k in range(0, kcount):
+                        service=seps[k]["service"]
+                        if  k == kcount: 
+                            sep=sep+service
+                        else:
+                            sep=sep + service + ','
+                                 
+                    sep=sep+']'
+                    fr.write('\t service_endpoints = "'+ sep + '"\n')
+            except KeyError:
+                pass
+            
+            try:
+                snsgid=subs[i]["properties"]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
+                snsgrg=subs[i]["properties"]["networkSecurityGroup"]["id"].split("/")[4].replace(".","-")
+                fr.write('\t network_security_group_id = "${azurerm_network_security_group.' + snsgrg + '__' + snsgid +'.id}"' + '\n')
+            except KeyError:
+                pass
+            
+            try:
+                rtbid=subs[i]["properties"]["routeTable"]["id"].split("/")[8].replace(".","-")
+                rtrg=subs[i]["properties"]["routeTable"]["id"].split("/")[4].replace(".","-")
+                fr.write('\t route_table_id = "${azurerm_route_table.' + rtrg + '__' + rtbid +'.id}"' + '\n')
+            except KeyError:
+                pass         
+
+            fr.write('}' + ' \n')
+
+# azurerm_subnet_network_security_group_association
+     
+            r1="skip"
+            try:
+                snsgid=subs[i]["properties"]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
+                r1="azurerm_subnet_network_security_group_association"
+                fr.write('resource ' + r1 + ' ' + rg + '__' + rname + '__' + snsgid + ' {\n') 
+                fr.write('\tsubnet_id = "${azurerm_subnet.' + rg + '__' + rgname + '.id}"' + '\n')
+                fr.write('\tnetwork_security_group_id = "${azurerm_network_security_group.' + snsgrg + '__' + snsgid +'.id}"' + '\n')
+                fr.write('}' + ' \n')
+            except KeyError:
+                pass
+                
+
+# azurerm_subnet_route_table_association
+
+            r2="skip"
+            try:
+                rtbid=subs[i]["properties"]["routeTable"]["id"].split("/")[8].replace(".","-")
+                r2="azurerm_subnet_route_table_association"
+                fr.write('resource ' + r2 + ' ' + rg + '__' + rname + '__' + rtbid + ' {\n') 
+                fr.write('\tsubnet_id = "${azurerm_subnet.' + rg + '__' + rgname + '.id}"' + '\n')
+                fr.write('\troute_table_id = "${azurerm_route_table.' + rtrg + '__' + rtbid +'.id}"' + '\n')
+                fr.write('}' + ' \n')
+            except KeyError:
+                pass
+            
+
             fr.write('}\n') 
             fr.close()   # close .tf file
+
+
+            # azurerm_subnet
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
             tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
             tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
-            tfim.write(tfcomm)  
+            tfim.write(tfcomm) 
+
+# azurerm_subnet_network_security_group_association
+
+            if "skip" not in r1:
+       
+                tfrm.write('terraform state rm ' + r1 + '.' + rg + '__' + rname + '__' + snsgid + '\n')
+                tfcomm='terraform import '+r1 +'.'+rg+'__'+rname+'__'+snsgid+' '+id+'\n'
+                tfim.write(tfcomm)
+        
+
+# azurerm_subnet_route_table_association
+
+            if "skip" not in r2:
+
+                tfrm.write('terraform state rm ' + r2 + '.' + rg + '__' + rname + '__' + rtbid + '\n')
+                tfcomm='terraform import '+r2 +'.'+rg+'__'+rname+'__'+rtbid+' '+id+'\n'
+                tfim.write(tfcomm)
+            
+
+
+
+    ###############
+    # specific code end
+    ###############
+ 
 
     # end for i loop
 

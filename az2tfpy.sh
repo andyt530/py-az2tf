@@ -128,9 +128,12 @@ pyc=`printf "%s %s %s %s" "$pyc1" "$pyc2" "$pyc3" "$pyc9"`
 echo $pyc
 
 eval $pyc
-if [ $? -ne 0 ]; then
+grep Error import.log
+if [ $? -eq 0 ]; then
+    echo "Error in resources.py"
     exit
 fi
+
 #
 # uncomment following line if you want to use an SPN login
 #../../setup-env.sh

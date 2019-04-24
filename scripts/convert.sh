@@ -21,5 +21,5 @@ sed -i .bak -e 's/; do/):/g' $1
 sed -i .bak -e 's/in seq/in range(/g' $1
 sed -i .bak -e 's/echo/print/g' $1
 sed -i .bak -e 's/done//g' $1
-sed -i .bak -e 's/fi//g' $1
+sed -i .bak -e 's/ fi //g' $1
 sed -i .bak -e 's/then/:/g' $1
