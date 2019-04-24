@@ -1201,7 +1201,7 @@ if crf in tfp:
                 snsgid=subs[i]["properties"]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
                 r1="azurerm_subnet_network_security_group_association"
                 fr.write('resource ' + r1 + ' ' + rg + '__' + rname + '__' + snsgid + ' {\n') 
-                fr.write('\tsubnet_id = "${azurerm_subnet.' + rg + '__' + rgname + '.id}"' + '\n')
+                fr.write('\tsubnet_id = "${azurerm_subnet.' + rg + '__' + rname + '.id}"' + '\n')
                 fr.write('\tnetwork_security_group_id = "${azurerm_network_security_group.' + snsgrg + '__' + snsgid +'.id}"' + '\n')
                 fr.write('}' + ' \n')
             except KeyError:
@@ -1215,7 +1215,7 @@ if crf in tfp:
                 rtbid=subs[i]["properties"]["routeTable"]["id"].split("/")[8].replace(".","-")
                 r2="azurerm_subnet_route_table_association"
                 fr.write('resource ' + r2 + ' ' + rg + '__' + rname + '__' + rtbid + ' {\n') 
-                fr.write('\tsubnet_id = "${azurerm_subnet.' + rg + '__' + rgname + '.id}"' + '\n')
+                fr.write('\tsubnet_id = "${azurerm_subnet.' + rg + '__' + rname + '.id}"' + '\n')
                 fr.write('\troute_table_id = "${azurerm_route_table.' + rtrg + '__' + rtbid +'.id}"' + '\n')
                 fr.write('}' + ' \n')
             except KeyError:
