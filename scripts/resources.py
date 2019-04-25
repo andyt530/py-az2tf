@@ -11,10 +11,6 @@ import glob
 import argparse
 
 
-
-
-
-
 parser = argparse.ArgumentParser(description='terraform sub rg')
 parser.add_argument('-s', help='Subscription Id')
 parser.add_argument('-g', help='Resource Group')
@@ -23,6 +19,7 @@ args = parser.parse_args()
 csub=args.s
 crg=args.g
 crf=args.r
+cde=False
 
 if csub is not None:
     print("sub=" + csub) 
@@ -369,14 +366,17 @@ tfrmf="001-"+tfp+"-staterm.sh"
 tfimf="001-"+tfp+"-stateimp.sh"
 tfrm=open(tfrmf, 'a')
 tfim=open(tfimf, 'a')
-frgfilename=tfp+".json"
-frg=open(frgfilename, 'w')
 url="https://management.azure.com/subscriptions/" + sub + "/resourceGroups"
 params = {'api-version': '2014-04-01'}
 r = requests.get(url, headers=headers, params=params)
 rgs= r.json()["value"]
-frg.write(json.dumps(rgs, indent=4, separators=(',', ': ')))
-frg.close()
+
+#frgfilename=tfp+".json"
+#frg=open(frgfilename, 'w')
+#frg.write(json.dumps(rgs, indent=4, separators=(',', ': ')))
+#frg.close()
+if cde:
+    print(json.dumps(rgs, indent=4, separators=(',', ': ')))
 
 tffile=tfp+"*.tf"
 #fileList = glob.glob(tffile) 
@@ -447,6 +447,9 @@ azr=""
 p = subprocess.Popen('az lock list -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 output, errors = p.communicate()
 azr=json.loads(output)
+
+if cde:
+    print(json.dumps(azr, indent=4, separators=(',', ': ')))
 
 tfrmf="002-"+tfp+"-staterm.sh"
 tfimf="002-"+tfp+"-stateimp.sh"
@@ -521,6 +524,8 @@ azr=""
 p = subprocess.Popen('az identity list -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 output, errors = p.communicate()
 azr=json.loads(output)
+if cde:
+    print(json.dumps(azr, indent=4, separators=(',', ': ')))
 
 tfrmf="015-"+tfp+"-staterm.sh"
 tfimf="015-"+tfp+"-stateimp.sh"
@@ -589,17 +594,12 @@ azr=""
 if crf in tfp:
 
     print "REST Avail Set"
-    fnsgfilename=tfp + ".json"
-    fnsg=open(fnsgfilename, 'w')
     url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/availabilitySets"
     params = {'api-version': '2018-10-01'}
     r = requests.get(url, headers=headers, params=params)
     azr= r.json()["value"]
-    #print (json.dumps(nsg, indent=4, separators=(',', ': ')))
-    fnsg.write(json.dumps(azr, indent=4, separators=(',', ': ')))
-    fnsg.close()
-
-
+    if cde:
+        print(json.dumps(azr, indent=4, separators=(',', ': ')))
 
     tfrmf="020-"+tfp+"-staterm.sh"
     tfimf="020-"+tfp+"-stateimp.sh"
@@ -678,14 +678,13 @@ azr=""
 if crf in tfp:
     # REST
     print "REST ASG"
-    fnsgfilename=tfp + ".json"
-    fnsg=open(fnsgfilename, 'w')
     url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/routeTables"
     params = {'api-version': '2018-07-01'}
     r=requests.get(url, headers=headers, params=params)
     azr=r.json()["value"]
-    fnsg.write(json.dumps(azr, indent=4, separators=(',', ': ')))
-    fnsg.close()
+    if cde:
+        print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
 
 #############
     tfrmf="030-"+tfp+"-staterm.sh"
@@ -775,15 +774,14 @@ azr=""
 if crf in tfp:
     # REST
     print "REST ASG"
-    fnsgfilename=tfp + ".json"
-    fnsg=open(fnsgfilename, 'w')
+
     url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/applicationSecurityGroups"
     params = {'api-version': '2018-07-01'}
     r = requests.get(url, headers=headers, params=params)
     azr= r.json()["value"]
-    #print (json.dumps(nsg, indent=4, separators=(',', ': ')))
-    fnsg.write(json.dumps(azr, indent=4, separators=(',', ': ')))
-    fnsg.close()
+    if cde:
+        print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
 
     tfrmf="040-"+tfp+"-staterm.sh"
     tfimf="040-"+tfp+"-stateimp.sh"
@@ -852,15 +850,14 @@ azr=""
 if crf in tfp:
     # REST
     print "REST NSG"
-    fnsgfilename=tfp + ".json"
-    fnsg=open(fnsgfilename, 'w')
+
     url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/networkSecurityGroups"
     params = {'api-version': '2018-07-01'}
     r = requests.get(url, headers=headers, params=params)
     azr= r.json()["value"]
-    #print (json.dumps(nsg, indent=4, separators=(',', ': ')))
-    fnsg.write(json.dumps(azr, indent=4, separators=(',', ': ')))
-    fnsg.close()
+    if cde:
+        print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
 
 
 
@@ -1027,14 +1024,14 @@ azr=""
 if crf in tfp:
     # REST
     print "REST VNets"
-    fnsgfilename=tfp + ".json"
-    fnsg=open(fnsgfilename, 'w')
+
     url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworks"
     params = {'api-version': '2018-07-01'}
     r = requests.get(url, headers=headers, params=params)
     azr= r.json()["value"]
-    fnsg.write(json.dumps(azr, indent=4, separators=(',', ': ')))
-    fnsg.close()
+    if cde:
+        print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
 
     tfrmf="060-"+tfp+"-staterm.sh"
     tfimf="060-"+tfp+"-stateimp.sh"
@@ -1344,10 +1341,11 @@ tfp="azurerm_key_vault"
 azr=""
 if crf in tfp:
     # REST or cli
-    p = subprocess.Popen('az identity list -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    p = subprocess.Popen('az keyvault list -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     output, errors = p.communicate()
     azr=json.loads(output)
-
+    if cde:
+        print(json.dumps(azr, indent=4, separators=(',', ': ')))
     tfrmf="090-"+tfp+"-staterm.sh"
     tfimf="090-"+tfp+"-stateimp.sh"
     tfrm=open(tfrmf, 'a')
@@ -1405,15 +1403,13 @@ azr=""
 if crf in tfp:
 # REST or cli
     print "REST Managed Disk"
-    fnsgfilename=tfp + ".json"
-    fnsg=open(fnsgfilename, 'w')
     url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/disks"
     params = {'api-version': '2017-03-30'}
     r = requests.get(url, headers=headers, params=params)
     azr= r.json()["value"]
-    #print (json.dumps(nsg, indent=4, separators=(',', ': ')))
-    fnsg.write(json.dumps(azr, indent=4, separators=(',', ': ')))
-    fnsg.close()
+    if cde:
+        print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
 
 
 
