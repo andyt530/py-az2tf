@@ -1,9 +1,4 @@
 
-azr=`az storage account list -g $rgsource -o json`
-count=`echo $azr | jq '. | length'`
-if [ "$count" -gt "0" ]; then
-    count=`expr $count - 1`
-    for i in `seq 0 $count`; do
         #echo $i
         name=`echo $azr | jq ".[(${i})].name" | tr -d '"'`
         rname=`echo $name | sed 's/\./-/g'`
@@ -75,7 +70,3 @@ if [ "$count" -gt "0" ]; then
 
                 
         printf "}\n" >> $outfile
-
-
-    done
-fi
