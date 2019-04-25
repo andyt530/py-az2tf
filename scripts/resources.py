@@ -993,8 +993,7 @@ if crf in tfp:
         #except KeyError:
         #    print "No security rules"
 
-    # tags block
-        
+    # tags block       
         try:
             mtags=azr[i]["tags"]
             fr.write('tags { \n')
@@ -1094,7 +1093,7 @@ if crf in tfp:
             fr.write('\t\t name = "'+ snname + '"\n')
             fr.write('\t\t address_prefix = "' + snaddr + '"\n')
             try:
-                snnsgid=subs[j]["properties"]["networkSecurityGroup.id"]
+                snnsgid=subs[j]["properties"]["networkSecurityGroup"]["id"]
                 nsgnam=snnsgid.split("/")[8].replace(".","-")
                 nsgrg=snnsgid.split("/")[4].replace(".","-")          
                 fr.write('\t\t security_group = ["${azurerm_network_security_group.' + nsgrg + '__' + nsgnam + '.id}"]' + '\n')
@@ -1102,6 +1101,17 @@ if crf in tfp:
                 pass
             
             fr.write('\t}' + '\n')
+
+    # tags block       
+        try:
+            mtags=azr[i]["tags"]
+            fr.write('tags { \n')
+            for key in mtags.keys():
+                tval=mtags[key]
+                fr.write('\t "' + key + '"="' + tval + '"\n')
+            fr.write('}\n')
+        except KeyError:
+            pass
 
         fr.write('}\n') 
         fr.close()   # close .tf file
@@ -1281,6 +1291,7 @@ if crf in tfp:
         for j in range(0, jcount):
             name=peers[j]["name"]
             #loc=peers[j]["location"] peers don't have a location
+            print (json.dumps(peers[j], indent=4, separators=(',', ': ')))
             id=peers[j]["id"]
             rg=id.split("/")[4].replace(".","-")
 
@@ -1299,10 +1310,19 @@ if crf in tfp:
             fr.write('\t resource_group_name = "'+ rg + '"\n')
             fr.write('\t virtual_network_name = "' + vnetname + '"\n')
 
-        ###############
-        # specific code
-        ###############
 
+            rvnid=peers[j]["properties"]["remoteVirtualNetwork"]["id"]
+            aft=str(peers[j]["properties"]["allowForwardedTraffic"])
+            agt=str(peers[j]["properties"]["allowGatewayTransit"])
+            avna=str(peers[j]["properties"]["allowVirtualNetworkAccess"])
+            urg=str(peers[j]["properties"]["useRemoteGateways"])
+
+            fr.write('\t remote_virtual_network_id = "' +  rvnid + '"\n')
+            fr.write('\t allow_forwarded_traffic = "' +  aft + '"\n')
+            fr.write('\t allow_gateway_transit = "' +  agt + '"\n')
+            fr.write('\t allow_virtual_network_access = "' +  avna + '"\n')
+            fr.write('\t use_remote_gateways = "' +  urg + '"\n')
+                        
             fr.write('}\n') 
             fr.close()   # close .tf file
 
