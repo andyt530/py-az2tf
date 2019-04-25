@@ -1288,7 +1288,6 @@ if crf in tfp:
         for j in range(0, jcount):
             name=peers[j]["name"]
             #loc=peers[j]["location"] peers don't have a location
-            print (json.dumps(peers[j], indent=4, separators=(',', ': ')))
             id=peers[j]["id"]
             rg=id.split("/")[4].replace(".","-")
 
@@ -1352,7 +1351,6 @@ if crf in tfp:
     tfim=open(tfimf, 'a')
     print tfp,
     count=len(azr)
-    print (json.dumps(azr, indent=4, separators=(',', ': ')))
     print count
     for i in range(0, count):
 
