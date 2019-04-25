@@ -1065,15 +1065,22 @@ if crf in tfp:
         fr.write('\t name = "' + name + '"\n')
         fr.write('\t location = "'+ loc + '"\n')
         fr.write('\t resource_group_name = "'+ rg + '"\n')
-
-        addsp=str(azr[i]["properties"]["addressSpace"]["addressPrefixes"])
+        
+        addsp=azr[i]["properties"]["addressSpace"]["addressPrefixes"]
+        laddsp='['
+        for x in addsp:
+            laddsp=laddsp+'"'+x+'",'
+        laddsp=laddsp+']'
+        #print laddsp
+        fr.write('\taddress_space =  ' + laddsp + '\n')
         try:
             dns=str(azr[i]["properties"]["dhcpOptions"]["dnsServers"])
-            fr.write('\t dns_servers =  "' + dns + '"\n')
+            if "[]" not in dns:
+                fr.write('\t dns_servers =  "' + dns + '"\n')
         except KeyError:
             pass        
 
-        fr.write('\taddress_space =  "' + addsp + '"\n')
+
         #
         #loop around subnets
         #
@@ -1128,10 +1135,12 @@ if crf in tfp:
         subs=azr[i]["properties"]["subnets"]
         vnetname=azr[i]["name"]
         jcount=len(subs)
+        #print "subs="+str(jcount)
+        #print (json.dumps(subs, indent=4, separators=(',', ': ')))
         for j in range(0, jcount):
-            name=subs[i]["name"]
-            #loc=subs[i]["location"] subnets don't have location
-            id=subs[i]["id"]
+            name=subs[j]["name"]
+            #loc=subs[j]["location"] subnets don't have location
+            id=subs[j]["id"]
             rg=id.split("/")[4].replace(".","-")
 
             if crg is not None:
@@ -1148,46 +1157,33 @@ if crf in tfp:
             fr.write('\t virtual_network_name = "' + vnetname + '"\n') 
             fr.write('\t resource_group_name = "' +  rg + '"\n')
 
-    ###############
-    # specific code
-    ###############
-
-
-            sprefix=subs[i]["properties"]["addressPrefix"]
+            sprefix=subs[j]["properties"]["addressPrefix"]
             fr.write('\t address_prefix = "' +  sprefix + '"\n')
-
-            sep="null"
             rtbid="null"
             try:
-                seps=subs[i]["properties"]["serviceEndpoints"]
+                seps=subs[j]["properties"]["serviceEndpoints"]
                 kcount=len(seps)
-                print kcount
-                print seps
-      
-                if "[]" not in seps:
-                    sep="["
-                    for k in range(0, kcount):
-                        service=seps[k]["service"]
-                        if  k == kcount: 
-                            sep=sep+service
-                        else:
-                            sep=sep + service + ','
-                                 
-                    sep=sep+']'
-                    fr.write('\t service_endpoints = "'+ sep + '"\n')
+                #print (json.dumps(seps, indent=4, separators=(',', ': ')))
+                #print kcount
+                lseps='['
+                for k in range(0, kcount):
+                    x=seps[k]["service"]
+                    lseps=lseps+'"'+x+'",'
+                lseps=lseps+']'
+                fr.write('\t service_endpoints = '+ lseps + '\n')
             except KeyError:
                 pass
             
             try:
-                snsgid=subs[i]["properties"]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
-                snsgrg=subs[i]["properties"]["networkSecurityGroup"]["id"].split("/")[4].replace(".","-")
+                snsgid=subs[j]["properties"]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
+                snsgrg=subs[j]["properties"]["networkSecurityGroup"]["id"].split("/")[4].replace(".","-")
                 fr.write('\t network_security_group_id = "${azurerm_network_security_group.' + snsgrg + '__' + snsgid +'.id}"' + '\n')
             except KeyError:
                 pass
             
             try:
-                rtbid=subs[i]["properties"]["routeTable"]["id"].split("/")[8].replace(".","-")
-                rtrg=subs[i]["properties"]["routeTable"]["id"].split("/")[4].replace(".","-")
+                rtbid=subs[j]["properties"]["routeTable"]["id"].split("/")[8].replace(".","-")
+                rtrg=subs[j]["properties"]["routeTable"]["id"].split("/")[4].replace(".","-")
                 fr.write('\t route_table_id = "${azurerm_route_table.' + rtrg + '__' + rtbid +'.id}"' + '\n')
             except KeyError:
                 pass         
@@ -1198,7 +1194,7 @@ if crf in tfp:
      
             r1="skip"
             try:
-                snsgid=subs[i]["properties"]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
+                snsgid=subs[j]["properties"]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
                 r1="azurerm_subnet_network_security_group_association"
                 fr.write('resource ' + r1 + ' ' + rg + '__' + rname + '__' + snsgid + ' {\n') 
                 fr.write('\tsubnet_id = "${azurerm_subnet.' + rg + '__' + rname + '.id}"' + '\n')
@@ -1212,7 +1208,7 @@ if crf in tfp:
 
             r2="skip"
             try:
-                rtbid=subs[i]["properties"]["routeTable"]["id"].split("/")[8].replace(".","-")
+                rtbid=subs[j]["properties"]["routeTable"]["id"].split("/")[8].replace(".","-")
                 r2="azurerm_subnet_route_table_association"
                 fr.write('resource ' + r2 + ' ' + rg + '__' + rname + '__' + rtbid + ' {\n') 
                 fr.write('\tsubnet_id = "${azurerm_subnet.' + rg + '__' + rname + '.id}"' + '\n')
@@ -1222,7 +1218,7 @@ if crf in tfp:
                 pass
             
 
-            fr.write('}\n') 
+            #fr.write('}\n') 
             fr.close()   # close .tf file
 
 
@@ -1252,7 +1248,7 @@ if crf in tfp:
                 tfim.write(tfcomm)
             
 
-
+        # end j
 
     ###############
     # specific code end
@@ -1280,6 +1276,7 @@ if crf in tfp:
     print count
     for i in range(0, count):
         peers=azr[i]["properties"]["virtualNetworkPeerings"]
+        vnetname=azr[i]["name"]
         jcount=len(peers)
         for j in range(0, jcount):
             name=peers[j]["name"]
@@ -1300,6 +1297,7 @@ if crf in tfp:
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
             fr.write('\t resource_group_name = "'+ rg + '"\n')
+            fr.write('\t virtual_network_name = "' + vnetname + '"\n')
 
         ###############
         # specific code
