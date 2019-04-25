@@ -15,10 +15,13 @@ parser = argparse.ArgumentParser(description='terraform sub rg')
 parser.add_argument('-s', help='Subscription Id')
 parser.add_argument('-g', help='Resource Group')
 parser.add_argument('-r', help='Filter azurerm resource')
+parser.add_argument('-d', help='Debug')
 args = parser.parse_args()
 csub=args.s
 crg=args.g
 crf=args.r
+deb=args.d
+
 cde=False
 
 if csub is not None:
@@ -30,6 +33,8 @@ if crg is not None:
 if crf is not None:
     print("resource filter=" + crf)
     # validate rg
+if deb is not None:
+    cde=True
 
 if sys.version_info[0] > 2:
     #raise Exception("Must be using Python 2")
@@ -1373,13 +1378,105 @@ if crf in tfp:
         fr.write('\t name = "' + name + '"\n')
         fr.write('\t location = "'+ loc + '"\n')
         fr.write('\t resource_group_name = "'+ rg + '"\n')
+        comm="az keyvault show -n "+name+" -o json"
+        print comm
+        p = subprocess.Popen(comm, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        output, errors = p.communicate()
+        kvshow=json.loads(output)
+        jcount=len(kvshow)
+        print(json.dumps(kvshow, indent=4, separators=(',', ': ')))
 
-###############
-# specific code
-###############
+        sku=kvshow["properties"]["sku"]["name"]
+        #if sku" = "premium" : sku="Premium" ; fi
+        #if sku" = "standard" : sku="Standard" ; fi
+ 
+        fr.write('\t sku {' + '\n')     
+        fr.write('\t\t name="' + sku + '"\n')
+        fr.write('\t }' + '\n')
 
-        fr.write('}\n') 
+        ten=kvshow["properties"]["tenantId"]     
+        fr.write('\t tenant_id="' + ten + '"\n')
+
+        try: 
+            endep=str(kvshow["properties"]["enabledForDeployment"])
+            fr.write('\t enabled_for_deployment="' +  endep + '"\n')
+        except KeyError:
+            pass
+        
+        try:
+            endisk=str(kvshow["properties"]["enabledForDiskEncryption"])
+            fr.write('\t enabled_for_disk_encryption="' +  endisk + '"\n')
+        except KeyError:
+            pass       
+        
+        try:
+            entemp=str(kvshow["properties"]["enabledForTemplateDeployment"])
+            fr.write('\t enabled_for_template_deployment="' +  entemp + '"\n')
+        except KeyError:
+            pass
+
+        ap=kvshow["properties"]["accessPolicies"]
+                
+        #
+        # Access Policies
+        #
+        pcount=len(ap)
+        for j in range(0, pcount):    
+            fr.write('\t access_policy {' + '\n')
+            apten=kvshow["properties"]["accessPolicies"][j]["tenantId"]           
+            fr.write('\t\t tenant_id="' + apten + '"\n')
+            apoid=kvshow["properties"]["accessPolicies"][j]["objectId"]
+            fr.write('\t\t object_id="' + apoid + '"\n')
+                
+            jkl=kvshow["properties"]["accessPolicies"][j]["permissions"]["keys"]
+            jsl=kvshow["properties"]["accessPolicies"][j]["permissions"]["secrets"]
+            jcl=kvshow["properties"]["accessPolicies"][j]["permissions"]["certificates"]
+                
+            kl=len(jkl)
+            sl=len(jsl)
+            cl=len(jcl)
+            print kl  
+            fr.write('\t\t key_permissions = [ \n')
+            for k in range(0,kl):
+                tk=kvshow["properties"]["accessPolicies"][j]["permissions"]["keys"][k]
+                fr.write('\t\t\t "' + tk + '",\n')
+            fr.write('\t\t ]\n')
+
+            print sl  
+            fr.write('\t\t secret_permissions = [ \n')
+            for k in range(0,sl):
+                tk=kvshow["properties"]["accessPolicies"][j]["permissions"]["secrets"][k]
+                fr.write('\t\t\t "' + tk + '",\n')
+            fr.write('\t\t ]\n')
+            
+            print cl  
+            fr.write('\t\t certificate_permissions = [ \n')
+            for k in range(0,cl):
+                tk=kvshow["properties"]["accessPolicies"][j]["permissions"]["certificates"][k]
+                fr.write('\t\t\t "' + tk + '",\n')
+            fr.write('\t\t ]\n')                          
+            fr.write('\t} \n') # end access policy
+
+        
+# tags block       
+        try:
+            mtags=azr[i]["tags"]
+            fr.write('tags { \n')
+            for key in mtags.keys():
+                tval=mtags[key]
+                fr.write('\t "' + key + '"="' + tval + '"\n')
+            fr.write('}\n')
+        except KeyError:
+            pass
+
+        
+
+        fr.write('} \n')
         fr.close()   # close .tf file
+
+        if cde:
+            with open(rfilename) as f: 
+                print f.read()
 
         tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -1407,11 +1504,6 @@ if crf in tfp:
     azr= r.json()["value"]
     if cde:
         print(json.dumps(azr, indent=4, separators=(',', ': ')))
-
-
-
-
-# peering in vnet
 
     tfrmf="100-"+tfp+"-staterm.sh"
     tfimf="100-"+tfp+"-stateimp.sh"
@@ -1445,6 +1537,17 @@ if crf in tfp:
 ###############
 # specific code
 ###############
+
+# tags block       
+        try:
+            mtags=azr[i]["tags"]
+            fr.write('tags { \n')
+            for key in mtags.keys():
+                tval=mtags[key]
+                fr.write('\t "' + key + '"="' + tval + '"\n')
+            fr.write('}\n')
+        except KeyError:
+            pass
 
         fr.write('}\n') 
         fr.close()   # close .tf file
