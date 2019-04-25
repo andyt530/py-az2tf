@@ -1096,7 +1096,7 @@ if crf in tfp:
                 snnsgid=subs[j]["properties"]["networkSecurityGroup"]["id"]
                 nsgnam=snnsgid.split("/")[8].replace(".","-")
                 nsgrg=snnsgid.split("/")[4].replace(".","-")          
-                fr.write('\t\t security_group = ["${azurerm_network_security_group.' + nsgrg + '__' + nsgnam + '.id}"]' + '\n')
+                fr.write('\t\t security_group = "${azurerm_network_security_group.' + nsgrg + '__' + nsgnam + '.id}"' + '\n')
             except KeyError: 
                 pass
             
@@ -1236,7 +1236,7 @@ if crf in tfp:
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
-            tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+            tfim.write('echo "importing ' + str(j) + ' of ' + str(jcount-1) + '"' + '\n')
             tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
             tfim.write(tfcomm) 
 
@@ -1328,7 +1328,7 @@ if crf in tfp:
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
-            tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+            tfim.write('echo "importing ' + str(j) + ' of ' + str(jcount-1) + '"' + '\n')
             tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
             tfim.write(tfcomm)  
         # end for j loop
@@ -1354,6 +1354,7 @@ if crf in tfp:
     tfim=open(tfimf, 'a')
     print tfp,
     count=len(azr)
+    print (json.dumps(azr, indent=4, separators=(',', ': ')))
     print count
     for i in range(0, count):
 
