@@ -1567,6 +1567,7 @@ if crf in tfp:
 
 #############
 #  110 storage account
+cde=True
 tfp="azurerm_storage_account"
 azr=""
 if crf in tfp:
@@ -1610,15 +1611,17 @@ if crf in tfp:
 
         satier=azr[i]["sku"]["tier"]
         sakind=azr[i]["kind"]
-        sartype=azr[i]["sku"]["name"].split("_")[2]
-        saencrypt=azr[i]["properties"]["encryption.services.blob.enabled"]
-        fiencrypt=azr[i]["properties"]["encryption.services.file.enabled"]
-        sahttps=azr[i]["properties"]["supportsHttpsTrafficOnly"]
-        nrs=azr[i]["properties"]["networkAcls"]
-        saencs=azr[i]["properties"]["encryption.keySource"]
         
-        fr.write('\t account_tier = "' +  satier + '"\n')
-        fr.write('\t account_kind = "' +  sakind + '"\n')
+        sartype=azr[i]["sku"]["name"].split("_")[1]
+        print sartype
+        saencrypt=str(azr[i]["properties"]["encryption"]["services"]["blob"]["enabled"])
+        fiencrypt=str(azr[i]["properties"]["encryption"]["services"]["file"]["enabled"])
+        sahttps=str(azr[i]["properties"]["supportsHttpsTrafficOnly"])
+        nrs=azr[i]["properties"]["networkAcls"]
+        saencs=azr[i]["properties"]["encryption"]["keySource"]
+        
+        fr.write('\t account_tier = "' + satier + '"\n')
+        fr.write('\t account_kind = "' + sakind + '"\n')
         fr.write('\t account_replication_type = "' +  sartype + '"\n')
         fr.write('\t enable_blob_encryption = "' +  saencrypt + '"\n')
         fr.write('\t enable_file_encryption = "' +  fiencrypt + '"\n')
@@ -1630,27 +1633,25 @@ if crf in tfp:
 
             ipr=azr[i]["properties"]["networkAcls"]["ipRules"]
             vnr=azr[i]["properties"]["networkAcls"]["virtualNetworkRules"]
-
+            
             icount=len(ipr)
             vcount=len(vnr)
-            
+           
             # if the only network rule is AzureServices, dont need a network_rules block
-            if byp != "AzureServices" or  icount > 0 or vcount > 0:
+            if "AzureServices" not in byp or icount > 0 or vcount > 0:
                 fr.write('\t network_rules { \n')
-                byp=byp.replace(",","")
                 fr.write('\t\t bypass = ["' +  byp + '"]\n')
-
-                if icount > 0 :
+                
+                if icount > 0:
                     for ic in range(0, icount): 
                         ipa=ipr[ic]["ipAddressOrRange"]
                         fr.write('\t\t ip_rules = ["' + ipa + '"]\n')
-                    
-                
-                if vcount > 0 :
+                if vcount > 0:
                     for vc in range(0,vcount):
-                        vnsid=vnr[vc]["virtualNetworkResourceId"]
+                        vnsid=vnr[vc]["id"]
                         fr.write('\t\t virtual_network_subnet_ids = ["' + vnsid + '"]\n')
-
+                fr.write('}\n')
+            # end if
 
         except KeyError:
             pass            
@@ -1668,6 +1669,10 @@ if crf in tfp:
 
         fr.write('}\n') 
         fr.close()   # close .tf file
+
+        if cde:
+            with open(rfilename) as f: 
+                print f.read()
 
         tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -1755,6 +1760,10 @@ if crf in tfp:
 
         fr.write('}\n') 
         fr.close()   # close .tf file
+
+        if cde:
+            with open(rfilename) as f: 
+                print f.read()
 
         tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
