@@ -32,8 +32,6 @@ if [ "$count" -gt "0" ]; then
         printf "\t domain_name_label = \"%s\"\n" $dnsname >> $outfile
         fi
         #
-
-
         printf "}\n" >> $outfile
         #
         cat $outfile
