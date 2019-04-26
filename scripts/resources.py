@@ -1965,7 +1965,7 @@ if crf in tfp:
 #  125 traffic manager endpoint
 cde=True
 tfp="azurerm_traffic_manager_endpoint"
-azr=""
+
 if crf in tfp:
 # REST or cli
 # from above
@@ -1979,29 +1979,12 @@ if crf in tfp:
     print count
     for i in range(0, count):
 
-        name=azr[i]["name"]
         #loc=azr[i]["location"]
         id=azr[i]["id"]
-        rg=id.split("/")[4].replace(".","-")
-
-        if crg is not None:
-            if rg.lower() != crg.lower():
-                continue  # back to for
-        
-        rname=name.replace(".","-")
-        prefix=tfp+"."+rg+'__'+rname
-        #print prefix
-        rfilename=prefix+".tf"
-        fr=open(rfilename, 'w')
-        fr.write(az2tfmess)
-        fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
-        fr.write('\t name = "' + name + '"\n')
-        #fr.write('\t location = "'+ loc + '"\n')
-        fr.write('\t resource_group_name = "'+ rg + '"\n')
-
         pname=azr[i]["name"]
         azr2=azr[i]["properties"]["endpoints"]
         jcount=len(azr2)
+        print "jcount=" + str(jcount)
         for j in range (0,jcount):
 
             name=azr2[j]["name"]
@@ -2023,61 +2006,39 @@ if crf in tfp:
             #fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rg + '"\n')
             fr.write('\t profile_name = "' +  pname + '"\n')
-            type=azr2[j]["type"].split("/")[2]
-            fr.write('\t type = "' +  type + '"\n')
+            ttype=azr2[j]["type"].split("/")[2]
+            fr.write('\t type = "' +  ttype + '"\n')
 
             pri=azr2[j]["properties"]["priority"]
             fr.write('\t priority = "' +  str(pri) + '"\n')
             wt=azr2[j]["properties"]["weight"]
             fr.write('\t weight = "' +  str(wt) + '"\n')
 
-            tgt=azr2[j]["properties"]["id"]
+            tgt=azr2[j]["properties"]["target"]
             fr.write('\t target = "' +  tgt + '"\n')
             eps=azr2[j]["properties"]["endpointStatus"]
             fr.write('\t endpoint_status = "' +  eps + '"\n')
-            tgtid=azr2[j]["properties"]["target"]
-            tgtrrg=azr2[j]["properties"]["target"].split("/")[4].replace(".","-")
-            tgtrid=azr2[j]["properties"]["target"].split("/")[8].replace(".","-")
+            tgtid=azr2[j]["id"]
+            tgtrrg=azr2[j]["id"].split("/")[4].replace(".","-")
+            tgtrid=azr2[j]["id"].split("/")[8].replace(".","-")
            
             fr.write('\t target_resource_id = "{azurerm_public_ip.' + tgtrrg + '__' + tgtrid + '.id}"\n')
-                    
-            fr.write('} \n')
-        # end j loop        
-                
-        
 
-# tags block       
-        try:
-            mtags=azr[i]["tags"]
-            fr.write('tags { \n')
-            for key in mtags.keys():
-                tval=mtags[key]
-                fr.write('\t "' + key + '"="' + tval + '"\n')
-            fr.write('}\n')
-        except KeyError:
-            pass
+            if cde:
+                with open(rfilename) as f: 
+                    print f.read()
 
-        fr.write('}\n') 
-        fr.close()   # close .tf file
+            tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
-        if cde:
-            with open(rfilename) as f: 
-                print f.read()
-
-        tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
-
-        tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
-        tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
-        tfim.write(tfcomm)  
+            tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+            tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+            tfim.write(tfcomm)  
 
     # end for i loop
 
     tfrm.close()
     tfim.close()
 #end traffic manager endpoint
-
-
-
 
 # ******************************************************************************************
 exit()
