@@ -1644,7 +1644,7 @@ if crf in tfp:
                 
                 if icount > 0:
                     for ic in range(0, icount): 
-                        ipa=ipr[ic]["ipAddressOrRange"]
+                        ipa=ipr[ic]["value"]
                         fr.write('\t\t ip_rules = ["' + ipa + '"]\n')
                 if vcount > 0:
                     for vc in range(0,vcount):

@@ -134,7 +134,7 @@ if [ $? -eq 0 ]; then
     exit
 fi
 
-exit
+
 #
 # uncomment following line if you want to use an SPN login
 #../../setup-env.sh
