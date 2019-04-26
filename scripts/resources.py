@@ -1635,24 +1635,21 @@ if crf in tfp:
             vcount=len(vnr)
             
             # if the only network rule is AzureServices, dont need a network_rules block
-            if byp != "AzureServices" or  icount -gt 0 or vcount -gt 0:
-                fr.write('\t network_rules {'  + '"\n')
-                byp=print byp | tr -d ','
-                fr.write('\t\t bypass = ["' + ]["n" byp + '"\n')
+            if byp != "AzureServices" or  icount > 0 or vcount > 0:
+                fr.write('\t network_rules { \n')
+                byp=byp.replace(",","")
+                fr.write('\t\t bypass = ["' +  byp + '"]\n')
 
                 if icount > 0 :
-             
                     for ic in range(0, icount): 
-                        ipa=print ipr | jq ".[ic]["ipAddressOrRange"]
-                        fr.write('\t\t ip_rules = ["' + ]["n" ipa + '"\n')
+                        ipa=ipr[ic]["ipAddressOrRange"]
+                        fr.write('\t\t ip_rules = ["' + ipa + '"]\n')
                     
-                fi
                 
                 if vcount > 0 :
-                   
                     for vc in range(0,vcount):
-                        vnsid=print vnr | jq ".[vc]["virtualNetworkResourceId"]
-                        fr.write('\t\t virtual_network_subnet_ids = ["' + ]["n" vnsid + '"\n')
+                        vnsid=vnr[vc]["virtualNetworkResourceId"]
+                        fr.write('\t\t virtual_network_subnet_ids = ["' + vnsid + '"]\n')
 
 
         except KeyError:
