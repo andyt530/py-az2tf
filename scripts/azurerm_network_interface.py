@@ -60,7 +60,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                
             icount=len(ipcon)
             for j in range(0,icount):
-                ipcname=azr[i]["properties"]["ipConfigurations"][j]["properties"]["name"].split("/")[10]
+                ipcname=azr[i]["properties"]["ipConfigurations"][j]["name"]
                 subname=azr[i]["properties"]["ipConfigurations"][j]["properties"]["subnet"]["id"].split("/")[10].replace(".","-")
                 subrg=azr[i]["properties"]["ipConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-")
                 subipid=azr[i]["properties"]["ipConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[8]
