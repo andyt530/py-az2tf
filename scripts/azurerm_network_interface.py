@@ -41,36 +41,32 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rg + '"\n')
 
-            ipfor=azr[i]["enableIpForwarding"]
-            netacc=azr[i]["enableAcceleratedNetworking"]
-
-            snsg=azr[i]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
-            snsgrg=azr[i]["networkSecurityGroup"]["id"].split("/")[4].replace(".","-")
-            ipcon=azr[i]["ipConfigurations"]
-        
+            ipfor=azr[i]["properties"]["enableIPForwarding"]
+            netacc=azr[i]["properties"]["enableAcceleratedNetworking"]
+            ipcon=azr[i]["properties"]["ipConfigurations"]
+          
+            #fr.write('\t internal_dns_name_label  = "' +  ipfor + '"\n')
+            fr.write('\t enable_ip_forwarding = "' +  str(ipfor) + '"\n')
+            fr.write('\t enable_accelerated_networking  = "' +  str(netacc) + '"\n')
+            #fr.write('\t dns_servers  = "' +  ipfor + '"\n')
+            #privip0=azr[i]["properties"]["ipConfigurations"][0]["privateIPAddress"]
 
             try:
-                snsg=azr[i]["networkSecurityGroup"]["id"].split[8].replace(".","-")
-                snsgrg=azr[i]["networkSecurityGroup"]["id"].split[4].replace(".","-")
+                snsg=azr[i]["properties"]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
+                snsgrg=azr[i]["properties"]["networkSecurityGroup"]["id"].split("/")[4].replace(".","-")
                 fr.write('\t network_security_group_id = "${azurerm_network_security_group.' + snsgrg + '__' + snsg + '.id}"\n')
             except KeyError:
                 pass
-        
-            #fr.write('\t internal_dns_name_label  = "' +  ipfor + '"\n')
-            fr.write('\t enable_ip_forwarding = "' +  ipfor + '"\n')
-            fr.write('\t enable_accelerated_networking  = "' +  netacc + '"\n')
-            #fr.write('\t dns_servers  = "' +  ipfor + '"\n')
-            privip0=azr[i]["ipConfigurations"][0]["privateIpAddress"]
                
             icount=len(ipcon)
             for j in range(0,icount):
-                ipcname=azr[i]["ipConfigurations"][j]["name"].split("/")[10]
-                subname=azr[i]["ipConfigurations"][j]["subnet"]["id"].split("/")[10].replace(".","-")
-                subrg=azr[i]["ipConfigurations"][j]["subnet"]["id"].split("/")[4].replace(".","-")
-                subipid=azr[i]["ipConfigurations"][j]["publicIpAddress"]["id"].split("/")[8]
-                subipalloc=azr[i]["ipConfigurations"][j]["privateIpAllocationMethod"]
-                privip=azr[i]["ipConfigurations"][j]["privateIpAddress"]
-                prim=azr[i]["ipConfigurations"][j]["primary"]
+                ipcname=azr[i]["properties"]["ipConfigurations"][j]["properties"]["name"].split("/")[10]
+                subname=azr[i]["properties"]["ipConfigurations"][j]["properties"]["subnet"]["id"].split("/")[10].replace(".","-")
+                subrg=azr[i]["properties"]["ipConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-")
+                subipid=azr[i]["properties"]["ipConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[8]
+                subipalloc=azr[i]["properties"]["ipConfigurations"][j]["properties"]["privateIPAllocationMethod"]
+                privip=azr[i]["properties"]["ipConfigurations"][j]["properties"]["privateIPAddress"]
+                prim=azr[i]["properties"]["ipConfigurations"][j]["properties"]["primary"]
 
                                       
                 fr.write('\t ip_configuration {' + '"\n')
@@ -81,8 +77,8 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                
                 fr.write('\t\t private_ip_address_allocation = "' +    subipalloc + '"\n')
                 try:
-                    pubipnam=azr[i]["ipConfigurations"][j]["publicIpAddress"]["id"].split("/")[8].replace(".","-")
-                    pubiprg=azr[i]["ipConfigurations"][j]["publicIpAddress"]["id"].split("/")[4].replace(".","-")
+                    pubipnam=azr[i]["properties"]["ipConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[8].replace(".","-")
+                    pubiprg=azr[i]["properties"]["ipConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[4].replace(".","-")
                     fr.write('\t\t public_ip_address_id = "${azurerm_public_ip.' + pubiprg + '__' + pubipnam + '.id}"\n')
                 except KeyError:
                     pass
@@ -93,12 +89,12 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 #fr.write('\t\t application_security_group_ids = "' +    subipalloc + '"\n')
                 fr.write('\t\t primary = "' + prim + '"\n')
                 
-                asgs=azr[i]["ipConfigurations"][j]["applicationSecurityGroups"]
+                asgs=azr[i]["properties"]["ipConfigurations"][j]["properties"]["applicationSecurityGroups"]
          
                 kcount=len(asgs)
                 for k in range(0,kcount):
-                    asgnam=azr[i]["ipConfigurations"][j]["applicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
-                    asgrg=azr[i]["ipConfigurations"][j]["applicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-")
+                    asgnam=azr[i]["properties"]["ipConfigurations"][j]["properties"]["applicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
+                    asgrg=azr[i]["properties"]["ipConfigurations"][j]["properties"]["applicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-")
                     fr.write('\t\t application_security_group_ids = ${azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}"\n')
                 
                 fr.write('\t}\n') # end ip configurations

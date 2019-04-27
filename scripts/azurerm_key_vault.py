@@ -39,12 +39,9 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess
             fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rg + '"\n')
             comm="az keyvault show -n "+name+" -o json"
-            print comm
             p = subprocess.Popen(comm, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             output, errors = p.communicate()
             kvshow=json.loads(output)
-            #jcount=len(kvshow)
-            print(json.dumps(kvshow, indent=4, separators=(',', ': ')))
 
             sku=kvshow["properties"]["sku"]["name"]
             #if sku" = "premium" : sku="Premium" ; fi
@@ -95,21 +92,21 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess
                 kl=len(jkl)
                 sl=len(jsl)
                 cl=len(jcl)
-                print kl  
+               
                 fr.write('\t\t key_permissions = [ \n')
                 for k in range(0,kl):
                     tk=kvshow["properties"]["accessPolicies"][j]["permissions"]["keys"][k]
                     fr.write('\t\t\t "' + tk + '",\n')
                 fr.write('\t\t ]\n')
 
-                print sl  
+               
                 fr.write('\t\t secret_permissions = [ \n')
                 for k in range(0,sl):
                     tk=kvshow["properties"]["accessPolicies"][j]["permissions"]["secrets"][k]
                     fr.write('\t\t\t "' + tk + '",\n')
                 fr.write('\t\t ]\n')
                 
-                print cl  
+                
                 fr.write('\t\t certificate_permissions = [ \n')
                 for k in range(0,cl):
                     tk=kvshow["properties"]["accessPolicies"][j]["permissions"]["certificates"][k]
