@@ -80,8 +80,8 @@ if count > 0" :
         icount= netifs | | len(
         if icount > 0" :
             for j in range(0,icount):
-                vmnetid=azr[i]["networkProfile.networkInterfaces[j]["]["id"].split[8].replace(".","-")
-                vmnetrg=azr[i]["networkProfile.networkInterfaces[j]["]["id"].split[4].replace(".","-")
+                vmnetid=azr[i]["networkProfile.networkInterfaces[j]["]["id"].split("/")[8].replace(".","-")
+                vmnetrg=azr[i]["networkProfile.networkInterfaces[j]["]["id"].split("/")[4].replace(".","-")
                 vmnetpri=azr[i]["networkProfile.networkInterfaces[j]["primary"]
                 fr.write('\t network_interface_ids = ["'\{'azurerm_network_interface. + '__' + .id}'"']["n" vmnetrg vmnetid + '"\n')
                 if vmnetpri" == "true" :
@@ -235,8 +235,8 @@ if count > 0" :
                 
                 if ddcreopt" = "Attach" :
                     if ddmd" try ][":
-                    ddmdid= datadisks | jq ".[j]["managedDisk"]["id"].split[8].replace(".","-")
-                    ddmdrg= datadisks | jq ".[j]["managedDisk"]["id"].split[4].replace(".","-")
+                    ddmdid= datadisks | jq ".[j]["managedDisk"]["id"].split("/")[8].replace(".","-")
+                    ddmdrg= datadisks | jq ".[j]["managedDisk"]["id"].split("/")[4].replace(".","-")
                     ## ddmdrg  from cut is upper case - not good
                     ## probably safe to assume managed disk in same RG as VM ??
                     # check id lowercase rg = ddmdrg if so use rg

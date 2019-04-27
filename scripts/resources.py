@@ -36,6 +36,7 @@ import azurerm_public_ip
 import azurerm_key_vault
 import azurerm_traffic_manager_profile
 import azurerm_traffic_manager_endpoint
+import azurerm_network_interface
 
 os.chdir(scwd)
 #print os.getcwd()
@@ -209,7 +210,8 @@ azurerm_public_ip.azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfm
 azr=azurerm_traffic_manager_profile.azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 #  125 traffic manager endpoint
 azurerm_traffic_manager_endpoint.azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr)
-
+#  130 network interface
+azurerm_network_interface.azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # ******************************************************************************************
 exit()
 

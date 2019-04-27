@@ -9,7 +9,7 @@ if count > 0" :
         if icount > 0" :
             for j in range(0,icount):
                 
-                name=azr[i]["probes[j]["name"].split[10]]
+                name=azr[i]["probes[j]["name"].split("/")[10]]
                 rname= name.replace(".","-")
                 id=azr[i]["probes[j]["]["id"]
                 rg=azr[i]["probes[j]["resourceGroup"].replace(".","-")
@@ -19,8 +19,8 @@ if count > 0" :
                 proto=azr[i]["probes[j]["protocol"]
                 int=azr[i]["probes[j]["intervalInSeconds"]
                 rpath=azr[i]["probes[j]["requestPath"]
-                lbrg=azr[i]["]["id"].split[4].replace(".","-")
-                lbname=azr[i]["]["id"].split[8].replace(".","-")
+                lbrg=azr[i]["]["id"].split("/")[4].replace(".","-")
+                lbname=azr[i]["]["id"].split("/")[8].replace(".","-")
                 
 
                 fr.write('resource "' +  "' + '__' +  + '__' + "' {' tfp rg lbname rname + '"\n')

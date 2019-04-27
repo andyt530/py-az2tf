@@ -5,29 +5,29 @@ if count > 0" :
     for i in range(0,count):
         beap=azr[i]["loadBalancingRules"
         rg=azr[i]["resourceGroup"].replace(".","-")
-        lbrg=azr[i]["]["id"].split[4].replace(".","-")
-        lbname=azr[i]["]["id"].split[8].replace(".","-")
+        lbrg=azr[i]["]["id"].split("/")[4].replace(".","-")
+        lbname=azr[i]["]["id"].split("/")[8].replace(".","-")
         
         icount= beap | | len(
         if icount > 0" :
             for j in range(0,icount):
                 
-                name=azr[i]["loadBalancingRules[j]["name"].split[10]]
+                name=azr[i]["loadBalancingRules[j]["name"].split("/")[10]]
                 rname= name.replace(".","-")
                 id=azr[i]["loadBalancingRules[j]["]["id"]
                 rrg=azr[i]["loadBalancingRules[j]["resourceGroup"].replace(".","-")
                 fep=azr[i]["loadBalancingRules[j]["frontendPort"]
                 bep=azr[i]["loadBalancingRules[j]["backendPort"]
                 proto=azr[i]["loadBalancingRules[j]["protocol"]
-                feipc=azr[i]["loadBalancingRules[j]["frontendIpConfiguration"]["id"].split[10]]
+                feipc=azr[i]["loadBalancingRules[j]["frontendIpConfiguration"]["id"].split("/")[10]]
                 efip=azr[i]["loadBalancingRules[j]["enableFloatingIp"]
                 ld=azr[i]["loadBalancingRules[j]["loadDistribution"]
                 itm=azr[i]["loadBalancingRules[j]["idleTimeoutInMinutes"]
 
-                prg=azr[i]["loadBalancingRules[j]["probe"]["id"].split[4].replace(".","-")
-                pid=azr[i]["loadBalancingRules[j]["probe"]["id"].split[10].replace(".","-")
-                beadprg=azr[i]["loadBalancingRules[j]["backendAddressPool"]["id"].split[4].replace(".","-")
-                beadpid=azr[i]["loadBalancingRules[j]["backendAddressPool"]["id"].split[10].replace(".","-")
+                prg=azr[i]["loadBalancingRules[j]["probe"]["id"].split("/")[4].replace(".","-")
+                pid=azr[i]["loadBalancingRules[j]["probe"]["id"].split("/")[10].replace(".","-")
+                beadprg=azr[i]["loadBalancingRules[j]["backendAddressPool"]["id"].split("/")[4].replace(".","-")
+                beadpid=azr[i]["loadBalancingRules[j]["backendAddressPool"]["id"].split("/")[10].replace(".","-")
 
              
                 fr.write('resource "' +  "' + '__' +  + '__' + "' {' tfp rg lbname rname + '"\n')

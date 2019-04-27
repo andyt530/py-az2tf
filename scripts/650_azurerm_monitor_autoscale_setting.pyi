@@ -23,9 +23,9 @@ if count > 0" :
         loc=azr[i]["location"]
         profs=azr[i]["profiles"
         nots=azr[i]["notifications"
-        trrg=azr[i]["targetResourceUri"].split[4].replace(".","-")
+        trrg=azr[i]["targetResourceUri"].split("/")[4].replace(".","-")
         trty=azr[i]["targetResourceUri" | cut -d'/' -f7].replace(".","-")
-        trid=azr[i]["targetResourceUri"].split[8].replace(".","-")
+        trid=azr[i]["targetResourceUri"].split("/")[8].replace(".","-")
         # assume trty = Microsoft.Compute
         tftyp="azurerm_virtual_machine_scale_set"
         if [ trty = "Microsoft-Web" :
@@ -108,8 +108,8 @@ if count > 0" :
                                 mtn="Percentage CPU"
                            
                             mtid=azr[i]["profiles[j]["rules[k]["metricTrigger.metricResourceUri"]
-                            mtrrg=azr[i]["profiles[j]["rules[k]["metricTrigger.metricResourceUri"].split[4].replace(".","-")
-                            mtrid=azr[i]["profiles[j]["rules[k]["metricTrigger.metricResourceUri"].split[8].replace(".","-")
+                            mtrrg=azr[i]["profiles[j]["rules[k]["metricTrigger.metricResourceUri"].split("/")[4].replace(".","-")
+                            mtrid=azr[i]["profiles[j]["rules[k]["metricTrigger.metricResourceUri"].split("/")[8].replace(".","-")
                             mtop=azr[i]["profiles[j]["rules[k]["metricTrigger.operator"]
                             mtstat=azr[i]["profiles[j]["rules[k]["metricTrigger.statistic"]
                             mtthres=azr[i]["profiles[j]["rules[k]["metricTrigger.threshold"]

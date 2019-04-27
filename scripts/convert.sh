@@ -26,9 +26,9 @@ sed -i .bak -e 's/then/:/g' $1
 sed -i .bak -e 's/=echo/=/g' $1
 sed -i .bak -e 's/\}'\'' + '\''\"/\}/g' $1
 sed -i .bak -e 's/!= \"null\"/try/g' $1
-sed -i .bak -e 's/ | cut -d'\''\/'\'' -f5/].split[4]/g' $1
-sed -i .bak -e 's/ | cut -d'\''\/'\'' -f9/].split[8]/g' $1
-sed -i .bak -e 's/ | cut -d'\''\/'\'' -f11/].split[10]/g' $1
+sed -i .bak -e 's/ | cut -d'\''\/'\'' -f5/].split(\"\/\")[4]/g' $1
+sed -i .bak -e 's/ | cut -d'\''\/'\'' -f9/].split(\"\/\")[8]/g' $1
+sed -i .bak -e 's/ | cut -d'\''\/'\'' -f11/].split(\"\/\")[10]/g' $1
 sed -i .bak -e 's/length'\''/len(/g' $1
 sed -i .bak -e 's/] | sed '\''s\/\\.\/-\/g'\'']/].replace(\".\",\"-\")/g' $1
 sed -i .bak -e 's/ | sed '\''s\/\\.\/-\/g'\'']/].replace(\".\",\"-\")/g' $1

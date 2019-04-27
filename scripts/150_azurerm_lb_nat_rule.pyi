@@ -11,20 +11,20 @@ if count > 0" :
         if icount > 0" :
             for j in range(0,icount):
                 
-                name=azr[i]["inboundNatRules[j]["name"].split[10]]
+                name=azr[i]["inboundNatRules[j]["name"].split("/")[10]]
                 rname= name.replace(".","-")
 
                 id=azr[i]["inboundNatRules[j]["]["id"]
                 rg=azr[i]["inboundNatRules[j]["resourceGroup"].replace(".","-")
                 
-                lbrg=azr[i]["]["id"].split[4].replace(".","-")
-                lbname=azr[i]["]["id"].split[8].replace(".","-")
+                lbrg=azr[i]["]["id"].split("/")[4].replace(".","-")
+                lbname=azr[i]["]["id"].split("/")[8].replace(".","-")
 
                 fep=azr[i]["inboundNatRules[j]["frontendPort"]
                 bep=azr[i]["inboundNatRules[j]["backendPort"]
                 proto=azr[i]["inboundNatRules[j]["protocol"]
-                feipc=azr[i]["inboundNatRules[j]["frontendIpConfiguration"]["id"].split[10]]
-                enfip=azr[i]["inboundNatRules[j]["enableFloatingIp"].split[10]]
+                feipc=azr[i]["inboundNatRules[j]["frontendIpConfiguration"]["id"].split("/")[10]]
+                enfip=azr[i]["inboundNatRules[j]["enableFloatingIp"].split("/")[10]]
 
                 
                 fr.write('resource "' +  "' + '__' + "' {' tfp rg rname + '"\n')

@@ -10,16 +10,16 @@ if count > 0" :
         id=azr[i]["]["id"]
         loc=azr[i]["location"]
         type=azr[i]["connectionType"]
-        vngrg=azr[i]["virtualNetworkGateway1"]["id"].split[4].replace(".","-")
-        vngnam=azr[i]["virtualNetworkGateway1"]["id"].split[8].replace(".","-")
+        vngrg=azr[i]["virtualNetworkGateway1"]["id"].split("/")[4].replace(".","-")
+        vngnam=azr[i]["virtualNetworkGateway1"]["id"].split("/")[8].replace(".","-")
         
-        peerrg=azr[i]["peer"]["id"].split[4].replace(".","-")
-        peernam=azr[i]["peer"]["id"].split[8].replace(".","-")
+        peerrg=azr[i]["peer"]["id"].split("/")[4].replace(".","-")
+        peernam=azr[i]["peer"]["id"].split("/")[8].replace(".","-")
         
         if type" = "IPsec" :
             echo "is sec"
-            peerrg=azr[i]["localNetworkGateway2"]["id"].split[4].replace(".","-")
-            peernam=azr[i]["localNetworkGateway2"]["id"].split[8].replace(".","-")
+            peerrg=azr[i]["localNetworkGateway2"]["id"].split("/")[4].replace(".","-")
+            peernam=azr[i]["localNetworkGateway2"]["id"].split("/")[8].replace(".","-")
             echo peerrg
             echo peernam
        

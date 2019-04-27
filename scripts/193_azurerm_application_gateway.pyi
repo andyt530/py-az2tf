@@ -49,8 +49,8 @@ if count > 0" :
         if icount > 0" :
             for j in range(0,icount):
                 gname=azr[i]["gatewayIpConfigurations[j]["name"]
-                subrg=azr[i]["gatewayIpConfigurations[j]["subnet"]["id"].split[4].replace(".","-")
-                subname=azr[i]["gatewayIpConfigurations[j]["subnet"]["id"].split[10].replace(".","-")
+                subrg=azr[i]["gatewayIpConfigurations[j]["subnet"]["id"].split("/")[4].replace(".","-")
+                subname=azr[i]["gatewayIpConfigurations[j]["subnet"]["id"].split("/")[10].replace(".","-")
                 fr.write('gateway_ip_configuration {' + '"\n')
                 fr.write('\t name = "' +    gname + '"\n')
                 if subname" try :
@@ -81,11 +81,11 @@ if count > 0" :
                 fname=azr[i]["frontendIpConfigurations[j]["name"]
                 priv=azr[i]["frontendIpConfigurations[j]["privateIpAddress"]
                 
-                pubrg=azr[i]["frontendIpConfigurations[j]["publicIpAddress"]["id"].split[4].replace(".","-")
-                pubname=azr[i]["frontendIpConfigurations[j]["publicIpAddress"]["id"].split[8].replace(".","-")
+                pubrg=azr[i]["frontendIpConfigurations[j]["publicIpAddress"]["id"].split("/")[4].replace(".","-")
+                pubname=azr[i]["frontendIpConfigurations[j]["publicIpAddress"]["id"].split("/")[8].replace(".","-")
                 
-                subrg=azr[i]["frontendIpConfigurations[j]["subnet"]["id"].split[4].replace(".","-")
-                subname=azr[i]["frontendIpConfigurations[j]["subnet"]["id"].split[10].replace(".","-")
+                subrg=azr[i]["frontendIpConfigurations[j]["subnet"]["id"].split("/")[4].replace(".","-")
+                subname=azr[i]["frontendIpConfigurations[j]["subnet"]["id"].split("/")[10].replace(".","-")
                 privalloc=azr[i]["frontendIpConfigurations[j]["privateIpAllocationMethod"]
                 
                 fr.write('frontend_ip_configuration {' + '"\n')
@@ -144,8 +144,8 @@ if count > 0" :
                 bproto=azr[i]["backendHttpSettingsCollection[j]["protocol"]
                 bcook=azr[i]["backendHttpSettingsCollection[j]["cookieBasedAffinity"]
                 btimo=azr[i]["backendHttpSettingsCollection[j]["requestTimeout"]
-                pname=azr[i]["backendHttpSettingsCollection[j]["probe"]["id"].split[10]]
-                acert=azr[i]["backendHttpSettingsCollection[j]["au:ticationCertificates[0]["]["id"].split[10]]
+                pname=azr[i]["backendHttpSettingsCollection[j]["probe"]["id"].split("/")[10]]
+                acert=azr[i]["backendHttpSettingsCollection[j]["au:ticationCertificates[0]["]["id"].split("/")[10]]
 
                 fr.write('backend_http_settings {' + '"\n')
                 fr.write('\t name = "' +    bname + '"\n')
@@ -171,11 +171,11 @@ if count > 0" :
         if icount > 0" :
             for j in range(0,icount):
                 bname=azr[i]["httpListeners[j]["name"]
-                feipcn=azr[i]["httpListeners[j]["frontendIpConfiguration"]["id"].split[10]]
-                fepn=azr[i]["httpListeners[j]["frontendPort"]["id"].split[10]]  
+                feipcn=azr[i]["httpListeners[j]["frontendIpConfiguration"]["id"].split("/")[10]]
+                fepn=azr[i]["httpListeners[j]["frontendPort"]["id"].split("/")[10]]  
                 bproto=azr[i]["httpListeners[j]["protocol"]
                 bhn=azr[i]["httpListeners[j]["hostName"]
-                bssl=azr[i]["httpListeners[j]["sslCertificate"]["id"].split[10]]
+                bssl=azr[i]["httpListeners[j]["sslCertificate"]["id"].split("/")[10]]
                 rsni=azr[i]["httpListeners[j]["requireServerNameIndication"]                               
 
                 fr.write('http_listener {' + '"\n')
@@ -252,9 +252,9 @@ if count > 0" :
             for j in range(0,icount):
                 bname=azr[i]["requestRoutingRules[j]["name"]
                 btyp=azr[i]["requestRoutingRules[j]["ruleType"]
-                blin=azr[i]["requestRoutingRules[j]["httpListener"]["id"].split[10]]
-                bapn=azr[i]["requestRoutingRules[j]["backendAddressPool"]["id"].split[10]]
-                bhsn=azr[i]["requestRoutingRules[j]["backendHttpSettings"]["id"].split[10]]
+                blin=azr[i]["requestRoutingRules[j]["httpListener"]["id"].split("/")[10]]
+                bapn=azr[i]["requestRoutingRules[j]["backendAddressPool"]["id"].split("/")[10]]
+                bhsn=azr[i]["requestRoutingRules[j]["backendHttpSettings"]["id"].split("/")[10]]
 
                 fr.write('request_routing_rule {' + '"\n')
 

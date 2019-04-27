@@ -9,13 +9,13 @@ if count > 0" :
         if icount > 0" :
             for j in range(0,icount):
                 
-                name=azr[i]["inboundNatPools[j]["name"].split[10]]
+                name=azr[i]["inboundNatPools[j]["name"].split("/")[10]]
                 rname= name.replace(".","-")
                 id=azr[i]["inboundNatPools[j]["]["id"]
                 rg=azr[i]["inboundNatPools[j]["resourceGroup"].replace(".","-")
                 proto=azr[i]["inboundNatPools[j]["protocol"]
 
-                feipc=azr[i]["inboundNatPools[j]["frontendIpConfiguration"]["id"].split[10]]
+                feipc=azr[i]["inboundNatPools[j]["frontendIpConfiguration"]["id"].split("/")[10]]
 
                 feps=azr[i]["inboundNatPools[j]["frontendPortStart"]
                 fepe=azr[i]["inboundNatPools[j]["frontendPortEnd"]
@@ -23,8 +23,8 @@ if count > 0" :
                 if feps" = "null" : feps= bep;
                 if fepe" = "null" : fepe= bep;
                 
-                lbrg=azr[i]["]["id"].split[4].replace(".","-")
-                lbname=azr[i]["]["id"].split[8].replace(".","-")
+                lbrg=azr[i]["]["id"].split("/")[4].replace(".","-")
+                lbname=azr[i]["]["id"].split("/")[8].replace(".","-")
                 
                 fr.write('resource "' +  "' + '__' + "' {' tfp rg rname + '"\n')
                 fr.write('\t\t name = "' +    name + '"\n')

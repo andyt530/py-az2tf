@@ -28,11 +28,11 @@ if count > 0" :
                 fname=azr[i]["frontendIpConfigurations[j]["name"]
                 priv=azr[i]["frontendIpConfigurations[j]["privateIpAddress"]
 
-                pubrg=azr[i]["frontendIpConfigurations[j]["publicIpAddress"]["id"].split[4].replace(".","-")
-                pubname=azr[i]["frontendIpConfigurations[j]["publicIpAddress"]["id"].split[8].replace(".","-")
+                pubrg=azr[i]["frontendIpConfigurations[j]["publicIpAddress"]["id"].split("/")[4].replace(".","-")
+                pubname=azr[i]["frontendIpConfigurations[j]["publicIpAddress"]["id"].split("/")[8].replace(".","-")
                 
-                subrg=azr[i]["frontendIpConfigurations[j]["subnet"]["id"].split[4].replace(".","-")
-                subname=azr[i]["frontendIpConfigurations[j]["subnet"]["id"].split[10].replace(".","-")
+                subrg=azr[i]["frontendIpConfigurations[j]["subnet"]["id"].split("/")[4].replace(".","-")
+                subname=azr[i]["frontendIpConfigurations[j]["subnet"]["id"].split("/")[10].replace(".","-")
                 privalloc=azr[i]["frontendIpConfigurations[j]["privateIpAllocationMethod"]
                 
                 fr.write('\t frontend_ip_configuration {' + '"\n')

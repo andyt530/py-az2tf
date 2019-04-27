@@ -21,8 +21,8 @@ if count > 0" :
         loc=azr[i]["location"
         https=azr[i]["httpsOnly"
   
-        prg=azr[i]["appServicePlanId"].split[4] ]
-        pnam=azr[i]["appServicePlanId"].split[8]]
+        prg=azr[i]["appServicePlanId"].split("/")[4] ]
+        pnam=azr[i]["appServicePlanId"].split("/")[8]]
         lcrg=azr[i]["resourceGroup" | awk '{'print tolower(0)}'']
         appplid=azr[i]["appServicePlanId"]
         rg= lcrg.replace(".","-")

@@ -47,7 +47,7 @@ if count2 > 0" :
             pub=azrplan.publisher"
             prod=azrplan.product"]
             soln=azrplan.product" | cut -f2 -d'/']
-            workname=azrproperties.workspaceResourceId"].split[8]]
+            workname=azrproperties.workspaceResourceId"].split("/")[8]]
             workn1=azrname" | cut -d'(' -f2
             workn= workn1 | cut -d')' -f1
             workid=azrproperties.workspaceResourceId"]

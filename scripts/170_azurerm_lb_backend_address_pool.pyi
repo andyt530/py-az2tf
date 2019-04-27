@@ -11,13 +11,13 @@ if count > 0" :
         if icount > 0" :
             for j in range(0,icount):
                 
-                name=azr[i]["backendAddressPools[j]["name"].split[10]]
+                name=azr[i]["backendAddressPools[j]["name"].split("/")[10]]
                 rname= name.replace(".","-")
                 id=azr[i]["backendAddressPools[j]["]["id"]
                 rg=azr[i]["backendAddressPools[j]["resourceGroup"].replace(".","-")
                 
-                lbrg=azr[i]["]["id"].split[4].replace(".","-")
-                lbname=azr[i]["]["id"].split[8].replace(".","-")
+                lbrg=azr[i]["]["id"].split("/")[4].replace(".","-")
+                lbname=azr[i]["]["id"].split("/")[8].replace(".","-")
                          
                 fr.write('resource "' +  "' + '__' +  + '__' + "' {' tfp rg lbname rname + '"\n')
                 fr.write('\t\t name = "' +    name + '"\n')

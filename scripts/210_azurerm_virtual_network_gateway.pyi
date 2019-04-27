@@ -72,10 +72,10 @@ if count > 0" :
             ipcpipa= ipc | jq ".[j]["privateIpAllocationMethod"
             ipcpipid= ipc | jq ".[j]["publicIpAddress.id"
             ipcsubid= ipc | jq ".[j]["subnet.id"
-            pipnam= ipcpipid].split[8].replace(".","-")
-            piprg= ipcpipid].split[4].replace(".","-")
-            subnam= ipcsubid].split[10].replace(".","-")
-            subrg= ipcsubid].split[4].replace(".","-")
+            pipnam= ipcpipid].split("/")[8].replace(".","-")
+            piprg= ipcpipid].split("/")[4].replace(".","-")
+            subnam= ipcsubid].split("/")[10].replace(".","-")
+            subrg= ipcsubid].split("/")[4].replace(".","-")
             fr.write('\tip_configuration {'  + '"\n')
             fr.write('\t\t name =  ipcname + '"\n')
             fr.write('\t\t private_ip_address_allocation =  ipcpipa + '"\n')
