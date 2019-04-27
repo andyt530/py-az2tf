@@ -99,6 +99,7 @@ if [ "$f" = "no" ]; then
 else
     sort -u processed.txt > pt.txt
     cp pt.txt processed.txt
+    rm *state*.sh
 fi
 
 # cleanup from any previous runs
@@ -150,7 +151,17 @@ terraform fmt
 
 
 chmod 755 *state*.sh
-for com in `ls *stateimp*.sh | sort -g`; do
+
+if [ "$f" = "yes" ]; then
+for com in `ls *staterm.sh | sort -g`; do
+    comm=`printf "./%s" $com`
+    echo $comm
+    eval $comm
+done
+fi
+
+
+for com in `ls *stateimp.sh | sort -g`; do
     comm=`printf "./%s" $com`
     echo $comm
     eval $comm

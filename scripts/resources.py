@@ -1863,8 +1863,8 @@ if crf in tfp:
     if cde:
         print(json.dumps(azr, indent=4, separators=(',', ': ')))
 
-    tfrmf="125-"+tfp+"-staterm.sh"
-    tfimf="125-"+tfp+"-stateimp.sh"
+    tfrmf="124-"+tfp+"-staterm.sh"
+    tfimf="124-"+tfp+"-stateimp.sh"
     tfrm=open(tfrmf, 'a')
     tfim=open(tfimf, 'a')
     print tfp,
@@ -1990,7 +1990,8 @@ if crf in tfp:
             name=azr2[j]["name"]
             id=azr2[j]["id"]
             rg=id.split("/")[4].replace(".","-")
-
+            print rg
+            print crg
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
@@ -2008,7 +2009,7 @@ if crf in tfp:
             fr.write('\t profile_name = "' +  pname + '"\n')
             ttype=azr2[j]["type"].split("/")[2]
             fr.write('\t type = "' +  ttype + '"\n')
-
+            print "hi2"
             pri=azr2[j]["properties"]["priority"]
             fr.write('\t priority = "' +  str(pri) + '"\n')
             wt=azr2[j]["properties"]["weight"]
@@ -2018,11 +2019,17 @@ if crf in tfp:
             fr.write('\t target = "' +  tgt + '"\n')
             eps=azr2[j]["properties"]["endpointStatus"]
             fr.write('\t endpoint_status = "' +  eps + '"\n')
-            tgtid=azr2[j]["id"]
-            tgtrrg=azr2[j]["id"].split("/")[4].replace(".","-")
-            tgtrid=azr2[j]["id"].split("/")[8].replace(".","-")
-           
-            fr.write('\t target_resource_id = "{azurerm_public_ip.' + tgtrrg + '__' + tgtrid + '.id}"\n')
+            try:
+                tgtid=azr2[j]["properties"]["targetResourceId"]
+                tgtrrg=azr2[j]["properties"]["targetResourceId"].split("/")[4].replace(".","-")
+                tgtrid=azr2[j]["properties"]["targetResourceId"].split("/")[8].replace(".","-")          
+                fr.write('\t target_resource_id = "${azurerm_public_ip.' + tgtrrg + '__' + tgtrid + '.id}"\n')
+            except KeyError:
+                pass
+
+
+            fr.write('}\n') 
+            fr.close()   # close .tf file
 
             if cde:
                 with open(rfilename) as f: 
@@ -2033,6 +2040,7 @@ if crf in tfp:
             tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
             tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
             tfim.write(tfcomm)  
+        # end for j loop
 
     # end for i loop
 
