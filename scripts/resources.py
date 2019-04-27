@@ -1,7 +1,5 @@
 #!/usr/bin/python2
-#from azure.common.client_factory import get_client_from_cli_profile
-#from azure.mgmt.compute import ComputeManagementClient
-#from azure.mgmt.resource import ResourceManagementClient
+
 import subprocess
 import requests
 import adal
@@ -12,14 +10,14 @@ import glob
 import argparse
 
 scwd=os.getcwd()
-print scwd
+#print scwd
 head, tail = os.path.split(scwd)
 os.chdir(head)
 cwd=os.getcwd()
 head, tail = os.path.split(cwd)
 newd=head+"/scripts"
 os.chdir(newd)
-print os.getcwd()
+#print os.getcwd()
 
 import azurerm_resources
 import azurerm_resource_group
@@ -36,9 +34,11 @@ import azurerm_managed_disk
 import azurerm_storage_account
 import azurerm_public_ip
 import azurerm_key_vault
+import azurerm_traffic_manager_profile
+import azurerm_traffic_manager_endpoint
 
 os.chdir(scwd)
-print os.getcwd()
+#print os.getcwd()
 
 
 parser = argparse.ArgumentParser(description='terraform sub rg')
@@ -175,8 +175,9 @@ if crf is None:
     crf="azurerm"
 
 
-
-azurerm_resources.azurerm_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# record resources
+azurerm_resources.azurerm_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os)
+# 001 Resource Group
 azurerm_resource_group.azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 002 management locks
 azurerm_management_lock.azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess)
@@ -204,217 +205,13 @@ azurerm_managed_disk.azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,
 azurerm_storage_account.azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 #120 public ip
 azurerm_public_ip.azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-
-
-
 #  124 Traffic manager profile
-
-tfp="azurerm_traffic_manager_profile"
-azr=""
-if crf in tfp:
-# REST or cli
-    print "REST Traffic Manager Profile"
-    url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/trafficmanagerprofiles"
-    params = {'api-version': '2017-05-01'}
-    r = requests.get(url, headers=headers, params=params)
-    azr= r.json()["value"]
-    if cde:
-        print(json.dumps(azr, indent=4, separators=(',', ': ')))
-
-    tfrmf="124-"+tfp+"-staterm.sh"
-    tfimf="124-"+tfp+"-stateimp.sh"
-    tfrm=open(tfrmf, 'a')
-    tfim=open(tfimf, 'a')
-    print tfp,
-    count=len(azr)
-    print count
-    for i in range(0, count):
-
-        name=azr[i]["name"]
-        #loc=azr[i]["location"]
-        id=azr[i]["id"]
-        rg=id.split("/")[4].replace(".","-")
-
-        if crg is not None:
-            if rg.lower() != crg.lower():
-                continue  # back to for
-        
-        rname=name.replace(".","-")
-        prefix=tfp+"."+rg+'__'+rname
-        #print prefix
-        rfilename=prefix+".tf"
-        fr=open(rfilename, 'w')
-        fr.write(az2tfmess)
-        fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
-        fr.write('\t name = "' + name + '"\n')
-        #fr.write('\t location = "'+ loc + '"\n')
-        fr.write('\t resource_group_name = "'+ rg + '"\n')
-
-        trm=azr[i]["properties"]["trafficRoutingMethod"]
-        fr.write('\t traffic_routing_method = "' +  trm + '"\n')
-        ps=azr[i]["properties"]["profileStatus"]
-        fr.write('\t profile_status = "' + ps + '"\n') 
-      
-        dnsc=azr[i]["properties"]["dnsConfig"]
-        monc=azr[i]["properties"]["monitorConfig"]
-                
-
-# dns_config block
-
-        rn=azr[i]["properties"]["dnsConfig"]["relativeName"]
-        ttl=azr[i]["properties"]["dnsConfig"]["ttl"]
-        
-        if ttl == 0: 
-            ttl=30
-        
-        fr.write('\t dns_config { \n')
-        fr.write('\t\t relative_name = "' + rn + '"\n')
-        #TF bug returning 0
-        fr.write('\t\t ttl  = "' + str(ttl) + '"\n')
-        fr.write('\t} \n')
-        
-# monitor_config block
-
-        prot=azr[i]["properties"]["monitorConfig"]["protocol"]
-        port=azr[i]["properties"]["monitorConfig"]["port"]
-
-        fr.write('\t monitor_config { \n')
-        fr.write('\t\t protocol = "' + prot + '"\n')
-        fr.write('\t\t port  = "' + str(port) + '"\n')
-        try:
-            path=azr[i]["properties"]["monitorConfig"]["path"]
-            fr.write('\t\t path  = "' + path + '"\n')
-        except KeyError:
-            pass
-        fr.write('\t} \n')  
-        
-
-
-# tags block       
-        try:
-            mtags=azr[i]["tags"]
-            fr.write('tags { \n')
-            for key in mtags.keys():
-                tval=mtags[key]
-                fr.write('\t "' + key + '"="' + tval + '"\n')
-            fr.write('}\n')
-        except KeyError:
-            pass
-
-        fr.write('}\n') 
-        fr.close()   # close .tf file
-
-        if cde:
-            with open(rfilename) as f: 
-                print f.read()
-
-        tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
-
-        tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
-        tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
-        tfim.write(tfcomm)  
-
-    # end for i loop
-
-    tfrm.close()
-    tfim.close()
-#end traffic manager profile
-
+azr=azurerm_traffic_manager_profile.azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 #  125 traffic manager endpoint
-
-tfp="azurerm_traffic_manager_endpoint"
-
-if crf in tfp:
-# REST or cli
-# from above
-    
-    tfrmf="125-"+tfp+"-staterm.sh"
-    tfimf="125-"+tfp+"-stateimp.sh"
-    tfrm=open(tfrmf, 'a')
-    tfim=open(tfimf, 'a')
-    print tfp,
-    count=len(azr)
-    print count
-    for i in range(0, count):
-
-        #loc=azr[i]["location"]
-        id=azr[i]["id"]
-        pname=azr[i]["name"]
-        azr2=azr[i]["properties"]["endpoints"]
-        jcount=len(azr2)
-        print "jcount=" + str(jcount)
-        for j in range (0,jcount):
-
-            name=azr2[j]["name"]
-            id=azr2[j]["id"]
-            rg=id.split("/")[4].replace(".","-")
-            print rg
-            print crg
-            if crg is not None:
-                if rg.lower() != crg.lower():
-                    continue  # back to for
-            
-            rname=name.replace(".","-")
-            prefix=tfp+"."+rg+'__'+rname
-            print prefix
-            rfilename=prefix+".tf"
-            fr=open(rfilename, 'w')
-            fr.write(az2tfmess)
-            fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
-            fr.write('\t name = "' + name + '"\n')
-            #fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rg + '"\n')
-            fr.write('\t profile_name = "' +  pname + '"\n')
-            ttype=azr2[j]["type"].split("/")[2]
-            fr.write('\t type = "' +  ttype + '"\n')
-            print "hi2"
-            pri=azr2[j]["properties"]["priority"]
-            fr.write('\t priority = "' +  str(pri) + '"\n')
-            wt=azr2[j]["properties"]["weight"]
-            fr.write('\t weight = "' +  str(wt) + '"\n')
-
-            tgt=azr2[j]["properties"]["target"]
-            fr.write('\t target = "' +  tgt + '"\n')
-            eps=azr2[j]["properties"]["endpointStatus"]
-            fr.write('\t endpoint_status = "' +  eps + '"\n')
-            try:
-                tgtid=azr2[j]["properties"]["targetResourceId"]
-                tgtrrg=azr2[j]["properties"]["targetResourceId"].split("/")[4].replace(".","-")
-                tgtrid=azr2[j]["properties"]["targetResourceId"].split("/")[8].replace(".","-")          
-                fr.write('\t target_resource_id = "${azurerm_public_ip.' + tgtrrg + '__' + tgtrid + '.id}"\n')
-            except KeyError:
-                pass
-
-
-            fr.write('}\n') 
-            fr.close()   # close .tf file
-
-            if cde:
-                with open(rfilename) as f: 
-                    print f.read()
-
-            tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
-
-            tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
-            tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
-            tfim.write(tfcomm)  
-        # end for j loop
-
-    # end for i loop
-
-    tfrm.close()
-    tfim.close()
-#end traffic manager endpoint
+azurerm_traffic_manager_endpoint.azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr)
 
 # ******************************************************************************************
 exit()
 
-#rclient = get_client_from_cli_profile(ResourceManagementClient)
-#for resource_group in rclient.resource_groups.list():
-#    print(resource_group.name)
-
-# template
-
-#############
 
 
