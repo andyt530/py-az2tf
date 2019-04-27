@@ -1,14 +1,13 @@
 
 azr=az network vnet-gateway list -g rgsource -o json
-count=print azr | jq '. | length'
-if count" -gt "0" :
-    count=expr count - 1
-    for i in range( 0 count):
+count= azr | | len(
+if count > 0" :
+    for i in range(0,count):
         name=azr[i]["name"]
-        rname=print name | sed 's/\./-/g'
-        rg=azr[i]["resourceGroup" | sed 's/\./-/g']
+        rname= name.replace(".","-")
+        rg=azr[i]["resourceGroup"].replace(".","-")
 
-        id=azr[i]["id"]
+        id=azr[i]["]["id"]
         loc=azr[i]["location"]
         type=azr[i]["gatewayType"]
         vpntype=azr[i]["vpnType"]
@@ -23,9 +22,6 @@ if count" -gt "0" :
         
         aa=azr[i]["activeActive"
         enbgp=azr[i]["enableBgp"
-        prefix=fr.write(' + '__' + " prefixa rg
-        outfile=fr.write('. + '__' + .tf" tfp rg rname
-        print az2tfmess > outfile
         
         fr.write('resource "' +  "' + '__' + "' {' tfp rg rname + '"\n')
         fr.write('\t name = "' +  name + '"\n')
@@ -37,7 +33,7 @@ if count" -gt "0" :
         fr.write('\t active_active = "' +  aa + '"\n')
         fr.write('\t enable_bgp = "' +  enbgp + '"\n')
         
-        if vadsp" != "null" :
+        if vadsp" try :
             fr.write('\t vpn_client_configuration {'  + '"\n')
             fr.write('\t\t address_space =   "vadsp" + '"\n')
             if radsa" == "null" :
@@ -45,20 +41,20 @@ if count" -gt "0" :
                 fr.write('\t\t\t name = "' +    + '"\n')
                 fr.write('\t\t\t public_cert_data = "' +    + '"\n')
                 fr.write('\t\t }'  + '"\n')
-            fi
-            if radsa" != "null" :
+           
+            if radsa" try :
             fr.write('\t\t radius_server_address =   "radsa" + '"\n')
             fr.write('\t\t radius_server_secret =   "radss" + '"\n')
-            fi
-            if vcp0" != "null" :
+           
+            if vcp0" try :
             fr.write('\t\t vpn_client_protocols =   "vcp" + '"\n')
-            fi
+           
             
             fr.write('\t }'  + '"\n')
-        fi
+       
         
         
-        if bgps" != "null" :
+        if bgps" try :
             fr.write('\t bgp_settings {'  + '"\n')
             asn=azr[i]["bgpSettings.asn"]
             peera=azr[i]["bgpSettings.bgpPeeringAddress"]
@@ -67,35 +63,34 @@ if count" -gt "0" :
             fr.write('\t\t peering_address = "' +  peera + '"\n')
             fr.write('\t\t peer_weight = "' +  peerw + '"\n')
             fr.write('\t }'  + '"\n')
-        fi
+       
         
         ipc=azr[i]["ipConfigurations"
-        count=print ipc | jq '. | length'
-        count=expr count - 1
-        for j in range( 0 count):
-            ipcname=print ipc | jq ".[j]["name"
-            ipcpipa=print ipc | jq ".[j]["privateIpAllocationMethod"
-            ipcpipid=print ipc | jq ".[j]["publicIpAddress.id"
-            ipcsubid=print ipc | jq ".[j]["subnet.id"
-            pipnam=print ipcpipid | cut -d'/' -f9 | sed 's/\./-/g']
-            piprg=print ipcpipid | cut -d'/' -f5 | sed 's/\./-/g']
-            subnam=print ipcsubid | cut -d'/' -f11 | sed 's/\./-/g']
-            subrg=print ipcsubid | cut -d'/' -f5 | sed 's/\./-/g']
+        count= ipc | | len(
+        for j in range(0,count):
+            ipcname= ipc | jq ".[j]["name"
+            ipcpipa= ipc | jq ".[j]["privateIpAllocationMethod"
+            ipcpipid= ipc | jq ".[j]["publicIpAddress.id"
+            ipcsubid= ipc | jq ".[j]["subnet.id"
+            pipnam= ipcpipid].split[8].replace(".","-")
+            piprg= ipcpipid].split[4].replace(".","-")
+            subnam= ipcsubid].split[10].replace(".","-")
+            subrg= ipcsubid].split[4].replace(".","-")
             fr.write('\tip_configuration {'  + '"\n')
             fr.write('\t\t name =  ipcname + '"\n')
             fr.write('\t\t private_ip_address_allocation =  ipcpipa + '"\n')
-            if pipnam" != "null" :
+            if pipnam" try :
                 fr.write('\t\t public_ip_address_id = "'\{'azurerm_public_ip. + '__' + .id}'"' piprg pipnam + '"\n')
-            fi
-            if subnam" != "null" :
+           
+            if subnam" try :
                 fr.write('\t\t subnet_id = "'\{'azurerm_subnet. + '__' + .id}'"' subrg subnam + '"\n')
-            fi
-            fr.write('\t}' + '"\n')
+           
+            fr.write('\t}\n')
         
 
         
         
-        fr.write('}' + '"\n')
+        fr.write('}\n')
         #
 
         

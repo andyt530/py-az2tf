@@ -1,34 +1,30 @@
-prefixa=print 0 | awk -F 'azurerm_' '{'print 2}'' | awk -F '.sh' '{'print 1}'' 
+prefixa= 0 | awk -F 'azurerm_' '{'print 2}'' | awk -F '.sh' '{'print 1}'' 
 tfp=fr.write('azurerm_" prefixa
 if 1" != " :
     rgsource=1
 else
-    print -n "Enter name of Resource Group [rgsource]["> "
+    echo -n "Enter name of Resource Group [rgsource]["> "
     read response
     if [ -n "response" :
         rgsource=response
-    fi
+   
 fi
 azr=az webapp list -g rgsource -o json
-count=print azr | jq '. | length'
-if count" -gt "0" :
-    count=expr count - 1
-    for i in range( 0 count):
+count= azr | | len(
+if count > 0" :
+    for i in range(0,count):
         
         name=azr[i]["name"]
-        rname=print name | sed 's/\./-/g'
+        rname= name.replace(".","-")
         rg=azr[i]["resourceGroup" ]
-        id=azr[i]["id"]
+        id=azr[i]["]["id"]
         loc=azr[i]["location"
-        prg=azr[i]["appServicePlanId" | cut -d'/' -f5 ]
-        pnam=azr[i]["appServicePlanId" | cut -d'/' -f9]
+        prg=azr[i]["appServicePlanId"].split[4] ]
+        pnam=azr[i]["appServicePlanId"].split[8]]
         lcrg=azr[i]["resourceGroup" | awk '{'print tolower(0)}'']
         appplid=azr[i]["appServicePlanId"]
-        rg=print lcrg | sed 's/\./-/g'
+        rg= lcrg.replace(".","-")
 
-        prefix=fr.write('." prefixa rg
-        outfile=fr.write('. + '__' + .tf" tfp rg rname
-        print az2tfmess > outfile  
         
         fr.write('resource "' +  "' + '__' + "' {' tfp rg rname + '"\n')
         fr.write('\t name = "' +  name + '"\n')
@@ -41,33 +37,32 @@ if count" -gt "0" :
 
 # geo location block
         
-#        icount=print geol | jq '. | length'
-#        if icount" -gt "0" :
-#            icount=expr icount - 1
-#            for j in range( 0 icount):
+#        icount= geol | | len(
+#        if icount > 0" :
+#            for j in range(0,icount):
 #                floc=azr[i]["failoverPolicies[j]["locationName"
 #                fop=azr[i]["failoverPolicies[j]["failoverPriority"]
 #                fr.write('\t geo_location {'   + '"\n')
 #                fr.write('\t location =    "floc" + '"\n')
 #                fr.write('\t failover_priority  = "' +    fop + '"\n')
-#                fr.write('}' + '"\n')
+#                fr.write('}\n')
 #            
-#        fi
+#       
 
         
         #
         # tags internal
         
         
-        fr.write('}' + '"\n')
+        fr.write('}\n')
         #
 
         cat outfile
         statecomm=fr.write('terraform state rm . + '__' + " tfp rg rname
-        print statecomm >> tf-staterm.sh
+        echo statecomm >> tf-staterm.sh
         eval statecomm
         evalcomm=fr.write('terraform import . + '__' +  " tfp rg rname id
-        print evalcomm >> tf-stateimp.sh
+        echo evalcomm >> tf-stateimp.sh
         eval evalcomm
     
 fi

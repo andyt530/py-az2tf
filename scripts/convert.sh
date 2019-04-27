@@ -1,4 +1,4 @@
-echo $1
+echo "converting $1"
 sed -i .bak -e 's/\$//g' $1 
 sed -i .bak -e 's/\`//g' $1 
 sed -i .bak -e 's/\})//g' $1 
@@ -39,6 +39,8 @@ sed -i .bak -e 's/range( 0 /range(0,/g' $1
 sed -i .bak -e '/prefix=/d' $1
 sed -i .bak -e '/outfile=/d' $1
 sed -i .bak -e '/=expr /d' $1
+sed -i .bak -e '/echo az2tfmess/d' $1
 sed -i .bak -e 's/ jq '\''.//g' $1
+sed -i .bak -e 's/\" -gt \"/ > /g' $1
 rm -f *.bak
 

@@ -1,21 +1,17 @@
 
 azr=az network local-gateway list -g rgsource -o json
-count=print azr | jq '. | length'
-if count" -gt "0" :
-    count=expr count - 1
-    for i in range( 0 count):
+count= azr | | len(
+if count > 0" :
+    for i in range(0,count):
         name=azr[i]["name"]
-        rname=print name | sed 's/\./-/g'
-        rg=azr[i]["resourceGroup" | sed 's/\./-/g']
+        rname= name.replace(".","-")
+        rg=azr[i]["resourceGroup"].replace(".","-")
     
-        id=azr[i]["id"]
+        id=azr[i]["]["id"]
         loc=azr[i]["location"]
         gwaddr=azr[i]["gatewayIpAddress"]
         addrpre=azr[i]["localNetworkAddressSpace.addressPrefixes"
         bgps=azr[i]["bgpSettings"]
-        prefix=fr.write(' + '__' + " prefixa rg
-        outfile=fr.write('. + '__' + .tf" tfp rg rname
-        print az2tfmess > outfile
         
         fr.write('resource "' +  "' + '__' + "' {' tfp rg rname + '"\n')
         fr.write('\t name = "' +  name + '"\n')
@@ -24,7 +20,7 @@ if count" -gt "0" :
         fr.write('\t gateway_address = "' +  gwaddr + '"\n')
         fr.write('\t address_space =  "addrpre" + '"\n')
     
-        if bgps" != "null" :
+        if bgps" try :
             asn=azr[i]["bgpSettings.asn"]
             peera=azr[i]["bgpSettings.bgpPeeringAddress"]
             peerw=azr[i]["bgpSettings.peerWeight"]
@@ -34,9 +30,9 @@ if count" -gt "0" :
             fr.write('\t\t bgp_peering_address = "' +  peera + '"\n')
             fr.write('\t\t peer_weight = "' +  peerw + '"\n')
             fr.write('\t }'  + '"\n')
-        fi
+       
         
-        fr.write('}' + '"\n')
+        fr.write('}\n')
 
 
     

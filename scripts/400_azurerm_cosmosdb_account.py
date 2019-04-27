@@ -1,15 +1,14 @@
 
 azr=az cosmosdb list -g rgsource -o json
-count=print azr | jq '. | length'
-if count" -gt "0" :
-    count=expr count - 1
-    for i in range( 0 count):
+count= azr | | len(
+if count > 0" :
+    for i in range(0,count):
         
         name=azr[i]["name"]
-        rname=print name | sed 's/\./-/g'
-        rg=azr[i]["resourceGroup" | sed 's/\./-/g']
+        rname= name.replace(".","-")
+        rg=azr[i]["resourceGroup"].replace(".","-")
 
-        id=azr[i]["id"]
+        id=azr[i]["]["id"]
         loc=azr[i]["location"
         kind=azr[i]["kind"]
         offer=azr[i]["databaseAccountOfferType"]
@@ -20,9 +19,6 @@ if count" -gt "0" :
         geol=azr[i]["failoverPolicies"       
         
         af=azr[i]["enableAutomaticFailover"]      
-        prefix=fr.write('." prefixa rg
-        outfile=fr.write('. + '__' + .tf" tfp rg rname
-        print az2tfmess > outfile  
         
         fr.write('resource "' +  "' + '__' + "' {' tfp rg rname + '"\n')
         fr.write('\t name = "' +  name + '"\n')
@@ -44,23 +40,22 @@ if count" -gt "0" :
 
         fr.write('\t\t name = "' +  caps + '"\n')        
         fr.write('\t }' caps + '"\n')
-        fi
+       
 # geo location block
         
-        icount=print geol | jq '. | length'
-        if icount" -gt "0" :
-            icount=expr icount - 1
-            for j in range( 0 icount):
+        icount= geol | | len(
+        if icount > 0" :
+            for j in range(0,icount):
                 floc=azr[i]["failoverPolicies[j]["locationName"
                 fop=azr[i]["failoverPolicies[j]["failoverPriority"]
                 fr.write('\t geo_location {'   + '"\n')
                 fr.write('\t location =    "floc" + '"\n')
                 fr.write('\t failover_priority  = "' +    fop + '"\n')
-                fr.write('}' + '"\n')
+                fr.write('}\n')
             
           
         
-        fr.write('}' + '"\n')
+        fr.write('}\n')
         #
 
         cat outfile

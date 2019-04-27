@@ -1,19 +1,15 @@
 
 azr=az network watcher list -o json
-count=print azr | jq '. | length'
-if count" -gt "0" :
-    count=expr count - 1
-    for i in range( 0 count):
+count= azr | | len(
+if count > 0" :
+    for i in range(0,count):
         name=azr[i]["name"]
-        #name=print name | awk '{'print tolower(0)}''
-        rname=print name | sed 's/\./-/g'
-        rg=azr[i]["resourceGroup" | sed 's/\./-/g']
+        #name= name | awk '{'print tolower(0)}''
+        rname= name.replace(".","-")
+        rg=azr[i]["resourceGroup"].replace(".","-")
 
-        prefix=fr.write(' + '__' + " prefixa rg
-        outfile=fr.write('. + '__' + .tf" tfp rg rname
-        print az2tfmess > outfile
 
-        id=azr[i]["id"]
+        id=azr[i]["]["id"]
         loc=azr[i]["location"
         
         fr.write('resource "' +  "' + '__' + "' {' tfp rg rname + '"\n')
@@ -27,7 +23,7 @@ if count" -gt "0" :
 
             
         
-        fr.write('}' + '"\n')
+        fr.write('}\n')
         cat outfile
 
     

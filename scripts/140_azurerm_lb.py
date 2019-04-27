@@ -1,7 +1,7 @@
 
 azr=az network lb list -g rgsource -o json
 count= azr | | len(
-if count" -gt "0" :
+if count > 0" :
     for i in range(0,count):
        
         name=azr[i]["name"]
@@ -13,7 +13,6 @@ if count" -gt "0" :
         sku=azr[i]["sku.name"]
         fronts=azr[i]["frontendIpConfigurations"
         
-        echo az2tfmess > outfile
 
         fr.write('resource "' +  "' + '__' + "' {' tfp rg rname + '"\n')
         fr.write('\t name = "' +  name + '"\n')
@@ -23,7 +22,7 @@ if count" -gt "0" :
            
         icount= fronts | | len(
        
-        if icount" -gt "0" :
+        if icount > 0" :
             for j in range(0,icount):
                     
                 fname=azr[i]["frontendIpConfigurations[j]["name"]

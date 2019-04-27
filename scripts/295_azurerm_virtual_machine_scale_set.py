@@ -1,14 +1,13 @@
 
 azr=az vmss list -g rgsource -o json
-count=print azr | jq '. | length'
-if count" -gt "0" :
-    count=expr count - 1
-    for i in range( 0 count):
+count= azr | | len(
+if count > 0" :
+    for i in range(0,count):
         name=azr[i]["name"]
-        rname=print name | sed 's/\./-/g'
-        rg=azr[i]["resourceGroup" | sed 's/\./-/g']
+        rname= name.replace(".","-")
+        rg=azr[i]["resourceGroup"].replace(".","-")
 
-        id=azr[i]["id"]
+        id=azr[i]["]["id"]
         loc=azr[i]["location"]
         upm=azr[i]["upgradePolicy.mode"]
         op=azr[i]["overprovision"]
@@ -17,9 +16,6 @@ if count" -gt "0" :
         vmpri=azr[i]["virtualMachineProfile.priority"]
 
 
-        prefix=fr.write(' + '__' + " prefixa rg
-        outfile=fr.write('. + '__' + .tf" tfp rg rname
-        print az2tfmess > outfile
 
 
         vmtype=azr[i]["virtualMachineProfile.storageProfile.osDisk.osType"]
@@ -33,7 +29,7 @@ if count" -gt "0" :
         #  
         osvhd=azr[i]["virtualMachineProfile.osProfile.linuxConfiguration.ssh.publicKeys[0]["keyData"]
         #
-        vmimid=azr[i]["virtualMachineProfile.storageProfile.imageReference.id"]
+        vmimid=azr[i]["virtualMachineProfile.storageProfile.imageReference"]["id"]
 
         vmimoffer=azr[i]["virtualMachineProfile.storageProfile.imageReference.offer"]
         vmimpublisher=azr[i]["virtualMachineProfile.storageProfile.imageReference.publisher"]
@@ -62,15 +58,15 @@ if count" -gt "0" :
         fr.write('}' upm + '"\n')
 # basic settings continued
         fr.write('resource_group_name = "' +  rgsource + '"\n')
-        if vmlic" != "null" : 
+        if vmlic" try : 
             fr.write('license_type = "' +  vmlic + '"\n')
            
         fr.write('upgrade_policy_mode = "' +  upm + '"\n')
         fr.write('overprovision = "' +  op + '"\n')
         fr.write('single_placement_group = "' +  spg + '"\n')
-        if vmpri" != "null" : 
+        if vmpri" try : 
         fr.write('priority = "' +  vmpri + '"\n')
-        fi
+       
 #os_profile block
         vmadmin=azr[i]["virtualMachineProfile.osProfile.adminUsername"]
         vmadminpw=azr[i]["virtualMachineProfile.osProfile.Password"]
@@ -78,10 +74,10 @@ if count" -gt "0" :
         fr.write('os_profile {' + '"\n')
         fr.write('\tcomputer_name_prefix = "' +  vmcn + '"\n')
         fr.write('\tadmin_username = "' +  vmadmin + '"\n')
-        if vmadminpw" != "null" :
+        if vmadminpw" try :
         fr.write('\tadmin_password = "' +  vmadminpw + '"\n')
-        fi
-        fr.write('}' + '"\n')
+       
+        fr.write('}\n')
 
 # os_profile_secrets - not used ?
 
@@ -89,83 +85,81 @@ if count" -gt "0" :
         winb=azr[i]["virtualMachineProfile.osProfile.windowsConfiguration"
         
        #
-        if winb" != "null" :
+        if winb" try :
             vmwau=azr[i]["virtualMachineProfile.osProfile.windowsConfiguration.enableAutomaticUpdates"]
             vmwvma=azr[i]["virtualMachineProfile.osProfile.windowsConfiguration.provisionVmAgent"]
             vmwtim=azr[i]["virtualMachineProfile.osProfile.windowsConfiguration.timeZone"
-            if vmwau" != "null" :
+            if vmwau" try :
                 fr.write('os_profile_windows_config {'  + '"\n')
                 fr.write('\t enable_automatic_upgrades = "' +  vmwau + '"\n')
                 fr.write('\t provision_vm_agent = "' +  vmwvma + '"\n')
-                if vmwtim" != "null" :
+                if vmwtim" try :
                     fr.write('\t timezone =   "vmwtim" + '"\n')
-                fi
-                fr.write('}' + '"\n')
-            fi
-        fi
+               
+                fr.write('}\n')
+           
+       
 
 # os_profile_linux_config block
         linuxb=azr[i]["virtualMachineProfile.osProfile.linuxConfiguration"
         
 
-        if linuxb" != "null" :
+        if linuxb" try :
             fr.write('os_profile_linux_config {'  + '"\n')
             if [ vmdispw = "null" :
             # osprofile can by null for vhd imported images - must make an artificial one.
             vmdispw="false"
-            fi
+           
             fr.write('\tdisable_password_au:tication = "' +   vmdispw + '"\n')
             if vmdispw" != "false" :
                fr.write('\tssh_keys {'  + '"\n')
                 fr.write('\t\tpath = "' +   vmsshpath + '"\n')
-                print "		key_data = "'vmsshkey"'"  + '"\n')
-                fr.write('\t}' + '"\n')
-            fi
+                echo "		key_data = "'vmsshkey"'"  + '"\n')
+                fr.write('\t}\n')
+           
             
-            fr.write('}' + '"\n')
-        fi
+            fr.write('}\n')
+       
 
 # network profile block
         netifs=azr[i]["virtualMachineProfile.networkProfile.networkInterfaceConfigurations"      
-        icount=print netifs | jq '. | length'
-        if icount" -gt "0" :
-            icount=expr icount - 1
-            for j in range( 0 icount):
+        icount= netifs | | len(
+        if icount > 0" :
+            for j in range(0,icount):
                 fr.write('network_profile {' + '"\n')
                 nn=azr[i]["virtualMachineProfile.networkProfile.networkInterfaceConfigurations[j]["name"]
                 pri=azr[i]["virtualMachineProfile.networkProfile.networkInterfaceConfigurations[j]["primary"]
                 ipc=azr[i]["virtualMachineProfile.networkProfile.networkInterfaceConfigurations[j]["ipConfigurations"
                 fr.write('\tname = "' +  nn + '"\n')
                 fr.write('\tprimary = "' +  pri + '"\n')
-                kcount=print ipc | jq '. | length'
-                if kcount" -gt "0" :
-                    kcount=expr kcount - 1
-                        for k in range( 0 kcount):
+                kcount= ipc | | len(
+                if kcount > 0" :
+                        for k in range(0,kcount):
                             fr.write('\tip_configuration {' + '"\n')
                                 ipcn=azr[i]["virtualMachineProfile.networkProfile.networkInterfaceConfigurations[j]["ipConfigurations[k]["name"]
                                 ipcp=azr[i]["virtualMachineProfile.networkProfile.networkInterfaceConfigurations[j]["ipConfigurations[k]["primary"]
-                                ipcsrg=azr[i]["virtualMachineProfile.networkProfile.networkInterfaceConfigurations[j]["ipConfigurations[k]["subnet.id" | cut -f5 -d'/' | sed 's/\./-/g']
-                                ipcsn=azr[i]["virtualMachineProfile.networkProfile.networkInterfaceConfigurations[j]["ipConfigurations[k]["subnet.id" | cut -f11 -d'/' | sed 's/\./-/g']                    
+                                ipcsrg=azr[i]["virtualMachineProfile.networkProfile.networkInterfaceConfigurations[j]["ipConfigurations[k]["subnet.id" | cut -f5 -d'/'].replace(".","-")
+                                ipcsn=azr[i]["virtualMachineProfile.networkProfile.networkInterfaceConfigurations[j]["ipConfigurations[k]["subnet.id" | cut -f11 -d'/'].replace(".","-")                    
                                 beapids=azr[i]["virtualMachineProfile.networkProfile.networkInterfaceConfigurations[j]["ipConfigurations[k]["loadBalancerBackendAddressPools"
                                 natrids=azr[i]["virtualMachineProfile.networkProfile.networkInterfaceConfigurations[j]["ipConfigurations[k]["loadBalancerInboundNatPools"                                
-                                print "*************************************************"
-                                print beapids
-                                print natrids  
-                                print "-------------------------------------------------"               
+                                echo "*************************************************"
+                                echo beapids
+                                echo natrids  
+                                echo "-------------------------------------------------"               
                                 if ipcp" = "null" : ipcp=";fi
                                 fr.write('\t\tname = "' +  ipcn + '"\n')
                                 fr.write('\t\tprimary = "' +  ipcp + '"\n')
                                 fr.write('\t\tsubnet_id = "'\{'azurerm_subnet. + '__' + .id}'"' ipcsrg ipcsn + '"\n')
-                            fr.write('\t}' + '"\n')
+                            fr.write('\t}\n')
                         
                       
-                fr.write('}' + '"\n')
+                fr.write('}\n')
             
-        fi
+       
 
-        #print "*************************************************"
-        #print "-------------------------------------------------"
-        #print "================================================="
+        #echo "*************************************************"
+        #echo "-------------------------------------------------"
+        #echo "================================================="
 
 # storage_profile_os_disk  block
         fr.write('storage_profile_os_disk {'  + '"\n')
@@ -173,35 +167,35 @@ if count" -gt "0" :
         fr.write('\tcaching = "' +   vmosdiskcache  >>  outfile
         if vmosacctype" != " :
             fr.write('\tmanaged_disk_type = "' +   vmosacctype + '"\n')
-        fi
+       
 
         fr.write('\tcreate_option = "' +   vmoscreoption + '"\n')
-        if vmtype" = "null" : vmtype=" ; fi
+        if vmtype" = "null" : vmtype=" ;
         fr.write('\tos_type = "' +   vmtype + '"\n')
-        if vmoswa" != "null" :
+        if vmoswa" try :
             fr.write('\t write_accelerator_enabled = "' +   vmoswa + '"\n')
-        fi
+       
         vmosvhdc=azr[i]["virtualMachineProfile.storageProfile.osDisk.vhdContainers"
 
-        if vmosvhdc" != "null" :
+        if vmosvhdc" try :
             fr.write('\tvhd_containers =    "vmosvhdc" + '"\n')
-        fi
-        fr.write('}' + '"\n')
+       
+        fr.write('}\n')
         #
        
 # storage_profile_data_disk  block
         
-        #print datadisks | jq .
-        dcount=print datadisks | jq '. | length'
+        #echo datadisks | jq .
+        dcount= datadisks | | len(
         dcount=((dcount-1))
         
-        for j in range( 0 dcount):
-            ddname=print datadisks | jq ".[j]["name"]
-            if ddname" != "null" :
-                ddcreopt=print datadisks | jq ".[j]["createOption"]
-                ddlun=print datadisks | jq ".[j]["lun"]
-                ddvhd=print datadisks | jq ".[j]["vhd.uri"]
-                ddmd=print datadisks | jq ".[j]["managedDisk"]
+        for j in range(0,dcount):
+            ddname= datadisks | jq ".[j]["name"]
+            if ddname" try :
+                ddcreopt= datadisks | jq ".[j]["createOption"]
+                ddlun= datadisks | jq ".[j]["lun"]
+                ddvhd= datadisks | jq ".[j]["vhd.uri"]
+                ddmd= datadisks | jq ".[j]["managedDisk"]
                 fr.write('storage_profile_data_disk {'  + '"\n')
                 fr.write('\t name = "' +  ddname + '"\n')
                 fr.write('\t create_option = "' +  ddcreopt + '"\n')
@@ -209,9 +203,9 @@ if count" -gt "0" :
                 # caching , disk_size_gn, write_accelerator_enabled 
                 
                 if ddcreopt" = "Attach" :
-                    if ["ddmd" != "null" ][":
-                    ddmdid=print datadisks | jq ".[j]["managedDisk.id" | cut -d'/' -f9 | sed 's/\./-/g']
-                    ddmdrg=print datadisks | jq ".[j]["managedDisk.id" | cut -d'/' -f5 | sed 's/\./-/g']
+                    if ["ddmd" try ][":
+                    ddmdid= datadisks | jq ".[j]["managedDisk"]["id"].split[8].replace(".","-")
+                    ddmdrg= datadisks | jq ".[j]["managedDisk"]["id"].split[4].replace(".","-")
                     ## ddmdrg from cut is upper case - not good
                     ## probably safe to assume managed disk in same RG as VM ??
                     # check id lowercase rg = ddmdrg if so use rg
@@ -220,30 +214,30 @@ if count" -gt "0" :
                     #
                     
                     fr.write('\t managed_disk_id = "'\{'azurerm_managed_disk. + '__' + .id}'"' rg ddmdid + '"\n')
-                    fi
-                fi
-                if ddvhd" != "null" :
+                   
+               
+                if ddvhd" try :
                     fr.write('\t vhd_uri = "' +  ddvhd + '"\n')
-                fi
+               
                 
-                fr.write('}' + '"\n')
-            fi
+                fr.write('}\n')
+           
         
 
 # storage_profile_image_reference block
 
         if vmimid" = "null" :
-            if vmimpublisher" != "null" ][":
+            if vmimpublisher" try ][":
             fr.write('storage_profile_image_reference {'  + '"\n')
             fr.write('\t publisher = "' +  vmimpublisher  + '"\n')
             fr.write('\t offer = "' +   vmimoffer + '"\n')
             fr.write('\t sku = "' +   vmimsku + '"\n')
             fr.write('\t version = "' +   vmimversion + '"\n')
             
-            fr.write('}' + '"\n')
-            fi
+            fr.write('}\n')
+           
           
-        fi
+       
 
 # extensions
 
@@ -253,30 +247,30 @@ if count" -gt "0" :
         vmbturi=azr[i]["virtualMachineProfile.diagnosticsProfile.bootDiagnostics.storageUri"]
         vmbten=azr[i]["virtualMachineProfile.diagnosticsProfile.bootDiagnostics.enabled"]
 
-        if vmdiags" != "null" :
+        if vmdiags" try :
             fr.write('boot_diagnostics {'  + '"\n')
             fr.write('\t enabled = "' +  vmbten + '"\n')
             fr.write('\t storage_uri = "' +  vmbturi + '"\n')
-            fr.write('}' + '"\n')
-        fi
+            fr.write('}\n')
+       
 
 # plan block
-        if vmplname" != "null" :
+        if vmplname" try :
             vmplprod=azr[i]["plan.product"]
             vmplpub=azr[i]["plan.publisher"] 
             fr.write('plan {'  + '"\n')
             fr.write('\t name = "' +  vmplname  + '"\n')
             fr.write('\t publisher = "' +  vmplpub  + '"\n')
             fr.write('\t product = "' +  vmplprod  + '"\n')
-            fr.write('}' + '"\n')
+            fr.write('}\n')
               
  
 
 # zones block
         
-# finish
+#nish
 
-        fr.write('}' + '"\n')
+        fr.write('}\n')
 
     
 fi

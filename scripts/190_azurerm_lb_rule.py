@@ -1,39 +1,34 @@
 
 azr=az network lb list -g rgsource -o json
-count=print azr | jq '. | length'
-if count" -gt "0" :
-    count=expr count - 1
-    for i in range( 0 count):
+count= azr | | len(
+if count > 0" :
+    for i in range(0,count):
         beap=azr[i]["loadBalancingRules"
-        rg=azr[i]["resourceGroup" | sed 's/\./-/g']
-        lbrg=azr[i]["id" | cut -d'/' -f5 | sed 's/\./-/g']
-        lbname=azr[i]["id" | cut -d'/' -f9 | sed 's/\./-/g']
+        rg=azr[i]["resourceGroup"].replace(".","-")
+        lbrg=azr[i]["]["id"].split[4].replace(".","-")
+        lbname=azr[i]["]["id"].split[8].replace(".","-")
         
-        icount=print beap | jq '. | length'
-        if icount" -gt "0" :
-            icount=expr icount - 1
-            for j in range( 0 icount):
+        icount= beap | | len(
+        if icount > 0" :
+            for j in range(0,icount):
                 
-                name=azr[i]["loadBalancingRules[j]["name" | cut -d'/' -f11]
-                rname=print name | sed 's/\./-/g'
-                id=azr[i]["loadBalancingRules[j]["id"]
-                rrg=azr[i]["loadBalancingRules[j]["resourceGroup" | sed 's/\./-/g']
+                name=azr[i]["loadBalancingRules[j]["name"].split[10]]
+                rname= name.replace(".","-")
+                id=azr[i]["loadBalancingRules[j]["]["id"]
+                rrg=azr[i]["loadBalancingRules[j]["resourceGroup"].replace(".","-")
                 fep=azr[i]["loadBalancingRules[j]["frontendPort"]
                 bep=azr[i]["loadBalancingRules[j]["backendPort"]
                 proto=azr[i]["loadBalancingRules[j]["protocol"]
-                feipc=azr[i]["loadBalancingRules[j]["frontendIpConfiguration.id" | cut -d'/' -f11]
+                feipc=azr[i]["loadBalancingRules[j]["frontendIpConfiguration"]["id"].split[10]]
                 efip=azr[i]["loadBalancingRules[j]["enableFloatingIp"]
                 ld=azr[i]["loadBalancingRules[j]["loadDistribution"]
                 itm=azr[i]["loadBalancingRules[j]["idleTimeoutInMinutes"]
 
-                prg=azr[i]["loadBalancingRules[j]["probe.id" | cut -d'/' -f5 | sed 's/\./-/g']
-                pid=azr[i]["loadBalancingRules[j]["probe.id" | cut -d'/' -f11 | sed 's/\./-/g']
-                beadprg=azr[i]["loadBalancingRules[j]["backendAddressPool.id" | cut -d'/' -f5 | sed 's/\./-/g']
-                beadpid=azr[i]["loadBalancingRules[j]["backendAddressPool.id" | cut -d'/' -f11 | sed 's/\./-/g']
+                prg=azr[i]["loadBalancingRules[j]["probe"]["id"].split[4].replace(".","-")
+                pid=azr[i]["loadBalancingRules[j]["probe"]["id"].split[10].replace(".","-")
+                beadprg=azr[i]["loadBalancingRules[j]["backendAddressPool"]["id"].split[4].replace(".","-")
+                beadpid=azr[i]["loadBalancingRules[j]["backendAddressPool"]["id"].split[10].replace(".","-")
 
-                prefix=fr.write(' + '__' + " prefixa rg 
-                outfile=fr.write('. + '__' +  + '__' + .tf" tfp rrg lbname rname  
-                print az2tfmess > outfile 
              
                 fr.write('resource "' +  "' + '__' +  + '__' + "' {' tfp rg lbname rname + '"\n')
                 fr.write('\t\t name = "' +    name + '"\n')
@@ -53,11 +48,11 @@ if count" -gt "0" :
                 fr.write('\t\t load_distribution = "' +    ld + '"\n')
 
 
-                fr.write('}' + '"\n')
+                fr.write('}\n')
 
 
         #
         
-        fi
+       
     
 fi

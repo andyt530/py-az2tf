@@ -1,62 +1,58 @@
-prefixa=print 0 | awk -F 'azurerm_' '{'print 2}'' | awk -F '.sh' '{'print 1}'' 
+prefixa= 0 | awk -F 'azurerm_' '{'print 2}'' | awk -F '.sh' '{'print 1}'' 
 tfp=fr.write('azurerm_" prefixa
 
-print TF_VAR_rgtarget
+echo TF_VAR_rgtarget
 if 1" != " :
     rgsource=1
 fi
 
 at=az account get-access-token -o json
-bt=print at | jq .accessToken]
-sub=print at | jq .subscription]
+bt= at | jq .accessToken]
+sub= at | jq .subscription]
 
 
 ris=fr.write('curl -s  -X GET -H "'Authorization: Bearer "' -H "'Content-Type: application/json"' https://management.azure.com/subscriptions//resourceGroups//providers/Microsoft.OperationsManagement/solutions?api-version=2015-11-01-preview" bt sub rgsource
-#print ris
+#echo ris
 ret=eval ris
 
-azr2=print ret | jq .value
+azr2= ret | jq .value
 rg=rgsource
-print "anal sol=rg"
-count2=print azr2 | jq '. | length'
-if count2" -gt "0" :
-    count2=expr count2 - 1
-    for j in range( 0 count2):
+echo "anal sol=rg"
+count2= azr2 | | len(
+if count2 > 0" :
+    for j in range(0,count2):
         
-        azr=print azr2 | jq ".[j]["
-        count=print azr | jq '. | length'
-        if count" -gt "0" :
+        azr= azr2 | jq ".[j]["
+        count= azr | | len(
+        if count > 0" :
             
             name=azrname"]
-            pname=print name
-            name=print name | sed s/\(/-/
-            name=print name | sed s/\)/-/
+            pname= name
+            name= name | sed s/\(/-/
+            name= name | sed s/\)/-/
             
             
-            id=azrid"]
+            id=az"]["id"]
             skip="false"
             if [[ id = *"["* ]["; :
-                print "Skipping this soluion pname - can't process currently"
+                echo "Skipping this soluion pname - can't process currently"
                 skip="true"
-            fi
+           
             
             loc=azrlocation"
             
-            rname=print name | sed 's/\./-/g'
-            rg=print rgsource | sed 's/\./-/g'
+            rname= name.replace(".","-")
+            rg= rgsource.replace(".","-")
 
             pub=azrplan.publisher"
             prod=azrplan.product"]
             soln=azrplan.product" | cut -f2 -d'/']
-            workname=azrproperties.workspaceResourceId" | cut -d'/' -f9]
+            workname=azrproperties.workspaceResourceId"].split[8]]
             workn1=azrname" | cut -d'(' -f2
-            workn=print workn1 | cut -d')' -f1
+            workn= workn1 | cut -d')' -f1
             workid=azrproperties.workspaceResourceId"]
-            print "workname=workn"
+            echo "workname=workn"
             
-            prefix=fr.write(' + '__' + " prefixa rg
-            outfile=fr.write('. + '__' + .tf" tfp rg rname
-            print az2tfmess > outfile
             
             if skip" != "true" :
                 
@@ -75,13 +71,13 @@ if count2" -gt "0" :
 
 # tags cause errors                
                 
-                fr.write('}' + '"\n')
+                fr.write('}\n')
           
 
-            fi
+           
             
             #
-        fi
+       
         
     
 fi

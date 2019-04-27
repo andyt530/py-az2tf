@@ -1,51 +1,46 @@
-prefixa=print 0 | awk -F 'azurerm_' '{'print 2}'' | awk -F '.sh' '{'print 1}'' 
+prefixa= 0 | awk -F 'azurerm_' '{'print 2}'' | awk -F '.sh' '{'print 1}'' 
 tfp=fr.write('azurerm_" prefixa
 
-print TF_VAR_rgtarget
+echo TF_VAR_rgtarget
 if 1" != " :
     rgsource=1
 fi
 at=az account get-access-token -o json
-bt=print at | jq .accessToken]
-sub=print at | jq .subscription]
+bt= at | jq .accessToken]
+sub= at | jq .subscription]
 
 
 ris=fr.write('curl -s  -X GET -H "'Authorization: Bearer "' -H "'Content-Type: application/json"' https://management.azure.com/subscriptions//resourceGroups//providers/Microsoft.Network/expressRouteCircuits?api-version=2018-01-01" bt sub rgsource
 # count how many of this provider type there are.
 ret=eval ris
-azr2=print ret | jq .value
+azr2= ret | jq .value
 rg=rgsource
-count2=print azr2 | jq '. | length'
-if count2" -gt "0" :
-    count2=expr count2 - 1
-    for j in range( 0 count2):
+count2= azr2 | | len(
+if count2 > 0" :
+    for j in range(0,count2):
         
-        name2=print azr2 | jq ".[j]["name"]
+        name2= azr2 | jq ".[j]["name"]
         ris2=fr.write('curl -s -X GET -H "'Authorization: Bearer "' -H "'Content-Type: application/json"' https://management.azure.com/subscriptions//resourceGroups//providers/Microsoft.Network/expressRouteCircuits/?api-version=2018-01-01" bt sub rgsource name2
-        #print ris2
+        #echo ris2
         ret2=eval ris2
-        azr=print ret2 | jq .
-        #print ret2 | jq .
-        count=print azr | jq '. | length'
-        if count" -gt "0" :
+        azr= ret2 | jq .
+        #echo ret2 | jq .
+        count= azr | | len(
+        if count > 0" :
             
             
             auths=azrproperties.authorizations"
-            print auths | jq .
+            echo auths | jq .
             
-            acount=print auths | jq '. | length'
-            if acount" -gt "0" :
-                acount=expr acount - 1
-                for k in range( 0 acount):
+            acount= auths | | len(
+            if acount > 0" :
+                for k in range(0,acount):
                     
-                    name=print auths | jq ".[k]["name"]
-                    id=print auths | jq ".[k]["id"]
+                    name= auths | jq ".[k]["name"]
+                    id= auths | jq ".[k]["]["id"]
                     
-                    rname=print name | sed 's/\./-/g'
-                    rg=print rgsource | sed 's/\./-/g'
-                    prefix=fr.write(' + '__' + " prefixa rg
-                    outfile=fr.write('. + '__' + .tf" tfp rg rname
-                    print az2tfmess > outfile
+                    rname= name.replace(".","-")
+                    rg= rgsource.replace(".","-")
                     
                     fr.write('resource "' +  "' + '__' + "' {' tfp rg rname + '"\n')
                     fr.write('\t name = "' +  name + '"\n')
@@ -53,15 +48,15 @@ if count2" -gt "0" :
                     fr.write('\t express_route_circuit_name = "' +  name2 + '"\n')
                                        
                     
-                    fr.write('}' + '"\n')
+                    fr.write('}\n')
 
                     
                 
                 
-            fi
+           
             
             #
-        fi
+       
         
     
 fi

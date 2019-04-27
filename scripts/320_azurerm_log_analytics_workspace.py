@@ -1,44 +1,40 @@
-prefixa=print 0 | awk -F 'azurerm_' '{'print 2}'' | awk -F '.sh' '{'print 1}'' 
+prefixa= 0 | awk -F 'azurerm_' '{'print 2}'' | awk -F '.sh' '{'print 1}'' 
 tfp=fr.write('azurerm_" prefixa
 
-print TF_VAR_rgtarget
+echo TF_VAR_rgtarget
 if 1" != " :
     rgsource=1
 fi
 at=az account get-access-token -o json
-bt=print at | jq .accessToken]
-sub=print at | jq .subscription]
+bt= at | jq .accessToken]
+sub= at | jq .subscription]
 
 
 ris=fr.write('curl -s  -X GET -H "'Authorization: Bearer "' -H "'Content-Type: application/json"' https://management.azure.com/subscriptions//resourceGroups//providers/Microsoft.OperationalInsights/workspaces?api-version=2015-11-01-preview" bt sub rgsource
-#print ris
+#echo ris
 ret=eval ris
-azr2=print ret | jq .value
+azr2= ret | jq .value
 rg=rgsource
-count2=print azr2 | jq '. | length'
-if count2" -gt "0" :
-    count2=expr count2 - 1
-    for j in range( 0 count2):
+count2= azr2 | | len(
+if count2 > 0" :
+    for j in range(0,count2):
         
-        name2=print azr2 | jq ".[j]["name"]
+        name2= azr2 | jq ".[j]["name"]
         ris2=fr.write('curl -s -X GET -H "'Authorization: Bearer "' -H "'Content-Type: application/json"' https://management.azure.com/subscriptions//resourceGroups//providers/Microsoft.OperationalInsights/workspaces/?api-version=2015-11-01-preview" bt sub rgsource name2
-        #print ris2
+        #echo ris2
         ret2=eval ris2
-        azr=print ret2 | jq .
-        #print ret2 | jq .
-        count=print azr | jq '. | length'
-        if count" -gt "0" :
+        azr= ret2 | jq .
+        #echo ret2 | jq .
+        count= azr | | len(
+        if count > 0" :
             name=azrname"]
-            id=azrid"]
+            id=az"]["id"]
             loc=azrlocation"
             
-            rname=print name | sed 's/\./-/g'
-            rg=print rgsource | sed 's/\./-/g'
+            rname= name.replace(".","-")
+            rg= rgsource.replace(".","-")
             sku=azrproperties.sku.name"
             rdays=azrproperties.retentionInDays"
-            prefix=fr.write(' + '__' + " prefixa rg
-            outfile=fr.write('. + '__' + .tf" tfp rg rname
-            print az2tfmess > outfile
             
             fr.write('resource "' +  "' + '__' + "' {' tfp rg rname + '"\n')
             fr.write('\t name = "' +  name + '"\n')
@@ -48,16 +44,16 @@ if count2" -gt "0" :
             # 7 is not a valid value, but is the default reported from AZ api. If 7, skip to avoid triggering plan difference
             if rdays" -ne "7" :
                 fr.write('\t retention_in_days =   "rdays" + '"\n')
-            fi
+           
             
 
             
             
-            fr.write('}' + '"\n')
+            fr.write('}\n')
 
             
             #
-        fi
+       
         
     
 fi

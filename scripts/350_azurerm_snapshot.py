@@ -1,14 +1,13 @@
 
 azr=az snapshot list -g rgsource -o json
-count=print azr | jq '. | length'
+count= azr | | len(
 if count" != "0" :
-    count=expr count - 1
-    for i in range( 0 count):
+    for i in range(0,count):
         name=azr[i]["name"]
-        rname=print name | sed 's/\./-/g'
-        rg=azr[i]["resourceGroup" | sed 's/\./-/g']
+        rname= name.replace(".","-")
+        rg=azr[i]["resourceGroup"].replace(".","-")
 
-        id=azr[i]["id"]
+        id=azr[i]["]["id"]
         loc=azr[i]["location"]
         co=azr[i]["creationData.createOption"]
         sz=azr[i]["diskSizeGb"]
@@ -17,9 +16,6 @@ if count" != "0" :
         srid=azr[i]["creationData.sourceResourceId"]
         said=azr[i]["creationData.storageAccountId"]
 
-        prefix=fr.write(' + '__' + " prefixa rg
-        outfile=fr.write('. + '__' + .tf" tfp rg rname
-        print az2tfmess > outfile
         
         fr.write('resource "' +  "' + '__' + "' {' tfp rg rname + '"\n')
         fr.write('\t name = "' +  name + '"\n')
@@ -27,22 +23,22 @@ if count" != "0" :
         fr.write('\t resource_group_name = "' +  rgsource + '"\n')
         fr.write('\t create_option = "' +  co + '"\n')
         
-        if sz" != "null" :
+        if sz" try :
         fr.write('\t disk_size_gb = "' +  sz + '"\n')
-        fi
-        #if suri" != "null" :
+       
+        #if suri" try :
         #    fr.write('\t source_uri = "' +  suri + '"\n')
         #fi
-        #if srid" != "null" :
+        #if srid" try :
         #    fr.write('\t source_resource_id = "' +  srid + '"\n')
         #fi
-        #if said" != "null" :
+        #if said" try :
         #    fr.write('\t source_account_id = "' +  said + '"\n')
         #fi        
 
         
         #
-        fr.write('}' + '"\n')
+        fr.write('}\n')
         #
 
         
