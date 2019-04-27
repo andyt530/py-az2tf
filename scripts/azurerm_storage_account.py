@@ -45,7 +45,6 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             sakind=azr[i]["kind"]
             
             sartype=azr[i]["sku"]["name"].split("_")[1]
-            print sartype
             saencrypt=str(azr[i]["properties"]["encryption"]["services"]["blob"]["enabled"])
             fiencrypt=str(azr[i]["properties"]["encryption"]["services"]["file"]["enabled"])
             sahttps=str(azr[i]["properties"]["supportsHttpsTrafficOnly"])

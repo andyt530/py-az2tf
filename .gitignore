@@ -6,3 +6,4 @@ tf*.sh
 terraform*
 generated
 *.bak
+*.pyc
