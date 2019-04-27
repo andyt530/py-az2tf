@@ -1,3 +1,4 @@
+echo $1
 sed -i .bak -e 's/\$//g' $1 
 sed -i .bak -e 's/\`//g' $1 
 sed -i .bak -e 's/\})//g' $1 

@@ -82,8 +82,60 @@ else:
 bt=bt2.rstrip('\n')
 print "Subscription:",sub
 headers = {'Authorization': 'Bearer ' + bt, 'Content-Type': 'application/json'}
-print "REST Resources ",
 
+
+# subscription check
+#https://management.azure.com/subscriptions?api-version=2014-04-01
+print "REST Subscriptions ",
+url="https://management.azure.com/subscriptions"
+params = {'api-version': '2014-04-01'}
+try: 
+    r = requests.get(url, headers=headers, params=params)
+    subs= r.json()["value"]
+except KeyError:
+    print "Error getting subscription list"
+    exit("ErrorGettingSubscriptionList")
+ssubs=json.dumps(subs)
+if sub not in ssubs: 
+    print "Could not find subscription with ID " + sub + "Exiting ..." 
+    exit("ErrorInvalidSubscriptionID")
+
+FoundSub=False
+count=len(sub)
+print count
+for i in range(0, count):
+    id=str(subs[i]["subscriptionId"])
+    if id == sub:
+        FoundSub=True
+
+if not FoundSub:
+    print "Could not find subscription with ID " + sub + "Exiting ..." 
+    exit("ErrorInvalidSubscriptionID")
+
+
+print "Found subscription " + sub + " proceeding ..."
+
+if crg is not None:
+    FoundRg=False
+    # get and check Resource group
+    url="https://management.azure.com/subscriptions/" + sub + "/resourceGroups"
+    params = {'api-version': '2014-04-01'}
+    r = requests.get(url, headers=headers, params=params)
+    rgs= r.json()["value"]
+
+    count=len(rgs)
+    for j in range(0, count):    
+        name=rgs[j]["name"]
+        if crg.lower() == name.lower():
+            print "Found Resource Group" + crg
+            FoundRg=True
+
+    if not FoundRg:
+        print "Could not find Resource Group " + crg + " in subscription " + sub + " Exiting ..." 
+        exit("ErrorInvalidResourceGroup")
+
+
+print "REST Resources ",
 fresfilename="data.json"
 fres=open(fresfilename, 'w')
 url="https://management.azure.com/subscriptions/" + sub + "/resources"
@@ -1850,7 +1902,7 @@ if crf in tfp:
 #end public ip
 
 #  124 Traffic manager profile
-cde=True
+
 tfp="azurerm_traffic_manager_profile"
 azr=""
 if crf in tfp:
@@ -1963,7 +2015,7 @@ if crf in tfp:
 #end traffic manager profile
 
 #  125 traffic manager endpoint
-cde=True
+
 tfp="azurerm_traffic_manager_endpoint"
 
 if crf in tfp:

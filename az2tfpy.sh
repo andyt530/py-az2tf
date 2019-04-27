@@ -47,34 +47,9 @@ else
     fi
 fi
 
-echo "Checking Subscription $mysub exists ..."
-isok="no"
-subs=`az account list --query '[].id' -o json | jq '.[]' | tr -d '"'`
-for i in `echo $subs`
-do
-    if [ "$i" = "$mysub" ] ; then
-        echo "Found subscription $mysub proceeding ..."
-        isok="yes"
-    fi
-done
-if [ "$isok" != "yes" ]; then
-    echo "Could not find subscription with ID $mysub"
-    exit
-fi
-
 myrg=$g
 export ARM_SUBSCRIPTION_ID="$mysub"
 az account set -s $mysub
-
-# check provided resource group exists in subscription
-if [ "$g" != "" ]; then
-    lcg=`echo $g | awk '{print tolower($0)}'`
-    exists=`az group exists -g $g -o json`
-    if  ! $exists ; then
-        echo "Resource Group $g does not exists in subscription $mysub  Exit ....."
-        exit
-    fi
-fi
 
 echo " "
 echo "Subscription ID = ${s}"
@@ -99,7 +74,7 @@ if [ "$f" = "no" ]; then
 else
     sort -u processed.txt > pt.txt
     cp pt.txt processed.txt
-    rm *state*.sh
+    rm -f *state*.sh import.log
 fi
 
 # cleanup from any previous runs
@@ -173,6 +148,8 @@ terraform plan .
 echo "---------------------------------------------------------------------------"
 echo "az2tf output files are in generated/tf.$mysub"
 echo "---------------------------------------------------------------------------"
+
+
 exit
 
 
