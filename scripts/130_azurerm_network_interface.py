@@ -1,94 +1,135 @@
+def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+    cde=True
+    tfp="azurerm_network_interface"
+    azr=""
+    if crf in tfp:
+    # REST or cli
+        print "REST Managed Disk"
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/networkInterfaces"
+        params = {'api-version': '2018-07-01'}
+        r = requests.get(url, headers=headers, params=params)
+        azr= r.json()["value"]
+        if cde:
+            print(json.dumps(azr, indent=4, separators=(',', ': ')))
 
-azr=az network nic list -g rgsource -o json
-count= azr | | len(
-if count > 0" :
-    for i in range(0,count):
-        name=azr[i]["name"]
-        rname= name.replace(".","-")
-        rg=azr[i]["resourceGroup"].replace(".","-")
-        id=azr[i]["]["id"]
-        loc=azr[i]["location"]
-        ipfor=azr[i]["enableIpForwarding"]
-        netacc=azr[i]["enableAcceleratedNetworking"]
+        tfrmf="130-"+tfp+"-staterm.sh"
+        tfimf="130-"+tfp+"-stateimp.sh"
+        tfrm=open(tfrmf, 'a')
+        tfim=open(tfimf, 'a')
+        print tfp,
+        count=len(azr)
+        print count
+        for i in range(0, count):
 
-        snsg=azr[i]["networkSecurityGroup"]["id"].split[8].replace(".","-")
-        snsgrg=azr[i]["networkSecurityGroup"]["id"].split[4].replace(".","-")
-        ipcon=azr[i]["ipConfigurations"
+            name=azr[i]["name"]
+            loc=azr[i]["location"]
+            id=azr[i]["id"]
+            rg=id.split("/")[4].replace(".","-")
+
+            if crg is not None:
+                if rg.lower() != crg.lower():
+                    continue  # back to for
+            
+            rname=name.replace(".","-")
+            prefix=tfp+"."+rg+'__'+rname
+            #print prefix
+            rfilename=prefix+".tf"
+            fr=open(rfilename, 'w')
+            fr.write(az2tfmess)
+            fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+            fr.write('\t name = "' + name + '"\n')
+            fr.write('\t location = "'+ loc + '"\n')
+            fr.write('\t resource_group_name = "'+ rg + '"\n')
+
+            ipfor=azr[i]["enableIpForwarding"]
+            netacc=azr[i]["enableAcceleratedNetworking"]
+
+            snsg=azr[i]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
+            snsgrg=azr[i]["networkSecurityGroup"]["id"].split("/")[4].replace(".","-")
+            ipcon=azr[i]["ipConfigurations"]
         
+
+            try:
+                snsg=azr[i]["networkSecurityGroup"]["id"].split[8].replace(".","-")
+                snsgrg=azr[i]["networkSecurityGroup"]["id"].split[4].replace(".","-")
+                fr.write('\t network_security_group_id = "${azurerm_network_security_group.' + snsgrg + '__' + snsg + '.id}"\n')
+            except KeyError:
+                pass
         
-        fr.write('resource "' +  "' + '__' + "' {' tfp rg rname + '"\n')
-        fr.write('\t name = "' +  name + '"\n')
-        fr.write('\t resource_group_name = "' +  rgsource + '"\n')
-        fr.write('\t location = "' +  loc + '"\n')
-        if snsg" try :
-            fr.write('\t network_security_group_id = "'\{'azurerm_network_security_group. + '__' + .id}'"' snsgrg snsg + '"\n')
-       
-        
-        #fr.write('\t internal_dns_name_label  = "' +  ipfor + '"\n')
-        fr.write('\t enable_ip_forwarding = "' +  ipfor + '"\n')
-        fr.write('\t enable_accelerated_networking  = "' +  netacc + '"\n')
-        #fr.write('\t dns_servers  = "' +  ipfor + '"\n')
-        privip0=azr[i]["ipConfigurations[(0)]["privateIpAddress"]
-        
-        
-        
-        
-        icount= ipcon | | len(
-        if icount > 0" :
+            #fr.write('\t internal_dns_name_label  = "' +  ipfor + '"\n')
+            fr.write('\t enable_ip_forwarding = "' +  ipfor + '"\n')
+            fr.write('\t enable_accelerated_networking  = "' +  netacc + '"\n')
+            #fr.write('\t dns_servers  = "' +  ipfor + '"\n')
+            privip0=azr[i]["ipConfigurations"][0]["privateIpAddress"]
+               
+            icount=len(ipcon)
             for j in range(0,icount):
-                ipcname=azr[i]["ipConfigurations[j]["name"].split[10]]
-                subname=azr[i]["ipConfigurations[j]["subnet"]["id"].split[10].replace(".","-")
-                subrg=azr[i]["ipConfigurations[j]["subnet"]["id"].split[4].replace(".","-")
-                subipid=azr[i]["ipConfigurations[j]["publicIpAddress"]["id"].split[8]]
-                subipalloc=azr[i]["ipConfigurations[j]["privateIpAllocationMethod"]
-                privip=azr[i]["ipConfigurations[j]["privateIpAddress"]
-                prim=azr[i]["ipConfigurations[j]["primary"]
-                pubipnam=azr[i]["ipConfigurations[j]["publicIpAddress"]["id"].split[8].replace(".","-")
-                pubiprg=azr[i]["ipConfigurations[j]["publicIpAddress"]["id"].split[4].replace(".","-")
-                
-                
-                
+                ipcname=azr[i]["ipConfigurations"][j]["name"].split("/")[10]
+                subname=azr[i]["ipConfigurations"][j]["subnet"]["id"].split("/")[10].replace(".","-")
+                subrg=azr[i]["ipConfigurations"][j]["subnet"]["id"].split("/")[4].replace(".","-")
+                subipid=azr[i]["ipConfigurations"][j]["publicIpAddress"]["id"].split("/")[8]
+                subipalloc=azr[i]["ipConfigurations"][j]["privateIpAllocationMethod"]
+                privip=azr[i]["ipConfigurations"][j]["privateIpAddress"]
+                prim=azr[i]["ipConfigurations"][j]["primary"]
+
+                                      
                 fr.write('\t ip_configuration {' + '"\n')
-                fr.write('\t\t name = "' +    ipcname + '"\n')
-                fr.write('\t\t subnet_id = "'\{'azurerm_subnet. + '__' + .id}'"' subrg subname + '"\n')
-                if subipalloc" != "Dynamic" :
-                    fr.write('\t\t private_ip_address = "' +    privip + '"\n')
+                fr.write('\t\t name = "' + ipcname + '"\n')
+                fr.write('\t\t subnet_id = "${azurerm_subnet.' + subrg + '__' + subname + '.id}"\n')
+                if subipalloc != "Dynamic":
+                    fr.write('\t\t private_ip_address = "' + privip + '"\n')
                
                 fr.write('\t\t private_ip_address_allocation = "' +    subipalloc + '"\n')
-                if subipid" try :
-                    fr.write('\t\t public_ip_address_id = "'\{'azurerm_public_ip. + '__' + .id}'"' pubiprg pubipnam + '"\n')
-               
+                try:
+                    pubipnam=azr[i]["ipConfigurations"][j]["publicIpAddress"]["id"].split("/")[8].replace(".","-")
+                    pubiprg=azr[i]["ipConfigurations"][j]["publicIpAddress"]["id"].split("/")[4].replace(".","-")
+                    fr.write('\t\t public_ip_address_id = "${azurerm_public_ip.' + pubiprg + '__' + pubipnam + '.id}"\n')
+                except KeyError:
+                    pass
+
                 #fr.write('\t\t application_gateway_backend_address_pools_ids = "' +    subipalloc + '"\n')
                 #fr.write('\t\t load_balancer_backend_address_pools_ids = "' +    subipalloc + '"\n')
                 #fr.write('\t\t load_balancer_inbound_nat_rules_ids = "' +    subipalloc + '"\n')
                 #fr.write('\t\t application_security_group_ids = "' +    subipalloc + '"\n')
-                fr.write('\t\t primary = "' +    prim + '"\n')
+                fr.write('\t\t primary = "' + prim + '"\n')
                 
-                asgs=azr[i]["ipConfigurations[j]["applicationSecurityGroups"
-                #if [ asgs != null :
-                    kcount= asgs | | len(
-                    if kcount > 0" :
-                        for k in range(0,kcount):
-                            asgnam=azr[i]["ipConfigurations[j]["applicationSecurityGroups[k]["]["id"].split[8].replace(".","-")
-                            asgrg=azr[i]["ipConfigurations[j]["applicationSecurityGroups[k]["]["id"].split[4].replace(".","-")
-                            
-                            fr.write('\t\t application_security_group_ids = ["'\{'azurerm_application_security_group. + '__' + .id}'"']["n" asgrg asgnam + '"\n')
-                        
-                   
-                #fi
+                asgs=azr[i]["ipConfigurations"][j]["applicationSecurityGroups"]
+         
+                kcount=len(asgs)
+                for k in range(0,kcount):
+                    asgnam=azr[i]["ipConfigurations"][j]["applicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
+                    asgrg=azr[i]["ipConfigurations"][j]["applicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-")
+                    fr.write('\t\t application_security_group_ids = ${azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}"\n')
                 
-                fr.write('\t}\n')
-                #
-                
-            
-       
-        #fr.write('\t private_ip_address = "' +    pprivip + '"\n')
-        #
+                fr.write('\t}\n') # end ip configurations
+            # end j           
 
-            
-        
-        fr.write('}\n')
- 
-        
-    
-fi
+    # tags block       
+            try:
+                mtags=azr[i]["tags"]
+                fr.write('tags { \n')
+                for key in mtags.keys():
+                    tval=mtags[key]
+                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                fr.write('}\n')
+            except KeyError:
+                pass
+
+            fr.write('}\n') 
+            fr.close()   # close .tf file
+
+            if cde:
+                with open(rfilename) as f: 
+                    print f.read()
+
+            tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+
+            tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+            tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+            tfim.write(tfcomm)  
+
+        # end for i loop
+
+        tfrm.close()
+        tfim.close()
+    #end stub
