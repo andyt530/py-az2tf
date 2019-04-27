@@ -21,13 +21,8 @@ newd=head+"/scripts"
 os.chdir(newd)
 print os.getcwd()
 
-import azurerm_virtual_network
-import azurerm_subnet
-import azurerm_virtual_network_peering
-import azurerm_managed_disk
 import azurerm_storage_account
 import azurerm_public_ip
-import azurerm_key_vault
 
 os.chdir(scwd)
 print os.getcwd()
@@ -119,21 +114,20 @@ except KeyError:
     exit("ErrorGettingSubscriptionList")
 ssubs=json.dumps(subs)
 if sub not in ssubs: 
-    print "Could not find subscription with ID (Test 1) " + sub + " Exiting ..." 
-    exit("ErrorInvalidSubscriptionID-1")
+    print "Could not find subscription with ID " + sub + "Exiting ..." 
+    exit("ErrorInvalidSubscriptionID")
 
 FoundSub=False
 count=len(sub)
 print count
 for i in range(0, count):
     id=str(subs[i]["subscriptionId"])
-    #print id + " " + sub
     if id == sub:
         FoundSub=True
 
 if not FoundSub:
-    print "Could not find subscription with ID (Test 2) " + sub + " Exiting ..." 
-    #exit("ErrorInvalidSubscriptionID-2")
+    print "Could not find subscription with ID " + sub + "Exiting ..." 
+    exit("ErrorInvalidSubscriptionID")
 
 
 print "Found subscription " + sub + " proceeding ..."
@@ -1099,18 +1093,737 @@ if crf in tfp:
     tfim.close()
     #end NSG
 
-
-
 #  060 Virtual Networks
-azr=azurerm_virtual_network.azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+tfp="azurerm_virtual_network"
+azr=""
+if crf in tfp:
+    # REST
+    print "REST VNets"
+
+    url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworks"
+    params = {'api-version': '2018-07-01'}
+    r = requests.get(url, headers=headers, params=params)
+    azr= r.json()["value"]
+    if cde:
+        print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
+
+    tfrmf="060-"+tfp+"-staterm.sh"
+    tfimf="060-"+tfp+"-stateimp.sh"
+    tfrm=open(tfrmf, 'a')
+    tfim=open(tfimf, 'a')
+    print tfp,
+    count=len(azr)
+    print count
+    for i in range(0, count):
+
+        name=azr[i]["name"]
+        loc=azr[i]["location"]
+        id=azr[i]["id"]
+        rg=id.split("/")[4].replace(".","-")
+
+        if crg is not None:
+            if rg.lower() != crg.lower():
+                continue  # back to for
+        
+        rname=name.replace(".","-")
+        prefix=tfp+"."+rg+'__'+rname
+        #print prefix
+        rfilename=prefix+".tf"
+        fr=open(rfilename, 'w')
+        fr.write("")
+        fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+        fr.write('\t name = "' + name + '"\n')
+        fr.write('\t location = "'+ loc + '"\n')
+        fr.write('\t resource_group_name = "'+ rg + '"\n')
+        
+        addsp=azr[i]["properties"]["addressSpace"]["addressPrefixes"]
+        laddsp='['
+        for x in addsp:
+            laddsp=laddsp+'"'+x+'",'
+        laddsp=laddsp+']'
+        #print laddsp
+        fr.write('\taddress_space =  ' + laddsp + '\n')
+        try:
+            dns=str(azr[i]["properties"]["dhcpOptions"]["dnsServers"])
+            if "[]" not in dns:
+                fr.write('\t dns_servers =  "' + dns + '"\n')
+        except KeyError:
+            pass        
+
+
+        #
+        #loop around subnets
+        #
+        subs=azr[i]["properties"]["subnets"]
+        jcount=len(subs)
+        for j in range(0,jcount):
+            snname=subs[j]["name"]
+            snaddr=subs[j]["properties"]["addressPrefix"]
+
+            fr.write('\tsubnet {'  + '\n')
+            fr.write('\t\t name = "'+ snname + '"\n')
+            fr.write('\t\t address_prefix = "' + snaddr + '"\n')
+            try:
+                snnsgid=subs[j]["properties"]["networkSecurityGroup"]["id"]
+                nsgnam=snnsgid.split("/")[8].replace(".","-")
+                nsgrg=snnsgid.split("/")[4].replace(".","-")          
+                fr.write('\t\t security_group = "${azurerm_network_security_group.' + nsgrg + '__' + nsgnam + '.id}"' + '\n')
+            except KeyError: 
+                pass
+            
+            fr.write('\t}' + '\n')
+
+    # tags block       
+        try:
+            mtags=azr[i]["tags"]
+            fr.write('tags { \n')
+            for key in mtags.keys():
+                tval=mtags[key]
+                fr.write('\t "' + key + '"="' + tval + '"\n')
+            fr.write('}\n')
+        except KeyError:
+            pass
+
+        fr.write('}\n') 
+        fr.close()   # close .tf file
+
+        tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+
+        tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+        tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+        tfim.write(tfcomm)  
+
+    # end for i loop
+
+    tfrm.close()
+    tfim.close()
+#end VNET
+#############
+
+
 #  070 subnets
-azurerm_subnet.azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr)
+tfp="azurerm_subnet"
+if crf in tfp:
+# subnet in vnet
+    tfrmf="070-"+tfp+"-staterm.sh"
+    tfimf="070-"+tfp+"-stateimp.sh"
+    tfrm=open(tfrmf, 'a')
+    tfim=open(tfimf, 'a')
+    print tfp,
+    count=len(azr)
+    print count
+    for i in range(0, count):
+        subs=azr[i]["properties"]["subnets"]
+        vnetname=azr[i]["name"]
+        jcount=len(subs)
+        #print "subs="+str(jcount)
+        #print (json.dumps(subs, indent=4, separators=(',', ': ')))
+        for j in range(0, jcount):
+            name=subs[j]["name"]
+            #loc=subs[j]["location"] subnets don't have location
+            id=subs[j]["id"]
+            rg=id.split("/")[4].replace(".","-")
+
+            if crg is not None:
+                if rg.lower() != crg.lower():
+                    continue  # back to for
+            
+            rname=name.replace(".","-")
+            prefix=tfp+"."+rg+'__'+rname
+            #print prefix
+            rfilename=prefix+".tf"
+            fr=open(rfilename, 'w')
+            fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+            fr.write('\t name = "' + name + '"\n')
+            fr.write('\t virtual_network_name = "' + vnetname + '"\n') 
+            fr.write('\t resource_group_name = "' +  rg + '"\n')
+
+            sprefix=subs[j]["properties"]["addressPrefix"]
+            fr.write('\t address_prefix = "' +  sprefix + '"\n')
+            rtbid="null"
+            try:
+                seps=subs[j]["properties"]["serviceEndpoints"]
+                kcount=len(seps)
+                #print (json.dumps(seps, indent=4, separators=(',', ': ')))
+                #print kcount
+                lseps='['
+                for k in range(0, kcount):
+                    x=seps[k]["service"]
+                    lseps=lseps+'"'+x+'",'
+                lseps=lseps+']'
+                fr.write('\t service_endpoints = '+ lseps + '\n')
+            except KeyError:
+                pass
+            
+            try:
+                snsgid=subs[j]["properties"]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
+                snsgrg=subs[j]["properties"]["networkSecurityGroup"]["id"].split("/")[4].replace(".","-")
+                fr.write('\t network_security_group_id = "${azurerm_network_security_group.' + snsgrg + '__' + snsgid +'.id}"' + '\n')
+            except KeyError:
+                pass
+            
+            try:
+                rtbid=subs[j]["properties"]["routeTable"]["id"].split("/")[8].replace(".","-")
+                rtrg=subs[j]["properties"]["routeTable"]["id"].split("/")[4].replace(".","-")
+                fr.write('\t route_table_id = "${azurerm_route_table.' + rtrg + '__' + rtbid +'.id}"' + '\n')
+            except KeyError:
+                pass         
+
+            fr.write('}' + ' \n')
+
+# azurerm_subnet_network_security_group_association
+     
+            r1="skip"
+            try:
+                snsgid=subs[j]["properties"]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
+                r1="azurerm_subnet_network_security_group_association"
+                fr.write('resource ' + r1 + ' ' + rg + '__' + rname + '__' + snsgid + ' {\n') 
+                fr.write('\tsubnet_id = "${azurerm_subnet.' + rg + '__' + rname + '.id}"' + '\n')
+                fr.write('\tnetwork_security_group_id = "${azurerm_network_security_group.' + snsgrg + '__' + snsgid +'.id}"' + '\n')
+                fr.write('}' + ' \n')
+            except KeyError:
+                pass
+                
+
+# azurerm_subnet_route_table_association
+
+            r2="skip"
+            try:
+                rtbid=subs[j]["properties"]["routeTable"]["id"].split("/")[8].replace(".","-")
+                r2="azurerm_subnet_route_table_association"
+                fr.write('resource ' + r2 + ' ' + rg + '__' + rname + '__' + rtbid + ' {\n') 
+                fr.write('\tsubnet_id = "${azurerm_subnet.' + rg + '__' + rname + '.id}"' + '\n')
+                fr.write('\troute_table_id = "${azurerm_route_table.' + rtrg + '__' + rtbid +'.id}"' + '\n')
+                fr.write('}' + ' \n')
+            except KeyError:
+                pass
+            
+
+            #fr.write('}\n') 
+            fr.close()   # close .tf file
+
+
+            # azurerm_subnet
+
+            tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+
+            tfim.write('echo "importing ' + str(j) + ' of ' + str(jcount-1) + '"' + '\n')
+            tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+            tfim.write(tfcomm) 
+
+# azurerm_subnet_network_security_group_association
+
+            if "skip" not in r1:
+       
+                tfrm.write('terraform state rm ' + r1 + '.' + rg + '__' + rname + '__' + snsgid + '\n')
+                tfcomm='terraform import '+r1 +'.'+rg+'__'+rname+'__'+snsgid+' '+id+'\n'
+                tfim.write(tfcomm)
+        
+
+# azurerm_subnet_route_table_association
+
+            if "skip" not in r2:
+
+                tfrm.write('terraform state rm ' + r2 + '.' + rg + '__' + rname + '__' + rtbid + '\n')
+                tfcomm='terraform import '+r2 +'.'+rg+'__'+rname+'__'+rtbid+' '+id+'\n'
+                tfim.write(tfcomm)
+            
+
+        # end j
+
+    ###############
+    # specific code end
+    ###############
+ 
+
+    # end for i loop
+
+    tfrm.close()
+    tfim.close()
+#end subnet
+
+
+#############
 #  080 vnet peering
-azurerm_virtual_network_peering.azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr)
-# 090 Key Vault - using cli
-azurerm_key_vault.azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess)
-# 100 managed disk
-azurerm_managed_disk.azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+tfp="azurerm_virtual_network_peering"
+if crf in tfp: 
+# peering in vnet
+    tfrmf="080-"+tfp+"-staterm.sh"
+    tfimf="080-"+tfp+"-stateimp.sh"
+    tfrm=open(tfrmf, 'a')
+    tfim=open(tfimf, 'a')
+    print tfp,
+    count=len(azr)
+    print count
+    for i in range(0, count):
+        peers=azr[i]["properties"]["virtualNetworkPeerings"]
+        vnetname=azr[i]["name"]
+        jcount=len(peers)
+        for j in range(0, jcount):
+            name=peers[j]["name"]
+            #loc=peers[j]["location"] peers don't have a location
+            id=peers[j]["id"]
+            rg=id.split("/")[4].replace(".","-")
+
+            if crg is not None:
+                if rg.lower() != crg.lower():
+                    continue  # back to for
+                
+            rname=name.replace(".","-")
+            prefix=tfp+"."+rg+'__'+rname
+                
+            rfilename=prefix+".tf"
+            fr=open(rfilename, 'w')
+            fr.write("")
+            fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+            fr.write('\t name = "' + name + '"\n')
+            fr.write('\t resource_group_name = "'+ rg + '"\n')
+            fr.write('\t virtual_network_name = "' + vnetname + '"\n')
+
+
+            rvnid=peers[j]["properties"]["remoteVirtualNetwork"]["id"]
+            aft=str(peers[j]["properties"]["allowForwardedTraffic"])
+            agt=str(peers[j]["properties"]["allowGatewayTransit"])
+            avna=str(peers[j]["properties"]["allowVirtualNetworkAccess"])
+            urg=str(peers[j]["properties"]["useRemoteGateways"])
+
+            fr.write('\t remote_virtual_network_id = "' +  rvnid + '"\n')
+            fr.write('\t allow_forwarded_traffic = "' +  aft + '"\n')
+            fr.write('\t allow_gateway_transit = "' +  agt + '"\n')
+            fr.write('\t allow_virtual_network_access = "' +  avna + '"\n')
+            fr.write('\t use_remote_gateways = "' +  urg + '"\n')
+                        
+            fr.write('}\n') 
+            fr.close()   # close .tf file
+
+            tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+
+            tfim.write('echo "importing ' + str(j) + ' of ' + str(jcount-1) + '"' + '\n')
+            tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+            tfim.write(tfcomm)  
+        # end for j loop
+    # end for i loop
+
+    tfrm.close()
+    tfim.close()
+#end peering
+
+#############
+#  090 key vault
+tfp="azurerm_key_vault"
+azr=""
+if crf in tfp:
+    # REST or cli
+    p = subprocess.Popen('az keyvault list -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    output, errors = p.communicate()
+    azr=json.loads(output)
+    if cde:
+        print(json.dumps(azr, indent=4, separators=(',', ': ')))
+    tfrmf="090-"+tfp+"-staterm.sh"
+    tfimf="090-"+tfp+"-stateimp.sh"
+    tfrm=open(tfrmf, 'a')
+    tfim=open(tfimf, 'a')
+    print tfp,
+    count=len(azr)
+    print count
+    for i in range(0, count):
+
+        name=azr[i]["name"]
+        loc=azr[i]["location"]
+        id=azr[i]["id"]
+        rg=id.split("/")[4].replace(".","-")
+
+        if crg is not None:
+            if rg.lower() != crg.lower():
+                continue  # back to for
+        
+        rname=name.replace(".","-")
+        prefix=tfp+"."+rg+'__'+rname
+        #print prefix
+        rfilename=prefix+".tf"
+        fr=open(rfilename, 'w')
+        fr.write("")
+        fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+        fr.write('\t name = "' + name + '"\n')
+        fr.write('\t location = "'+ loc + '"\n')
+        fr.write('\t resource_group_name = "'+ rg + '"\n')
+        comm="az keyvault show -n "+name+" -o json"
+        print comm
+        p = subprocess.Popen(comm, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        output, errors = p.communicate()
+        kvshow=json.loads(output)
+        jcount=len(kvshow)
+        print(json.dumps(kvshow, indent=4, separators=(',', ': ')))
+
+        sku=kvshow["properties"]["sku"]["name"]
+        #if sku" = "premium" : sku="Premium" ; fi
+        #if sku" = "standard" : sku="Standard" ; fi
+ 
+        fr.write('\t sku {' + '\n')     
+        fr.write('\t\t name="' + sku + '"\n')
+        fr.write('\t }' + '\n')
+
+        ten=kvshow["properties"]["tenantId"]     
+        fr.write('\t tenant_id="' + ten + '"\n')
+
+        try: 
+            endep=str(kvshow["properties"]["enabledForDeployment"])
+            fr.write('\t enabled_for_deployment="' +  endep + '"\n')
+        except KeyError:
+            pass
+        
+        try:
+            endisk=str(kvshow["properties"]["enabledForDiskEncryption"])
+            fr.write('\t enabled_for_disk_encryption="' +  endisk + '"\n')
+        except KeyError:
+            pass       
+        
+        try:
+            entemp=str(kvshow["properties"]["enabledForTemplateDeployment"])
+            fr.write('\t enabled_for_template_deployment="' +  entemp + '"\n')
+        except KeyError:
+            pass
+
+        ap=kvshow["properties"]["accessPolicies"]
+                
+        #
+        # Access Policies
+        #
+        pcount=len(ap)
+        for j in range(0, pcount):    
+            fr.write('\t access_policy {' + '\n')
+            apten=kvshow["properties"]["accessPolicies"][j]["tenantId"]           
+            fr.write('\t\t tenant_id="' + apten + '"\n')
+            apoid=kvshow["properties"]["accessPolicies"][j]["objectId"]
+            fr.write('\t\t object_id="' + apoid + '"\n')
+                
+            jkl=kvshow["properties"]["accessPolicies"][j]["permissions"]["keys"]
+            jsl=kvshow["properties"]["accessPolicies"][j]["permissions"]["secrets"]
+            jcl=kvshow["properties"]["accessPolicies"][j]["permissions"]["certificates"]
+                
+            kl=len(jkl)
+            sl=len(jsl)
+            cl=len(jcl)
+            print kl  
+            fr.write('\t\t key_permissions = [ \n')
+            for k in range(0,kl):
+                tk=kvshow["properties"]["accessPolicies"][j]["permissions"]["keys"][k]
+                fr.write('\t\t\t "' + tk + '",\n')
+            fr.write('\t\t ]\n')
+
+            print sl  
+            fr.write('\t\t secret_permissions = [ \n')
+            for k in range(0,sl):
+                tk=kvshow["properties"]["accessPolicies"][j]["permissions"]["secrets"][k]
+                fr.write('\t\t\t "' + tk + '",\n')
+            fr.write('\t\t ]\n')
+            
+            print cl  
+            fr.write('\t\t certificate_permissions = [ \n')
+            for k in range(0,cl):
+                tk=kvshow["properties"]["accessPolicies"][j]["permissions"]["certificates"][k]
+                fr.write('\t\t\t "' + tk + '",\n')
+            fr.write('\t\t ]\n')                          
+            fr.write('\t} \n') # end access policy
+
+        
+# tags block       
+        try:
+            mtags=azr[i]["tags"]
+            fr.write('tags { \n')
+            for key in mtags.keys():
+                tval=mtags[key]
+                fr.write('\t "' + key + '"="' + tval + '"\n')
+            fr.write('}\n')
+        except KeyError:
+            pass
+
+        
+
+        fr.write('} \n')
+        fr.close()   # close .tf file
+
+        if cde:
+            with open(rfilename) as f: 
+                print f.read()
+
+        tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+
+        tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+        tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+        tfim.write(tfcomm)  
+
+    # end for i loop
+
+    tfrm.close()
+    tfim.close()
+#end key vault
+
+
+#############
+#  100 managed disk
+
+tfp="azurerm_managed_disk"
+azr=""
+if crf in tfp:
+# REST or cli
+    print "REST Managed Disk"
+    url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/disks"
+    params = {'api-version': '2017-03-30'}
+    r = requests.get(url, headers=headers, params=params)
+    azr= r.json()["value"]
+    if cde:
+        print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
+    tfrmf="100-"+tfp+"-staterm.sh"
+    tfimf="100-"+tfp+"-stateimp.sh"
+    tfrm=open(tfrmf, 'a')
+    tfim=open(tfimf, 'a')
+    print tfp,
+    count=len(azr)
+    print count
+    for i in range(0, count):
+
+        oname=azr[i]["name"]
+        name=oname.replace("/.vhd","/_vhd") 
+        loc=azr[i]["location"]
+        id=azr[i]["id"]
+        rg=id.split("/")[4].replace(".","-")
+        if crg is not None:
+            if rg.lower() != crg.lower():
+                continue  # back to for
+        
+        rname=name.replace(".","-")
+        prefix=tfp+"."+rg+'__'+rname
+        rfilename=prefix+".tf"
+        fr=open(rfilename, 'w')
+        fr.write(az2tfmess)
+        fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+        fr.write('\t name = "' + name + '"\n')
+        fr.write('\t location = "'+ loc + '"\n')
+        fr.write('\t resource_group_name = "'+ rg + '"\n')
+
+
+        try:
+            ostyp=azr[i]["properties"]["osType"]
+            fr.write('\t os_type = "' +  ostyp + '"\n')
+        except KeyError:
+            pass
+        try:
+            creopt=azr[i]["properties"]["creationData"]["createOption"]
+            fr.write('\t create_option = "' +  creopt + '"\n')
+        except KeyError:
+            pass
+
+        try:
+            imid=azr[i]["properties"]["creationData"]["imageReference"]["id"]
+            fr.write('\t image_reference_id = "' +  imid + '"\n')
+        except KeyError:
+            pass 
+        """        
+        try:      
+            creid=azr[i]["properties"]["creationData"]["imageReference"]["id"]
+            fr.write('\t source_resource_id = "' +  creid + '"\n')
+        except KeyError:
+            pass
+        """        
+        try:
+            enc=azr[i]["properties"]["encryptionSettings"]["enabled"]
+            fr.write('\t encryption_settings {' + '"\n')
+            fr.write('\t\t enabled = "' +  enc + '"\n')
+            try:
+                kekurl=azr[i]["properties"]["encryptionSettings"]["keyEncryptionKey"]["keyUrl"]
+                kekvltid=azr[i]["properties"]["encryptionSettings"]["keyEncryptionKey"]["sourceVault"]["id"]
+                fr.write('\t\t key_encryption_key {' + '"\n')
+                fr.write('\t\t\t key_url = "' +  kekurl + '"\n')
+                fr.write('\t\t\t source_vault_id = "' +  kekvltid + '"\n')
+                fr.write('\t\t } \n')
+            except KeyError:
+                pass       
+
+            try:
+                dekurl=azr[i]["properties"]["encryptionSettings"]["diskEncryptionKey"]["secretUrl"]
+                dekvltid=azr[i]["properties"]["encryptionSettings"]["diskEncryptionKey"]["sourceVault"]["id"]
+                fr.write('\t\t disk_encryption_key {' + '"\n')
+                fr.write('\t\t\t secret_url = "' +  dekurl + '"\n')
+                fr.write('\t\t\t source_vault_id = "' +  dekvltid + '"\n')               
+                fr.write('\t\t } \n')
+            except KeyError:
+                pass
+
+
+            fr.write('\t } \n')
+        except KeyError:
+            pass
+
+
+        try:
+            stopt=azr[i]["sku"]["name"]
+            fr.write('\t storage_account_type = "' +  stopt + '"\n')
+        except KeyError:
+            pass    
+        
+       
+
+        try:
+            dsize=str(azr[i]["properties"]["diskSizeGB"])
+            fr.write('\t disk_size_gb = "' +  dsize + '"\n')
+                
+        except KeyError:
+            pass
+
+# tags block       
+        try:
+            mtags=azr[i]["tags"]
+            fr.write('tags { \n')
+            for key in mtags.keys():
+                tval=mtags[key]
+                fr.write('\t "' + key + '"="' + tval + '"\n')
+            fr.write('}\n')
+        except KeyError:
+            pass
+
+        fr.write('}\n') 
+        fr.close()   # close .tf file
+
+        if cde:
+            with open(rfilename) as f: 
+                print f.read()
+
+        tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+
+        tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+        tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+        tfim.write(tfcomm)  
+
+    # end for i loop
+
+    tfrm.close()
+    tfim.close()
+#end managed disk
+
+
+#############
+#  110 storage account
+
+tfp="azurerm_storage_account"
+azr=""
+if crf in tfp:
+# REST or cli
+    print "REST Managed Disk"
+    url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Storage/storageAccounts"
+    params = {'api-version': '2017-10-01'}
+    r = requests.get(url, headers=headers, params=params)
+    azr= r.json()["value"]
+    if cde:
+        print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
+    tfrmf="110-"+tfp+"-staterm.sh"
+    tfimf="110-"+tfp+"-stateimp.sh"
+    tfrm=open(tfrmf, 'a')
+    tfim=open(tfimf, 'a')
+    print tfp,
+    count=len(azr)
+    print count
+    for i in range(0, count):
+
+        name=azr[i]["name"]
+        loc=azr[i]["location"]
+        id=azr[i]["id"]
+        rg=id.split("/")[4].replace(".","-")
+
+        if crg is not None:
+            if rg.lower() != crg.lower():
+                continue  # back to for
+        
+        rname=name.replace(".","-")
+        prefix=tfp+"."+rg+'__'+rname
+        #print prefix
+        rfilename=prefix+".tf"
+        fr=open(rfilename, 'w')
+        fr.write("")
+        fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+        fr.write('\t name = "' + name + '"\n')
+        fr.write('\t location = "'+ loc + '"\n')
+        fr.write('\t resource_group_name = "'+ rg + '"\n')
+
+        satier=azr[i]["sku"]["tier"]
+        sakind=azr[i]["kind"]
+        
+        sartype=azr[i]["sku"]["name"].split("_")[1]
+        print sartype
+        saencrypt=str(azr[i]["properties"]["encryption"]["services"]["blob"]["enabled"])
+        fiencrypt=str(azr[i]["properties"]["encryption"]["services"]["file"]["enabled"])
+        sahttps=str(azr[i]["properties"]["supportsHttpsTrafficOnly"])
+        nrs=azr[i]["properties"]["networkAcls"]
+        saencs=azr[i]["properties"]["encryption"]["keySource"]
+        
+        fr.write('\t account_tier = "' + satier + '"\n')
+        fr.write('\t account_kind = "' + sakind + '"\n')
+        fr.write('\t account_replication_type = "' +  sartype + '"\n')
+        fr.write('\t enable_blob_encryption = "' +  saencrypt + '"\n')
+        fr.write('\t enable_file_encryption = "' +  fiencrypt + '"\n')
+        fr.write('\t enable_https_traffic_only = "' +  sahttps + '"\n')
+        fr.write('\t account_encryption_source = "' +  saencs + '"\n')
+        
+        try:
+            byp=azr[i]["properties"]["networkAcls"]["bypass"]
+
+            ipr=azr[i]["properties"]["networkAcls"]["ipRules"]
+            vnr=azr[i]["properties"]["networkAcls"]["virtualNetworkRules"]
+            
+            icount=len(ipr)
+            vcount=len(vnr)
+           
+            # if the only network rule is AzureServices, dont need a network_rules block
+            if "AzureServices" not in byp or icount > 0 or vcount > 0:
+                fr.write('\t network_rules { \n')
+                fr.write('\t\t bypass = ["' +  byp + '"]\n')
+                
+                if icount > 0:
+                    for ic in range(0, icount): 
+                        ipa=ipr[ic]["value"]
+                        fr.write('\t\t ip_rules = ["' + ipa + '"]\n')
+                if vcount > 0:
+                    for vc in range(0,vcount):
+                        vnsid=vnr[vc]["id"]
+                        fr.write('\t\t virtual_network_subnet_ids = ["' + vnsid + '"]\n')
+                fr.write('}\n')
+            # end if
+
+        except KeyError:
+            pass            
+
+# tags block       
+        try:
+            mtags=azr[i]["tags"]
+            fr.write('tags { \n')
+            for key in mtags.keys():
+                tval=mtags[key]
+                fr.write('\t "' + key + '"="' + tval + '"\n')
+            fr.write('}\n')
+        except KeyError:
+            pass
+
+        fr.write('}\n') 
+        fr.close()   # close .tf file
+
+        if cde:
+            with open(rfilename) as f: 
+                print f.read()
+
+        tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+
+        tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+        tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+        tfim.write(tfcomm)  
+
+    # end for i loop
+
+    tfrm.close()
+    tfim.close()
+#end storage account
 #110 storgae account
 azurerm_storage_account.azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 #120 public ip
