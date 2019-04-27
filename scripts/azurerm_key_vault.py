@@ -43,7 +43,7 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess
             p = subprocess.Popen(comm, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             output, errors = p.communicate()
             kvshow=json.loads(output)
-            jcount=len(kvshow)
+            #jcount=len(kvshow)
             print(json.dumps(kvshow, indent=4, separators=(',', ': ')))
 
             sku=kvshow["properties"]["sku"]["name"]
