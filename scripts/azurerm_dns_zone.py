@@ -3,11 +3,13 @@ def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_dns_zone"
     tcode="131-"
     azr=""
+    cde=True
     if crf in tfp:
     # REST or cli
         print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/disks"
-        params = {'api-version': '2017-03-30'}
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/dnszones"
+        #params = {'api-version': '2016-04-01'}
+        params = {'api-version': '2018-05-01'}       
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
         if cde:
@@ -23,7 +25,7 @@ def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         for i in range(0, count):
 
             name=azr[i]["name"]
-            loc=azr[i]["location"]
+            #loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-")
 
@@ -39,37 +41,35 @@ def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write(az2tfmess)
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
-            fr.write('\t location = "'+ loc + '"\n')
+            #fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rg + '"\n')
 
     ###############
     # specific code start
     ###############
 
-
-
             #azr=az network dns zone list -g rgsource -o json
-            count=len(azr)
-if count" != "0" :
-    for i in range(0,count):
-        name=azr[i]["name"]
-        rname= name.replace(".","-")
-        rg=azr[i]["resourceGroup"].replace(".","-")
-        id=azr[i]["]["id"]
-        zt=azr[i]["zoneType"]
-        resvn=azr[i]["resolutionVirtualNetworks"]
-        regvn=azr[i]["registrationVirtualNetworks"]
-        
-  
-        fr.write('\t zone_type = "' +  zt + '"\n')
-        
-        
-        #
-        fr.write('}\n')
-        #
+ 
+            zt=azr[i]["properties"]["zoneType"]
+            try:
+                resvn=azr[i]["properties"]["resolutionVirtualNetworks"]
+                kcount=len(resvn)
+                for k in range(0,kcount):
+                    vid=resvn[k]["id"]
+                    fr.write('\t resolution_virtual_network_ids = ["' + vid  + '"]\n')
+            except KeyError:
+                pass
+            try:
+                regvn=azr[i]["properties"]["registrationVirtualNetworks"] 
+                kcount=len(regvn)
+                for k in range(0,kcount):
+                    vid=regvn[k]["id"]
+                    fr.write('\t registration_virtual_network_ids = "' +  regvn + '"\n') 
+            except KeyError:
+                pass  
+
+            fr.write('\t zone_type = "' +  zt + '"\n')
       
-    
-fi
 
     ###############
     # specific code end

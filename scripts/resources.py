@@ -37,7 +37,7 @@ import azurerm_public_ip
 import azurerm_traffic_manager_profile
 import azurerm_traffic_manager_endpoint
 import azurerm_network_interface
-#import 131_azurerm_dns_zone
+import azurerm_dns_zone
 #import 140_azurerm_lb
 #import 150_azurerm_lb_nat_rule
 #import 160_azurerm_lb_nat_pool
@@ -261,7 +261,7 @@ azurerm_traffic_manager_endpoint.azurerm_traffic_manager_endpoint(crf,cde,crg,he
 #  130 network interface
 azurerm_network_interface.azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 131_azurerm_dns_zone
-# 131_azurerm_dns_zone.azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_dns_zone.azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 140_azurerm_lb
 # 140_azurerm_lb.azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 150_azurerm_lb_nat_rule
