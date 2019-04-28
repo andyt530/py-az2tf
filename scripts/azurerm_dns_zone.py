@@ -3,7 +3,7 @@ def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_dns_zone"
     tcode="131-"
     azr=""
-    cde=True
+    
     if crf in tfp:
     # REST or cli
         print "REST Managed Disk"
