@@ -63,13 +63,13 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 ipcname=azr[i]["properties"]["ipConfigurations"][j]["name"]
                 subname=azr[i]["properties"]["ipConfigurations"][j]["properties"]["subnet"]["id"].split("/")[10].replace(".","-")
                 subrg=azr[i]["properties"]["ipConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-")
-                subipid=azr[i]["properties"]["ipConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[8]
+                #subipid=azr[i]["properties"]["ipConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[8]
                 subipalloc=azr[i]["properties"]["ipConfigurations"][j]["properties"]["privateIPAllocationMethod"]
                 privip=azr[i]["properties"]["ipConfigurations"][j]["properties"]["privateIPAddress"]
                 prim=azr[i]["properties"]["ipConfigurations"][j]["properties"]["primary"]
 
                                       
-                fr.write('\t ip_configuration {' + '"\n')
+                fr.write('\t ip_configuration {' + '\n')
                 fr.write('\t\t name = "' + ipcname + '"\n')
                 fr.write('\t\t subnet_id = "${azurerm_subnet.' + subrg + '__' + subname + '.id}"\n')
                 if subipalloc != "Dynamic":
@@ -87,16 +87,18 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 #fr.write('\t\t load_balancer_backend_address_pools_ids = "' +    subipalloc + '"\n')
                 #fr.write('\t\t load_balancer_inbound_nat_rules_ids = "' +    subipalloc + '"\n')
                 #fr.write('\t\t application_security_group_ids = "' +    subipalloc + '"\n')
-                fr.write('\t\t primary = "' + prim + '"\n')
-                
-                asgs=azr[i]["properties"]["ipConfigurations"][j]["properties"]["applicationSecurityGroups"]
-         
-                kcount=len(asgs)
-                for k in range(0,kcount):
-                    asgnam=azr[i]["properties"]["ipConfigurations"][j]["properties"]["applicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
-                    asgrg=azr[i]["properties"]["ipConfigurations"][j]["properties"]["applicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-")
-                    fr.write('\t\t application_security_group_ids = ${azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}"\n')
-                
+                fr.write('\t\t primary = "' + str(prim) + '"\n')
+                try:
+                    asgs=azr[i]["properties"]["ipConfigurations"][j]["properties"]["applicationSecurityGroups"]
+                    kcount=len(asgs)
+                    for k in range(0,kcount):
+                        asgnam=azr[i]["properties"]["ipConfigurations"][j]["properties"]["applicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
+                        asgrg=azr[i]["properties"]["ipConfigurations"][j]["properties"]["applicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-")
+                        fr.write('\t\t application_security_group_ids = ${azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}"\n')
+                except KeyError:
+                    pass
+
+
                 fr.write('\t}\n') # end ip configurations
             # end j           
 
