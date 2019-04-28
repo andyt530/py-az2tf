@@ -1,7 +1,7 @@
-#  100 managed disk
-def azurerm_stub(crf,cde,crg,headers,requests,sub,json,az2tfmess):
-    cde=True
-    tfp="azurerm_managed_disk"
+# azurerm_dns_zone
+def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+    tfp="azurerm_dns_zone"
+    tcode="131-"
     azr=""
     if crf in tfp:
     # REST or cli
@@ -13,8 +13,8 @@ def azurerm_stub(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         if cde:
             print(json.dumps(azr, indent=4, separators=(',', ': ')))
 
-        tfrmf="100-"+tfp+"-staterm.sh"
-        tfimf="100-"+tfp+"-stateimp.sh"
+        tfrmf=tcode+tfp+"-staterm.sh"
+        tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
         print tfp,
@@ -43,7 +43,36 @@ def azurerm_stub(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t resource_group_name = "'+ rg + '"\n')
 
     ###############
-    # specific code
+    # specific code start
+    ###############
+
+
+
+            #azr=az network dns zone list -g rgsource -o json
+            count=len(azr)
+if count" != "0" :
+    for i in range(0,count):
+        name=azr[i]["name"]
+        rname= name.replace(".","-")
+        rg=azr[i]["resourceGroup"].replace(".","-")
+        id=azr[i]["]["id"]
+        zt=azr[i]["zoneType"]
+        resvn=azr[i]["resolutionVirtualNetworks"]
+        regvn=azr[i]["registrationVirtualNetworks"]
+        
+  
+        fr.write('\t zone_type = "' +  zt + '"\n')
+        
+        
+        #
+        fr.write('}\n')
+        #
+      
+    
+fi
+
+    ###############
+    # specific code end
     ###############
 
     # tags block       

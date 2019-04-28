@@ -1,7 +1,7 @@
-#  100 managed disk
-def azurerm_stub(crf,cde,crg,headers,requests,sub,json,az2tfmess):
-    cde=True
-    tfp="azurerm_managed_disk"
+# azurerm_lb
+def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+    tfp="azurerm_lb"
+    tcode="140-"
     azr=""
     if crf in tfp:
     # REST or cli
@@ -13,8 +13,8 @@ def azurerm_stub(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         if cde:
             print(json.dumps(azr, indent=4, separators=(',', ': ')))
 
-        tfrmf="100-"+tfp+"-staterm.sh"
-        tfimf="100-"+tfp+"-stateimp.sh"
+        tfrmf=tcode+tfp+"-staterm.sh"
+        tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
         print tfp,
@@ -43,7 +43,76 @@ def azurerm_stub(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t resource_group_name = "'+ rg + '"\n')
 
     ###############
-    # specific code
+    # specific code start
+    ###############
+
+
+
+azr=az network lb list -g rgsource -o json
+count= azr | | len(
+if count > 0" :
+    for i in range(0,count):
+       
+        name=azr[i]["name"]
+        rname= name.replace(".","-")
+        rg=azr[i]["resourceGroup"].replace(".","-")
+
+        id=azr[i]["]["id"]
+        loc=azr[i]["location"
+        sku=azr[i]["sku.name"]
+        fronts=azr[i]["frontendIpConfigurations"
+        
+
+        fr.write('resource "' +  "' + '__' + "' {' tfp rg rname + '"\n')
+        fr.write('\t name = "' +  name + '"\n')
+        fr.write('\t location =  "loc" + '"\n')
+        fr.write('\t resource_group_name = "' +  rgsource + '"\n')
+        fr.write('\t sku = "' +  sku + '"\n')
+           
+        icount= fronts | | len(
+       
+        if icount > 0" :
+            for j in range(0,icount):
+                    
+                fname=azr[i]["frontendIpConfigurations[j]["name"]
+                priv=azr[i]["frontendIpConfigurations[j]["privateIpAddress"]
+
+                pubrg=azr[i]["frontendIpConfigurations[j]["publicIpAddress"]["id"].split("/")[4].replace(".","-")
+                pubname=azr[i]["frontendIpConfigurations[j]["publicIpAddress"]["id"].split("/")[8].replace(".","-")
+                
+                subrg=azr[i]["frontendIpConfigurations[j]["subnet"]["id"].split("/")[4].replace(".","-")
+                subname=azr[i]["frontendIpConfigurations[j]["subnet"]["id"].split("/")[10].replace(".","-")
+                privalloc=azr[i]["frontendIpConfigurations[j]["privateIpAllocationMethod"]
+                
+                fr.write('\t frontend_ip_configuration {' + '"\n')
+                fr.write('\t\t name = "' +    fname + '"\n')
+                if subname" try :
+                    fr.write('\t\t subnet_id = "'\{'azurerm_subnet. + '__' + .id}'"' subrg subname + '"\n')
+               
+                if priv" try :
+                    fr.write('\t\t private_ip_address = "' +    priv + '"\n')
+                          
+                if privalloc" try :
+                    fr.write('\t\t private_ip_address_allocation  = "' +    privalloc + '"\n')
+               
+                if pubname" try :
+                    fr.write('\t\t public_ip_address_id = "'\{'azurerm_public_ip. + '__' + .id}'"' pubrg pubname + '"\n')
+               
+
+                fr.write('\t }\n')
+                
+            
+       
+        
+        
+        fr.write('}\n')
+        #
+ 
+    
+fi
+
+    ###############
+    # specific code end
     ###############
 
     # tags block       

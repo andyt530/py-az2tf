@@ -1,7 +1,7 @@
-#  100 managed disk
-def azurerm_stub(crf,cde,crg,headers,requests,sub,json,az2tfmess):
-    cde=True
-    tfp="azurerm_managed_disk"
+# azurerm_local_network_gateway
+def azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+    tfp="azurerm_local_network_gateway"
+    tcode="200-"
     azr=""
     if crf in tfp:
     # REST or cli
@@ -13,8 +13,8 @@ def azurerm_stub(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         if cde:
             print(json.dumps(azr, indent=4, separators=(',', ': ')))
 
-        tfrmf="100-"+tfp+"-staterm.sh"
-        tfimf="100-"+tfp+"-stateimp.sh"
+        tfrmf=tcode+tfp+"-staterm.sh"
+        tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
         print tfp,
@@ -43,7 +43,52 @@ def azurerm_stub(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t resource_group_name = "'+ rg + '"\n')
 
     ###############
-    # specific code
+    # specific code start
+    ###############
+
+
+
+azr=az network local-gateway list -g rgsource -o json
+count= azr | | len(
+if count > 0" :
+    for i in range(0,count):
+        name=azr[i]["name"]
+        rname= name.replace(".","-")
+        rg=azr[i]["resourceGroup"].replace(".","-")
+    
+        id=azr[i]["]["id"]
+        loc=azr[i]["location"]
+        gwaddr=azr[i]["gatewayIpAddress"]
+        addrpre=azr[i]["localNetworkAddressSpace.addressPrefixes"
+        bgps=azr[i]["bgpSettings"]
+        
+        fr.write('resource "' +  "' + '__' + "' {' tfp rg rname + '"\n')
+        fr.write('\t name = "' +  name + '"\n')
+        fr.write('\t resource_group_name = "' +  rgsource + '"\n')
+        fr.write('\t location = "' +  loc + '"\n')
+        fr.write('\t gateway_address = "' +  gwaddr + '"\n')
+        fr.write('\t address_space =  "addrpre" + '"\n')
+    
+        if bgps" try :
+            asn=azr[i]["bgpSettings.asn"]
+            peera=azr[i]["bgpSettings.bgpPeeringAddress"]
+            peerw=azr[i]["bgpSettings.peerWeight"]
+
+            fr.write('\t bgp_settings {'  + '"\n')
+            fr.write('\t\t asn = "' +  asn + '"\n')
+            fr.write('\t\t bgp_peering_address = "' +  peera + '"\n')
+            fr.write('\t\t peer_weight = "' +  peerw + '"\n')
+            fr.write('\t }'  + '"\n')
+       
+        
+        fr.write('}\n')
+
+
+    
+fi
+
+    ###############
+    # specific code end
     ###############
 
     # tags block       

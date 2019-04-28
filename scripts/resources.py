@@ -37,6 +37,41 @@ import azurerm_public_ip
 import azurerm_traffic_manager_profile
 import azurerm_traffic_manager_endpoint
 import azurerm_network_interface
+#import 131_azurerm_dns_zone
+#import 140_azurerm_lb
+#import 150_azurerm_lb_nat_rule
+#import 160_azurerm_lb_nat_pool
+#import 170_azurerm_lb_backend_address_pool
+#import 180_azurerm_lb_probe
+#import 190_azurerm_lb_rule
+#import 193_azurerm_application_gateway
+#import 200_azurerm_local_network_gateway
+#import 210_azurerm_virtual_network_gateway
+#import 220_azurerm_virtual_network_gateway_connection
+#import 230_azurerm_express_route_circuit
+#import 240_azurerm_express_route_circuit_authorization
+#import 250_azurerm_express_route_circuit_peering
+#import 260_azurerm_container_registry
+#import 270_azurerm_kubernetes_cluster
+#import 280_azurerm_recovery_services_vault
+#import 290_azurerm_virtual_machine
+#import 295_azurerm_virtual_machine_scale_set
+#import 310_azurerm_automation_account
+#import 320_azurerm_log_analytics_workspace
+#import 330_azurerm_log_analytics_solution
+#import 340_azurerm_image
+#import 350_azurerm_snapshot
+#import 360_azurerm_network_watcher
+#import 400_azurerm_cosmosdb_account
+#import 500_azurerm_servicebus_namespace
+#import 510_azurerm_servicebus_queue
+#import 540_azurerm_sql_server
+#import 541_azurerm_sql_database
+#import 550_azurerm_databricks_workspace
+#import 600_azurerm_app_service_plan
+#import 610_azurerm_app_service
+#import 620_azurerm_function_app
+#import 650_azurerm_monitor_autoscale_setting
 
 
 
@@ -78,6 +113,17 @@ if sys.version_info[0] > 2:
 def printf(format, *values):
     print(format % values )
 
+# cleanup files with Python
+#tffile=tfp+"*.tf"
+#fileList = glob.glob(tffile) 
+# Iterate over the list of filepaths & remove each file.
+#for filePath in fileList:
+#    try:
+#        os.remove(filePath)
+#    except:
+#        print("Error while deleting file : ", filePath)
+
+
 #with open(filename, 'w') as f:
     #print >> f, 'Filename:'
 
@@ -94,7 +140,7 @@ def printf(format, *values):
 #url = 'https://management.azure.com/' + 'subscriptions'
 #r = requests.get(url, headers=headers, params=params)
 #print(json.dumps(r.json(), indent=4, separators=(',', ': ')))
-print "Access Token"
+print "Get Access Token from CLI"
 p = subprocess.Popen('az account get-access-token -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 c=0
 for line in p.stdout.readlines():
@@ -214,46 +260,76 @@ azr=azurerm_traffic_manager_profile.azurerm_traffic_manager_profile(crf,cde,crg,
 azurerm_traffic_manager_endpoint.azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr)
 #  130 network interface
 azurerm_network_interface.azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-# 131 dns zone
-# 140 lb
-# 150 lb nat
-# 160 ln nat pool
-# 170 lb backend address pool
-# 180 lb probe
-# 190 lb rule
-# 193 application_gateway
-# 195 firewall
-# 195 firewll_network_rule
-# 200 local network gateway
-# 210 virtual network gateway
-# 220 virtual network gateway connection
-# 230 express route circuit
-# 240 express route circuit authorization
-# 250 express route circuit peering
-# 260 container registry
-# 270 kubernetes cluster
-# 280 recovery services vault
-# 290 virtual machine
-# 295 virtual machine scale set
-# 310 automation account
-# 320 log analytics workspace
-# 330 log analytics solution
-# 340 image
-# 350 snapshot
-# 360 network watcher
-# 400 cosmosdb_account
-# 500 servicebus_namespace
-# 510 servicebus_queue
-# 540 sql_server
-# 541 sql_database 
-# 550 databricks_workspace
-# 600 app service plan
-# 610 app service
-# 620 function app
-# 650 monitor autoscale setting
-
-
-
+# 131_azurerm_dns_zone
+# 131_azurerm_dns_zone.azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 140_azurerm_lb
+# 140_azurerm_lb.azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 150_azurerm_lb_nat_rule
+# 150_azurerm_lb_nat_rule.azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 160_azurerm_lb_nat_pool
+# 160_azurerm_lb_nat_pool.azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 170_azurerm_lb_backend_address_pool
+# 170_azurerm_lb_backend_address_pool.azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 180_azurerm_lb_probe
+# 180_azurerm_lb_probe.azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 190_azurerm_lb_rule
+# 190_azurerm_lb_rule.azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 193_azurerm_application_gateway
+# 193_azurerm_application_gateway.azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 200_azurerm_local_network_gateway
+# 200_azurerm_local_network_gateway.azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 210_azurerm_virtual_network_gateway
+# 210_azurerm_virtual_network_gateway.azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 220_azurerm_virtual_network_gateway_connection
+# 220_azurerm_virtual_network_gateway_connection.azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 230_azurerm_express_route_circuit
+# 230_azurerm_express_route_circuit.azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 240_azurerm_express_route_circuit_authorization
+# 240_azurerm_express_route_circuit_authorization.azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 250_azurerm_express_route_circuit_peering
+# 250_azurerm_express_route_circuit_peering.azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 260_azurerm_container_registry
+# 260_azurerm_container_registry.azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 270_azurerm_kubernetes_cluster
+# 270_azurerm_kubernetes_cluster.azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 280_azurerm_recovery_services_vault
+# 280_azurerm_recovery_services_vault.azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 290_azurerm_virtual_machine
+# 290_azurerm_virtual_machine.azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 295_azurerm_virtual_machine_scale_set
+# 295_azurerm_virtual_machine_scale_set.azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 310_azurerm_automation_account
+# 310_azurerm_automation_account.azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 320_azurerm_log_analytics_workspace
+# 320_azurerm_log_analytics_workspace.azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 330_azurerm_log_analytics_solution
+# 330_azurerm_log_analytics_solution.azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 340_azurerm_image
+# 340_azurerm_image.azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 350_azurerm_snapshot
+# 350_azurerm_snapshot.azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 360_azurerm_network_watcher
+# 360_azurerm_network_watcher.azurerm_network_watcher(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 400_azurerm_cosmosdb_account
+# 400_azurerm_cosmosdb_account.azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 500_azurerm_servicebus_namespace
+# 500_azurerm_servicebus_namespace.azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 510_azurerm_servicebus_queue
+# 510_azurerm_servicebus_queue.azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 540_azurerm_sql_server
+# 540_azurerm_sql_server.azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 541_azurerm_sql_database
+# 541_azurerm_sql_database.azurerm_sql_database(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 550_azurerm_databricks_workspace
+# 550_azurerm_databricks_workspace.azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 600_azurerm_app_service_plan
+# 600_azurerm_app_service_plan.azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 610_azurerm_app_service
+# 610_azurerm_app_service.azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 620_azurerm_function_app
+# 620_azurerm_function_app.azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 650_azurerm_monitor_autoscale_setting
+# 650_azurerm_monitor_autoscale_setting.azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 
 # ******************************************************************************************
 exit()

@@ -34,7 +34,7 @@ if count2 > 0" :
             
             id=az"]["id"]
             skip="false"
-            if [[ id = *"["* ]["; :
+            if [[ id = *"]["* ]["; :
                 echo "Skipping this soluion pname - can't process currently"
                 skip="true"
            

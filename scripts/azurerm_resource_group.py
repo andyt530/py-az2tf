@@ -18,14 +18,7 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if cde:
         print(json.dumps(rgs, indent=4, separators=(',', ': ')))
 
-    tffile=tfp+"*.tf"
-    #fileList = glob.glob(tffile) 
-    # Iterate over the list of filepaths & remove each file.
-    #for filePath in fileList:
-    #    try:
-    #        os.remove(filePath)
-    #    except:
-    #        print("Error while deleting file : ", filePath)
+
 
     count=len(rgs)
     print count

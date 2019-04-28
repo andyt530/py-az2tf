@@ -57,7 +57,7 @@ if count" != "0" :
                         for j in range(0,tcount):
                             k1= keys | jq ".[j]["
                             #echo "key=k1"
-                            re="[[:space:]["+"
+                            re="][[:space:]["+"
                             if [[ k1 =~ re ]["; :
                                 #echo "found a space"
                                 tval= tt | jq ."k1"
