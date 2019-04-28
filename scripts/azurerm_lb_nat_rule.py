@@ -17,12 +17,14 @@ def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
         for i in range(0, count):
             try:
                 beap=azr[i]["properties"]["inboundNatRules"] 
-                if cde:
-                    print "********** beap **************"
-                    print(json.dumps(beap, indent=4, separators=(',', ': ')))
+                id=azr[i]["id"]
+                rg=id.split("/")[4].replace(".","-")
+                if crg is not None:
+                    if rg.lower() != crg.lower():
+                        continue  # back to for
    
-                jcount=len(beap)
-            
+                jcount=len(beap)   
+                        
                 for j in range(0,jcount):
                     
                     name=azr[i]["properties"]["inboundNatRules"][j]["name"]
@@ -35,7 +37,7 @@ def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                             continue  # back to for
 
                     prefix=tfp+"."+rg+'__'+rname
-                    print prefix
+                    #print prefix
                     rfilename=prefix+".tf"
                     fr=open(rfilename, 'w')
                     fr.write(az2tfmess)
