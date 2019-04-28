@@ -46,8 +46,8 @@ def azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfm
             ps=azr[i]["properties"]["profileStatus"]
             fr.write('\t profile_status = "' + ps + '"\n') 
         
-            dnsc=azr[i]["properties"]["dnsConfig"]
-            monc=azr[i]["properties"]["monitorConfig"]
+            #dnsc=azr[i]["properties"]["dnsConfig"]
+            #monc=azr[i]["properties"]["monitorConfig"]
                     
 
     # dns_config block
