@@ -42,5 +42,6 @@ sed -i .bak -e '/=expr /d' $1
 sed -i .bak -e '/echo az2tfmess/d' $1
 sed -i .bak -e 's/ jq '\''.//g' $1
 sed -i .bak -e 's/\" -gt \"/ > /g' $1
+sed -i .bak -e 's/\"\[/\"\]\[/g' $1
 rm -f *.bak
 

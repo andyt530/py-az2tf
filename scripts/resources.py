@@ -32,11 +32,13 @@ import azurerm_subnet
 import azurerm_virtual_network_peering
 import azurerm_managed_disk
 import azurerm_storage_account
-import azurerm_public_ip
 import azurerm_key_vault
+import azurerm_public_ip
 import azurerm_traffic_manager_profile
 import azurerm_traffic_manager_endpoint
 import azurerm_network_interface
+
+
 
 os.chdir(scwd)
 #print os.getcwd()
@@ -212,6 +214,47 @@ azr=azurerm_traffic_manager_profile.azurerm_traffic_manager_profile(crf,cde,crg,
 azurerm_traffic_manager_endpoint.azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr)
 #  130 network interface
 azurerm_network_interface.azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 131 dns zone
+# 140 lb
+# 150 lb nat
+# 160 ln nat pool
+# 170 lb backend address pool
+# 180 lb probe
+# 190 lb rule
+# 193 application_gateway
+# 195 firewall
+# 195 firewll_network_rule
+# 200 local network gateway
+# 210 virtual network gateway
+# 220 virtual network gateway connection
+# 230 express route circuit
+# 240 express route circuit authorization
+# 250 express route circuit peering
+# 260 container registry
+# 270 kubernetes cluster
+# 280 recovery services vault
+# 290 virtual machine
+# 295 virtual machine scale set
+# 310 automation account
+# 320 log analytics workspace
+# 330 log analytics solution
+# 340 image
+# 350 snapshot
+# 360 network watcher
+# 400 cosmosdb_account
+# 500 servicebus_namespace
+# 510 servicebus_queue
+# 540 sql_server
+# 541 sql_database 
+# 550 databricks_workspace
+# 600 app service plan
+# 610 app service
+# 620 function app
+# 650 monitor autoscale setting
+
+
+
+
 # ******************************************************************************************
 exit()
 
