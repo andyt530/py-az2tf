@@ -44,12 +44,12 @@ def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                        
                     lbrg=azr[i]["id"].split("/")[4].replace(".","-")
                     lbname=azr[i]["id"].split("/")[8].replace(".","-")
-                    print "hi 1"
+                    
                     fep=azr[i]["properties"]["inboundNatRules"][j]["properties"]["frontendPort"]
                     bep=azr[i]["properties"]["inboundNatRules"][j]["properties"]["backendPort"]
                     proto=azr[i]["properties"]["inboundNatRules"][j]["properties"]["protocol"]
                     feipc=azr[i]["properties"]["inboundNatRules"][j]["properties"]["frontendIPConfiguration"]["id"].split("/")[10]
-                    print "hi 2"
+                    
                     fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')   
 
                     fr.write('\t\t name = "' +    name + '"\n')

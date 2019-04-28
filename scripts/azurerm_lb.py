@@ -3,7 +3,6 @@ def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_lb"
     tcode="140-"
     azr=""
-    print "in lb"
     if crf in tfp:
     # REST or cli
         print "REST Load Balancers"

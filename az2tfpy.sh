@@ -108,7 +108,7 @@ if [ $? -eq 0 ]; then
     echo "Error in resources.py"
     exit
 fi
-
+exit
 
 #
 # uncomment following line if you want to use an SPN login

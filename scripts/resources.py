@@ -40,7 +40,7 @@ import azurerm_network_interface
 import azurerm_dns_zone
 import azurerm_lb
 import azurerm_lb_nat_rule
-#import 160_azurerm_lb_nat_pool
+import azurerm_lb_nat_pool
 #import 170_azurerm_lb_backend_address_pool
 #import 180_azurerm_lb_probe
 #import 190_azurerm_lb_rule
@@ -263,12 +263,12 @@ azurerm_network_interface.azurerm_network_interface(crf,cde,crg,headers,requests
 # 131_azurerm_dns_zone
 azurerm_dns_zone.azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 140_azurerm_lb
-cde=True
 azr=azurerm_lb.azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 150_azurerm_lb_nat_rule
 azurerm_lb_nat_rule.azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr)
 # 160_azurerm_lb_nat_pool
-# 160_azurerm_lb_nat_pool.azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_lb_nat_pool.azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr)
+cde=True
 # 170_azurerm_lb_backend_address_pool
 # 170_azurerm_lb_backend_address_pool.azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 180_azurerm_lb_probe
