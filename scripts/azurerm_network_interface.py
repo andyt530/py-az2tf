@@ -94,7 +94,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     for k in range(0,kcount):
                         asgnam=azr[i]["properties"]["ipConfigurations"][j]["properties"]["applicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
                         asgrg=azr[i]["properties"]["ipConfigurations"][j]["properties"]["applicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-")
-                        fr.write('\t\t application_security_group_ids = ${azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}"\n')
+                        fr.write('\t\t application_security_group_ids = ["${azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}"]\n')
                 except KeyError:
                     pass
 
