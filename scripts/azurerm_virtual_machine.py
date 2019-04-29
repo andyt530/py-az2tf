@@ -73,7 +73,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             vmosmdtyp=azr[i]["storageProfile"]["osDisk"]["managedDisk"]["storageAccountType"]
             #
             
-            osvhd=azr[i]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys[0]["keyData"]
+            osvhd=azr[i]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys"][0]["keyData"]
             
             #
             vmimid=azr[i]["storageProfile"]["imageReference"]["id"]
@@ -87,67 +87,80 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             vmadminpw=azr[i]["osProfile"]["Password"]
             vmcn=azr[i]["osProfile"]["computerName"]
             vmdispw=azr[i]["osProfile"]["linuxConfiguration"]["disablePasswordAu:tication"]
-            vmsshpath=azr[i]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys[0]["path"]
-            vmsshkey=azr[i]["osProfile"]["linuxConfiguration.ssh"]["publicKeys[0]["keyData"]
+            vmsshpath=azr[i]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys"][0]["path"]
+            vmsshkey=azr[i]["osProfile"]["linuxConfiguration.ssh"]["publicKeys"][0]["keyData"]
             #
             vmplname=azr[i]["plan"]["name"]  
             #
 
-            if avsid" try : 
+            try : 
+                avsid=azr[i]["availabilitySet"]["id"].split("/")[8].replace(".","-")
+                avsrg=azr[i]["availabilitySet"]["id"].split("/")[8].replace(".","-")
                 fr.write('\t availability_set_id = "${azurerm_availability_set.' + myavs + '.id}\n')
-        
-            if vmlic" try : 
+            except KeyError:
+                pass
+
+
+            try : 
+                vmlic=azr[i]["licenseType"]
                 fr.write('\t license_type = "' +  vmlic + '"\n')
-        
-            fr.write('\t vm_size = "' +  vmsize + '"\n')
+            except KeyError:
+                pass
+
+            fr.write('\t vm_size = "' + vmsize + '"\n')
             #
             # Multiples
             #
-            icount= netifs | | len(
-            if icount > 0" :
+            icount=len(netifs)
+            if icount > 0 :
                 for j in range(0,icount):
                     vmnetid=azr[i]["networkProfile"]["networkInterfaces"][j]["id"].split("/")[8].replace(".","-")
                     vmnetrg=azr[i]["networkProfile"]["networkInterfaces"][j]["id"].split("/")[4].replace(".","-")
                     vmnetpri=azr[i]["networkProfile"]["networkInterfaces"][j]["primary"]
-                    fr.write('\t network_interface_ids = ["${azurerm_network_interface.' + vmnetrg + '__' + vmnetid + ''.id}"\n')
-                    if vmnetpri" == "true" :
-                        fr.write('\t primary_network_interface_id = "${azurerm_network_interface.' + vmnetrg +'__' +  vmnetid + ''.id}"\n')
-                
-                
-        
+                    fr.write('\t network_interface_ids = ["${azurerm_network_interface.' + vmnetrg + '__' + vmnetid + '.id}"\n')
+                    if vmnetpri == "true" :
+                        fr.write('\t primary_network_interface_id = "${azurerm_network_interface.' + vmnetrg + '__' +  vmnetid + '.id}"\n')     
+            
             #
-            #
-            fr.write('\t delete_data_disks_on_termination = "'+ false + \n')
+            fr.write('\t delete_data_disks_on_termination = "'+ false + '"\n')
             fr.write('\t delete_os_disk_on_termination = "'+ false + '"\n')
             #
-            if vmcn" try ][":
-            fr.write('os_profile {'  + '"\n')
-            fr.write('\tcomputer_name = "' +    vmcn + '"\n')
-            fr.write('\tadmin_username = "' +    vmadmin + '"\n')
+            try:
+                vmcn=azr[i]["osProfile"]["computerName"]
+                fr.write('os_profile {'  + '"\n')
+                fr.write('\tcomputer_name = "' +    vmcn + '"\n')
+                fr.write('\tadmin_username = "' +    vmadmin + '"\n')
+            except KeyError:
+                pass
+                     
+            
             try : 
+                vmadminpw=azr[i]["osProfile"]["Password"]
                 fr.write('\t admin_password = "' +  vmadminpw + '"\n')
-        
+            except KeyError:
+                pass
 
             #  admin_password ?
             fr.write('}\n')
         
-            
-            #
             #
             havesir=0
-            if vmimid" = "null" :
-                if vmimpublisher" try ][":
-                fr.write('storage_image_reference {'  + '"\n')
-                fr.write('\t publisher = "' +  vmimpublisher  + '"\n')
-                fr.write('\t offer = "' +   vmimoffer + '"\n')
-                fr.write('\t sku = "' +   vmimsku + '"\n')
-                fr.write('\t version = "' +   vmimversion + '"\n')
-                havesir=1
-                fr.write('}\n')
-            
+            if vmimid == "null" :
+                try:
+                    vmimpublisher=azr[i]["storageProfile"]["imageReference"]["publisher"]
+                    fr.write('storage_image_reference {'  + '"\n')
+                    fr.write('\t publisher = "' +  vmimpublisher  + '"\n')
+                    fr.write('\t offer = "' +   vmimoffer + '"\n')
+                    fr.write('\t sku = "' +   vmimsku + '"\n')
+                    fr.write('\t version = "' +   vmimversion + '"\n')
+                    havesir=1
+                    fr.write('}\n')
+                except KeyError:
+                    pass
             
         
-            if vmplname" try :
+            try :
+                vmplname=azr[i]["plan"]["name"]
                 vmplprod=azr[i]["plan"]["product"]
                 vmplpub=azr[i]["plan"]["publisher"] 
                 fr.write('plan {'  + '"\n')
@@ -155,43 +168,50 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('\t publisher = "' +  vmplpub  + '"\n')
                 fr.write('\t product = "' +  vmplprod  + '"\n')
                 fr.write('}\n')
-        
+            except KeyError:
+                pass
             #
             #
             #
-            if vmdiags" try :
+            try :
+                vmdiags=azr[i]["diagnosticsProfile"]
                 fr.write('boot_diagnostics {'  + '"\n')
-                fr.write('\t enabled = "'true"'  + '"\n')
+                fr.write('\t enabled = "' + true + '"\n')
                 fr.write('\t storage_uri = "' +  vmbturi + '"\n')
                 fr.write('}\n')
-        
+            except KeyError:
+                pass
             #
-            if [ vmtype = "Windows" :
+            if vmtype == "Windows" :
                 vmwau=azr[i]["osProfile"]["windowsConfiguration"]["enableAutomaticUpdates"]
                 vmwvma=azr[i]["osProfile"]["windowsConfiguration"]["provisionVmAgent"]
                 vmwtim=azr[i]["osProfile"]["windowsConfiguration"]["timeZone"]
-                if vmwau" try :
+                try :
+                    vmwau=azr[i]["osProfile"]["windowsConfiguration"]["enableAutomaticUpdates"]
                     fr.write('os_profile_windows_config {'  + '"\n')
                     fr.write('\t enable_automatic_upgrades = "' +  vmwau + '"\n')
                     fr.write('\t provision_vm_agent = "' +  vmwvma + '"\n')
-                    if vmwtim" try :
-                        fr.write('\t timezone =   "vmwtim" + '"\n')
-                
+                    try :
+                        vmwtim=azr[i]["osProfile"]["windowsConfiguration"]["timeZone"]
+                        fr.write('\t timezone =   "' + vmwtim + '"\n')
+                    except KeyError:
+                        pass
                     fr.write('}\n')
-            
+                except KeyError:
+                    pass
         
             #
-            if [ vmtype = "Linux" :
+            if  vmtype == "Linux" :
                 fr.write('os_profile_linux_config {'  + '"\n')
-                if [ vmdispw = "null" :
+                if  vmdispw == "null" :
                 # osprofile can by null for vhd imported images - must make an artificial one.
-                vmdispw="false"
+                    vmdispw="false"
             
-                fr.write('\tdisable_password_au:tication = "' +   vmdispw + '"\n')
-                if vmdispw" != "false" :
-                fr.write('\tssh_keys {'  + '"\n')
+                fr.write('\tdisable_password_authentication = "' +   vmdispw + '"\n')
+                if vmdispw != "false" :
+                    fr.write('\tssh_keys {'  + '\n')
                     fr.write('\t\tpath = "' +   vmsshpath + '"\n')
-                    echo "		key_data = "'vmsshkey"'"  + '"\n')
+             
                     fr.write('\t}\n')
             
                 
@@ -203,21 +223,26 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             #
             fr.write('\t storage_os_disk {'  + '"\n')
             fr.write('\t\tname = "' +    vmosdiskname + '"\n')
-            fr.write('\t\tcaching = "' +   vmosdiskcache  >>  outfile
-            fr.write('\t\tcreate_option = "' +   vmoscreoption + '"\n')
+            fr.write('\t\tcaching = "' +   vmosdiskcache  + '"\n')
+            fr.write('\t\tcreate_option = "' + vmoscreoption + '"\n')
             fr.write('\t\tos_type = "' +   vmtype + '"\n')
 
     
-            if vmossiz" try :
+            try :
+                vmossiz=azr[i]["storageProfile"]["osDisk"]["diskSizeGb"]
                 fr.write('\t\t disk_size_gb = "' +   vmossiz + '"\n')
-                
+            except KeyError:
+                pass   
 
-            if vmosvhd" try :
+            try :
+                vmosvhd=azr[i]["storageProfile"]["osDisk"]["vhd"]["uri"]
                 fr.write('\t\tvhd_uri = "' +   vmosvhd + '"\n')
-        
+            except KeyError:
+                pass
             if vmoswa" try :
                 fr.write('\t write_accelerator_enabled = "' +   vmoswa + '"\n')
-        
+            except KeyError:
+                pass
 
             vmosmdid=azr[i]["storageProfile.osDisk.managedDisk"]["id"]
             vmosmdtyp=azr[i]["storageProfile.osDisk.managedDisk.storageAccountType"]
@@ -226,10 +251,12 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             if vmoscreoption" = "Attach" :
                 if vmosmdtyp" try :
                     fr.write('\tmanaged_disk_type = "' +   vmosmdtyp + '"\n')
-            
+                except KeyError:
+                    pass
                 if vmosmdid" try :
                     fr.write('\tmanaged_disk_id = "' +   vmosmdid + '"\n')
-            
+                except KeyError:
+                    pass
         
 
             fr.write('}\n')
@@ -271,25 +298,24 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                         #
                         
                         fr.write('\t managed_disk_id = "${azurerm_managed_disk. + '__' + .id}'"' rg ddmdid + '"\n')
-                    
+                        except KeyError:
+                            pass
                 
                     if ddvhd" try :
                         fr.write('\t vhd_uri = "' +  ddvhd + '"\n')
-                
+                    except KeyError:
+                            pass
                     
                     fr.write('}\n')
-            
+                except KeyError:
+                            pass
             
 
             
             fr.write('}\n')
 
         
-    
 
-    ###############
-    # specific code end
-    ###############
 
     # tags block       
             try:

@@ -145,7 +145,7 @@ def azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2t
             # osprofile can by null for vhd imported images - must make an artificial one.
             vmdispw="false"
            
-            fr.write('\tdisable_password_au:tication = "' +   vmdispw + '"\n')
+            fr.write('\tdisable_password_authentication = "' +   vmdispw + '"\n')
             if vmdispw" != "false" :
                fr.write('\tssh_keys {'  + '"\n')
                 fr.write('\t\tpath = "' +   vmsshpath + '"\n')
