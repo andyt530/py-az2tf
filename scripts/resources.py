@@ -48,7 +48,7 @@ import azurerm_lb_nat_pool
 #import 200_azurerm_local_network_gateway
 #import 210_azurerm_virtual_network_gateway
 #import 220_azurerm_virtual_network_gateway_connection
-#import 230_azurerm_express_route_circuit
+#import 230_azurerm_express_route_circuit - 
 #import 240_azurerm_express_route_circuit_authorization
 #import 250_azurerm_express_route_circuit_peering
 #import 260_azurerm_container_registry
