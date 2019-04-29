@@ -4,8 +4,8 @@ prefixa="rdf"
 #azr=az role definition list -o json
 #azr=az role definition list --query "[?roleType!='BuiltInRole'][" -o json 
 count=len(azr)
-if count -gt "0" :
-    for i in range( 0 count):
+if count > 0 :
+    for i in range(0,count):
         print i " of " count
         
         name=azr[i]["roleName"]

@@ -239,21 +239,24 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('\t\tvhd_uri = "' +   vmosvhd + '"\n')
             except KeyError:
                 pass
-            if vmoswa" try :
+            try :
+                vmoswa=azr[i]["storageProfile"]["osDisk"]["writeAcceleratorEnabled"]
                 fr.write('\t write_accelerator_enabled = "' +   vmoswa + '"\n')
             except KeyError:
                 pass
 
-            vmosmdid=azr[i]["storageProfile.osDisk.managedDisk"]["id"]
-            vmosmdtyp=azr[i]["storageProfile.osDisk.managedDisk.storageAccountType"]
+            
+            
 
 
-            if vmoscreoption" = "Attach" :
-                if vmosmdtyp" try :
+            if vmoscreoption == "Attach" :
+                try :
+                    vmosmdtyp=azr[i]["storageProfile.osDisk.managedDisk.storageAccountType"]
                     fr.write('\tmanaged_disk_type = "' +   vmosmdtyp + '"\n')
                 except KeyError:
                     pass
-                if vmosmdid" try :
+                try :
+                    vmosmdid=azr[i]["storageProfile.osDisk.managedDisk"]["id"]
                     fr.write('\tmanaged_disk_id = "' +   vmosmdid + '"\n')
                 except KeyError:
                     pass
@@ -270,12 +273,11 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             # Data disks
             #
             #echo datadisks | jq .
-            dcount= datadisks | | len(
-            dcount=((dcount-1))
+            dcount= len(datadisks)
             
-            for j in range(0,dcount):
-                ddname= datadisks | jq ".[j]["name"]
-                if ddname" try :
+            for j in range(0,dcount):             
+                try :
+                    ddname= datadisks | jq ".[j]["name"]
                     ddcreopt= datadisks | jq ".[j]["createOption"]
                     ddlun= datadisks | jq ".[j]["lun"]
                     ddvhd= datadisks | jq ".[j]["vhd.uri"]
