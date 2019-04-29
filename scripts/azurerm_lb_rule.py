@@ -55,8 +55,8 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                 fep=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["frontendPort"]
                 bep=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["backendPort"]
                 proto=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["protocol"]
-                feipc=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["frontendIpConfiguration"]["id"]
-                efip=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["enableFloatingIp"]
+                feipc=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["frontendIPConfiguration"]["id"]
+                efip=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["enableFloatingIP"]
                 ld=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["loadDistribution"]
                 itm=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["idleTimeoutInMinutes"]
 
@@ -81,13 +81,6 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                 fr.write('\t\t idle_timeout_in_minutes = "' + itm + '"\n')
                 fr.write('\t\t load_distribution = "' + ld + '"\n')
 
-
-             
-
-
-        ###############
-        # specific code end
-        ###############
 
         # tags block       
                 try:
