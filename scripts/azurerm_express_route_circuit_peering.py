@@ -86,7 +86,7 @@ if count2 > 0" :
                 for k in range(0,acount):
                 
                 name= peers | jq ".[k]["name"]
-                id= peers | jq ".[k]["]["id"]
+                id= peers | jq ".[k]["id"]
                 pt= peers | jq ".[k]["properties.peeringType"]
                 pap= peers | jq ".[k]["properties.primaryPeerAddressPrefix"]
                 sap= peers | jq ".[k]["properties.secondaryPeerAddressPrefix"]

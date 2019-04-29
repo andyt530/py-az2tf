@@ -58,14 +58,14 @@ if count > 0" :
         rg=azr[i]["resourceGroup"].replace(".","-")
 
 
-        id=azr[i]["]["id"]
+        id=azr[i]["id"]
         loc=azr[i]["location"
         
         fr.write('resource "' +  "' + '__' + "' {' tfp rg rname + '"\n')
         fr.write('\t name = "' +  name + '"\n')
         #fr.write('\t id = "' +  id + '"\n')
         fr.write('\t location =  "loc" + '"\n')
-        #fr.write('\t resource_group_name = "'\{'var.rgtarget}'"' + '"\n')
+        #fr.write('\t resource_group_name = "${var.rgtarget}'"' + '"\n')
         fr.write('\t resource_group_name = "' +  rgsource + '"\n')
             
         #

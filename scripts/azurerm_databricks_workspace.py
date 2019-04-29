@@ -91,7 +91,7 @@ fr.write('\t resource_group_name = "' +  rgsource + '"\n')
 fr.write('\t location = "' +  loc + '"\n')
 fr.write('\t sku = "' +  sku + '"\n')
 fr.write('}\n')
-outid=azrproperties.outputResources[0]["]["id"]
+outid=azrproperties.outputResources[0]["id"]
 cat outfile
 statecomm=fr.write('terraform state rm . + '__' + " tfp rg rname
 echo statecomm >> tf-staterm.sh

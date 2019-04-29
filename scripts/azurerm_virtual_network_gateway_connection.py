@@ -90,7 +90,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
             if ctype == "ExpressRoute" :
                 peerid=azr[i]["properties"]["peer"]["id"]
                 fr.write('\t\t express_route_circuit_id = "' +  peerid + '"\n')
-                #fr.write('\t\t express_route_circuit_id = "'\{'azurerm_virtual_network_gateway. + '__' + .id}'"' peerrg peernam + '"\n')
+                #fr.write('\t\t express_route_circuit_id = "${azurerm_virtual_network_gateway. + '__' + .id}'"' peerrg peernam + '"\n')
                 peerid=azr[i]["properties"]["peer"]["id"]
                 
         

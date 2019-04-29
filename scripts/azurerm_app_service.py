@@ -66,7 +66,7 @@ if count > 0" :
         name=azr[i]["name"]
         rname= name.replace(".","-")
         rg=azr[i]["resourceGroup" ]
-        id=azr[i]["]["id"]
+        id=azr[i]["id"]
         loc=azr[i]["location"
         prg=azr[i]["appServicePlanId"].split("/")[4]
         pnam=azr[i]["appServicePlanId"].split("/")[8
@@ -80,7 +80,7 @@ if count > 0" :
         fr.write('\t location =  "loc" + '"\n')
         fr.write('\t resource_group_name = "' +  rgsource + '"\n')
         # case issues - so use resource id directly
-        # fr.write('\t app_service_plan_id = "'\{'azurerm_app_service_plan. + '__' + .id}'"' prg pnam + '"\n')
+        # fr.write('\t app_service_plan_id = "${azurerm_app_service_plan. + '__' + .id}'"' prg pnam + '"\n')
         fr.write('\t app_service_plan_id = "' +  appplid + '"\n')
 
 

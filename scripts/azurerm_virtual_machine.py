@@ -47,10 +47,10 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             lavs=avsrg + '__' + avsid
 
             lavs=lavs.lower()
-            for tavs in terraform state list | grep azurerm_availability_set):     
-                uavs= tavs | cut -f2 -d'.' | awk '{'print tolower(0)}'' 
-                if uavs" == "lavs" :            
-                    myavs= tavs | cut -f2 -d'.' 
+            #for tavs in terraform state list | grep azurerm_availability_set):     
+            uavs= tavs.split("/")[2].lower() 
+            if uavs == "lavs" :            
+                myavs= tavs.split("/")[2]
             
             
             #echo "myavs=myavs"
@@ -94,7 +94,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             #
 
             if avsid" try : 
-                fr.write('\t availability_set_id = "'\{'azurerm_availability_set..id}'"' myavs + '"\n')
+                fr.write('\t availability_set_id = "${azurerm_availability_set.' + myavs + '.id}\n')
         
             if vmlic" try : 
                 fr.write('\t license_type = "' +  vmlic + '"\n')
@@ -106,25 +106,25 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             icount= netifs | | len(
             if icount > 0" :
                 for j in range(0,icount):
-                    vmnetid=azr[i]["networkProfile"]["networkInterfaces[j]["]["id"].split("/")[8].replace(".","-")
-                    vmnetrg=azr[i]["networkProfile"]["networkInterfaces[j]["]["id"].split("/")[4].replace(".","-")
-                    vmnetpri=azr[i]["networkProfile"]["networkInterfaces[j]["primary"]
-                    fr.write('\t network_interface_ids = ["'\{'azurerm_network_interface. + '__' + .id}'"']["n" vmnetrg vmnetid + '"\n')
+                    vmnetid=azr[i]["networkProfile"]["networkInterfaces"][j]["id"].split("/")[8].replace(".","-")
+                    vmnetrg=azr[i]["networkProfile"]["networkInterfaces"][j]["id"].split("/")[4].replace(".","-")
+                    vmnetpri=azr[i]["networkProfile"]["networkInterfaces"][j]["primary"]
+                    fr.write('\t network_interface_ids = ["${azurerm_network_interface.' + vmnetrg + '__' + vmnetid + ''.id}"\n')
                     if vmnetpri" == "true" :
-                        fr.write('\t primary_network_interface_id = "'\{'azurerm_network_interface. + '__' + .id}'"' vmnetrg vmnetid + '"\n')
+                        fr.write('\t primary_network_interface_id = "${azurerm_network_interface.' + vmnetrg +'__' +  vmnetid + ''.id}"\n')
                 
                 
         
             #
             #
-            fr.write('\t delete_data_disks_on_termination = "'false"'  + '"\n')
-            fr.write('\t delete_os_disk_on_termination = "'false"'  + '"\n')
+            fr.write('\t delete_data_disks_on_termination = "'+ false + \n')
+            fr.write('\t delete_os_disk_on_termination = "'+ false + '"\n')
             #
             if vmcn" try ][":
             fr.write('os_profile {'  + '"\n')
             fr.write('\tcomputer_name = "' +    vmcn + '"\n')
             fr.write('\tadmin_username = "' +    vmadmin + '"\n')
-            if vmadminpw" try : 
+            try : 
                 fr.write('\t admin_password = "' +  vmadminpw + '"\n')
         
 
@@ -270,7 +270,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                         #if not will have to get from terraform state - convert ddmdrg to lc and terraform state output
                         #
                         
-                        fr.write('\t managed_disk_id = "'\{'azurerm_managed_disk. + '__' + .id}'"' rg ddmdid + '"\n')
+                        fr.write('\t managed_disk_id = "${azurerm_managed_disk. + '__' + .id}'"' rg ddmdid + '"\n')
                     
                 
                     if ddvhd" try :

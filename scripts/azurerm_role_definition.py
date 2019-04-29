@@ -39,7 +39,7 @@ if count" -gt "0" :
         fr.write('name =  "name"  >> prefix-rdid.tf
         fr.write('role_definition_id = "' +  >> prefix-rdid.tf
         fr.write('description =  "desc" >> prefix-rdid.tf
-#        fr.write('scope = "'\{'data.azurerm_subscription.primary.id}'"'  >> prefix-rdid.tf
+#        fr.write('scope = "${data.azurerm_subscription.primary.id}'"'  >> prefix-rdid.tf
 #        fr.write('scope = "'/subscriptions/"' rgsource >> prefix-rdid.tf
         fr.write('scope = "' +   >> prefix-rdid.tf
         #

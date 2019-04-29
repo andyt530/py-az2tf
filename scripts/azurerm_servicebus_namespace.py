@@ -56,7 +56,7 @@ if count > 0" :
         name=azr[i]["name"]
         rname= name.replace(".","-")
         rg=azr[i]["resourceGroup"].replace(".","-")
-        id=azr[i]["]["id"]
+        id=azr[i]["id"]
         loc=azr[i]["location"
         sku=azr[i]["sku.tier"]
         cap=azr[i]["sku.capacity"]

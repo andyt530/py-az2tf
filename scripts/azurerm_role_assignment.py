@@ -29,7 +29,7 @@ if count" -gt "0" :
         
         fr.write('resource "' +  "' + '__' + "' {' tfp rg rdid >> prefix-rdid.tf
         fr.write('name =  "name"  >> prefix-rdid.tf
-        fr.write('role_definition_id = "'\{'azurerm_role_definition. + '__' + .id}'"' "roleDefinitions" roledefid >> prefix-rdid.tf
+        fr.write('role_definition_id = "${azurerm_role_definition. + '__' + .id}'"' "roleDefinitions" roledefid >> prefix-rdid.tf
         
         fr.write('principal_id =  "prid" >> prefix-rdid.tf
         fr.write('scope =  "scope"  >> prefix-rdid.tf

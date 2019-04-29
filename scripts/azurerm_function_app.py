@@ -55,13 +55,13 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
 
             # case issues - so use resource id directly
-            # fr.write('\t app_service_plan_id = "'\{'azurerm_app_service_plan. + '__' + .id}'"' prg pnam + '"\n')
+            # fr.write('\t app_service_plan_id = "${azurerm_app_service_plan. + '__' + .id}'"' prg pnam + '"\n')
             fr.write('\t app_service_plan_id = "' +  appplid + '"\n')
     # dummy entry
 
             fr.write('\t https_only = "' + https + '"\n')
             blog=False
-            strcon="
+            strcon=""
 
             jcount= appset | | len(
             if jcount > 0" :

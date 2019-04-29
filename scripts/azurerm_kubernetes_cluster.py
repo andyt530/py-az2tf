@@ -56,7 +56,7 @@ if count" != "0" :
         rname= name.replace(".","-")
         rg=azr[i]["resourceGroup"].replace(".","-")
 
-        id=azr[i]["]["id"]
+        id=azr[i]["id"]
         loc=azr[i]["location"]
         admin=azr[i]["adminUserEnabled"]
         dnsp=azr[i]["dnsPrefix"]
@@ -136,7 +136,7 @@ if count" != "0" :
         fr.write('\t\t count =  "' +  pcount + '"\n')
         fr.write('\t\t os_type =  "' +  ost + '"\n')
         if vnsrg" try :
-        fr.write('\t\t vnet_subnet_id = "'\{'azurerm_subnet. + '__' + .id}'"' vnsrg vnsid + '"\n')      
+        fr.write('\t\t vnet_subnet_id = "${azurerm_subnet. + '__' + .id}'"' vnsrg vnsid + '"\n')      
        
         fr.write('\t }\n')
         

@@ -71,7 +71,7 @@ if count > 0" :
                 name= azr2 | jq ".[j]["name"]
                 rname= name.replace(".","-")
                 rg= azr2 | jq ".[j]["resourceGroup"].replace(".","-")
-                id= azr2 | jq ".[j]["]["id"]
+                id= azr2 | jq ".[j]["id"]
                 ep= azr2 | jq ".[j]["enablePartitioning"]
                 adoni= azr2 | jq ".[j]["autoDeleteOnIdle"]
                 

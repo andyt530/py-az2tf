@@ -46,25 +46,11 @@ def azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2t
     # specific code start
     ###############
 
-
-
-azr=az vmss list -g rgsource -o json
-count= azr | | len(
-if count > 0" :
-    for i in range(0,count):
-        name=azr[i]["name"]
-        rname= name.replace(".","-")
-        rg=azr[i]["resourceGroup"].replace(".","-")
-
-        id=azr[i]["]["id"]
-        loc=azr[i]["location"]
         upm=azr[i]["upgradePolicy.mode"]
         op=azr[i]["overprovision"]
         spg=azr[i]["singlePlacementGroup"]
         vmlic=azr[i]["virtualMachineProfile.licenseType"]
         vmpri=azr[i]["virtualMachineProfile.priority"]
-
-
 
 
         vmtype=azr[i]["virtualMachineProfile.storageProfile.osDisk.osType"]
@@ -198,7 +184,7 @@ if count > 0" :
                                 if ipcp" = "null" : ipcp=";fi
                                 fr.write('\t\tname = "' +  ipcn + '"\n')
                                 fr.write('\t\tprimary = "' +  ipcp + '"\n')
-                                fr.write('\t\tsubnet_id = "'\{'azurerm_subnet. + '__' + .id}'"' ipcsrg ipcsn + '"\n')
+                                fr.write('\t\tsubnet_id = "${azurerm_subnet. + '__' + .id}'"' ipcsrg ipcsn + '"\n')
                             fr.write('\t}\n')
                         
                       
@@ -262,7 +248,7 @@ if count > 0" :
                     #if not will have to get from terraform state - convert ddmdrg to lc and terraform state output
                     #
                     
-                    fr.write('\t managed_disk_id = "'\{'azurerm_managed_disk. + '__' + .id}'"' rg ddmdid + '"\n')
+                    fr.write('\t managed_disk_id = "${azurerm_managed_disk. + '__' + .id}'"' rg ddmdid + '"\n')
                    
                
                 if ddvhd" try :

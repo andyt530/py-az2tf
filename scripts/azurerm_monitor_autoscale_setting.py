@@ -67,7 +67,7 @@ if count > 0" :
         rname= name.replace(".","-")
         rg=azr[i]["resourceGroup"].replace(".","-")
 
-        id=azr[i]["]["id"]
+        id=azr[i]["id"]
         en=azr[i]["enabled"]
         loc=azr[i]["location"]
         profs=azr[i]["profiles"
@@ -91,7 +91,7 @@ if count > 0" :
         fr.write('location = "' +   "loc" + '"\n')
         fr.write('resource_group_name = "' +   rgsource + '"\n')
         if trrg" try :
-        fr.write('target_resource_id = "'\{'. + '__' + .id}'"' tftyp trrg trid + '"\n')      
+        fr.write('target_resource_id = "${. + '__' + .id}'"' tftyp trrg trid + '"\n')      
        
 
 
@@ -169,7 +169,7 @@ if count > 0" :
                             mttw2= mttw | cut -f2 -d':' | sed 's/^0*//'                           
                             fr.write('\t\tmetric_trigger {' + '"\n')
                             fr.write('\t\t\tmetric_name = "' +  "mtn" + '"\n')
-                            fr.write('\t\t\tmetric_resource_id = "'\{'. + '__' + .id}'"' tftyp mtrrg mtrid + '"\n')
+                            fr.write('\t\t\tmetric_resource_id = "${. + '__' + .id}'"' tftyp mtrrg mtrid + '"\n')
                             fr.write('\t\t\toperator = "' +  mtop + '"\n')
                             fr.write('\t\t\tstatistic= "' +  mtstat + '"\n')
                             fr.write('\t\t\tthreshold = "' +  mtthres + '"\n')

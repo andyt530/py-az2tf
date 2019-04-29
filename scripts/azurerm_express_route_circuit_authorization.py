@@ -86,7 +86,7 @@ if count2 > 0" :
                 for k in range(0,acount):
                     
                     name= auths | jq ".[k]["name"]
-                    id= auths | jq ".[k]["]["id"]
+                    id= auths | jq ".[k]["id"]
                     
                     rname= name.replace(".","-")
                     rg= rgsource.replace(".","-")

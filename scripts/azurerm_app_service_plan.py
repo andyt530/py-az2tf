@@ -68,10 +68,10 @@ if count > 0" :
         rg=azr[i]["resourceGroup"].replace(".","-")
 
 
-        id=azr[i]["]["id"]
+        id=azr[i]["id"]
         loc=azr[i]["location"
-        tier=azr[i]["sku.tier"]
-        size=azr[i]["sku.size"]
+        tier=azr[i]["sku"]["tier"]
+        size=azr[i]["sku"]["size"]
         kind=azr[i]["kind"]
         lcrg=azr[i]["resourceGroup" | awk '{'print tolower(0)}'']
         rg= lcrg.replace(".","-")
