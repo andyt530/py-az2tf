@@ -122,8 +122,8 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                         fr.write('\t primary_network_interface_id = "${azurerm_network_interface.' + vmnetrg + '__' +  vmnetid + '.id}"\n')     
             
             #
-            fr.write('\t delete_data_disks_on_termination = "'+ false + '"\n')
-            fr.write('\t delete_os_disk_on_termination = "'+ false + '"\n')
+            fr.write('\t delete_data_disks_on_termination = "'+ 'false' + '"\n')
+            fr.write('\t delete_os_disk_on_termination = "'+ 'false' + '"\n')
             #
             try:
                 vmcn=azr[i]["osProfile"]["computerName"]
@@ -176,7 +176,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             try :
                 vmdiags=azr[i]["diagnosticsProfile"]
                 fr.write('boot_diagnostics {'  + '"\n')
-                fr.write('\t enabled = "' + true + '"\n')
+                fr.write('\t enabled = "' + 'true' + '"\n')
                 fr.write('\t storage_uri = "' +  vmbturi + '"\n')
                 fr.write('}\n')
             except KeyError:
@@ -277,48 +277,47 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             
             for j in range(0,dcount):             
                 try :
-                    ddname= datadisks | jq ".[j]["name"]
-                    ddcreopt= datadisks | jq ".[j]["createOption"]
-                    ddlun= datadisks | jq ".[j]["lun"]
-                    ddvhd= datadisks | jq ".[j]["vhd.uri"]
-                    ddmd= datadisks | jq ".[j]["managedDisk"]
+                    ddname= datadisks[j]["name"]
+                    ddcreopt= datadisks[j]["createOption"]
+                    ddlun= datadisks[j]["lun"]
+                    ddvhd= datadisks[j]["vhd.uri"]
+                    ddmd= datadisks[j]["managedDisk"]
                     fr.write('storage_data_disk {'  + '"\n')
                     fr.write('\t name = "' +  ddname + '"\n')
                     fr.write('\t create_option = "' +  ddcreopt + '"\n')
                     fr.write('\t lun = "' +  ddlun + '"\n')
                     # caching , disk_size_gn, write_accelerator_enabled 
                     
-                    if ddcreopt" = "Attach" :
-                        if ddmd" try ][":
-                        ddmdid= datadisks | jq ".[j]["managedDisk"]["id"].split("/")[8].replace(".","-")
-                        ddmdrg= datadisks | jq ".[j]["managedDisk"]["id"].split("/")[4].replace(".","-")
-                        ## ddmdrg  from cut is upper case - not good
-                        ## probably safe to assume managed disk in same RG as VM ??
-                        # check id lowercase rg = ddmdrg if so use rg
-                        #
-                        #if not will have to get from terraform state - convert ddmdrg to lc and terraform state output
-                        #
-                        
-                        fr.write('\t managed_disk_id = "${azurerm_managed_disk. + '__' + .id}'"' rg ddmdid + '"\n')
+                    if ddcreopt == "Attach" :
+                        try:
+                            ddmdid= datadisks[j]["managedDisk"]["id"].split("/")[8].replace(".","-")
+                            ddmdrg= datadisks[j]["managedDisk"]["id"].split("/")[4].replace(".","-")
+                            ## ddmdrg  from cut is upper case - not good
+                            ## probably safe to assume managed disk in same RG as VM ??
+                            # check id lowercase rg = ddmdrg if so use rg
+                            #
+                            #if not will have to get from terraform state - convert ddmdrg to lc and terraform state output
+                            #
+                            
+                            fr.write('\t managed_disk_id = "${azurerm_managed_disk.' + rg + '__' + ddmdid + '.id} \n')
                         except KeyError:
                             pass
                 
-                    if ddvhd" try :
+                    try :
+                        ddvhd= datadisks[j]["vhd.uri"]
                         fr.write('\t vhd_uri = "' +  ddvhd + '"\n')
                     except KeyError:
                             pass
                     
                     fr.write('}\n')
                 except KeyError:
-                            pass
+                    pass
             
 
             
             fr.write('}\n')
 
         
-
-
     # tags block       
             try:
                 mtags=azr[i]["tags"]
