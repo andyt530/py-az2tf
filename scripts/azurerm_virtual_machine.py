@@ -169,7 +169,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             if [ vmtype = "Windows" :
                 vmwau=azr[i]["osProfile"]["windowsConfiguration"]["enableAutomaticUpdates"]
                 vmwvma=azr[i]["osProfile"]["windowsConfiguration"]["provisionVmAgent"]
-                vmwtim=azr[i]["osProfile"]["windowsConfiguration"]["timeZone"
+                vmwtim=azr[i]["osProfile"]["windowsConfiguration"]["timeZone"]
                 if vmwau" try :
                     fr.write('os_profile_windows_config {'  + '"\n')
                     fr.write('\t enable_automatic_upgrades = "' +  vmwau + '"\n')
