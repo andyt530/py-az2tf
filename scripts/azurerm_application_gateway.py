@@ -6,7 +6,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
     if crf in tfp:
     # REST or cli
         print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/disks"
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/applicationGateway"
         params = {'api-version': '2017-03-30'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -112,17 +112,8 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                 for j in range(0,icount):
                     
                     fname=azr[i]["properties"]["frontendIpConfigurations"][j]["name"]
-                    priv=azr[i]["properties"]["frontendIpConfigurations"][j]["properties"]["privateIPAddress"]
-                    
-                    pubrg=azr[i]["properties"]["frontendIpConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[4].replace(".","-")
-                    pubname=azr[i]["properties"]["frontendIpConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[8].replace(".","-")
-                    
-                    subrg=azr[i]["properties"]["frontendIpConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-")
-                    subname=azr[i]["properties"]["frontendIpConfigurations"][j]["properties"]["subnet"]["id"].split("/")[10].replace(".","-")
-                    privalloc=azr[i]["properties"]["frontendIpConfigurations"][j]["properties"]["privateIPAllocationMethod"]
-                    
                     fr.write('frontend_ip_configuration {' + '"\n')
-                    fr.write('\t name = "' +    fname + '"\n')
+                    fr.write('\t name = "' + fname + '"\n')
                     try :
                         subrg=azr[i]["properties"]["frontendIpConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-")
                         subname=azr[i]["properties"]["frontendIpConfigurations"][j]["properties"]["subnet"]["id"].split("/")[10].replace(".","-")                 
@@ -131,20 +122,21 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                         pass
 
                     try :
-
+                        priv=azr[i]["properties"]["frontendIpConfigurations"][j]["properties"]["privateIPAddress"]
                         fr.write('\t private_ip_address = "' +  priv + '"\n')
                     except KeyError:
                         pass
                 
                     try :
-
+                        privalloc=azr[i]["properties"]["frontendIpConfigurations"][j]["properties"]["privateIPAllocationMethod"]
                         fr.write('\t private_ip_address_allocation  = "' +  privalloc + '"\n')
                     except KeyError:
                         pass
 
                     try :
-
-                        fr.write('\t public_ip_address_id = "'\{'azurerm_public_ip. + '__' + .id}'"' pubrg pubname + '"\n')
+                        pubrg=azr[i]["properties"]["frontendIpConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[4].replace(".","-")
+                        pubname=azr[i]["properties"]["frontendIpConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[8].replace(".","-")  
+                        fr.write('\t public_ip_address_id = "${azurerm_public_ip.' + pubrg + '__' + pubname + '.id}" \n')
                     except KeyError:
                         pass
                     
@@ -158,15 +150,15 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
             icount=len(beap)
             if icount > 0:
                 for j in range(0,icount):
-                    bname=azr[i]["properties"]["backendAddressPools[j]["name"]
-                    fr.write('backend_address_pool {' + '"\n')
+                    bname=azr[i]["properties"]["backendAddressPools"][j]["name"]
+                    fr.write('backend_address_pool {' + '\n')
                     fr.write('\t name = "' +    bname + '"\n')
                     beaddr=azr[i]["properties"]["backendAddressPools[j]["properties"]["backendAddresses"]         
-                    kcount= len(beaddr)    
+                    kcount=len(beaddr)    
                     if kcount > 0 :
                         for k in range(0,kcount):
-                            beadip=azr[i]["properties"]["backendAddressPools[j]["properties"]["backendAddresses"][k]["IPAddress"]
-                            beadfq=azr[i]["properties"]["backendAddressPools[j]["properties"]["backendAddresses"][k]["fqdn"]
+                            beadip=azr[i]["properties"]["backendAddressPools"][j]["properties"]["backendAddresses"][k]["IPAddress"]
+                            beadfq=azr[i]["properties"]["backendAddressPools"][j]["properties"]["backendAddresses"][k]["fqdn"]
                             try :
                                 fr.write('\t ip_address ="' +  beadip + '"\n')
                         
