@@ -6,8 +6,8 @@ prefixa="rdf"
 count=len(azr)
 if count > 0 :
     for i in range(0,count):
-        print i " of " count
-        
+    
+    
         name=azr[i]["roleName"]
  
         rdid=azr[i]["name"]

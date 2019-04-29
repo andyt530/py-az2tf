@@ -63,44 +63,44 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             blog=False
             strcon=""
 
-            jcount= appset | | len(
-            if jcount > 0" :
+            jcount=len(appset)
+            if jcount > 0 :
                 for j in range(0,jcount):
 
-                    aname= appset | jq ".[j]["name"]
-                    aval= appset | jq ".[j]["value"
+                    aname= appset["name"]
+                    aval= appset["value"]
 
-                    case "aname" in 
                     
-                    "AzureWebJobsStorage")
+                    
+                    if "AzureWebJobsStorage" in aname: 
                         strcon= aval
-                    ;;
-                    "FUNCTIONS_EXTENSION_VERSION")
-                        fr.write('\t version =    "aval" + '"\n')
-                    ;;
-                    "null")
-                    ;;
-                    "WEBSITE_CONTENTSHARE" | "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING")
-                    ;;
-                    "AzureWebJobsDashboard")
+                    
+                    else: 
+                        if "FUNCTIONS_EXTENSION_VERSION" in aname:
+                            fr.write('\t version =    "' + aval + '"\n')
+                    
+                    else: 
+                        if aname="null":
+                            aname=aname
+                    
+                    else aname == "WEBSITE_CONTENTSHARE" or aname == "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING":
+                        aname=aname
+                    else  aname=-"AzureWebJobsDashboard":
             
-                    if [ {'#aval}' -ge 3 :
-                    blog=True
+                    else aval > 3 :
+                        blog=True
                 
-                    ;;
-
-                    *) 
-                    fr.write('\t app_settings {'  + '"\n')
-                    fr.write('\t = aname "aval" + '"\n')
-                    fr.write('\t }'  + '"\n')
-                    ;;
-                    esac
+                    else:         
+                        fr.write('\t app_settings { \n')
+                        fr.write('\t = aname "aval" + '"\n')
+                        fr.write('\t }'  + '\n')
+               
 
                 
         
 
-            if [ {'#strcon}' -ge 3 :
-                fr.write('\t storage_connection_string =    "strcon" + '"\n')
+            if [ {'#strcon}' >= 3 :
+                fr.write('\t storage_connection_string = "' + strcon + '" \n')
             else
                 fr.write('\t storage_connection_string = ""\n')
         
