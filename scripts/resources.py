@@ -48,14 +48,14 @@ import azurerm_lb_nat_pool
 #import 200_azurerm_local_network_gateway
 #import 210_azurerm_virtual_network_gateway
 #import 220_azurerm_virtual_network_gateway_connection
-#import 230_azurerm_express_route_circuit - 
+#import 230_azurerm_express_route_circuit 
 #import 240_azurerm_express_route_circuit_authorization
 #import 250_azurerm_express_route_circuit_peering
 #import 260_azurerm_container_registry
 #import 270_azurerm_kubernetes_cluster
-#import 280_azurerm_recovery_services_vault
+#import 280_azurerm_recovery_services_vault 
 #import 290_azurerm_virtual_machine
-#import 295_azurerm_virtual_machine_scale_set
+#import 295_azurerm_virtual_machine_scale_set -
 #import 310_azurerm_automation_account
 #import 320_azurerm_log_analytics_workspace
 #import 330_azurerm_log_analytics_solution

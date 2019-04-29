@@ -1,15 +1,5 @@
-tfp="azurerm_role_assignment"
-prefixa="ras"
-if 1" != " :
-    rgsource=1
-else
-    print -n "Enter name of Resource Group [rgsource]["> "
-    read response
-    if [ -n "response" :
-        rgsource=response
-    fi
-fi
-azr=az role assignment list -o json
+
+#azr=az role assignment list -o json
 count=print azr | jq '. | length'
 if count" -gt "0" :
     count=expr count - 1

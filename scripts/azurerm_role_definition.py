@@ -16,14 +16,12 @@ if count > 0 :
         rg="roleDefinitions"
 
         scopes=azr[i]["assignableScopes"]
-        dactions=azr[i]["permissions[0]["dataActions"]
-        ndactions=azr[i]["permissions[0]["notDataActions"]
-        actions=azr[i]["permissions[0]["actions"]
-        nactions=azr[i]["permissions[0]["notActions"]
+        dactions=azr[i]["permissions"][0]["dataActions"]
+        ndactions=azr[i]["permissions"][0]["notDataActions"]
+        actions=azr[i]["permissions"][0]["actions"]
+        nactions=azr[i]["permissions"][0]["notActions"]
 
-        prefix=fr.write(' + '__' + " prefixa rg
-        outfile=fr.write('. + '__' + .tf" tfp rg name
-        print az2tfmess > prefix-rdid.tf
+
         
  #      fr.write('data "'azurerm_subscription"' "'primary"' {'}'\n prefix-rdid.tf
         fr.write('resource "' +  "' + '__' + "' {' tfp rg rdid >> prefix-rdid.tf
