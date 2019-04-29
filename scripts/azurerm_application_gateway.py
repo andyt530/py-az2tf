@@ -212,9 +212,9 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                     feipcn=azr[i]["properties"]["httpListeners"][j]["properties"]["frontendIPConfiguration"]["id"].split("/")[10]
                     fepn=azr[i]["properties"]["httpListeners"][j]["properties"]["frontendPort"]["id"].split("/")[10]
                     bproto=azr[i]["properties"]["httpListeners"][j]["properties"]["protocol"]
-                    bhn=azr[i]["properties"]["httpListeners"][j]["properties"]["hostName"]
-                    bssl=azr[i]["properties"]["httpListeners"][j]["properties"]["sslCertificate"]["id"].split("/")[10]
-                    rsni=azr[i]["properties"]["httpListeners"][j]["properties"]["requireServerNameIndication"]                               
+                    
+                    
+                                                   
 
                     fr.write('http_listener {' + '"\n')
                     fr.write('\t name = "' +    bname + '"\n')
@@ -222,14 +222,17 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                     fr.write('\t frontend_port_name = "' +    fepn + '"\n')
                     fr.write('\t protocol = "' +    bproto + '"\n')
                     try :
+                        bhn=azr[i]["properties"]["httpListeners"][j]["properties"]["hostName"]
                         fr.write('\t host_name = "' +    bhn + '"\n')
                     except KeyError:
                         pass
                     try :
+                        bssl=azr[i]["properties"]["httpListeners"][j]["properties"]["sslCertificate"]["id"].split("/")[10]
                         fr.write('\t ssl_certificate_name = "' +    bssl + '"\n')
                     except KeyError:
                         pass
                     try :
+                        rsni=azr[i]["properties"]["httpListeners"][j]["properties"]["requireServerNameIndication"]
                         fr.write('\t require_sni = "' +    rsni + '"\n')
                     except KeyError:
                         pass
@@ -243,15 +246,15 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
             if icount > 0 :
                 for j in range(0,icount):
                     bname=azr[i]["properties"]["probes"][j]["name"]
-                    bproto=azr[i]["properties"]["probes"][j]["protocol"]
-                    bpath=azr[i]["properties"]["probes"][j]["path"]
-                    bhost=azr[i]["properties"]["probes"][j]["host"]
-                    bint=azr[i]["properties"]["probes"][j]["interval"]
-                    btimo=azr[i]["properties"]["probes"][j]["timeout"]
-                    bunth=azr[i]["properties"]["probes"][j]["unhealthyThreshold"]
-                    bmsrv=azr[i]["properties"]["probes"][j]["minServers"]               
-                    bmbod=azr[i]["properties"]["probes"][j]["match.body"]             
-                    bmstat=azr[i]["properties"]["probes"][j]["match.statusCodes"]
+                    bproto=azr[i]["properties"]["probes"][j]["properties"]["protocol"]
+                    bpath=azr[i]["properties"]["probes"][j]["properties"]["path"]
+                    bhost=azr[i]["properties"]["probes"][j]["properties"]["host"]
+                    bint=azr[i]["properties"]["probes"][j]["properties"]["interval"]
+                    btimo=azr[i]["properties"]["probes"][j]["properties"]["timeout"]
+                    bunth=azr[i]["properties"]["probes"][j]["properties"]["unhealthyThreshold"]
+                                   
+                                
+                    bmstat=azr[i]["properties"]["probes"][j]["properties"]["match"]["statusCodes"]
 
                     fr.write('probe{' + '"\n')
                     fr.write('\t name = "' +    bname + '"\n')
@@ -264,13 +267,15 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 
 
                     try :
-                        fr.write('\t minimum_servers = "' +    bmsrv + '"\n')
+                        bmsrv=azr[i]["properties"]["probes"][j]["properties"]["minServers"]
+                        fr.write('\t minimum_servers = "' + bmsrv + '"\n')
                     except KeyError:
                         pass
 
-                    fr.write('\t match {' + '"\n')
+                    fr.write('\t match {' + '\n')
                     
                     try :
+                        bmbod=azr[i]["properties"]["probes"][j]["properties"]["match"]["body"] 
                         if bmbod == "":
                             fr.write('\t\t body = "' + '*' + '"\n')
                         else:
@@ -285,7 +290,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                     #fi
                     
 
-                    fr.write('}\n')
+           
                 
             
 
@@ -295,10 +300,10 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
             if icount > 0 :
                 for j in range(0,icount):
                     bname=azr[i]["properties"]["requestRoutingRules"][j]["name"]
-                    btyp=azr[i]["properties"]["requestRoutingRules"][j]["ruleType"]
-                    blin=azr[i]["properties"]["requestRoutingRules"][j]["httpListener"]["id"].split("/")[10]]
-                    bapn=azr[i]["properties"]["requestRoutingRules"][j]["backendAddressPool"]["id"].split("/")[10]]
-                    bhsn=azr[i]["properties"]["requestRoutingRules"][j]["backendHttpSettings"]["id"].split("/")[10]]
+                    btyp=azr[i]["properties"]["requestRoutingRules"][j]["properties"]["ruleType"]
+                    blin=azr[i]["properties"]["requestRoutingRules"][j]["properties"]["httpListener"]["id"].split("/")[10]
+                    bapn=azr[i]["properties"]["requestRoutingRules"][j]["properties"]["backendAddressPool"]["id"].split("/")[10]
+                    bhsn=azr[i]["properties"]["requestRoutingRules"][j]["properties"]["backendHttpSettings"]["id"].split("/")[10]
 
                     fr.write('request_routing_rule {' + '"\n')
 
@@ -323,31 +328,30 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
             icount=len(sslcerts)
             if icount > 0 :
                 for j in range(0,icount):
-                    bname=azr[i]["properties"]["sslCertificates"][j]["name"]
-                    bdata=azr[i]["properties"]["sslCertificates"][j]["publicCertData"]
-                    bpw=azr[i]["properties"]["sslCertificates"][j]["password"]
-
+                    
                     try :
+                        bname=azr[i]["properties"]["sslCertificates"][j]["name"]
                         fr.write('ssl_certificate {' + '\n')
                         fr.write('\t name = "' + bname + '"\n')
-                    except KeyError:
-                        pass
 
-                        if bdata" try :
-                        fr.write('\t data = "' + bdata + '"\n')
-                        else
-                        fr.write('\t data = "' +    + '"\n')                
+
+                        try :
+                            bdata=azr[i]["properties"]["sslCertificates"][j]["properties"]["publicCertData"]
+                            fr.write('\t data = "' + bdata + '"\n')
                         except KeyError:
+                            fr.write('\t data = ""\n') 
                             pass
                         
-                        if bpw" try :
-                        fr.write('\t password = "' +    bpw + '"\n')
-                        else
-                        fr.write('\t password = "' +    + '"\n')
+                        try :
+                            bpw=azr[i]["properties"]["sslCertificates"][j]["properties"]["password"]
+                            fr.write('\t password = "' + bpw + '"\n')       
                         except KeyError:
+                            fr.write('\t password = ""\n')
                             pass
-                    
                         fr.write('\t }\n')
+
+                    except KeyError:
+                        pass
                 
                 
         
