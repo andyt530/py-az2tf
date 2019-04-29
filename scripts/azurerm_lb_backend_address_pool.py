@@ -1,15 +1,11 @@
 # azurerm_lb_backend_address_pool
-def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
     tfp="azurerm_lb_backend_address_pool"
     tcode="170-"
-    azr=""
+    
     if crf in tfp:
     # REST or cli
-        print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/disks"
-        params = {'api-version': '2017-03-30'}
-        r = requests.get(url, headers=headers, params=params)
-        azr= r.json()["value"]
+
         if cde:
             print(json.dumps(azr, indent=4, separators=(',', ': ')))
 
@@ -23,7 +19,7 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
         for i in range(0, count):
 
             name=azr[i]["name"]
-            loc=azr[i]["location"]
+         
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-")
 
@@ -31,87 +27,63 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
                 if rg.lower() != crg.lower():
                     continue  # back to for
             
-            rname=name.replace(".","-")
-            prefix=tfp+"."+rg+'__'+rname
-            #print prefix
-            rfilename=prefix+".tf"
-            fr=open(rfilename, 'w')
-            fr.write(az2tfmess)
-            fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
-            fr.write('\t name = "' + name + '"\n')
-            fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rg + '"\n')
-
-    ###############
-    # specific code start
-    ###############
-
-
-
-azr=az network lb list -g rgsource -o json
-count= azr | | len(
-if count > 0" :
-    for i in range(0,count):
-        beap=azr[i]["backendAddressPools"
-
-       
-        
-        icount= beap | | len(
-        if icount > 0" :
-            for j in range(0,icount):
+            beap=azr[i]["properties"]["backendAddressPools"]       
+            jcount= len(beap)
+   
+            for j in range(0,jcount):
                 
-                name=azr[i]["backendAddressPools[j]["name"].split("/")[10]]
+                name=azr[i]["properties"]["backendAddressPools"][j]["name"]
                 rname= name.replace(".","-")
-                id=azr[i]["backendAddressPools[j]["]["id"]
-                rg=azr[i]["backendAddressPools[j]["resourceGroup"].replace(".","-")
-                
-                lbrg=azr[i]["]["id"].split("/")[4].replace(".","-")
-                lbname=azr[i]["]["id"].split("/")[8].replace(".","-")
-                         
-                fr.write('resource "' +  "' + '__' +  + '__' + "' {' tfp rg lbname rname + '"\n')
-                fr.write('\t\t name = "' +    name + '"\n')
-                fr.write('\t\t resource_group_name = "' +    rgsource + '"\n')
-                fr.write('\t\t loadbalancer_id = "'\{'azurerm_lb. + '__' + .id}'"' lbrg lbname + '"\n')
-
-                fr.write('}\n')
-        #
-
-        #
-
-            
+                id=azr[i]["properties"]["backendAddressPools"][j]["id"]
+                rg=id.split("/")[4].replace(".","-")
        
+                prefix=tfp+"."+rg+'__'+rname
+                #print prefix
+                rfilename=prefix+".tf"
+                fr=open(rfilename, 'w')
+                fr.write(az2tfmess)
 
-    
-fi
+                fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+                fr.write('\t name = "' + name + '"\n')
+                fr.write('\t resource_group_name = "'+ rg + '"\n')
+                try:
+                    lbrg=azr[i]["id"].split("/")[4].replace(".","-")
+                    lbname=azr[i]["id"].split("/")[8].replace(".","-")            
+                    fr.write('\t\t loadbalancer_id = "${azurerm_lb.' + lbrg + '__' + lbname + '.id}" \n')    
+                except KeyError:
+                    pass
+                
+        # should be more stuff in here ?
 
-    ###############
-    # specific code end
-    ###############
+        #
+
+
 
     # tags block       
-            try:
-                mtags=azr[i]["tags"]
-                fr.write('tags { \n')
-                for key in mtags.keys():
-                    tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
-                fr.write('}\n')
-            except KeyError:
-                pass
+                try:
+                    mtags=azr[i]["tags"]
+                    fr.write('tags { \n')
+                    for key in mtags.keys():
+                        tval=mtags[key]
+                        fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write('}\n')
+                except KeyError:
+                    pass
 
-            fr.write('}\n') 
-            fr.close()   # close .tf file
+                fr.write('}\n') 
+                fr.close()   # close .tf file
 
-            if cde:
-                with open(rfilename) as f: 
-                    print f.read()
+                if cde:
+                    with open(rfilename) as f: 
+                        print f.read()
 
-            tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+                tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
-            tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
-            tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
-            tfim.write(tfcomm)  
+                tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+                tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+                tfim.write(tfcomm)  
 
+            # end for j loop
         # end for i loop
 
         tfrm.close()
