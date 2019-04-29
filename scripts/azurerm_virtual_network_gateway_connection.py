@@ -42,105 +42,70 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
             fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rg + '"\n')
 
-    ###############
-    # specific code start
-    ###############
-
-
-
-azr=az network vpn-connection list -g rgsource -o json
-count= azr | | len(
-if count > 0" :
-    for i in range(0,count):
-        name=azr[i]["name"]
-        rname= name.replace(".","-")
-        rg=azr[i]["resourceGroup"].replace(".","-")
-
-        id=azr[i]["]["id"]
-        loc=azr[i]["location"]
-        type=azr[i]["connectionType"]
-        vngrg=azr[i]["virtualNetworkGateway1"]["id"].split("/")[4].replace(".","-")
-        vngnam=azr[i]["virtualNetworkGateway1"]["id"].split("/")[8].replace(".","-")
+    ##  azr=az network vpn-connection list -g rgsource -o json
         
-        peerrg=azr[i]["peer"]["id"].split("/")[4].replace(".","-")
-        peernam=azr[i]["peer"]["id"].split("/")[8].replace(".","-")
-        
-        if type" = "IPsec" :
-            echo "is sec"
-            peerrg=azr[i]["localNetworkGateway2"]["id"].split("/")[4].replace(".","-")
-            peernam=azr[i]["localNetworkGateway2"]["id"].split("/")[8].replace(".","-")
-            echo peerrg
-            echo peernam
-       
-        
-        
-        authkey=azr[i]["authorizationKey"]
-        enbgp=azr[i]["enableBgp"]
-        rw=azr[i]["routingWeight"]
-        echo "RW = rw"
-        sk=azr[i]["shared_key"]
-        pbs=azr[i]["usePolicyBasedTrafficSelectors"]
-        
-        
-        fr.write('resource "' +  "' + '__' + "' {' tfp rg rname + '"\n')
-        fr.write('\t name = "' +  name + '"\n')
-        fr.write('\t resource_group_name = "' +  rgsource + '"\n')
-        fr.write('\t location = "' +  loc + '"\n')
-        fr.write('\t type = "' +  type + '"\n')
-        fr.write('\t\t virtual_network_gateway_id = "'\{'azurerm_virtual_network_gateway. + '__' + .id}'"' vngrg vngnam + '"\n')
-        if authkey" -ne "null" :
-            fr.write('\t authorization_key = "' +  authkey + '"\n')
-       
-        
-        fr.write('\t enable_bgp = "' +  enbgp + '"\n')
-        if rw" try ]["&& [ "rw" != "0" :
-            fr.write('\t routing_weight = "' +  rw + '"\n')
-       
-        if sk" try :
-            fr.write('\t shared_key = "' +  sk + '"\n')
-       
-        fr.write('\t use_policy_based_traffic_selectors = "' +  pbs + '"\n')
-        echo type
-        if type" == "ExpressRoute" :
-            peerid=azr[i]["peer"]["id"]
-            fr.write('\t\t express_route_circuit_id = "' +  peerid + '"\n')
-            #fr.write('\t\t express_route_circuit_id = "'\{'azurerm_virtual_network_gateway. + '__' + .id}'"' peerrg peernam + '"\n')
-            peerid=azr[i]["peer"]["id"]
+            ctype=azr[i]["connectionType"]
+            vngrg=azr[i]["virtualNetworkGateway1"]["id"].split("/")[4].replace(".","-")
+            vngnam=azr[i]["virtualNetworkGateway1"]["id"].split("/")[8].replace(".","-")
             
-       
-        if type" == "Vnet2Vnet" :
-            fr.write('\t\t peer_virtual_network_gateway_id = "'\{'azurerm_virtual_network_gateway. + '__' + .id}'"' peerrg peernam + '"\n')
-       
-        if type" == "IPsec" :
-            fr.write('\t\t local_network_gateway_id = "'\{'azurerm_local_network_gateway. + '__' + .id}'"' peerrg peernam + '"\n')
-       
-        
-        
-        ipsec=azr[i]["ipsecPolicies"
-        jcount= ipsec | | len(
-        if jcount > 0" :
-            for j in range(0,jcount):
-                fr.write('\t ipsec_policy {' + '"\n')
-                
-                dhg= ipsec | jq ".[j]["dhGroup"
-                fr.write('\t dh_group {' dhg + '"\n')
-                
-                fr.write('\t}\n')
+            peerrg=azr[i]["peer"]["id"].split("/")[4].replace(".","-")
+            peernam=azr[i]["peer"]["id"].split("/")[8].replace(".","-")
             
-       
-            
-        
-        fr.write('}\n')
-        #
-
-        
+            if ctype == "IPsec" :
+                print "is sec"
+                peerrg=azr[i]["localNetworkGateway2"]["id"].split("/")[4].replace(".","-")
+                peernam=azr[i]["localNetworkGateway2"]["id"].split("/")[8].replace(".","-")
     
-fi
-
-    ###############
-    # specific code end
-    ###############
-
+            
+            authkey=azr[i]["authorizationKey"]
+            enbgp=azr[i]["enableBgp"]
+            rw=azr[i]["routingWeight"]
+            echo "RW = rw"
+            sk=azr[i]["shared_key"]
+            pbs=azr[i]["usePolicyBasedTrafficSelectors"]
+            
+            fr.write('\t type = "' +  ctype + '"\n')
+            fr.write('\t\t virtual_network_gateway_id = "'\{'azurerm_virtual_network_gateway. + '__' + .id}'"' vngrg vngnam + '"\n')
+            if authkey" -ne "null" :
+                fr.write('\t authorization_key = "' +  authkey + '"\n')
+        
+            
+            fr.write('\t enable_bgp = "' +  enbgp + '"\n')
+            if rw" try ]["&& [ "rw" != "0" :
+                fr.write('\t routing_weight = "' +  rw + '"\n')
+        
+            if sk" try :
+                fr.write('\t shared_key = "' +  sk + '"\n')
+        
+            fr.write('\t use_policy_based_traffic_selectors = "' +  pbs + '"\n')
+            
+            if ctype == "ExpressRoute" :
+                peerid=azr[i]["peer"]["id"]
+                fr.write('\t\t express_route_circuit_id = "' +  peerid + '"\n')
+                #fr.write('\t\t express_route_circuit_id = "'\{'azurerm_virtual_network_gateway. + '__' + .id}'"' peerrg peernam + '"\n')
+                peerid=azr[i]["peer"]["id"]
+                
+        
+            if ctype == "Vnet2Vnet" :
+                fr.write('\t\t peer_virtual_network_gateway_id = "'\{'azurerm_virtual_network_gateway. + '__' + .id}'"' peerrg peernam + '"\n')
+        
+            if ctype == "IPsec" :
+                fr.write('\t\t local_network_gateway_id = "'\{'azurerm_local_network_gateway. + '__' + .id}'"' peerrg peernam + '"\n')
+        
+            
+            
+            ipsec=azr[i]["ipsecPolicies"]
+            jcount= len(ipsec)
+            if jcount > 0 :
+                for j in range(0,jcount):
+                    fr.write('\t ipsec_policy {' + '"\n')
+                    
+                    dhg= ipsec | jq ".[j]["dhGroup"
+                    fr.write('\t dh_group {' dhg + '"\n')
+                    
+                    fr.write('\t}\n')
+                
+    
     # tags block       
             try:
                 mtags=azr[i]["tags"]
