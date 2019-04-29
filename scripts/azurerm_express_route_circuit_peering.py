@@ -42,43 +42,10 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
             fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rg + '"\n')
 
-    ###############
-    # specific code start
-    ###############
 
-
-prefixa= 0 | awk -F 'azurerm_' '{'print 2}'' | awk -F '.sh' '{'print 1}'' 
-tfp=fr.write('azurerm_" prefixa
-
-echo TF_VAR_rgtarget
-if 1" != " :
-    rgsource=1
-fi
-at=az account get-access-token -o json
-bt= at | jq .accessToken]
-sub= at | jq .subscription]
-
-
-ris=fr.write('curl -s  -X GET -H "'Authorization: Bearer "' -H "'Content-Type: application/json"' https://management.azure.com/subscriptions//resourceGroups//providers/Microsoft.Network/expressRouteCircuits?api-version=2018-01-01" bt sub rgsource
-# count how many of this provider type there are.
-ret=eval ris
-azr2= ret | jq .value
-rg=rgsource
-count2= azr2 | | len(
-if count2 > 0" :
-    for j in range(0,count2):
-        
-        name2= azr2 | jq ".[j]["name"]
-        ris2=fr.write('curl -s -X GET -H "'Authorization: Bearer "' -H "'Content-Type: application/json"' https://management.azure.com/subscriptions//resourceGroups//providers/Microsoft.Network/expressRouteCircuits/?api-version=2018-01-01" bt sub rgsource name2
-        #echo ris2
-        ret2=eval ris2
-        azr= ret2 | jq .
-        #echo ret2 | jq .
-        count= azr | | len(
-        if count > 0" :
             
             
-            peers=azrproperties.peerings"
+            peers=azr[i]["properties"]["peerings"]
             echo peers | jq .
             
             acount= peers | | len(
@@ -93,10 +60,8 @@ if count2 > 0" :
                 vid= peers | jq ".[k]["properties.vlanId"]
                 pasn= peers | jq ".[k]["properties.peerASN"]
   
-                rname= name.replace(".","-")
-                rg= rgsource.replace(".","-")
+
                 
-                fr.write('resource "' +  "' + '__' + "' {' tfp rg rname + '"\n')
 
                 fr.write('\t peering_type = "' +  pt + '"\n')
                 fr.write('\t express_route_circuit_name = "' +  name2 + '"\n')
@@ -118,19 +83,7 @@ if count2 > 0" :
                 fr.write('}\n')
  
                 
-                
-                
-           
-            
-            #
-       
-        
-    
-fi
 
-    ###############
-    # specific code end
-    ###############
 
     # tags block       
             try:
