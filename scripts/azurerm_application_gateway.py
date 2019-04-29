@@ -123,13 +123,13 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 
                     try :
                         priv=azr[i]["properties"]["frontendIpConfigurations"][j]["properties"]["privateIPAddress"]
-                        fr.write('\t private_ip_address = "' +  priv + '"\n')
+                        fr.write('\t private_ip_address = "' + priv + '"\n')
                     except KeyError:
                         pass
                 
                     try :
                         privalloc=azr[i]["properties"]["frontendIpConfigurations"][j]["properties"]["privateIPAllocationMethod"]
-                        fr.write('\t private_ip_address_allocation  = "' +  privalloc + '"\n')
+                        fr.write('\t private_ip_address_allocation  = "' + privalloc + '"\n')
                     except KeyError:
                         pass
 
@@ -152,7 +152,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                 for j in range(0,icount):
                     bname=azr[i]["properties"]["backendAddressPools"][j]["name"]
                     fr.write('backend_address_pool {' + '\n')
-                    fr.write('\t name = "' +    bname + '"\n')
+                    fr.write('\t name = "' + bname + '"\n')
                     beaddr=azr[i]["properties"]["backendAddressPools"][j]["properties"]["backendAddresses"]         
                     kcount=len(beaddr)    
                     if kcount > 0 :
@@ -323,18 +323,18 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
             icount=len(sslcerts)
             if icount > 0 :
                 for j in range(0,icount):
-                    bname=azr[i]["sslCertificates[j]["name"]
-                    bdata=azr[i]["sslCertificates[j]["publicCertData"]
-                    bpw=azr[i]["sslCertificates[j]["password"]
+                    bname=azr[i]["properties"]["sslCertificates"][j]["name"]
+                    bdata=azr[i]["properties"]["sslCertificates"][j]["publicCertData"]
+                    bpw=azr[i]["properties"]["sslCertificates"][j]["password"]
 
                     try :
-                        fr.write('ssl_certificate {' + '"\n')
-                        fr.write('\t name = "' +    bname + '"\n')
+                        fr.write('ssl_certificate {' + '\n')
+                        fr.write('\t name = "' + bname + '"\n')
                     except KeyError:
                         pass
 
                         if bdata" try :
-                        fr.write('\t data = "' +    bdata + '"\n')
+                        fr.write('\t data = "' + bdata + '"\n')
                         else
                         fr.write('\t data = "' +    + '"\n')                
                         except KeyError:
@@ -357,30 +357,22 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
     #
             
             try :
-                fmode=azr[i]["webApplicationFirewallConfiguration.firewallMode"]
-                rst=azr[i]["webApplicationFirewallConfiguration.ruleSetType"]
-                rsv=azr[i]["webApplicationFirewallConfiguration.ruleSetVersion"]
-                fen=azr[i]["webApplicationFirewallConfiguration.enabled"]
+                fmode=azr[i]["properties"]["webApplicationFirewallConfiguration"]["firewallMode"]
+                rst=azr[i]["properties"]["webApplicationFirewallConfiguration"]["ruleSetType"]
+                rsv=azr[i]["properties"]["webApplicationFirewallConfiguration"]["ruleSetVersion"]
+                fen=azr[i]["properties"]["webApplicationFirewallConfiguration"]["enabled"]
                     
                 fr.write('waf_configuration {' + '"\n')
-                fr.write('\trewall_mode = "' +    fmode + '"\n')
-                fr.write('\t rule_set_type = "' +    rst + '"\n')
-                fr.write('\t rule_set_version = "' +    rsv + '"\n')
-                fr.write('\t enabled = "' +    fen + '"\n')
+                fr.write('\trewall_mode = "' + fmode + '"\n')
+                fr.write('\t rule_set_type = "' + rst + '"\n')
+                fr.write('\t rule_set_version = "' + rsv + '"\n')
+                fr.write('\t enabled = "' + fen + '"\n')
                 fr.write('\t }\n') 
             except KeyError:
                 pass         
-        
-
-        
+            
             fr.write('}\n')
-            #
-
-    
-fi
-
-
-
+  
     # tags block       
             try:
                 mtags=azr[i]["tags"]
