@@ -34,7 +34,7 @@ if [ "$count" -gt "0" ]; then
                 fep=`echo $azr | jq ".[(${i})].inboundNatRules[(${j})].frontendPort" | tr -d '"'`
                 bep=`echo $azr | jq ".[(${i})].inboundNatRules[(${j})].backendPort" | tr -d '"'`
                 proto=`echo $azr | jq ".[(${i})].inboundNatRules[(${j})].protocol" | tr -d '"'`
-                feipc=`echo $azr | jq ".[(${i})].inboundNatRules[(${j})].frontendIpConfiguration.id" | cut -d'/' -f11 | tr -d '"'`
+                feipc=`echo $azr | jq ".[(${i})].inboundNatRules[(${j})].frontendIPConfiguration.id" | cut -d'/' -f11 | tr -d '"'`
 
                 
                 printf "resource \"%s\" \"%s__%s\" {\n" $tfp $rg $name > $prefix-$name.tf

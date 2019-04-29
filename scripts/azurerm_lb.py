@@ -81,8 +81,8 @@ def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 except KeyError:
                     pass
                 try:
-                    pubrg=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicIpAddress"]["id"].split("/")[4].replace(".","-")
-                    pubname=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicIpAddress"]["id"].split("/")[8].replace(".","-")
+                    pubrg=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicAddress"]["id"].split("/")[4].replace(".","-")
+                    pubname=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicAddress"]["id"].split("/")[8].replace(".","-")
                     fr.write('\t\t public_ip_address_id = "${azurerm_public_ip.' + pubrg + '__' + pubname + '.id}"\n')
                 except KeyError:
                     pass

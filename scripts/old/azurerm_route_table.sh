@@ -35,7 +35,7 @@ if [ "$count" != "0" ]; then
                 rname=`echo $routes | jq ".[(${j})].name" | tr -d '"'`
                 adpr=`echo $routes | jq ".[(${j})].addressPrefix" | tr -d '"'`
                 nhtype=`echo $routes | jq ".[(${j})].nextHopType" | tr -d '"'`
-                nhaddr=`echo $routes | jq ".[(${j})].nextHopIpAddress" | tr -d '"'`
+                nhaddr=`echo $routes | jq ".[(${j})].nextHopAddress" | tr -d '"'`
                 printf "\t route { \n" >> $prefix-$name.tf
                 printf "\t\t name = \"%s\" \n" $rname >> $prefix-$name.tf
                 printf "\t\t address_prefix = \"%s\" \n" $adpr >> $prefix-$name.tf

@@ -28,8 +28,8 @@ if [ "$count" -gt "0" ]; then
                 fep=`echo $azr | jq ".[(${i})].inboundNatRules[(${j})].frontendPort" | tr -d '"'`
                 bep=`echo $azr | jq ".[(${i})].inboundNatRules[(${j})].backendPort" | tr -d '"'`
                 proto=`echo $azr | jq ".[(${i})].inboundNatRules[(${j})].protocol" | tr -d '"'`
-                feipc=`echo $azr | jq ".[(${i})].inboundNatRules[(${j})].frontendIpConfiguration.id" | cut -d'/' -f11 | tr -d '"'`
-                enfip=`echo $azr | jq ".[(${i})].inboundNatRules[(${j})].enableFloatingIp" | cut -d'/' -f11 | tr -d '"'`
+                feipc=`echo $azr | jq ".[(${i})].inboundNatRules[(${j})].frontendConfiguration.id" | cut -d'/' -f11 | tr -d '"'`
+                enfip=`echo $azr | jq ".[(${i})].inboundNatRules[(${j})].enableFloating" | cut -d'/' -f11 | tr -d '"'`
 
                 
                 printf "resource \"%s\" \"%s__%s\" {\n" $tfp $rg $rname >> $outfile

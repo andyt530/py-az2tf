@@ -78,14 +78,14 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
             
             icount=len(gwipc)
             for j in range(0,icount):
-                gname=azr[i]["properties"]["gatewayIpConfigurations"][j]["name"]
-                subrg=azr[i]["properties"]["gatewayIpConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-")
-                subname=azr[i]["gatewayIpConfigurations"][j]["subnet"]["id"].split("/")[10].replace(".","-")
+                gname=azr[i]["properties"]["gatewayIPConfigurations"][j]["name"]
+                subrg=azr[i]["properties"]["gatewayIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-")
+                subname=azr[i]["gatewayIPConfigurations"][j]["subnet"]["id"].split("/")[10].replace(".","-")
                 fr.write('gateway_ip_configuration {' + '\n')
-                fr.write('\t name = "' +    gname + '"\n')
+                fr.write('\t name = "' + gname + '"\n')
                 try:
-                    subrg=azr[i]["properties"]["gatewayIpConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-")
-                    subname=azr[i]["properties"]["gatewayIpConfigurations"][j]["properties"]["subnet"]["id"].split("/")[10].replace(".","-")
+                    subrg=azr[i]["properties"]["gatewayIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-")
+                    subname=azr[i]["properties"]["gatewayIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[10].replace(".","-")
                     fr.write('\t subnet_id = "${azurerm_subnet.' + subrg + '__' + subname + '.id} \n')
                 except KeyError:  
                     pass
@@ -106,36 +106,36 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                 
         
             
-    # front end ip config block
+    # front end IP config block
             icount=len(fronts)
             if icount > 0 :
                 for j in range(0,icount):
                     
-                    fname=azr[i]["properties"]["frontendIpConfigurations"][j]["name"]
+                    fname=azr[i]["properties"]["frontendIPConfigurations"][j]["name"]
                     fr.write('frontend_ip_configuration {' + '"\n')
                     fr.write('\t name = "' + fname + '"\n')
                     try :
-                        subrg=azr[i]["properties"]["frontendIpConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-")
-                        subname=azr[i]["properties"]["frontendIpConfigurations"][j]["properties"]["subnet"]["id"].split("/")[10].replace(".","-")                 
+                        subrg=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-")
+                        subname=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[10].replace(".","-")                 
                         fr.write('\t subnet_id = "${azurerm_subnet.' + subrg + '__'  + subname + '.id}" \n')
                     except KeyError:
                         pass
 
                     try :
-                        priv=azr[i]["properties"]["frontendIpConfigurations"][j]["properties"]["privateIPAddress"]
+                        priv=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["privateIPAddress"]
                         fr.write('\t private_ip_address = "' + priv + '"\n')
                     except KeyError:
                         pass
                 
                     try :
-                        privalloc=azr[i]["properties"]["frontendIpConfigurations"][j]["properties"]["privateIPAllocationMethod"]
+                        privalloc=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["privateIPAllocationMethod"]
                         fr.write('\t private_ip_address_allocation  = "' + privalloc + '"\n')
                     except KeyError:
                         pass
 
                     try :
-                        pubrg=azr[i]["properties"]["frontendIpConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[4].replace(".","-")
-                        pubname=azr[i]["properties"]["frontendIpConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[8].replace(".","-")  
+                        pubrg=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[4].replace(".","-")
+                        pubname=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[8].replace(".","-")  
                         fr.write('\t public_ip_address_id = "${azurerm_public_ip.' + pubrg + '__' + pubname + '.id}" \n')
                     except KeyError:
                         pass

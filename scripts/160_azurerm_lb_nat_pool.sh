@@ -17,7 +17,7 @@ if [ "$count" -gt "0" ]; then
                 rg=`echo $azr | jq ".[(${i})].inboundNatPools[(${j})].resourceGroup" | sed 's/\./-/g' | tr -d '"'`
                 proto=`echo $azr | jq ".[(${i})].inboundNatPools[(${j})].protocol" | tr -d '"'`
 
-                feipc=`echo $azr | jq ".[(${i})].inboundNatPools[(${j})].frontendIpConfiguration.id" | cut -d'/' -f11 | tr -d '"'`
+                feipc=`echo $azr | jq ".[(${i})].inboundNatPools[(${j})].frontendConfiguration.id" | cut -d'/' -f11 | tr -d '"'`
 
                 feps=`echo $azr | jq ".[(${i})].inboundNatPools[(${j})].frontendPortStart" | tr -d '"'`
                 fepe=`echo $azr | jq ".[(${i})].inboundNatPools[(${j})].frontendPortEnd" | tr -d '"'`

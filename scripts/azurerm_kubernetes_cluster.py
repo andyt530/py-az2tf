@@ -70,8 +70,8 @@ if count" != "0" :
         vms=azr[i]["agentPoolProfiles[0]["vmSize"]
         pcount=azr[i]["agentPoolProfiles[0]["count"]
         ost=azr[i]["agentPoolProfiles[0]["osType"]
-        vnsrg=azr[i]["agentPoolProfiles[0]["vnetSubnetId"].split("/")[4]]
-        vnsid=azr[i]["agentPoolProfiles[0]["vnetSubnetId"].split("/")[10]]
+        vnsrg=azr[i]["agentPoolProfiles[0]["vnetSubnetId"].split("/")[4]
+        vnsid=azr[i]["agentPoolProfiles[0]["vnetSubnetId"].split("/")[10]
         np=azr[i]["networkProfile"]
         
 
@@ -107,7 +107,7 @@ if count" != "0" :
         if np" try :
             netp=azr[i]["networkProfile.networkPlugin"]
             srvcidr=azr[i]["networkProfile.serviceCidr"]
-            dnssrvip=azr[i]["networkProfile.dnsServiceIp"]
+            dnssrvip=azr[i]["networkProfile.dnsService"]
             dbrcidr=azr[i]["networkProfile.dockerBridgeCidr"]
             podcidr=azr[i]["networkProfile.podCidr"]
 

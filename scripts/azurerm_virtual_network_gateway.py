@@ -118,8 +118,8 @@ if count > 0" :
         count= ipc | | len(
         for j in range(0,count):
             ipcname= ipc | jq ".[j]["name"
-            ipcpipa= ipc | jq ".[j]["privateIpAllocationMethod"
-            ipcpipid= ipc | jq ".[j]["publicIpAddress.id"
+            ipcpipa= ipc | jq ".[j]["privateAllocationMethod"
+            ipcpipid= ipc | jq ".[j]["publicAddress.id"
             ipcsubid= ipc | jq ".[j]["subnet.id"
             pipnam= ipcpipid].split("/")[8].replace(".","-")
             piprg= ipcpipid].split("/")[4].replace(".","-")

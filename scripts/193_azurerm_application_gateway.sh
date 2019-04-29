@@ -16,9 +16,9 @@ if [ "$count" -gt "0" ]; then
         
         
         # the blocks
-        gwipc=`echo $azr | jq ".[(${i})].gatewayIpConfigurations"`
+        gwipc=`echo $azr | jq ".[(${i})].gatewayConfigurations"`
         feps=`echo $azr | jq ".[(${i})].frontendPorts"`
-        fronts=`echo $azr | jq ".[(${i})].frontendIpConfigurations"`
+        fronts=`echo $azr | jq ".[(${i})].frontendConfigurations"`
         beap=`echo $azr | jq ".[(${i})].backendAddressPools"`
         bhttps=`echo $azr | jq ".[(${i})].backendHttpSettingsCollection"`
         httpl=`echo $azr | jq ".[(${i})].httpListeners"`
@@ -53,9 +53,9 @@ if [ "$count" -gt "0" ]; then
         if [ "$icount" -gt "0" ]; then
             icount=`expr $icount - 1`
             for j in `seq 0 $icount`; do
-                gname=`echo $azr | jq ".[(${i})].gatewayIpConfigurations[(${j})].name" | tr -d '"'`
-                subrg=`echo $azr | jq ".[(${i})].gatewayIpConfigurations[(${j})].subnet.id" | cut -d'/' -f5 | sed 's/\./-/g' | tr -d '"'`
-                subname=`echo $azr | jq ".[(${i})].gatewayIpConfigurations[(${j})].subnet.id" | cut -d'/' -f11 | sed 's/\./-/g' | tr -d '"'`
+                gname=`echo $azr | jq ".[(${i})].gatewayConfigurations[(${j})].name" | tr -d '"'`
+                subrg=`echo $azr | jq ".[(${i})].gatewayConfigurations[(${j})].subnet.id" | cut -d'/' -f5 | sed 's/\./-/g' | tr -d '"'`
+                subname=`echo $azr | jq ".[(${i})].gatewayConfigurations[(${j})].subnet.id" | cut -d'/' -f11 | sed 's/\./-/g' | tr -d '"'`
                 printf "gateway_ip_configuration {\n" >> $outfile
                 printf "\t name = \"%s\" \n"  $gname >> $outfile
                 if [ "$subname" != "null" ]; then
@@ -85,15 +85,15 @@ if [ "$count" -gt "0" ]; then
             icount=`expr $icount - 1`
             for j in `seq 0 $icount`; do
                 
-                fname=`echo $azr | jq ".[(${i})].frontendIpConfigurations[(${j})].name" | tr -d '"'`
-                priv=`echo $azr | jq ".[(${i})].frontendIpConfigurations[(${j})].privateIpAddress" | tr -d '"'`
+                fname=`echo $azr | jq ".[(${i})].frontendConfigurations[(${j})].name" | tr -d '"'`
+                priv=`echo $azr | jq ".[(${i})].frontendConfigurations[(${j})].privateAddress" | tr -d '"'`
                 
-                pubrg=`echo $azr | jq ".[(${i})].frontendIpConfigurations[(${j})].publicIpAddress.id" | cut -d'/' -f5 | sed 's/\./-/g' | tr -d '"'`
-                pubname=`echo $azr | jq ".[(${i})].frontendIpConfigurations[(${j})].publicIpAddress.id" | cut -d'/' -f9 | sed 's/\./-/g' | tr -d '"'`
+                pubrg=`echo $azr | jq ".[(${i})].frontendConfigurations[(${j})].publicAddress.id" | cut -d'/' -f5 | sed 's/\./-/g' | tr -d '"'`
+                pubname=`echo $azr | jq ".[(${i})].frontendConfigurations[(${j})].publicAddress.id" | cut -d'/' -f9 | sed 's/\./-/g' | tr -d '"'`
                 
-                subrg=`echo $azr | jq ".[(${i})].frontendIpConfigurations[(${j})].subnet.id" | cut -d'/' -f5 | sed 's/\./-/g' | tr -d '"'`
-                subname=`echo $azr | jq ".[(${i})].frontendIpConfigurations[(${j})].subnet.id" | cut -d'/' -f11 | sed 's/\./-/g' | tr -d '"'`
-                privalloc=`echo $azr | jq ".[(${i})].frontendIpConfigurations[(${j})].privateIpAllocationMethod" | tr -d '"'`
+                subrg=`echo $azr | jq ".[(${i})].frontendConfigurations[(${j})].subnet.id" | cut -d'/' -f5 | sed 's/\./-/g' | tr -d '"'`
+                subname=`echo $azr | jq ".[(${i})].frontendConfigurations[(${j})].subnet.id" | cut -d'/' -f11 | sed 's/\./-/g' | tr -d '"'`
+                privalloc=`echo $azr | jq ".[(${i})].frontendConfigurations[(${j})].privateAllocationMethod" | tr -d '"'`
                 
                 printf "frontend_ip_configuration {\n" >> $outfile
                 printf "\t name = \"%s\" \n"  $fname >> $outfile
@@ -182,7 +182,7 @@ if [ "$count" -gt "0" ]; then
             icount=`expr $icount - 1`
             for j in `seq 0 $icount`; do
                 bname=`echo $azr | jq ".[(${i})].httpListeners[(${j})].name" | tr -d '"'`
-                feipcn=`echo $azr | jq ".[(${i})].httpListeners[(${j})].frontendIpConfiguration.id" | cut -d'/' -f11 | tr -d '"'`
+                feipcn=`echo $azr | jq ".[(${i})].httpListeners[(${j})].frontendConfiguration.id" | cut -d'/' -f11 | tr -d '"'`
                 fepn=`echo $azr | jq ".[(${i})].httpListeners[(${j})].frontendPort.id" | cut -d'/' -f11 | tr -d '"'`  
                 bproto=`echo $azr | jq ".[(${i})].httpListeners[(${j})].protocol" | tr -d '"'`
                 bhn=`echo $azr | jq ".[(${i})].httpListeners[(${j})].hostName" | tr -d '"'`

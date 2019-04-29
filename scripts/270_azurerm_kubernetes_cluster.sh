@@ -62,7 +62,7 @@ if [ "$count" != "0" ]; then
         if [ "$np" != "null" ]; then
             netp=`echo $azr | jq ".[(${i})].networkProfile.networkPlugin" | tr -d '"'`
             srvcidr=`echo $azr | jq ".[(${i})].networkProfile.serviceCidr" | tr -d '"'`
-            dnssrvip=`echo $azr | jq ".[(${i})].networkProfile.dnsServiceIp" | tr -d '"'`
+            dnssrvip=`echo $azr | jq ".[(${i})].networkProfile.dnsService" | tr -d '"'`
             dbrcidr=`echo $azr | jq ".[(${i})].networkProfile.dockerBridgeCidr" | tr -d '"'`
             podcidr=`echo $azr | jq ".[(${i})].networkProfile.podCidr" | tr -d '"'`
 

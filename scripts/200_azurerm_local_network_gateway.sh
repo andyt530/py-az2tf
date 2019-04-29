@@ -10,7 +10,7 @@ if [ "$count" -gt "0" ]; then
     
         id=`echo $azr | jq ".[(${i})].id" | tr -d '"'`
         loc=`echo $azr | jq ".[(${i})].location" | tr -d '"'`
-        gwaddr=`echo $azr | jq ".[(${i})].gatewayIpAddress" | tr -d '"'`
+        gwaddr=`echo $azr | jq ".[(${i})].gatewayAddress" | tr -d '"'`
         addrpre=`echo $azr | jq ".[(${i})].localNetworkAddressSpace.addressPrefixes"`
         bgps=`echo $azr | jq ".[(${i})].bgpSettings" | tr -d '"'`
         prefix=`printf "%s__%s" $prefixa $rg`

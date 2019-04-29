@@ -20,7 +20,7 @@ if [ "$count" -gt "0" ]; then
         id=`echo $azr | jq ".[(${i})].id" | tr -d '"'`
         loc=`echo $azr | jq ".[(${i})].location"`
         sku=`echo $azr | jq ".[(${i})].sku.name" | tr -d '"'`
-        fronts=`echo $azr | jq ".[(${i})].frontendIpConfigurations"`
+        fronts=`echo $azr | jq ".[(${i})].frontendConfigurations"`
         
         prefix=`printf "%s__%s" $prefixa $rg`
         
@@ -36,15 +36,15 @@ if [ "$count" -gt "0" ]; then
             icount=`expr $icount - 1`
             for j in `seq 0 $icount`; do
                     
-                fname=`echo $azr | jq ".[(${i})].frontendIpConfigurations[(${j})].name" | tr -d '"'`
-                priv=`echo $azr | jq ".[(${i})].frontendIpConfigurations[(${j})].privateIpAddress" | tr -d '"'`
+                fname=`echo $azr | jq ".[(${i})].frontendConfigurations[(${j})].name" | tr -d '"'`
+                priv=`echo $azr | jq ".[(${i})].frontendConfigurations[(${j})].privateAddress" | tr -d '"'`
 
-                pubrg=`echo $azr | jq ".[(${i})].frontendIpConfigurations[(${j})].publicIpAddress.id" | cut -d'/' -f5 | tr -d '"'`
-                pubname=`echo $azr | jq ".[(${i})].frontendIpConfigurations[(${j})].publicIpAddress.id" | cut -d'/' -f9 | tr -d '"'`
+                pubrg=`echo $azr | jq ".[(${i})].frontendConfigurations[(${j})].publicAddress.id" | cut -d'/' -f5 | tr -d '"'`
+                pubname=`echo $azr | jq ".[(${i})].frontendConfigurations[(${j})].publicAddress.id" | cut -d'/' -f9 | tr -d '"'`
                 
-                subrg=`echo $azr | jq ".[(${i})].frontendIpConfigurations[(${j})].subnet.id" | cut -d'/' -f5 | tr -d '"'`
-                subname=`echo $azr | jq ".[(${i})].frontendIpConfigurations[(${j})].subnet.id" | cut -d'/' -f11 | tr -d '"'`
-                privalloc=`echo $azr | jq ".[(${i})].frontendIpConfigurations[(${j})].privateIpAllocationMethod" | tr -d '"'`
+                subrg=`echo $azr | jq ".[(${i})].frontendConfigurations[(${j})].subnet.id" | cut -d'/' -f5 | tr -d '"'`
+                subname=`echo $azr | jq ".[(${i})].frontendConfigurations[(${j})].subnet.id" | cut -d'/' -f11 | tr -d '"'`
+                privalloc=`echo $azr | jq ".[(${i})].frontendConfigurations[(${j})].privateAllocationMethod" | tr -d '"'`
                 
                 printf "\t frontend_ip_configuration {\n" >> $prefix-$name.tf
                 printf "\t\t name = \"%s\" \n"  $fname >> $prefix-$name.tf

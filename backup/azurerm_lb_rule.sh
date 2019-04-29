@@ -29,8 +29,8 @@ if [ "$count" -gt "0" ]; then
                 fep=`echo $azr | jq ".[(${i})].loadBalancingRules[(${j})].frontendPort" | tr -d '"'`
                 bep=`echo $azr | jq ".[(${i})].loadBalancingRules[(${j})].backendPort" | tr -d '"'`
                 proto=`echo $azr | jq ".[(${i})].loadBalancingRules[(${j})].protocol" | tr -d '"'`
-                feipc=`echo $azr | jq ".[(${i})].loadBalancingRules[(${j})].frontendIpConfiguration.id" | cut -d'/' -f11 | tr -d '"'`
-                efip=`echo $azr | jq ".[(${i})].loadBalancingRules[(${j})].enableFloatingIp" | tr -d '"'`
+                feipc=`echo $azr | jq ".[(${i})].loadBalancingRules[(${j})].frontendIPConfiguration.id" | cut -d'/' -f11 | tr -d '"'`
+                efip=`echo $azr | jq ".[(${i})].loadBalancingRules[(${j})].enableFloatingIP" | tr -d '"'`
                 ld=`echo $azr | jq ".[(${i})].loadBalancingRules[(${j})].loadDistribution" | tr -d '"'`
                 itm=`echo $azr | jq ".[(${i})].loadBalancingRules[(${j})].idleTimeoutInMinutes" | tr -d '"'`
 

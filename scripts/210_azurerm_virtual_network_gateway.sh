@@ -74,8 +74,8 @@ if [ "$count" -gt "0" ]; then
         count=`expr $count - 1`
         for j in `seq 0 $count`; do
             ipcname=`echo $ipc | jq ".[(${j})].name"`
-            ipcpipa=`echo $ipc | jq ".[(${j})].privateIpAllocationMethod"`
-            ipcpipid=`echo $ipc | jq ".[(${j})].publicIpAddress.id"`
+            ipcpipa=`echo $ipc | jq ".[(${j})].privateAllocationMethod"`
+            ipcpipid=`echo $ipc | jq ".[(${j})].publicAddress.id"`
             ipcsubid=`echo $ipc | jq ".[(${j})].subnet.id"`
             pipnam=`echo $ipcpipid | cut -d'/' -f9 | sed 's/\./-/g' | tr -d '"'`
             piprg=`echo $ipcpipid | cut -d'/' -f5 | sed 's/\./-/g' | tr -d '"'`

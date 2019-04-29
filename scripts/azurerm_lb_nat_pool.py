@@ -68,7 +68,7 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
 
                 proto=azr[i]["properties"]["inboundNatPools"][j]["properties"]["protocol"]
                 bep=azr[i]["properties"]["inboundNatPools"][j]["properties"]["backendPort"]
-                feipc=azr[i]["properties"]["inboundNatPools"][j]["properties"]["frontendIpConfiguration"]["id"].split("/")[10]
+                feipc=azr[i]["properties"]["inboundNatPools"][j]["properties"]["frontendConfiguration"]["id"].split("/")[10]
                 try:
                     feps=azr[i]["properties"]["inboundNatPools"][j]["properties"]["frontendPortStart"]
                 except:

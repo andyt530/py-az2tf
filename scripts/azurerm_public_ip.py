@@ -57,7 +57,7 @@ def azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 #pass
             
             try:
-                subipalloc=azr[i]["properties"]["publicIpAllocationMethod"]
+                subipalloc=azr[i]["properties"]["publicAllocationMethod"]
                 fr.write('\t allocation_method = "' +    subipalloc + '"\n')
             except KeyError:
                 pass

@@ -18,7 +18,7 @@ if [ "$count" -gt "0" ]; then
         rg=`echo $azr | jq ".[(${i})].resourceGroup" | tr -d '"'`
         id=`echo $azr | jq ".[(${i})].id" | tr -d '"'`
         loc=`echo $azr | jq ".[(${i})].location" | tr -d '"'`
-        ipfor=`echo $azr | jq ".[(${i})].enableIpForwarding" | tr -d '"'`
+        ipfor=`echo $azr | jq ".[(${i})].enableIPForwarding" | tr -d '"'`
 
         prefix=`printf "%s__%s" $prefixa $rg`
         snsg=`echo $azr | jq ".[(${i})].networkSecurityGroup.id" | cut -d'/' -f9 | tr -d '"'`
@@ -44,8 +44,8 @@ if [ "$count" -gt "0" ]; then
                 ipcname=`echo $azr | jq ".[(${i})].ipConfigurations[(${j})].name" | cut -d'/' -f11 | tr -d '"'`
                 subname=`echo $azr | jq ".[(${i})].ipConfigurations[(${j})].subnet.id" | cut -d'/' -f11 | tr -d '"'`
                 subrg=`echo $azr | jq ".[(${i})].ipConfigurations[(${j})].subnet.id" | cut -d'/' -f5 | tr -d '"'`
-                subipid=`echo $azr | jq ".[(${i})].ipConfigurations[(${j})].publicIpAddress.id" | cut -d'/' -f9 | tr -d '"'`
-                subipalloc=`echo $azr | jq ".[(${i})].ipConfigurations[(${j})].privateIpAllocationMethod" | tr -d '"'`
+                subipid=`echo $azr | jq ".[(${i})].ipConfigurations[(${j})].publicIPAddress.id" | cut -d'/' -f9 | tr -d '"'`
+                subipalloc=`echo $azr | jq ".[(${i})].ipConfigurations[(${j})].privateIPAllocationMethod" | tr -d '"'`
 
                 printf "\t ip_configuration {\n" >> $prefix-$name.tf
                 printf "\t\t name = \"%s\" \n"  $ipcname >> $prefix-$name.tf

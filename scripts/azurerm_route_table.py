@@ -58,7 +58,7 @@ def azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('\t\t address_prefix = "' + adpr + '"\n')
                 fr.write('\t\t next_hop_type = "' + nhtype + '"\n')
                 try:
-                    nhaddr=routes[j]["properties"]["nextHopIpAddress"]
+                    nhaddr=routes[j]["properties"]["nextHopAddress"]
                     fr.write('\t\t next_hop_in_ip_address = "' +  nhaddr + '"\n')
                 except KeyError:
                     pass             
