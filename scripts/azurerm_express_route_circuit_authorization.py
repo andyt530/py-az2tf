@@ -7,7 +7,7 @@ def azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub
     # REST or cli
         print "REST Managed Disk"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/expressRouteCircuits"
-        params = {'api-version': '2017-03-30'}
+        params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
         if cde:

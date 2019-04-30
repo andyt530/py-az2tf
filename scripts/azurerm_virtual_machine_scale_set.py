@@ -7,7 +7,7 @@ def azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2t
     # REST or cli
         print "REST Managed Disk"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/virtualMachineScaleSets"
-        params = {'api-version': '2017-03-30'}
+        params = {'api-version': '2019-03-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
         if cde:
