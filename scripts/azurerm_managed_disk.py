@@ -65,12 +65,12 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             """        
             try:
                 enc=azr[i]["properties"]["encryptionSettings"]["enabled"]
-                fr.write('\t encryption_settings {' + '"\n')
-                fr.write('\t\t enabled = "' +  enc + '"\n')
+                fr.write('\t encryption_settings { \n')
+                fr.write('\t\t enabled = "' +  str(enc) + '"\n')
                 try:
                     kekurl=azr[i]["properties"]["encryptionSettings"]["keyEncryptionKey"]["keyUrl"]
                     kekvltid=azr[i]["properties"]["encryptionSettings"]["keyEncryptionKey"]["sourceVault"]["id"]
-                    fr.write('\t\t key_encryption_key {' + '"\n')
+                    fr.write('\t\t key_encryption_key { \n')
                     fr.write('\t\t\t key_url = "' +  kekurl + '"\n')
                     fr.write('\t\t\t source_vault_id = "' +  kekvltid + '"\n')
                     fr.write('\t\t } \n')
@@ -80,7 +80,7 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 try:
                     dekurl=azr[i]["properties"]["encryptionSettings"]["diskEncryptionKey"]["secretUrl"]
                     dekvltid=azr[i]["properties"]["encryptionSettings"]["diskEncryptionKey"]["sourceVault"]["id"]
-                    fr.write('\t\t disk_encryption_key {' + '"\n')
+                    fr.write('\t\t disk_encryption_key { \n')
                     fr.write('\t\t\t secret_url = "' +  dekurl + '"\n')
                     fr.write('\t\t\t source_vault_id = "' +  dekvltid + '"\n')               
                     fr.write('\t\t } \n')

@@ -19,7 +19,7 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
         for i in range(0, count):
 
             name=azr[i]["name"]
-         
+            lbname=name
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-")
 
@@ -36,39 +36,28 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
                 rname= name.replace(".","-")
                 id=azr[i]["properties"]["backendAddressPools"][j]["id"]
                 rg=id.split("/")[4].replace(".","-")
-       
-                prefix=tfp+"."+rg+'__'+rname
+
+                prefix=tfp+"."+rg+'__'+lbname+'__'+rname
                 #print prefix
                 rfilename=prefix+".tf"
                 fr=open(rfilename, 'w')
                 fr.write(az2tfmess)
 
-                fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+                fr.write('resource ' + tfp + ' ' + rg + '__' +lbname+'__'+ rname + ' {\n')
                 fr.write('\t name = "' + name + '"\n')
                 fr.write('\t resource_group_name = "'+ rg + '"\n')
+
                 try:
-                    lbrg=azr[i]["id"].split("/")[4].replace(".","-")
-                    lbname=azr[i]["id"].split("/")[8].replace(".","-")            
+                    #lbrg=azr[i]["id"].split("/")[4].replace(".","-")
+                    #lbname=azr[i]["id"].split("/")[8].replace(".","-")   
+                    lbrg=id.split("/")[4].replace(".","-")
+                    lbname=id.split("/")[8].replace(".","-")          
                     fr.write('\t\t loadbalancer_id = "${azurerm_lb.' + lbrg + '__' + lbname + '.id}" \n')    
                 except KeyError:
                     pass
                 
         # should be more stuff in here ?
 
-        #
-
-
-
-    # tags block       
-                try:
-                    mtags=azr[i]["tags"]
-                    fr.write('tags { \n')
-                    for key in mtags.keys():
-                        tval=mtags[key]
-                        fr.write('\t "' + key + '"="' + tval + '"\n')
-                    fr.write('}\n')
-                except KeyError:
-                    pass
 
                 fr.write('}\n') 
                 fr.close()   # close .tf file
@@ -77,10 +66,10 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
                     with open(rfilename) as f: 
                         print f.read()
 
-                tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+                tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+lbname+'__'+rname + '\n')
 
                 tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
-                tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+                tfcomm='terraform import '+tfp+'.'+rg+'__'+lbname+'__'+rname+' '+id+'\n'
                 tfim.write(tfcomm)  
 
             # end for j loop

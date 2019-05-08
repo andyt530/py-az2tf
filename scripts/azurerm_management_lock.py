@@ -41,7 +41,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,subp
             rfilename=prefix+".tf"
             fr=open(rfilename, 'w')
             fr.write("")
-            fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+            fr.write('resource ' + tfp + ' "' + rg + '__' + rname + '" {\n')
             fr.write('\t name = "' + name + '"\n')
             #fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t lock_level = "'+ level + '"\n')   

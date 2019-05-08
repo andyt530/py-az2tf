@@ -34,21 +34,16 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                 rname= name.replace(".","-")
                 id=azr[i]["properties"]["loadBalancingRules"][j] ["id"]
     
-                prefix=tfp+"."+rg+'__'+rname
+                lbrg=azr[i]["id"].split("/")[4].replace(".","-")
+                lbname=azr[i]["id"].split("/")[8].replace(".","-")
+                prefix=tfp+"."+rg+ '__' + lbname+'__'+rname
                 #print prefix
                 rfilename=prefix+".tf"
                 fr=open(rfilename, 'w')
                 fr.write(az2tfmess)
-                fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+                fr.write('resource ' + tfp + ' ' + rg + '__' + lbname + '__' + rname + ' {\n')
                 fr.write('\t name = "' + name + '"\n')
-  
                 fr.write('\t resource_group_name = "'+ rg + '"\n')
-
-
-                lbrg=azr[i]["id"].split("/")[4].replace(".","-")
-                lbname=azr[i]["id"].split("/")[8].replace(".","-")
-
-
 
 
      
@@ -56,42 +51,28 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                 bep=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["backendPort"]
                 proto=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["protocol"]
                 feipc=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["frontendIPConfiguration"]["id"]
-                efip=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["enableFloatingIP"]
+                efip=str(azr[i]["properties"]["loadBalancingRules"][j]["properties"]["enableFloatingIP"])
                 ld=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["loadDistribution"]
                 itm=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["idleTimeoutInMinutes"]
 
-                prg=azr[i]["properties"]["loadBalancingRules"][j]["probe"]["id"].split("/")[4].replace(".","-")
-                pid=azr[i]["properties"]["loadBalancingRules"][j]["probe"]["id"].split("/")[10].replace(".","-")
+                prg=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["probe"]["id"].split("/")[4].replace(".","-")
+                pid=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["probe"]["id"].split("/")[10].replace(".","-")
                 beadprg=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["backendAddressPool"]["id"].split("/")[4].replace(".","-")
                 beadpid=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["backendAddressPool"]["id"].split("/")[10].replace(".","-")
 
-             
-                fr.write('resource "' + tfp + ' ' + rg + '__' + lbname + '__' + rname + ' {  "\n')
-                fr.write('\t\t name = "' + name + '"\n')
                 fr.write('\t\t loadbalancer_id = "${azurerm_lb.' + lbrg + '__' + lbname + '.id}" \n')
                 fr.write('\t\t frontend_ip_configuration_name = "' + feipc + '"\n')
                 fr.write('\t\t protocol = "' + proto + '"\n')   
-                fr.write('\t\t frontend_port = "' + fep + '"\n')
-                fr.write('\t\t backend_port = "' + bep + '"\n')
+                fr.write('\t\t frontend_port = "' + str(fep) + '"\n')
+                fr.write('\t\t backend_port = "' + str(bep) + '"\n')
                 
-                fr.write('\t\t backend_address_pool_id = "${azurerm_lb_backend_address_pool.' + beadprg + '__' + lbname + '__' + beadpid + '.id} \n')
+                fr.write('\t\t backend_address_pool_id = "${azurerm_lb_backend_address_pool.' + beadprg + '__' + lbname + '__' + beadpid + '.id}"\n')
                 fr.write('\t\t probe_id = "${azurerm_lb_probe.' + prg + '__' + lbname + '__' + pid + '.id}" \n')
                 
                 fr.write('\t\t enable_floating_ip = "' + efip + '"\n')
-                fr.write('\t\t idle_timeout_in_minutes = "' + itm + '"\n')
+                fr.write('\t\t idle_timeout_in_minutes = "' + str(itm) + '"\n')
                 fr.write('\t\t load_distribution = "' + ld + '"\n')
 
-
-        # tags block       
-                try:
-                    mtags=azr[i]["tags"]
-                    fr.write('tags { \n')
-                    for key in mtags.keys():
-                        tval=mtags[key]
-                        fr.write('\t "' + key + '"="' + tval + '"\n')
-                    fr.write('}\n')
-                except KeyError:
-                    pass
 
                 fr.write('}\n') 
                 fr.close()   # close .tf file
@@ -100,10 +81,10 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                     with open(rfilename) as f: 
                         print f.read()
 
-                tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+                tfrm.write('terraform state rm '+tfp+'.'+rg+ '__' + lbname+'__'+rname + '\n')
 
                 tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
-                tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+                tfcomm='terraform import '+tfp+'.'+rg+ '__' + lbname+'__'+rname+' '+id+'\n'
                 tfim.write(tfcomm)  
 
         # end for i loop
