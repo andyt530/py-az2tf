@@ -45,7 +45,7 @@ import azurerm_lb_nat_pool
 import azurerm_lb_backend_address_pool
 import azurerm_lb_probe
 import azurerm_lb_rule
-#import 193_azurerm_application_gateway
+import azurerm_application_gateway
 #import 200_azurerm_local_network_gateway
 #import 210_azurerm_virtual_network_gateway
 #import 220_azurerm_virtual_network_gateway_connection
@@ -57,9 +57,9 @@ import azurerm_lb_rule
 #import 280_azurerm_recovery_services_vault 
 import azurerm_virtual_machine
 #import 295_azurerm_virtual_machine_scale_set -
-#import 310_azurerm_automation_account
-#import 320_azurerm_log_analytics_workspace
-#import 330_azurerm_log_analytics_solution
+#import azurerm_automation_account
+#import azurerm_log_analytics_workspace
+#import azurerm_log_analytics_solution
 #import 340_azurerm_image
 #import 350_azurerm_snapshot
 #import 360_azurerm_network_watcher
@@ -280,7 +280,7 @@ azurerm_lb_probe.azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmes
 # 190_azurerm_lb_rule
 azurerm_lb_rule.azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr)
 # 193_azurerm_application_gateway
-# azurerm_application_gateway.azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_application_gateway.azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 200_azurerm_local_network_gateway
 # azurerm_local_network_gateway.azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 210_azurerm_virtual_network_gateway
@@ -300,11 +300,11 @@ azurerm_lb_rule.azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,
 # 280_azurerm_recovery_services_vault
 # azurerm_recovery_services_vault.azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 290_azurerm_virtual_machine
-cde=True
 azurerm_virtual_machine.azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 295_azurerm_virtual_machine_scale_set
 # azurerm_virtual_machine_scale_set.azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 310_azurerm_automation_account
+cde=True
 # azurerm_automation_account.azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 320_azurerm_log_analytics_workspace
 # azurerm_log_analytics_workspace.azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess)

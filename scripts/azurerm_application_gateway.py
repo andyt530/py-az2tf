@@ -6,8 +6,8 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
     if crf in tfp:
     # REST or cli
         print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/applicationGateway"
-        params = {'api-version': '2017-03-30'}
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/applicationGateways"
+        params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
         if cde:
@@ -43,9 +43,9 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
             fr.write('\t resource_group_name = "'+ rg + '"\n')
 
 
-            skun=azr[i]["sku"]["name"]
+            skun=azr[i]["properties"]["sku"]["name"]
 
-            skut=azr[i]["sku"]["tier"]
+            skut=azr[i]["properties"]["sku"]["tier"]
             
             
             # the blocks
@@ -60,7 +60,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
             urlpm=azr[i]["properties"]["urlPathMaps"]
             authcerts=azr[i]["properties"]["authenticationCertificates"]
             sslcerts=azr[i]["properties"]["sslCertificates"]
-            wafc=azr[i]["properties"]["webApplicationFirewallConfiguration"]
+            #wafc=azr[i]["properties"]["webApplicationFirewallConfiguration"]
 
             fr.write('sku { \n')
             fr.write('\t name = "' +  skun + '"\n')
@@ -73,14 +73,14 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 
             fr.write('\t tier = "' +  skut + '"\n')
             fr.write('} \n')
-            
-    # gateway ip config block
-            
+
+
+
             icount=len(gwipc)
             for j in range(0,icount):
                 gname=azr[i]["properties"]["gatewayIPConfigurations"][j]["name"]
                 subrg=azr[i]["properties"]["gatewayIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-")
-                subname=azr[i]["gatewayIPConfigurations"][j]["subnet"]["id"].split("/")[10].replace(".","-")
+                subname=azr[i]["properties"]["gatewayIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[10].replace(".","-")
                 fr.write('gateway_ip_configuration {' + '\n')
                 fr.write('\t name = "' + gname + '"\n')
                 try:
@@ -98,10 +98,10 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
             if icount > 0 :
                 for j in range(0,icount):
                     fname=azr[i]["properties"]["frontendPorts"][j]["name"]
-                    fport=azr[i]["properties"]["frontendPorts"][j]["port"]
-                    fr.write('frontend_port {' + '\n')
+                    fport=azr[i]["properties"]["frontendPorts"][j]["properties"]["port"]
+                    fr.write('frontend_port {\n')
                     fr.write('\t name = "' + fname + '"\n')
-                    fr.write('\t port = "' + fport + '"\n')
+                    fr.write('\t port = "' + str(fport) + '"\n')
                     fr.write('}\n')
                 
         
@@ -179,11 +179,11 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                     bproto=azr[i]["properties"]["backendHttpSettingsCollection"][j]["properties"]["protocol"]
                     bcook=azr[i]["properties"]["backendHttpSettingsCollection"][j]["properties"]["cookieBasedAffinity"]
                     btimo=azr[i]["properties"]["backendHttpSettingsCollection"][j]["properties"]["requestTimeout"]
-                    pname=azr[i]["properties"]["backendHttpSettingsCollection"][j]["properties"]["probe"]["id"].split("/")[10]
+                    #pname=azr[i]["properties"]["backendHttpSettingsCollection"][j]["properties"]["probe"]["id"].split("/")[10]
                     
-                    fr.write('backend_http_settings {' + '"\n')
+                    fr.write('backend_http_settings {\n')
                     fr.write('\t name = "' + bname + '"\n')
-                    fr.write('\t port = "' + bport + '"\n')
+                    fr.write('\t port = "' + str(bport) + '"\n')
                     fr.write('\t protocol = "' + bproto + '"\n')
                     fr.write('\t cookie_based_affinity = "' + bcook + '"\n')
                     fr.write('\t request_timeout = "' + btimo + '"\n')
@@ -212,11 +212,9 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                     feipcn=azr[i]["properties"]["httpListeners"][j]["properties"]["frontendIPConfiguration"]["id"].split("/")[10]
                     fepn=azr[i]["properties"]["httpListeners"][j]["properties"]["frontendPort"]["id"].split("/")[10]
                     bproto=azr[i]["properties"]["httpListeners"][j]["properties"]["protocol"]
-                    
-                    
-                                                   
+                                                                     
 
-                    fr.write('http_listener {' + '"\n')
+                    fr.write('http_listener {\n')
                     fr.write('\t name = "' +    bname + '"\n')
                     fr.write('\t frontend_ip_configuration_name = "' +    feipcn + '"\n')
                     fr.write('\t frontend_port_name = "' +    fepn + '"\n')
@@ -238,9 +236,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                         pass
                     fr.write('}\n')
                 
-            
-
-    # proble block  probes=azr[i]["probes"
+# probe block
 
             icount=len(probes)
             if icount > 0 :
@@ -285,16 +281,8 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                 
                     fr.write('\t }\n')
                     
-                    #if bmstat" try :
-                    #fr.write('\t status_code = "' +    bmstat + '"\n')
-                    #fi
-                    
 
-           
-                
-            
-
-    # request routing rules    block rrrs=azr[i]["requestRoutingRules"
+# routing rules
 
             icount=len(rrrs)
             if icount > 0 :
@@ -356,7 +344,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                 
         
 
-    # waf configuration block     wafc=azr[i]["webApplicationFirewallConfiguration"
+    # waf configuration block     wafc=azr[i]["webApplicationFirewallConfiguration"]
     # - not an array like the other blocks 
     #
             
