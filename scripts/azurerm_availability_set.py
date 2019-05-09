@@ -24,7 +24,7 @@ def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
-            #rg=azr[i]["resourceGroup"]
+        
             rg=id.split("/")[4].replace(".","-")
             fd=str(azr[i]["properties"]["platformFaultDomainCount"])
             ud=str(azr[i]["properties"]["platformUpdateDomainCount"])
@@ -39,6 +39,7 @@ def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 if rg.lower() != crg.lower():
                     continue  # back to for
             
+            rgl=rg.lower()
             rname=name.replace(".","-")
             prefix=tfp+"."+rg+'__'+rname
             #print prefix

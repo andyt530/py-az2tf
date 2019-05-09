@@ -120,8 +120,7 @@ fi
 #../../setup-env.sh
 
 
-echo "Terraform fmt ..."
-terraform fmt
+
 
 
 chmod 755 *state*.sh
@@ -141,6 +140,9 @@ for com in `ls *stateimp.sh | sort -g`; do
     eval $comm
 done
 
+
+echo "Terraform fmt ..."
+terraform fmt
 
 echo "Terraform Plan ..."
 terraform plan .

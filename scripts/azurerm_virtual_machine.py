@@ -84,8 +84,8 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             #
 
             try : 
-                avsid=azr[i]["properties"]["availabilitySet"]["id"].split("/")[8].replace(".","-")
-                avsrg=azr[i]["properties"]["availabilitySet"]["id"].split("/")[8].replace(".","-")
+                avsid=azr[i]["properties"]["availabilitySet"]["id"].split("/")[8].replace(".","-").lower()
+                avsrg=azr[i]["properties"]["availabilitySet"]["id"].split("/")[4].replace(".","-")
                 
                 fr.write('\t availability_set_id = "${azurerm_availability_set.' + avsrg + '__' +avsid + '.id}"\n')
             except KeyError:
