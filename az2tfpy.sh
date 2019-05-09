@@ -120,9 +120,6 @@ fi
 #../../setup-env.sh
 
 
-
-
-
 echo "Terraform fmt ..."
 terraform fmt
 

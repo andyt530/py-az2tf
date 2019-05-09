@@ -1,3 +1,4 @@
+import ast
 def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  050 NSG's
     tfp="azurerm_network_security_group"
@@ -12,8 +13,6 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
         azr= r.json()["value"]
         if cde:
             print(json.dumps(azr, indent=4, separators=(',', ': ')))
-
-
 
 
         tfrmf="050-"+tfp+"-staterm.sh"
@@ -80,9 +79,10 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
                 except KeyError:
                     pass
                     
-                srsps=str(srules[j]["properties"]["sourcePortRanges"])
+                srsps=str(ast.literal_eval(json.dumps(srules[j]["properties"]["sourcePortRanges"])))
+                srsps=srsps.replace("'",'"')
                 if srsps != "[]" :
-                    fr.write('\t\t source_port_ranges = "' + srsps + '"\n')
+                    fr.write('\t\t source_port_ranges = ' + srsps + '\n')
                     
                 try:
                     srsap=srules[j]["properties"]["sourceAddressPrefix"] 
@@ -90,9 +90,11 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
                 except KeyError:
                     pass
                     
-                srsaps=str(srules[j]["properties"]["sourceAddressPrefixes"]) 
+                srsaps=str(ast.literal_eval(json.dumps(srules[j]["properties"]["sourceAddressPrefixes"])))
+                srsaps=srsaps.replace("'",'"')
+
                 if srsaps != "[]" :
-                    fr.write('\t\t source_address_prefixes = "' + srsaps + '"\n')
+                    fr.write('\t\t source_address_prefixes = ' + srsaps + '\n')
 
     #destination address block
                 try:
@@ -101,9 +103,10 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
                 except KeyError:
                     pass
                 
-                srdps=str(srules[j]["properties"]["destinationPortRanges"])
+                srdps=str(ast.literal_eval(json.dumps(srules[j]["properties"]["destinationPortRanges"])))
+                srdps=srdps.replace("'",'"')
                 if srdps != "[]" :
-                    fr.write('\t\t destination_port_ranges = "' + srdps + '"\n')
+                    fr.write('\t\t destination_port_ranges = ' + srdps + '\n')
 
                 try:
                     srdap=srules[j]["properties"]["destinationAddressPrefix"]
@@ -111,9 +114,10 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
                 except KeyError:
                     pass
                 
-                srdaps=str(srules[j]["properties"]["destinationAddressPrefixes"]) 
+                srdaps=str(ast.literal_eval(json.dumps(srules[j]["properties"]["destinationAddressPrefixes"])))
+                srdaps=srdaps.replace("'",'"')
                 if srdaps != "[]" :
-                    fr.write('\t\t source_address_prefixes = "' + srdaps + '"\n')
+                    fr.write('\t\t destination_address_prefixes = ' + srdaps + '\n')
 
         # source asg's
                 try:
@@ -160,6 +164,10 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
             
             fr.write('}\n') 
             fr.close()   # close .tf file
+            
+            if cde:
+                with open(rfilename) as f: 
+                    print f.read()
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 

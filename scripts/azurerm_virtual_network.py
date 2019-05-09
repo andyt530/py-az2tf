@@ -1,3 +1,4 @@
+import ast
 def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  060 Virtual Networks
     tfp="azurerm_virtual_network"
@@ -50,9 +51,10 @@ def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             #print laddsp
             fr.write('\taddress_space =  ' + laddsp + '\n')
             try:
-                dns=str(azr[i]["properties"]["dhcpOptions"]["dnsServers"])
+                dns=str(ast.literal_eval(json.dumps(azr[i]["properties"]["dhcpOptions"]["dnsServers"])))
+                dns=dns.replace("'",'"')
                 if "[]" not in dns:
-                    fr.write('\t dns_servers =  "' + dns + '"\n')
+                    fr.write('\t dns_servers =  ' + dns + '\n')
             except KeyError:
                 pass        
 
@@ -92,6 +94,10 @@ def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
             fr.write('}\n') 
             fr.close()   # close .tf file
+
+            if cde:
+                with open(rfilename) as f: 
+                    print f.read()
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 

@@ -8,6 +8,7 @@ import json
 import sys
 import glob
 import argparse
+import ast
 
 scwd=os.getcwd()
 #print scwd
@@ -224,12 +225,12 @@ if crf is None:
     crf="azurerm"
 
 
-# record resources
+# record and sort resources
 azurerm_resources.azurerm_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os)
 # 001 Resource Group
 azurerm_resource_group.azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 002 management locks
-azurerm_management_lock.azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess)
+#azurerm_management_lock.azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess)
 # 015 user assigned identity
 azurerm_user_assigned_identity.azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess)
 #  020 Avail Sets
@@ -239,6 +240,7 @@ azurerm_route_table.azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az
 # 040 ASG
 azurerm_application_security_group.azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 #  050 NSG's
+#cde=True
 azurerm_network_security_group.azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 #  060 Virtual Networks
 azr=azurerm_virtual_network.azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess)
@@ -268,7 +270,7 @@ azr=azurerm_lb.azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 azurerm_lb_nat_rule.azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr)
 # 160_azurerm_lb_nat_pool
 azurerm_lb_nat_pool.azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr)
-cde=True
+
 # 170_azurerm_lb_backend_address_pool
 azurerm_lb_backend_address_pool.azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr)
 # 180_azurerm_lb_probe
