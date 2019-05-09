@@ -1,7 +1,22 @@
 def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
     #  070 subnets
     tfp="azurerm_subnet"
+    azr=""
     if crf in tfp:
+        # REST
+        print "REST VNets"
+
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworks"
+        params = {'api-version': '2018-07-01'}
+        r = requests.get(url, headers=headers, params=params)
+        azr= r.json()["value"]
+        if cde:
+            print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
+
+
+
+
     # subnet in vnet
         tfrmf="070-"+tfp+"-staterm.sh"
         tfimf="070-"+tfp+"-stateimp.sh"

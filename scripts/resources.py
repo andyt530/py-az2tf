@@ -236,7 +236,7 @@ azurerm_user_assigned_identity.azurerm_user_assigned_identity(crf,cde,crg,header
 #  020 Avail Sets
 
 azurerm_availability_set.azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-cde=True
+
 #  030 Route Table
 azurerm_route_table.azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 cde=False
@@ -280,6 +280,7 @@ azurerm_lb_probe.azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmes
 # 190_azurerm_lb_rule
 azurerm_lb_rule.azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr)
 # 193_azurerm_application_gateway
+cde=True
 azurerm_application_gateway.azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 200_azurerm_local_network_gateway
 # azurerm_local_network_gateway.azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)

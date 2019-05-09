@@ -10,8 +10,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
-        if cde:
-            print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
 
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"
@@ -30,6 +29,8 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
+            if cde:
+                print(json.dumps(azr[i]["properties"]["sku"], indent=4, separators=(',', ': ')))
             
             rname=name.replace(".","-")
             prefix=tfp+"."+rg+'__'+rname
@@ -44,7 +45,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 
 
             skun=azr[i]["properties"]["sku"]["name"]
-
+           
             skut=azr[i]["properties"]["sku"]["tier"]
             
             
@@ -65,8 +66,8 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
             fr.write('sku { \n')
             fr.write('\t name = "' +  skun + '"\n')
             try :
-                skuc=azr[i]["sku"]["capacity"]
-                fr.write('\t capacity = "' +  skuc + '"\n')
+                skuc=azr[i]["properties"]["sku"]["capacity"]
+                fr.write('\t capacity = "' +  str(skuc) + '"\n')
             except KeyError:
                 fr.write('\t capacity = "' + '1'  + '"\n')
                 pass
@@ -86,7 +87,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                 try:
                     subrg=azr[i]["properties"]["gatewayIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-")
                     subname=azr[i]["properties"]["gatewayIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[10].replace(".","-")
-                    fr.write('\t subnet_id = "${azurerm_subnet.' + subrg + '__' + subname + '.id} \n')
+                    fr.write('\t subnet_id = "${azurerm_subnet.' + subrg + '__' + subname + '.id}" \n')
                 except KeyError:  
                     pass
                 fr.write('}\n')
@@ -112,7 +113,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                 for j in range(0,icount):
                     
                     fname=azr[i]["properties"]["frontendIPConfigurations"][j]["name"]
-                    fr.write('frontend_ip_configuration {' + '"\n')
+                    fr.write('frontend_ip_configuration {\n')
                     fr.write('\t name = "' + fname + '"\n')
                     try :
                         subrg=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-")
@@ -186,15 +187,22 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                     fr.write('\t port = "' + str(bport) + '"\n')
                     fr.write('\t protocol = "' + bproto + '"\n')
                     fr.write('\t cookie_based_affinity = "' + bcook + '"\n')
-                    fr.write('\t request_timeout = "' + btimo + '"\n')
+                    fr.write('\t request_timeout = "' + str(btimo) + '"\n')
                     try :
                         pname=azr[i]["properties"]["backendHttpSettingsCollection"][j]["properties"]["probe"]["id"].split("/")[10]
                         fr.write('\t probe_name = "' + pname + '"\n')
                     except KeyError:
                         pass
                     try :
+                        bhn=azr[i]["properties"]["backendHttpSettingsCollection"][j]["properties"]["hostName"]
+                        fr.write('\t host_name = "' + bhn + '"\n')
+                    except KeyError:
+                        pass               
+                   
+                    try :
                         acert=azr[i]["properties"]["backendHttpSettingsCollection"][j]["properties"]["authenticationCertificates"][0]["id"].split("/")[10]
-                        fr.write('\t authentication_certificate {' + '"\n')
+                        print acert
+                        fr.write('\t authentication_certificate { \n')
                         fr.write('\t\t name = "' + acert + '"\n')
                         fr.write('\t}\n')
                     except KeyError:
@@ -231,7 +239,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                         pass
                     try :
                         rsni=azr[i]["properties"]["httpListeners"][j]["properties"]["requireServerNameIndication"]
-                        fr.write('\t require_sni = "' +    rsni + '"\n')
+                        fr.write('\t require_sni = "' +  str(rsni) + '"\n')
                     except KeyError:
                         pass
                     fr.write('}\n')
@@ -293,7 +301,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                     bapn=azr[i]["properties"]["requestRoutingRules"][j]["properties"]["backendAddressPool"]["id"].split("/")[10]
                     bhsn=azr[i]["properties"]["requestRoutingRules"][j]["properties"]["backendHttpSettings"]["id"].split("/")[10]
 
-                    fr.write('request_routing_rule {' + '"\n')
+                    fr.write('request_routing_rule { \n')
 
                     fr.write('\t name = "' + bname + '"\n')
                     fr.write('\t rule_type = "' + btyp + '"\n')
@@ -313,10 +321,12 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 
     # ssl_certificate block   sslcerts=azr[i]["sslCertificates"
 
-            icount=len(sslcerts)
-            if icount > 0 :
-                for j in range(0,icount):
-                    
+            jcount=len(sslcerts)
+            if jcount > 0 :
+                for j in range(0,jcount):
+                    print "***********"
+                    print(json.dumps(sslcerts[j], indent=4, separators=(',', ': ')))
+
                     try :
                         bname=azr[i]["properties"]["sslCertificates"][j]["name"]
                         fr.write('ssl_certificate {' + '\n')
@@ -324,18 +334,22 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 
 
                         try :
-                            bdata=azr[i]["properties"]["sslCertificates"][j]["properties"]["publicCertData"]
+                            bdata=azr[i]["properties"]["sslCertificates"][j]["properties"]["dummy"]
                             fr.write('\t data = "' + bdata + '"\n')
                         except KeyError:
                             fr.write('\t data = ""\n') 
                             pass
                         
                         try :
-                            bpw=azr[i]["properties"]["sslCertificates"][j]["properties"]["password"]
+                            bpw=azr[i]["properties"]["sslCertificates"][j]["password"]
                             fr.write('\t password = "' + bpw + '"\n')       
                         except KeyError:
                             fr.write('\t password = ""\n')
                             pass
+
+
+
+
                         fr.write('\t }\n')
 
                     except KeyError:
@@ -363,7 +377,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
             except KeyError:
                 pass         
             
-            fr.write('}\n')
+  
   
     # tags block       
             try:
