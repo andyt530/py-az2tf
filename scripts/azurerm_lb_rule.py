@@ -50,7 +50,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                 fep=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["frontendPort"]
                 bep=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["backendPort"]
                 proto=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["protocol"]
-                feipc=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["frontendIPConfiguration"]["id"]
+                feipc=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["frontendIPConfiguration"]["id"].split("/")[10]
                 efip=str(azr[i]["properties"]["loadBalancingRules"][j]["properties"]["enableFloatingIP"])
                 ld=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["loadDistribution"]
                 itm=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["idleTimeoutInMinutes"]

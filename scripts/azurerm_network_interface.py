@@ -1,5 +1,5 @@
 def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
-    cde=True
+    
     tfp="azurerm_network_interface"
     azr=""
     if crf in tfp:

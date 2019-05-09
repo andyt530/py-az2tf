@@ -55,7 +55,7 @@ import azurerm_lb_rule
 #import 260_azurerm_container_registry
 #import 270_azurerm_kubernetes_cluster
 #import 280_azurerm_recovery_services_vault 
-#import 290_azurerm_virtual_machine
+import azurerm_virtual_machine
 #import 295_azurerm_virtual_machine_scale_set -
 #import 310_azurerm_automation_account
 #import 320_azurerm_log_analytics_workspace
@@ -240,7 +240,6 @@ azurerm_route_table.azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az
 # 040 ASG
 azurerm_application_security_group.azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 #  050 NSG's
-#cde=True
 azurerm_network_security_group.azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 #  060 Virtual Networks
 azr=azurerm_virtual_network.azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess)
@@ -298,7 +297,8 @@ azurerm_lb_rule.azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,
 # 280_azurerm_recovery_services_vault
 # azurerm_recovery_services_vault.azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 290_azurerm_virtual_machine
-# azurerm_virtual_machine.azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+cde=True
+#azurerm_virtual_machine.azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 295_azurerm_virtual_machine_scale_set
 # azurerm_virtual_machine_scale_set.azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 310_azurerm_automation_account
