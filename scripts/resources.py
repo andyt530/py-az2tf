@@ -232,7 +232,7 @@ azurerm_resources.azurerm_resources(crf,cde,crg,headers,requests,sub,json,az2tfm
 azurerm_resource_group.azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 002 management locks
 
-azurerm_management_lock.azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess)
+azurerm_management_lock.azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 015 user assigned identity
 azurerm_user_assigned_identity.azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess)
 #  020 Avail Sets

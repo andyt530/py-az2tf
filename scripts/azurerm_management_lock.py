@@ -1,4 +1,4 @@
-def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess):
+def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # management locks
     tfp="azurerm_management_lock"
     azr=""
