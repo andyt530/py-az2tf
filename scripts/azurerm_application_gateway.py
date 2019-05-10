@@ -377,7 +377,10 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
             except KeyError:
                 pass         
             
-  
+            jcount=len(authcerts)
+            if cde:
+                print(json.dumps(authcerts, indent=4, separators=(',', ': ')))
+
   
     # tags block       
             try:
