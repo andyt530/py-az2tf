@@ -1,4 +1,4 @@
-def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
+def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  070 subnets
     tfp="azurerm_subnet"
     azr=""

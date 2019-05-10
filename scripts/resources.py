@@ -234,7 +234,7 @@ azurerm_resource_group.azurerm_resource_group(crf,cde,crg,headers,requests,sub,j
 
 azurerm_management_lock.azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 015 user assigned identity
-azurerm_user_assigned_identity.azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess)
+azurerm_user_assigned_identity.azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 #  020 Avail Sets
 
 azurerm_availability_set.azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess)
@@ -249,7 +249,7 @@ azurerm_network_security_group.azurerm_network_security_group(crf,cde,crg,header
 #  060 Virtual Networks
 azr=azurerm_virtual_network.azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 #  070 subnets
-azurerm_subnet.azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr)
+azurerm_subnet.azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 #  080 vnet peering
 azurerm_virtual_network_peering.azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr)
 # 090 Key Vault - using cli

@@ -1,14 +1,17 @@
-def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess):
+def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # 015 user assigned identity
     tfp="azurerm_user_assigned_identity"
     azr=""
     if crf in tfp:
-        p = subprocess.Popen('az identity list -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        output, errors = p.communicate()
-        azr=json.loads(output)
+        print "User assigned Identity"
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.ManagedIdentity/userAssignedIdentities"
+        params = {'api-version': '2018-11-30'}
+        r = requests.get(url, headers=headers, params=params)
+        azr=r.json()["value"]
         if cde:
             print(json.dumps(azr, indent=4, separators=(',', ': ')))
 
+ 
         tfrmf="015-"+tfp+"-staterm.sh"
         tfimf="015-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
@@ -21,8 +24,7 @@ def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfme
             name=azr[j]["name"]
             loc=azr[j]["location"]
             id=azr[j]["id"]
-            rg=azr[j]["resourceGroup"]
-
+            rg=id.split("/")[4].replace(".","-")
             if crg is not None:
                 print "rgname=" + rg + " crg=" + crg
                 if rg.lower() != crg.lower():
