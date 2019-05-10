@@ -46,33 +46,33 @@ import azurerm_lb_backend_address_pool
 import azurerm_lb_probe
 import azurerm_lb_rule
 import azurerm_application_gateway
-#import 200_azurerm_local_network_gateway
-#import 210_azurerm_virtual_network_gateway
-#import 220_azurerm_virtual_network_gateway_connection
-#import 230_azurerm_express_route_circuit 
-#import 240_azurerm_express_route_circuit_authorization
-#import 250_azurerm_express_route_circuit_peering
-#import 260_azurerm_container_registry
-#import 270_azurerm_kubernetes_cluster
-#import 280_azurerm_recovery_services_vault 
+import azurerm_local_network_gateway
+#import azurerm_virtual_network_gateway
+#import azurerm_virtual_network_gateway_connection
+#import azurerm_express_route_circuit 
+#import azurerm_express_route_circuit_authorization
+#import azurerm_express_route_circuit_peering
+#import azurerm_container_registry
+#import azurerm_kubernetes_cluster
+#import azurerm_recovery_services_vault 
 import azurerm_virtual_machine
-#import 295_azurerm_virtual_machine_scale_set -
+#import azurerm_virtual_machine_scale_set -
 #import azurerm_automation_account
 #import azurerm_log_analytics_workspace
 #import azurerm_log_analytics_solution
-#import 340_azurerm_image
-#import 350_azurerm_snapshot
-#import 360_azurerm_network_watcher
-#import 400_azurerm_cosmosdb_account
-#import 500_azurerm_servicebus_namespace
-#import 510_azurerm_servicebus_queue
-#import 540_azurerm_sql_server
-#import 541_azurerm_sql_database
-#import 550_azurerm_databricks_workspace
-#import 600_azurerm_app_service_plan
-#import 610_azurerm_app_service
-#import 620_azurerm_function_app
-#import 650_azurerm_monitor_autoscale_setting
+#import azurerm_image
+#import azurerm_snapshot
+#import azurerm_network_watcher
+#import azurerm_cosmosdb_account
+#import azurerm_servicebus_namespace
+#import azurerm_servicebus_queue
+#import azurerm_sql_server
+#import azurerm_sql_database
+#import azurerm_databricks_workspace
+#import azurerm_app_service_plan
+#import azurerm_app_service
+#import azurerm_function_app
+#import azurerm_monitor_autoscale_setting
 
 
 
@@ -283,7 +283,7 @@ azurerm_lb_rule.azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,
 cde=True
 azurerm_application_gateway.azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 200_azurerm_local_network_gateway
-# azurerm_local_network_gateway.azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_local_network_gateway.azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 210_azurerm_virtual_network_gateway
 # azurerm_virtual_network_gateway.azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 220_azurerm_virtual_network_gateway_connection
