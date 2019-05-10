@@ -29,8 +29,8 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
-            if cde:
-                print(json.dumps(azr[i]["properties"]["sku"], indent=4, separators=(',', ': ')))
+            #if cde:
+                #print(json.dumps(azr[i]["properties"]["sku"], indent=4, separators=(',', ': ')))
             
             rname=name.replace(".","-")
             prefix=tfp+"."+rg+'__'+rname
@@ -59,7 +59,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
             probes=azr[i]["properties"]["probes"]
             rrrs=azr[i]["properties"]["requestRoutingRules"]
             urlpm=azr[i]["properties"]["urlPathMaps"]
-            authcerts=azr[i]["properties"]["authenticationCertificates"]
+            
             sslcerts=azr[i]["properties"]["sslCertificates"]
             #wafc=azr[i]["properties"]["webApplicationFirewallConfiguration"]
 
@@ -324,8 +324,8 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
             jcount=len(sslcerts)
             if jcount > 0 :
                 for j in range(0,jcount):
-                    print "***********"
-                    print(json.dumps(sslcerts[j], indent=4, separators=(',', ': ')))
+                    #print "***********"
+                    #print(json.dumps(sslcerts[j], indent=4, separators=(',', ': ')))
 
                     try :
                         bname=azr[i]["properties"]["sslCertificates"][j]["name"]
@@ -377,9 +377,20 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
             except KeyError:
                 pass         
             
-            jcount=len(authcerts)
-            if cde:
-                print(json.dumps(authcerts, indent=4, separators=(',', ': ')))
+            #if cde:
+            #    print(json.dumps(authcerts, indent=4, separators=(',', ': ')))
+            try:
+                authcerts=azr[i]["properties"]["authenticationCertificates"]
+                jcount=len(authcerts)
+                for j in range(0,jcount):
+                    cname=azr[i]["properties"]["authenticationCertificates"][j]["name"]
+                    cdata=azr[i]["properties"]["authenticationCertificates"][j]["properties"]["data"]
+                    fr.write('authentication_certificate {\n')
+                    fr.write('\t name = "' + cname + '"\n')  
+                    fr.write('\t data = "' + '"\n') 
+                    fr.write('\t }\n')
+            except KeyError:
+                pass
 
   
     # tags block       
