@@ -58,7 +58,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             #vmosvhd=azr[i]["properties"]["storageProfile"]["osDisk"]["vhd"]["uri"]
             vmoscreoption=azr[i]["properties"]["storageProfile"]["osDisk"]["createOption"]
             #vmoswa=azr[i]["properties"]["storageProfile"]["osDisk"]["writeAcceleratorEnabled"]
-            vmossiz=azr[i]["properties"]["storageProfile"]["osDisk"]["diskSizeGB"]
+            #vmossiz=azr[i]["properties"]["storageProfile"]["osDisk"]["diskSizeGB"]
             #vmosmdid=azr[i]["properties"]["storageProfile"]["osDisk"]["managedDisk"]["id"]
             #vmosmdtyp=azr[i]["properties"]["storageProfile"]["osDisk"]["managedDisk"]["storageAccountType"]
             #
@@ -68,14 +68,14 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             #
             #vmimid=azr[i]["properties"]["storageProfile"]["imageReference"]["id"]
 
-            vmimoffer=azr[i]["properties"]["storageProfile"]["imageReference"]["offer"]
-            vmimpublisher=azr[i]["properties"]["storageProfile"]["imageReference"]["publisher"]
-            vmimsku=azr[i]["properties"]["storageProfile"]["imageReference"]["sku"]
-            vmimversion=azr[i]["properties"]["storageProfile"]["imageReference"]["version"]
+            #vmimoffer=azr[i]["properties"]["storageProfile"]["imageReference"]["offer"]
+            #vmimpublisher=azr[i]["properties"]["storageProfile"]["imageReference"]["publisher"]
+            #vmimsku=azr[i]["properties"]["storageProfile"]["imageReference"]["sku"]
+            #vmimversion=azr[i]["properties"]["storageProfile"]["imageReference"]["version"]
             #
-            vmadmin=azr[i]["properties"]["osProfile"]["adminUsername"]
+            #vmadmin=azr[i]["properties"]["osProfile"]["adminUsername"]
             #vmadminpw=azr[i]["properties"]["osProfile"]["Password"]
-            vmcn=azr[i]["properties"]["osProfile"]["computerName"]
+            #vmcn=azr[i]["properties"]["osProfile"]["computerName"]
 
             
             #vmsshkey=azr[i]["properties"]["osProfile"]["linuxConfiguration.ssh"]["publicKeys"][0]["keyData"]
@@ -122,30 +122,34 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             #
             try:
                 vmcn=azr[i]["properties"]["osProfile"]["computerName"]
+                vmadmin=azr[i]["properties"]["osProfile"]["adminUsername"]
                 fr.write('os_profile {\n')
                 fr.write('\tcomputer_name = "' +    vmcn + '"\n')
                 fr.write('\tadmin_username = "' +    vmadmin + '"\n')
-            except KeyError:
-                pass
-                     
-            
-            try : 
-                vmadminpw=azr[i]["properties"]["osProfile"]["Password"]
-                fr.write('\t admin_password = "' +  vmadminpw + '"\n')
-            except KeyError:
-                pass
+          
+                try : 
+                    vmadminpw=azr[i]["properties"]["osProfile"]["Password"]
+                    fr.write('\t admin_password = "' +  vmadminpw + '"\n')
+                except KeyError:
+                    pass
 
-            #  admin_password ?
-            fr.write('}\n')
+                #  admin_password ?
+                fr.write('}\n')
+            except KeyError:
+                pass 
         
             #
-            havesir=0
+           
             try:
                 vmimid=azr[i]["properties"]["storageProfile"]["imageReference"]["id"]  
                 print "do something with "+vmimid
             except KeyError:
                 try:
                     vmimpublisher=azr[i]["properties"]["storageProfile"]["imageReference"]["publisher"]
+                    vmimoffer=azr[i]["properties"]["storageProfile"]["imageReference"]["offer"]
+                    vmimpublisher=azr[i]["properties"]["storageProfile"]["imageReference"]["publisher"]
+                    vmimsku=azr[i]["properties"]["storageProfile"]["imageReference"]["sku"]
+                    vmimversion=azr[i]["properties"]["storageProfile"]["imageReference"]["version"]
                     fr.write('storage_image_reference {\n')
                     fr.write('\t publisher = "' +  vmimpublisher  + '"\n')
                     fr.write('\t offer = "' +   vmimoffer + '"\n')
@@ -183,18 +187,21 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 pass
             #
             if vmtype == "Windows" :
-                vmwvma=azr[i]["properties"]["osProfile"]["windowsConfiguration"]["provisionVMAgent"]
-                try :
-                    vmwau=azr[i]["properties"]["osProfile"]["windowsConfiguration"]["enableAutomaticUpdates"]
-                    fr.write('os_profile_windows_config {\n')
-                    fr.write('\t enable_automatic_upgrades = "' +  str(vmwau) + '"\n')
-                    fr.write('\t provision_vm_agent = "' +  str(vmwvma) + '"\n')
+                try:
+                    vmwvma=azr[i]["properties"]["osProfile"]["windowsConfiguration"]["provisionVMAgent"]
                     try :
-                        vmwtim=azr[i]["properties"]["osProfile"]["windowsConfiguration"]["timeZone"]
-                        fr.write('\t timezone =   "' + vmwtim + '"\n')
+                        vmwau=azr[i]["properties"]["osProfile"]["windowsConfiguration"]["enableAutomaticUpdates"]
+                        fr.write('os_profile_windows_config {\n')
+                        fr.write('\t enable_automatic_upgrades = "' +  str(vmwau) + '"\n')
+                        fr.write('\t provision_vm_agent = "' +  str(vmwvma) + '"\n')
+                        try :
+                            vmwtim=azr[i]["properties"]["osProfile"]["windowsConfiguration"]["timeZone"]
+                            fr.write('\t timezone =   "' + vmwtim + '"\n')
+                        except KeyError:
+                            pass
+                        fr.write('}\n')
                     except KeyError:
                         pass
-                    fr.write('}\n')
                 except KeyError:
                     pass
         
