@@ -1,15 +1,16 @@
 # azurerm_local_network_gateway
+import ast
 def azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_local_network_gateway"
     tcode="200-"
     azr=""
     if crf in tfp:
     # REST or cli
-        print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/localNetworkGateway"
-        params = {'api-version': '2017-03-30'}
+        print "REST Local NW Gateway"
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/localNetworkGateways"
+        params = {'api-version': '2019-04-01'}
         r = requests.get(url, headers=headers, params=params)
-        azr= r.json()["value"]
+        azr=r.json()["value"]
         if cde:
             print(json.dumps(azr, indent=4, separators=(',', ': ')))
 
@@ -44,18 +45,24 @@ def azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmes
 
   
 
-            gwaddr=azr[i]["proprties"]["gatewayIPAddress"]
-            addrpre=azr[i]["proprties"]["localNetworkAddressSpace"]["addressPrefixes"]
-            
+            gwaddr=azr[i]["properties"]["gatewayIpAddress"]
+
+            try:
+                addrpre=str(ast.literal_eval(json.dumps(azr[i]["properties"]["localNetworkAddressSpace"]["addressPrefixes"])))
+                addrpre=addrpre.replace("'",'"')
+                if "[]" not in addrpre:
+                    fr.write('\t address_space =  ' + addrpre +  '\n')
+            except KeyError:
+                pass
             
             fr.write('\t gateway_address = "' +  gwaddr + '"\n')
-            fr.write('\t address_space =  "' + addrpre +  '"\n')
+            
         
             try :
-                bgps=azr[i]["proprties"]["bgpSettings"]
-                asn=azr[i]["proprties"]["bgpSettings"]["asn"]
-                peera=azr[i]["proprties"]["bgpSettings"]["bgpPeeringAddress"]
-                peerw=azr[i]["proprties"]["bgpSettings"]["peerWeight"]
+                bgps=azr[i]["properties"]["bgpSettings"]
+                asn=azr[i]["properties"]["bgpSettings"]["asn"]
+                peera=azr[i]["properties"]["bgpSettings"]["bgpPeeringAddress"]
+                peerw=azr[i]["properties"]["bgpSettings"]["peerWeight"]
 
                 fr.write('\t bgp_settings {'  + '\n')
                 fr.write('\t\t asn = "' + asn + '"\n')
@@ -65,8 +72,6 @@ def azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmes
             except KeyError:
                 pass
         
-    
-
 
     # tags block       
             try:

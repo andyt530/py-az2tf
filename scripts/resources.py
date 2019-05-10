@@ -46,6 +46,7 @@ import azurerm_lb_backend_address_pool
 import azurerm_lb_probe
 import azurerm_lb_rule
 import azurerm_application_gateway
+cde=True
 import azurerm_local_network_gateway
 #import azurerm_virtual_network_gateway
 #import azurerm_virtual_network_gateway_connection
@@ -230,7 +231,8 @@ azurerm_resources.azurerm_resources(crf,cde,crg,headers,requests,sub,json,az2tfm
 # 001 Resource Group
 azurerm_resource_group.azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 002 management locks
-#azurerm_management_lock.azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess)
+
+azurerm_management_lock.azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess)
 # 015 user assigned identity
 azurerm_user_assigned_identity.azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess)
 #  020 Avail Sets
@@ -239,7 +241,7 @@ azurerm_availability_set.azurerm_availability_set(crf,cde,crg,headers,requests,s
 
 #  030 Route Table
 azurerm_route_table.azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-cde=False
+
 # 040 ASG
 azurerm_application_security_group.azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 #  050 NSG's

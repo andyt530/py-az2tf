@@ -1,11 +1,21 @@
 def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess):
     # management locks
     tfp="azurerm_management_lock"
+    print tfp
     azr=""
     if crf in tfp:
-        p = subprocess.Popen('az lock list -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        output, errors = p.communicate()
-        azr=json.loads(output)
+        # REST
+        print "REST VNets"
+
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Authorization/locks"
+        params = {'api-version': '2017-04-01'}
+        r = requests.get(url, headers=headers, params=params)
+        azr= r.json()["value"]
+        #if cde:
+        #    print(json.dumps(azr, indent=4, separators=(',', ': ')))
+        #p = subprocess.Popen('az lock list -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        #output, errors = p.communicate()
+        #azr=json.loads(output)
 
         if cde:
             print(json.dumps(azr, indent=4, separators=(',', ': ')))
@@ -22,9 +32,10 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,subp
             name=azr[j]["name"]
             #loc=azr[j]["location"]
             id=azr[j]["id"]
-            rg=azr[j]["resourceGroup"]
-            level=azr[j]["level"]
-            notes=azr[j]["notes"]
+            rg=id.split("/")[4].replace(".","-")
+           
+            level=azr[j]["properties"]["level"]
+            notes=azr[j]["properties"]["notes"]
             scope1=id.split("/Microsoft.Authorization")[0].rstrip("providers")
             scope=scope1.rstrip("/")
 
@@ -36,6 +47,10 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,subp
             
 
             rname=name.replace(".","-")
+            rname=rname.replace("[","-")
+            rname=rname.replace("]","-")
+            rname=rname.replace(" ","_")
+            print "rname="+rname
             prefix=tfp+"."+rg+'__'+rname
             #print prefix
             rfilename=prefix+".tf"
@@ -67,7 +82,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,subp
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
             
-            tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+            tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' "'+id+'"\n'
             tfim.write('echo "importing ' + str(j) + ' of ' + str(count-1) + '"' + '\n')
             tfim.write(tfcomm)  
 

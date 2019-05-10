@@ -13,10 +13,6 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
         if cde:
             print(json.dumps(azr, indent=4, separators=(',', ': ')))
 
-
-
-
-
     # subnet in vnet
         tfrmf="070-"+tfp+"-staterm.sh"
         tfimf="070-"+tfp+"-stateimp.sh"
