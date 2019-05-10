@@ -1,7 +1,6 @@
 def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess):
     # management locks
     tfp="azurerm_management_lock"
-    print tfp
     azr=""
     if crf in tfp:
         # REST
@@ -11,11 +10,6 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,subp
         params = {'api-version': '2017-04-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
-        #if cde:
-        #    print(json.dumps(azr, indent=4, separators=(',', ': ')))
-        #p = subprocess.Popen('az lock list -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        #output, errors = p.communicate()
-        #azr=json.loads(output)
 
         if cde:
             print(json.dumps(azr, indent=4, separators=(',', ': ')))
@@ -50,7 +44,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,subp
             rname=rname.replace("[","-")
             rname=rname.replace("]","-")
             rname=rname.replace(" ","_")
-            print "rname="+rname
+          
             prefix=tfp+"."+rg+'__'+rname
             #print prefix
             rfilename=prefix+".tf"
@@ -79,6 +73,10 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,subp
             
             fr.write('}\n') 
             fr.close()  # close .tf file
+
+            if cde:
+                with open(rfilename) as f: 
+                    print f.read()
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
             
