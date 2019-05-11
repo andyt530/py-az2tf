@@ -1,12 +1,14 @@
+import ast
 def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  110 storage account
     tfp="azurerm_storage_account"
     azr=""
+    cde=True
     if crf in tfp:
     # REST or cli
         print "REST Managed Disk"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Storage/storageAccounts"
-        params = {'api-version': '2017-10-01'}
+        params = {'api-version': '2019-04-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
         if cde:
@@ -59,8 +61,12 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t enable_https_traffic_only = "' +  sahttps + '"\n')
             fr.write('\t account_encryption_source = "' +  saencs + '"\n')
             
-            try:
-                byp=azr[i]["properties"]["networkAcls"]["bypass"]
+            try:        
+                byp=str(ast.literal_eval(json.dumps(azr[i]["properties"]["networkAcls"]["bypass"])))
+                byp=byp.replace("'",'"')
+                byp=byp.replace(", ",'", "')
+                
+                print "################## " + byp
 
                 ipr=azr[i]["properties"]["networkAcls"]["ipRules"]
                 vnr=azr[i]["properties"]["networkAcls"]["virtualNetworkRules"]

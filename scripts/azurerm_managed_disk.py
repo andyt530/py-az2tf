@@ -45,11 +45,18 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('\t os_type = "' +  ostyp + '"\n')
             except KeyError:
                 pass
+                
             try:
                 creopt=azr[i]["properties"]["creationData"]["createOption"]
                 fr.write('\t create_option = "' +  creopt + '"\n')
             except KeyError:
                 pass
+
+            try:
+                creopt=azr[i]["properties"]["creationData"]["sourceResourceId"]
+                fr.write('\t source_resource_id = "' +  creopt + '"\n')
+            except KeyError:
+                pass        
 
             try:
                 imid=azr[i]["properties"]["creationData"]["imageReference"]["id"]
