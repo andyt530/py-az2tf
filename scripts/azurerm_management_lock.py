@@ -27,6 +27,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             #loc=azr[j]["location"]
             id=azr[j]["id"]
             rg=id.split("/")[4].replace(".","-")
+            rgs=id.split("/")[4]
            
             level=azr[j]["properties"]["level"]
             notes=azr[j]["properties"]["notes"]

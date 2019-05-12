@@ -57,7 +57,7 @@ import azurerm_local_network_gateway
 #import azurerm_kubernetes_cluster
 #import azurerm_recovery_services_vault 
 import azurerm_virtual_machine
-#import azurerm_virtual_machine_scale_set -
+import azurerm_virtual_machine_scale_set
 #import azurerm_automation_account
 #import azurerm_log_analytics_workspace
 #import azurerm_log_analytics_solution
@@ -305,7 +305,7 @@ azurerm_local_network_gateway.azurerm_local_network_gateway(crf,cde,crg,headers,
 # 290_azurerm_virtual_machine
 azurerm_virtual_machine.azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 295_azurerm_virtual_machine_scale_set
-# azurerm_virtual_machine_scale_set.azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_virtual_machine_scale_set.azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 310_azurerm_automation_account
 cde=True
 # azurerm_automation_account.azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess)

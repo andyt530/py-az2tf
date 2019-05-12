@@ -25,6 +25,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-")
+            rgs=id.split("/")[4]
 
             if crg is not None:
                 if rg.lower() != crg.lower():
@@ -42,7 +43,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
             fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rg + '"\n')
+            fr.write('\t resource_group_name = "'+ rgs + '"\n')
         
             
             
@@ -57,31 +58,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             vmosdiskcache=azr[i]["properties"]["storageProfile"]["osDisk"]["caching"]
             #vmosvhd=azr[i]["properties"]["storageProfile"]["osDisk"]["vhd"]["uri"]
             vmoscreoption=azr[i]["properties"]["storageProfile"]["osDisk"]["createOption"]
-            #vmoswa=azr[i]["properties"]["storageProfile"]["osDisk"]["writeAcceleratorEnabled"]
-            #vmossiz=azr[i]["properties"]["storageProfile"]["osDisk"]["diskSizeGB"]
-            #vmosmdid=azr[i]["properties"]["storageProfile"]["osDisk"]["managedDisk"]["id"]
-            #vmosmdtyp=azr[i]["properties"]["storageProfile"]["osDisk"]["managedDisk"]["storageAccountType"]
-            #
-            
-            #osvhd=azr[i]["properties"]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys"][0]["keyData"]
-            
-            #
-            #vmimid=azr[i]["properties"]["storageProfile"]["imageReference"]["id"]
-
-            #vmimoffer=azr[i]["properties"]["storageProfile"]["imageReference"]["offer"]
-            #vmimpublisher=azr[i]["properties"]["storageProfile"]["imageReference"]["publisher"]
-            #vmimsku=azr[i]["properties"]["storageProfile"]["imageReference"]["sku"]
-            #vmimversion=azr[i]["properties"]["storageProfile"]["imageReference"]["version"]
-            #
-            #vmadmin=azr[i]["properties"]["osProfile"]["adminUsername"]
-            #vmadminpw=azr[i]["properties"]["osProfile"]["Password"]
-            #vmcn=azr[i]["properties"]["osProfile"]["computerName"]
-
-            
-            #vmsshkey=azr[i]["properties"]["osProfile"]["linuxConfiguration.ssh"]["publicKeys"][0]["keyData"]
-            #
-            #vmplname=azr[i]["plan"]["name"]  
-            #
+    
 
             try : 
                 avsid=azr[i]["properties"]["availabilitySet"]["id"].split("/")[8].replace(".","-").lower()

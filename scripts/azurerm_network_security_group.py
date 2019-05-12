@@ -27,9 +27,8 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
-        #    rg=azr[i]["resourceGroup"]
+            rgs=id.split("/")[4]
             rg=id.split("/")[4].replace(".","-")
-            #print rg
 
             if crg is not None:
                 if rg.lower() != crg.lower():
@@ -44,7 +43,7 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
             fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rg + '"\n')   
+            fr.write('\t resource_group_name = "'+ rgs + '"\n')   
             #
             # Security Rules
             #

@@ -24,8 +24,8 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
+            rgs=id.split("/")[4]
             rg=id.split("/")[4].replace(".","-")
-
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
@@ -39,7 +39,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
             fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rg + '"\n')
+            fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
             ipfor=azr[i]["properties"]["enableIPForwarding"]
             netacc=azr[i]["properties"]["enableAcceleratedNetworking"]
