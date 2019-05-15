@@ -7,7 +7,7 @@ def azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # REST or cli
         print "REST Managed Disk"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Automation/automationAccounts"
-        params = {'api-version': '2015-10-31'}
+        params = {'api-version': '2018-06-30'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
         if cde:
@@ -42,14 +42,17 @@ def azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rg + '"\n')
 
-            sku=azr[i]["properties"]["sku"]["name"]
-            if sku == "Free" :
+            try:
+                #sku=azr[i]["properties"]["sku"]["name"]
+                #if sku == "Free" :
+                #    sku="Basic"
                 sku="Basic"
-            sku="Basic"  # only one supported
-         
-            fr.write('\t sku {'  + '"\n')   
-            fr.write('\t\t name = "' + sku + '"\n')
-            fr.write('\t}\n')
+
+                fr.write('\t sku {\n')   
+                fr.write('\t\t name = "' + sku + '"\n')
+                fr.write('\t}\n')
+            except KeyError:
+                pass
 
     # tags block       
             try:
