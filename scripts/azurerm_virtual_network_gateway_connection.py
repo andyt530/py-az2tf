@@ -6,7 +6,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
     if crf in tfp:
     # REST or cli
         print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/disks"
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Networks/disks"
         params = {'api-version': '2017-03-30'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

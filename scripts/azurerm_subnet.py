@@ -1,3 +1,4 @@
+import ast
 def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  070 subnets
     tfp="azurerm_subnet"
@@ -10,8 +11,7 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
-        if cde:
-            print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
 
     # subnet in vnet
         tfrmf="070-"+tfp+"-staterm.sh"
@@ -36,6 +36,8 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 if crg is not None:
                     if rg.lower() != crg.lower():
                         continue  # back to for
+                if cde:
+                    print(json.dumps(subs[j], indent=4, separators=(',', ': ')))
                 
                 rname=name.replace(".","-")
                 prefix=tfp+"."+rg+'__'+rname
@@ -76,7 +78,31 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     rtrg=subs[j]["properties"]["routeTable"]["id"].split("/")[4].replace(".","-")
                     fr.write('\t route_table_id = "${azurerm_route_table.' + rtrg + '__' + rtbid +'.id}"' + '\n')
                 except KeyError:
-                    pass         
+                    pass   
+
+                try:
+                    delegn=subs[j]["properties"]["delegations"]
+                    kcount=len(delegn)
+                    for k in range(0, kcount):
+                        delegn=subs[j]["properties"]["delegations"][k]["name"]
+                        fr.write('delegation {'  + '\n')
+                        fr.write('\t name = "' + delegn + '"\n')
+                        try:
+                            sdn=subs[j]["properties"]["delegations"][k]["properties"]["serviceName"]
+                            sdact=str(ast.literal_eval(json.dumps(subs[j]["properties"]["delegations"][k]["properties"]["actions"])))                                 
+                            sdact=sdact.replace("'",'"')
+                            fr.write('\t service_delegation {'  + '\n')
+                            fr.write('\t name = "' + sdn + '"\n')
+                            #fr.write('\t actions = ' + sdact + '\n')
+                            fr.write('\t} \n')
+                        except KeyError:
+                            pass         
+
+                        fr.write('} \n')
+                    # end k loop
+                except KeyError:
+                    pass 
+
 
                 fr.write('}' + ' \n')
 

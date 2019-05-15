@@ -6,8 +6,8 @@ def azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
     # REST or cli
         print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/disks"
-        params = {'api-version': '2017-03-30'}
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.ContainerRegistry/registries"
+        params = {'api-version': '2017-10-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
         if cde:
@@ -41,10 +41,10 @@ def azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t name = "' + name + '"\n')
             fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rg + '"\n')
-            admin=azr[i]["adminUserEnabled"]
+            admin=azr[i]["properties"]["adminUserEnabled"]
             sku=azr[i]["sku"]["name"]
             
-            fr.write('\t admin_enabled = "' + admin + '"\n')
+            fr.write('\t admin_enabled = "' + str(admin) + '"\n')
             fr.write('\t sku = "' + sku + '"\n')
         
   

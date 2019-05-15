@@ -1,4 +1,5 @@
 # azurerm_virtual_network_gateway
+import ast
 def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_virtual_network_gateway"
     tcode="210-"
@@ -6,8 +7,8 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
     if crf in tfp:
     # REST or cli
         print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworkGateway"
-        params = {'api-version': '2017-03-30'}
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworkGateways"
+        params = {'api-version': '2019-04-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
         if cde:
@@ -42,41 +43,41 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
             fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rg + '"\n')
 
-            gtype=azr[i]["gatewayType"]
-            vpntype=azr[i]["vpnType"]
+            gtype=azr[i]["properties"]["gatewayType"]
+            vpntype=azr[i]["properties"]["vpnType"]
 
-            sku=azr[i]["sku"]["name"]
-            vadsp=azr[i]["properties"]["vpnClientConfiguration"]["vpnClientAddressPool"]["addressPrefixes"]
-            radsa=azr[i]["properties"]["vpnClientConfiguration"]["radiusServerAddress"]
-            radss=azr[i]["properties"]["vpnClientConfiguration"]["radiusServerSecret"]
-            vcp0=azr[i]["properties"]["vpnClientConfiguration"]["vpnClientProtocols"][0]
-            vcp=azr[i]["properties"]["vpnClientConfiguration"]["vpnClientProtocols"]
+            sku=azr[i]["properties"]["sku"]["name"]
                        
-            aa=azr[i]["activeActive"]
-            enbgp=azr[i]["enableBgp"]
+            aa=azr[i]["properties"]["activeActive"]
+            enbgp=azr[i]["properties"]["enableBgp"]
             
             fr.write('\t type = "' + gtype + '"\n')
             fr.write('\t vpn_type = "' +  vpntype + '"\n')
             fr.write('\t sku = "' +  sku + '"\n')
-            fr.write('\t active_active = "' + aa + '"\n')
-            fr.write('\t enable_bgp = "' + enbgp + '"\n')
+            fr.write('\t active_active = "' + str(aa) + '"\n')
+            fr.write('\t enable_bgp = "' + str(enbgp) + '"\n')
             
             try :
-                vadsp=azr[i]["properties"]["vpnClientConfiguration"]["vpnClientAddressPool"]["addressPrefixes"]
-                fr.write('\t vpn_client_configuration {'  + '"\n')
-                fr.write('\t\t address_space = "' + vadsp + '"\n')
-                if radsa == "null" :
+                vadsp=str(ast.literal_eval(json.dumps(azr[i]["properties"]["vpnClientConfiguration"]["vpnClientAddressPool"]["addressPrefixes"])))
+                vadsp=vadsp.replace("'",'"')
+                fr.write('\t vpn_client_configuration {\n')
+                fr.write('\t\t address_space = ' + vadsp + '\n')
+                try:
+                    radsa=azr[i]["properties"]["vpnClientConfiguration"]["radiusServerAddress"]
+                    radss=azr[i]["properties"]["vpnClientConfiguration"]["radiusServerSecret"]
+                    fr.write('\t\t radius_server_address = "' + radsa + '"\n')
+                    fr.write('\t\t radius_server_secret = "' + radss + '"\n')
+                except KeyError:  # = null
                     fr.write('\t\t root_certificate {'    + '"\n')
                     fr.write('\t\t\t name = ""\n')
                     fr.write('\t\t\t public_cert_data = ""\n')
                     fr.write('\t\t }'  + '"\n')
-            
-                if radsa == True:
-                    fr.write('\t\t radius_server_address = "' + radsa + '"\n')
-                    fr.write('\t\t radius_server_secret = "' + radss + '"\n')
+                    pass
             
                 try :
-                    fr.write('\t\t vpn_client_protocols = "' + vcp + '"\n')
+                    vcp=str(ast.literal_eval(json.dumps(azr[i]["properties"]["vpnClientConfiguration"]["vpnClientProtocols"])))
+                    vcp=vcp.replace("'",'"')
+                    fr.write('\t\t vpn_client_protocols = ' + vcp + '\n')
                 except KeyError:
                     pass            
                 
@@ -86,13 +87,13 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
         
             try :
                 bgps=azr[i]["properties"]["bgpSettings"]
-                fr.write('\t bgp_settings {'  + '\n')
+                fr.write('\t bgp_settings {\n')
                 asn=azr[i]["properties"]["bgpSettings"]["asn"]
                 peera=azr[i]["properties"]["bgpSettings"]["bgpPeeringAddress"]
                 peerw=azr[i]["properties"]["bgpSettings"]["peerWeight"]
-                fr.write('\t\t asn = "' +  asn + '"\n')
+                fr.write('\t\t asn = "' +  str(asn) + '"\n')
                 fr.write('\t\t peering_address = "' + peera + '"\n')
-                fr.write('\t\t peer_weight = "' + peerw + '"\n')
+                fr.write('\t\t peer_weight = "' + str(peerw) + '"\n')
                 fr.write('\t } \n')
             except KeyError:
                 pass
@@ -102,13 +103,13 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
             count= len(ipc)
             for j in range(0,count):
                 ipcname= ipc[j]["name"]
-                ipcpipa= ipc[j]["privateAllocationMethod"]
+                ipcpipa= ipc[j]["properties"]["privateIPAllocationMethod"]
                 
-                fr.write('\tip_configuration {'  + '"\n')
+                fr.write('\tip_configuration {\n')
                 fr.write('\t\t name = "' + ipcname + '"\n')
                 fr.write('\t\t private_ip_address_allocation = "' + ipcpipa + '"\n')
                 try :
-                    ipcpipid= ipc[j]["publicAddress"]["id"]
+                    ipcpipid= ipc[j]["properties"]["publicIPAddress"]["id"]
                     pipnam= ipcpipid.split("/")[8].replace(".","-")
                     piprg= ipcpipid.split("/")[4].replace(".","-")
                     fr.write('\t\t public_ip_address_id = "${azurerm_public_ip.' + piprg + '__' + pipnam + '.id}"\n')
@@ -116,10 +117,10 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
                     pass
 
                 try :
-                    ipcsubid= ipc[j]["subnet"]["id"]
+                    ipcsubid= ipc[j]["properties"]["subnet"]["id"]
                     subnam= ipcsubid.split("/")[10].replace(".","-")
                     subrg= ipcsubid.split("/")[4].replace(".","-")
-                    fr.write('\t\t subnet_id = "${azurerm_subnet.' + subrg + '__' + subnam + '.id}\n')
+                    fr.write('\t\t subnet_id = "${azurerm_subnet.' + subrg + '__' + subnam + '.id}"\n')
                 except KeyError:
                     pass
                 fr.write('\t}\n')

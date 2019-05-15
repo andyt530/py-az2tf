@@ -46,14 +46,15 @@ import azurerm_lb_backend_address_pool
 import azurerm_lb_probe
 import azurerm_lb_rule
 import azurerm_application_gateway
-cde=True
+
 import azurerm_local_network_gateway
-#import azurerm_virtual_network_gateway
+import azurerm_virtual_network_gateway
 #import azurerm_virtual_network_gateway_connection
 #import azurerm_express_route_circuit 
 #import azurerm_express_route_circuit_authorization
 #import azurerm_express_route_circuit_peering
-#import azurerm_container_registry
+cde=True
+import azurerm_container_registry
 #import azurerm_kubernetes_cluster
 #import azurerm_recovery_services_vault 
 import azurerm_virtual_machine
@@ -249,7 +250,9 @@ azurerm_network_security_group.azurerm_network_security_group(crf,cde,crg,header
 #  060 Virtual Networks
 azr=azurerm_virtual_network.azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 #  070 subnets
+
 azurerm_subnet.azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+
 #  080 vnet peering
 azurerm_virtual_network_peering.azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr)
 # 090 Key Vault - using cli
@@ -282,12 +285,13 @@ azurerm_lb_probe.azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmes
 # 190_azurerm_lb_rule
 azurerm_lb_rule.azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr)
 # 193_azurerm_application_gateway
-cde=True
 azurerm_application_gateway.azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 200_azurerm_local_network_gateway
 azurerm_local_network_gateway.azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 210_azurerm_virtual_network_gateway
-# azurerm_virtual_network_gateway.azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+cde=True
+azurerm_virtual_network_gateway.azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+
 # 220_azurerm_virtual_network_gateway_connection
 # azurerm_virtual_network_gateway_connection.azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 230_azurerm_express_route_circuit
@@ -297,7 +301,7 @@ azurerm_local_network_gateway.azurerm_local_network_gateway(crf,cde,crg,headers,
 # 250_azurerm_express_route_circuit_peering
 # azurerm_express_route_circuit_peering.azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 260_azurerm_container_registry
-# azurerm_container_registry.azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_container_registry.azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 270_azurerm_kubernetes_cluster
 # azurerm_kubernetes_cluster.azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 280_azurerm_recovery_services_vault
@@ -307,7 +311,7 @@ azurerm_virtual_machine.azurerm_virtual_machine(crf,cde,crg,headers,requests,sub
 # 295_azurerm_virtual_machine_scale_set
 azurerm_virtual_machine_scale_set.azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 310_azurerm_automation_account
-cde=True
+
 # azurerm_automation_account.azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 320_azurerm_log_analytics_workspace
 # azurerm_log_analytics_workspace.azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess)
