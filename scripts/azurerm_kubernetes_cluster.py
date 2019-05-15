@@ -54,14 +54,8 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             dnsp=azr[i]["properties"]["dnsPrefix"]
             rbac=azr[i]["properties"]["enableRBAC"]
             kv=azr[i]["properties"]["kubernetesVersion"]
-            clid=azr[i]["properties"]["servicePrincipalProfile"]["clientId"]
-
-           
             
-            pname=azr[i]["properties"]["agentPoolProfiles"][0]["name"]
-            vms=azr[i]["properties"]["agentPoolProfiles"][0]["vmSize"]
-            pcount=azr[i]["properties"]["agentPoolProfiles"][0]["count"]
-            ost=azr[i]["properties"]["agentPoolProfiles"][0]["osType"]
+
             #vnsrg=azr[i]["properties"]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[4]
             #vnsid=azr[i]["properties"]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[10]
            
@@ -137,25 +131,38 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             except KeyError:
                     pass
 
-            fr.write('\t agent_pool_profile {\n')
-            fr.write('\t\t name =  "' + pname + '"\n')
-            fr.write('\t\t vm_size =  "' + vms + '"\n')
-            fr.write('\t\t count =  "' + str(pcount) + '"\n')
-            fr.write('\t\t os_type =  "' + ost + '"\n')
+            try:
+                pname=azr[i]["properties"]["agentPoolProfiles"][0]["name"]
+                vms=azr[i]["properties"]["agentPoolProfiles"][0]["vmSize"]
+                pcount=azr[i]["properties"]["agentPoolProfiles"][0]["count"]
+                ost=azr[i]["properties"]["agentPoolProfiles"][0]["osType"]
 
-            try :
-                vnsrg=azr[i]["properties"]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[4]
-                vnsid=azr[i]["properties"]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[10]
-                fr.write('\t\t vnet_subnet_id = "${azurerm_subnet.' + vnsrg + '__' + vnsid + '.id}" \n')      
+
+                fr.write('\t agent_pool_profile {\n')
+                fr.write('\t\t name =  "' + pname + '"\n')
+                fr.write('\t\t vm_size =  "' + vms + '"\n')
+                fr.write('\t\t count =  "' + str(pcount) + '"\n')
+                fr.write('\t\t os_type =  "' + ost + '"\n')
+
+                try :
+                    vnsrg=azr[i]["properties"]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[4]
+                    vnsid=azr[i]["properties"]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[10]
+                    fr.write('\t\t vnet_subnet_id = "${azurerm_subnet.' + vnsrg + '__' + vnsid + '.id}" \n')      
+                except KeyError:
+                    pass
+
+                fr.write('\t }\n')
             except KeyError:
                 pass
 
-            fr.write('\t }\n')
-            
-            fr.write('\t service_principal { \n')
-            fr.write('\t\t client_id =  "' +  clid + '"\n')
-            #fr.write('\t\t client_secret =  ""\n')
-            fr.write('\t }\n')
+            try:
+                clid=azr[i]["properties"]["servicePrincipalProfile"]["clientId"]
+                fr.write('\t service_principal { \n')
+                fr.write('\t\t client_id =  "' +  clid + '"\n')
+                fr.write('\t\t client_secret =  "ChangeME"\n')
+                fr.write('\t }\n')
+            except KeyError:
+                pass
 
 
     # tags block       
