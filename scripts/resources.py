@@ -60,7 +60,7 @@ import azurerm_recovery_services_vault
 import azurerm_virtual_machine
 import azurerm_virtual_machine_scale_set
 import azurerm_automation_account
-#import azurerm_log_analytics_workspace
+import azurerm_log_analytics_workspace
 #import azurerm_log_analytics_solution
 #import azurerm_image
 #import azurerm_snapshot
@@ -316,7 +316,7 @@ azurerm_virtual_machine_scale_set.azurerm_virtual_machine_scale_set(crf,cde,crg,
 cde=True
 azurerm_automation_account.azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 320_azurerm_log_analytics_workspace
-# azurerm_log_analytics_workspace.azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_log_analytics_workspace.azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 330_azurerm_log_analytics_solution
 # azurerm_log_analytics_solution.azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 340_azurerm_image
