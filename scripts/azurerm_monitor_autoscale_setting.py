@@ -51,11 +51,11 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
             profs=azr[i]["profiles"]
             nots=azr[i]["notifications"]
             trrg=azr[i]["targetResourceUri"].split("/")[4].replace(".","-")
-            trty=azr[i]["targetResourceUri"] | cut -d'/' -f7].replace(".","-")
+            trty=azr[i]["targetResourceUri"].split("/")[6].replace(".","-")
             trid=azr[i]["targetResourceUri"].split("/")[8].replace(".","-")
             # assume trty = Microsoft.Compute
             tftyp="azurerm_virtual_machine_scale_set"
-            if [ trty = "Microsoft-Web" :
+            if  trty == "Microsoft-Web" :
                 tftyp="azurerm_app_service_plan"
         
             print "trty  tftyp"
@@ -64,7 +64,7 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
             #
     # basic settings 
   
-            fr.write('enabled = "' +  en + '"\n')
+            fr.write('enabled = "' + en + '"\n')
    
             if trrg" try :
             fr.write('target_resource_id = "${. + '__' + .id}'"' tftyp trrg trid + '"\n')      
@@ -84,16 +84,16 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
                     fr.write('\tname =  "pn" + '"\n')
     # capacity
                     fr.write('\tcapacity {\n')
-                    fr.write('\t\tdefault = "' +  cdef + '"\n')
-                    fr.write('\t\tminimum = "' +  cmin + '"\n')
-                    fr.write('\t\tmaximum = "' +  cmax + '"\n')
+                    fr.write('\t\tdefault = "' + cdef + '"\n')
+                    fr.write('\t\tminimum = "' + cmin + '"\n')
+                    fr.write('\t\tmaximum = "' + cmax + '"\n')
                     fr.write('\t}\n')
     #xed date
 
-                    fd=azr[i]["profiles[j]["fixedDate.end"
+                    fd=azr[i]["profiles[j]["fixedDate.end"]
                     fdend=azr[i]["profiles[j]["fixedDate.end"]
                     fdstart=azr[i]["profiles[j]["fixedDate.start"]
-                    fdtz=azr[i]["profiles[j]["fixedDate.timeZone"
+                    fdtz=azr[i]["profiles[j]["fixedDate.timeZone"]
                     fdend2= fdend | cut -f1 -d'+'
                     fdstart2= fdstart | cut -f1 -d'+'
                     
@@ -105,13 +105,13 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
                     fr.write('\t}\n')
                 
     # recurance
-                    rec=azr[i]["profiles[j]["recurrence"
+                    rec=azr[i]["profiles[j]["recurrence"]
                     if rec" try :
-                    rfr=azr[i]["profiles[j]["recurrence.frequency"| tr -d '"'
-                    rsd=azr[i]["profiles[j]["recurrence.schedule.days"
-                    rsh=azr[i]["profiles[j]["recurrence.schedule.hours"
-                    rsm=azr[i]["profiles[j]["recurrence.schedule.minutes"
-                    rst=azr[i]["profiles[j]["recurrence.schedule.timeZone"| tr -d '"'
+                    rfr=azr[i]["profiles[j]["recurrence.frequency"]| tr -d '"'
+                    rsd=azr[i]["profiles[j]["recurrence.schedule.days"]
+                    rsh=azr[i]["profiles[j]["recurrence.schedule.hours"]
+                    rsm=azr[i]["profiles[j]["recurrence.schedule.minutes"]
+                    rst=azr[i]["profiles[j]["recurrence.schedule.timeZone"]| tr -d '"'
                     fr.write('\trecurrence {\n')
                     fr.write('\t\ttimezone = "' +  rst + '"\n')
                     fr.write('\t\tdays =  "rsd" + '"\n')
@@ -121,7 +121,7 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
                 
     # rules
 
-                    rules=azr[i]["profiles[j]["rules"
+                    rules=azr[i]["profiles"][j]["rules"]
 
                     kcount= rules | | len(
                     if kcount > 0" :
