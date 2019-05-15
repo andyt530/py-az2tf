@@ -6,8 +6,8 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
     # REST or cli
         print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/disks"
-        params = {'api-version': '2017-03-30'}
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.ContainerService/managedClusters"
+        params = {'api-version': '2019-04-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
         if cde:
@@ -26,10 +26,13 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-")
+            rgs=id.split("/")[4]
 
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
+            if cde:
+                print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
             
             rname=name.replace(".","-")
             prefix=tfp+"."+rg+'__'+rname
@@ -40,27 +43,28 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
             fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rg + '"\n')
+            fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
     ###############
     # specific code start
     ###############
 
-            admin=azr[i]["adminUserEnabled"]
-            dnsp=azr[i]["dnsPrefix"]
-            rbac=azr[i]["enableRbac"]
-            kv=azr[i]["kubernetesVersion"]
-            clid=azr[i]["servicePrincipalProfile"]["clientId"]
-            au=azr[i]["linuxProfile"]["adminUsername"]
-            lp=azr[i]["linuxProfile"]
-            sshk=azr[i]["linuxProfile"]["ssh"]["publicKeys"][0]["keyData"]
-            pname=azr[i]["agentPoolProfiles"][0]["name"]
-            vms=azr[i]["agentPoolProfiles"][0]["vmSize"]
-            pcount=azr[i]["agentPoolProfiles"][0]["count"]
-            ost=azr[i]["agentPoolProfiles"][0]["osType"]
-            vnsrg=azr[i]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[4]
-            vnsid=azr[i]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[10]
-            np=azr[i]["networkProfile"]
+            #admin=azr[i]["adminUserEnabled"]
+            
+            dnsp=azr[i]["properties"]["dnsPrefix"]
+            rbac=azr[i]["properties"]["enableRBAC"]
+            kv=azr[i]["properties"]["kubernetesVersion"]
+            clid=azr[i]["properties"]["servicePrincipalProfile"]["clientId"]
+
+           
+            
+            pname=azr[i]["properties"]["agentPoolProfiles"][0]["name"]
+            vms=azr[i]["properties"]["agentPoolProfiles"][0]["vmSize"]
+            pcount=azr[i]["properties"]["agentPoolProfiles"][0]["count"]
+            ost=azr[i]["properties"]["agentPoolProfiles"][0]["osType"]
+            #vnsrg=azr[i]["properties"]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[4]
+            #vnsid=azr[i]["properties"]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[10]
+           
             
 
             fr.write('\t dns_prefix = "' +  dnsp + '"\n')
@@ -73,10 +77,13 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         
             
             try :
-                lp=azr[i]["linuxProfile"]
-                fr.write('\t linux_profile {' + '"\n')
+                lp=azr[i]["properties"]["linuxProfile"]
+                au=azr[i]["properties"]["linuxProfile"]["adminUsername"]
+                sshk=azr[i]["properties"]["linuxProfile"]["ssh"]["publicKeys"][0]["keyData"]
+
+                fr.write('\t linux_profile {\n')
                 fr.write('\t\t admin_username =  "' +  au + '"\n')
-                fr.write('\t\t ssh_key {' + '"\n')
+                fr.write('\t\t ssh_key {\n')
                 fr.write('\t\t\t key_data =    "' + sshk + '"\n')
                 fr.write('\t\t }\n')
                 fr.write('\t }\n')
@@ -92,35 +99,35 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         
             
             try :
-                np=azr[i]["networkProfile"]
-                netp=azr[i]["networkProfile.networkPlugin"]
-                srvcidr=azr[i]["networkProfile.serviceCidr"]
-                dnssrvip=azr[i]["networkProfile.dnsService"]
-                dbrcidr=azr[i]["networkProfile.dockerBridgeCidr"]
-                podcidr=azr[i]["networkProfile.podCidr"]
+                np=azr[i]["properties"]["networkProfile"]
+                netp=azr[i]["properties"]["networkProfile"]["networkPlugin"]
+                srvcidr=azr[i]["properties"]["networkProfile"]["serviceCidr"]
+                dnssrvip=azr[i]["properties"]["networkProfile"]["dnsService"]
+                dbrcidr=azr[i]["properties"]["networkProfile"]["dockerBridgeCidr"]
+                podcidr=azr[i]["properties"]["networkProfile"]["podCidr"]
 
-                fr.write('\t network_profile {' + '"\n')
+                fr.write('\t network_profile {\n')
                 fr.write('\t\t network_plugin =  "' +  netp + '"\n')
                 try :
-                    srvcidr=azr[i]["networkProfile.serviceCidr"]
+                    srvcidr=azr[i]["properties"]["networkProfile"]["serviceCidr"]
                     fr.write('\t\t service_cidr =  "' +  srvcidr + '"\n')
                 except KeyError:
                     pass
             
                 try :
-                    dnssrvip=azr[i]["networkProfile.dnsService"]
+                    dnssrvip=azr[i]["properties"]["networkProfile"]["dnsService"]
                     fr.write('\t\t dns_service_ip =  "' +  dnssrvip + '"\n')
                 except KeyError:
                     pass
             
                 try :
-                    dbrcidr=azr[i]["networkProfile.dockerBridgeCidr"]
+                    dbrcidr=azr[i]["properties"]["networkProfile"]["dockerBridgeCidr"]
                     fr.write('\t\t docker_bridge_cidr =  "' +  dbrcidr + '"\n')
                 except KeyError:
                     pass
             
                 try :
-                    podcidr=azr[i]["networkProfile.podCidr"]
+                    podcidr=azr[i]["properties"]["networkProfile"]["podCidr"]
                     fr.write('\t\t pod_cidr =  "' +  podcidr + '"\n')
                 except KeyError:
                     pass
@@ -130,15 +137,15 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             except KeyError:
                     pass
 
-            fr.write('\t agent_pool_profile {' + '\n')
+            fr.write('\t agent_pool_profile {\n')
             fr.write('\t\t name =  "' + pname + '"\n')
             fr.write('\t\t vm_size =  "' + vms + '"\n')
-            fr.write('\t\t count =  "' + pcount + '"\n')
+            fr.write('\t\t count =  "' + str(pcount) + '"\n')
             fr.write('\t\t os_type =  "' + ost + '"\n')
 
             try :
-                vnsrg=azr[i]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[4]
-                vnsid=azr[i]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[10]
+                vnsrg=azr[i]["properties"]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[4]
+                vnsid=azr[i]["properties"]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[10]
                 fr.write('\t\t vnet_subnet_id = "${azurerm_subnet.' + vnsrg + '__' + vnsid + '.id}" \n')      
             except KeyError:
                 pass
@@ -147,7 +154,7 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             
             fr.write('\t service_principal { \n')
             fr.write('\t\t client_id =  "' +  clid + '"\n')
-            fr.write('\t\t client_secret =  ""\n')
+            #fr.write('\t\t client_secret =  ""\n')
             fr.write('\t }\n')
 
 
