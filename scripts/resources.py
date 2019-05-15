@@ -143,6 +143,7 @@ def printf(format, *values):
 #url = 'https://management.azure.com/' + 'subscriptions'
 #r = requests.get(url, headers=headers, params=params)
 #print(json.dumps(r.json(), indent=4, separators=(',', ': ')))
+
 print "Get Access Token from CLI"
 p = subprocess.Popen('az account get-access-token -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 c=0
@@ -300,6 +301,7 @@ azurerm_virtual_network_gateway.azurerm_virtual_network_gateway(crf,cde,crg,head
 # azurerm_express_route_circuit_authorization.azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 250_azurerm_express_route_circuit_peering
 # azurerm_express_route_circuit_peering.azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+
 # 260_azurerm_container_registry
 azurerm_container_registry.azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 cde=True
