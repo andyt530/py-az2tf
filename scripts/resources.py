@@ -56,7 +56,7 @@ import azurerm_virtual_network_gateway
 cde=True
 import azurerm_container_registry
 import azurerm_kubernetes_cluster
-#import azurerm_recovery_services_vault 
+import azurerm_recovery_services_vault 
 import azurerm_virtual_machine
 import azurerm_virtual_machine_scale_set
 import azurerm_automation_account
@@ -290,7 +290,6 @@ azurerm_application_gateway.azurerm_application_gateway(crf,cde,crg,headers,requ
 # 200_azurerm_local_network_gateway
 azurerm_local_network_gateway.azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 210_azurerm_virtual_network_gateway
-
 azurerm_virtual_network_gateway.azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 
 # 220_azurerm_virtual_network_gateway_connection
@@ -308,7 +307,7 @@ cde=True
 # 270_azurerm_kubernetes_cluster
 azurerm_kubernetes_cluster.azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 280_azurerm_recovery_services_vault
-# azurerm_recovery_services_vault.azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_recovery_services_vault.azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 290_azurerm_virtual_machine
 azurerm_virtual_machine.azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 295_azurerm_virtual_machine_scale_set

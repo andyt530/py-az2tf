@@ -6,8 +6,8 @@ def azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfm
     if crf in tfp:
     # REST or cli
         print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/disks"
-        params = {'api-version': '2017-03-30'}
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.RecoveryServices/vaults"
+        params = {'api-version': '2018-07-10'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
         if cde:
