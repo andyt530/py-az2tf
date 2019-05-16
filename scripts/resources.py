@@ -183,9 +183,13 @@ if sub not in ssubs:
     print "Could not find subscription with ID (Test 1) " + sub + " Exiting ..." 
     exit("ErrorInvalidSubscriptionID-1")
 
+
+print(json.dumps(subs, indent=4, separators=(',', ': ')))
+
 FoundSub=False
-count=len(sub)
+count=len(subs)
 print count
+
 for i in range(0, count):
     id=str(subs[i]["subscriptionId"])
     #print id + " " + sub
@@ -303,7 +307,7 @@ azurerm_virtual_network_gateway.azurerm_virtual_network_gateway(crf,cde,crg,head
 
 # 260_azurerm_container_registry
 azurerm_container_registry.azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-cde=True
+
 # 270_azurerm_kubernetes_cluster
 azurerm_kubernetes_cluster.azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 280_azurerm_recovery_services_vault

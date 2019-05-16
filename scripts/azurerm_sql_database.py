@@ -45,8 +45,7 @@ def azurerm_sql_database(crf, cde, crg, headers, requests, sub, json, az2tfmess)
 # azr=az sql db list --server sname -g srg -o json
 
             col=azr[i]["properties"]["collation"]
-            ed=col
-            #ted=azr[i][["properties"]["edition"]
+            ed=azr[i]["properties"]["edition"]
             rso=azr[i]["properties"]["requestedServiceObjectiveName"]
 
             if ed != "System":
@@ -55,7 +54,7 @@ def azurerm_sql_database(crf, cde, crg, headers, requests, sub, json, az2tfmess)
                 fr.write('\t edition= "' + ed + '"\n')
                 fr.write('\t requested_service_objective_name= "' + rso + '"\n')
                 try:
-                    cm = azr[i]["createMode"]
+                    cm = azr[i]["properties"]["createMode"]
                     fr.write('\t create_mode= "' + cm + '"\n')
                 except KeyError:
                     pass

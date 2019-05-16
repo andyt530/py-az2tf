@@ -70,7 +70,7 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
                 fr.write('\t workspace_name = "' +  workn + '"\n')
                 fr.write('\t workspace_resource_id = "' +  workid + '"\n')
                 
-                fr.write('\t plan {'  + '"\n')
+                fr.write('\t plan {\n')
                 fr.write('\t\t publisher =  "'+pub + '"\n')
                 fr.write('\t\t product = "' + +prod + '"\n')
                 fr.write('\t }'  + '"\n')

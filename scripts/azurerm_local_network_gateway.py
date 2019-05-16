@@ -65,7 +65,7 @@ def azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmes
                 peera=azr[i]["properties"]["bgpSettings"]["bgpPeeringAddress"]
                 peerw=azr[i]["properties"]["bgpSettings"]["peerWeight"]
 
-                fr.write('\t bgp_settings {'  + '\n')
+                fr.write('\t bgp_settings {\n')
                 fr.write('\t\t asn = "' + asn + '"\n')
                 fr.write('\t\t bgp_peering_address = "' + peera + '"\n')
                 fr.write('\t\t peer_weight = "' + peerw + '"\n')

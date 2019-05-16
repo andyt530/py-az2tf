@@ -57,14 +57,14 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 rname= name.replace(".","-")
                 rg= azr2[j]["resourceGroup"].replace(".","-")
                 id= azr2[j]["id"]
-                ep= azr2[j]["enablePartitioning"]
-                adoni= azr2[j]["autoDeleteOnIdle"]
+                ep= azr2[j]["properties"]["enablePartitioning"]
+                adoni= azr2[j]["properties"]["autoDeleteOnIdle"]
                 
-                ee= azr2[j]["enableExpress"]
-                dd= azr2[j]["requiresDuplicateDetection"]
-                rs= azr2[j]["requiresSession"]
-                mx= azr2[j]["maxSizeInMegabytes"]
-                dl= azr2[j]["deadLetteringOnMessageExpiration"]
+                ee= azr2[j]["properties"]["enableExpress"]
+                dd= azr2[j]["properties"]["requiresDuplicateDetection"]
+                rs= azr2[j]["properties"]["requiresSession"]
+                mx= azr2[j] ["properties"]["maxSizeInMegabytes"]
+                dl= azr2[j]["properties"]["deadLetteringOnMessageExpiration"]
                 
                 fr.write('\t namespace_name = "' +  nname + '"\n')
                 fr.write('\t enable_partitioning =  "'+ep + '"\n')

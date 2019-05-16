@@ -975,7 +975,7 @@ if crf in tfp:
         scount=len(srules)
         for j in range(0, scount):  
             #print "j=" + str(j)            
-            fr.write('\t security_rule {'  + '\n')
+            fr.write('\t security_rule {\n')
             srname=srules[j]["name"]  
             #print "Security Rule " + srname                   
             fr.write('\t\t name = "' +  srname + '"\n')
@@ -1161,7 +1161,7 @@ if crf in tfp:
             snname=subs[j]["name"]
             snaddr=subs[j]["properties"]["addressPrefix"]
 
-            fr.write('\tsubnet {'  + '\n')
+            fr.write('\tsubnet {\n')
             fr.write('\t\t name = "'+ snname + '"\n')
             fr.write('\t\t address_prefix = "' + snaddr + '"\n')
             try:

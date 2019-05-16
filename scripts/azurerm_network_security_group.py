@@ -53,7 +53,7 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
             scount=len(srules)
             for j in range(0, scount):  
                 #print "j=" + str(j)            
-                fr.write('\t security_rule {'  + '\n')
+                fr.write('\t security_rule {\n')
                 srname=srules[j]["name"]  
                 #print "Security Rule " + srname                   
                 fr.write('\t\t name = "' +  srname + '"\n')

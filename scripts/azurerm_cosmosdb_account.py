@@ -53,12 +53,12 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             caps=azr[i]["properties"]["capabilities"][0]["name"] 
             geol=azr[i]["properties"]["failoverPolicies"]     
                 
-            af=azr[i]["enableAutomaticFailover"]      
+            af=azr[i]["properties"]["enableAutomaticFailover"]      
                 
 
             fr.write('\t kind = "' +  kind + '"\n')
             fr.write('\t offer_type = "' +  offer + '"\n')
-            fr.write('\t consistency_policy {'  + '"\n')
+            fr.write('\t consistency_policy {\n')
             fr.write('\t\t  consistency_level = "' +  cp + '"\n')
             fr.write('\t\t  max_interval_in_seconds = "' +  mis + '"\n')
             fr.write('\t\t  max_staleness_prefix = "' +  msp + '"\n')
@@ -68,7 +68,7 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
             # code out terraform error
             if caps == "EnableTable" or caps == "EnableGremlin" or caps == "EnableCassandra":
-                fr.write('\t capabilities {'  + '"\n')
+                fr.write('\t capabilities {\n')
                 fr.write('\t\t name = "' +  caps + '"\n')        
                 fr.write('\t }' + caps + '"\n')
             
@@ -76,8 +76,8 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 
             icount= len(geol)
             for j in range(0,icount):
-                    floc=azr[i]["failoverPolicies"][j]["locationName"]
-                    fop=azr[i]["failoverPolicies"][j]["failoverPriority"]
+                    floc=azr[i]["properties"]["failoverPolicies"][j]["locationName"]
+                    fop=azr[i]["properties"]["failoverPolicies"][j]["failoverPriority"]
                     fr.write('\t geo_location {\n')
                     fr.write('\t location = "'+floc + '"\n')
                     fr.write('\t failover_priority  = "' + fop + '"\n')

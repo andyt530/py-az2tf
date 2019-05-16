@@ -195,7 +195,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     try:
                         vmsshpath=azr[i]["properties"]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys"][0]["path"]
                         vmsshkey=azr[i]["properties"]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys"][0]["keyData"]
-                        fr.write('\tssh_keys {'  + '\n')
+                        fr.write('\tssh_keys {\n')
                         fr.write('\t\tpath = "' +   vmsshpath + '"\n')
                         fr.write('\t\tkey_data = "' +   vmsshkey + '"\n')  
                         fr.write('\t}\n')
@@ -267,7 +267,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     ddlun= datadisks[j]["lun"]
                     ddvhd= datadisks[j]["vhd.uri"]
                     ddmd= datadisks[j]["managedDisk"]
-                    fr.write('storage_data_disk {'  + '"\n')
+                    fr.write('storage_data_disk {\n')
                     fr.write('\t name = "' +  ddname + '"\n')
                     fr.write('\t create_option = "' +  ddcreopt + '"\n')
                     fr.write('\t lun = "' +  ddlun + '"\n')

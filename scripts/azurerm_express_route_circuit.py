@@ -59,7 +59,7 @@ def azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmes
             fr.write('\t\t family = "' +  family + '"\n')
             fr.write('\t }\n')
 
-            fr.write('\t allow_classic_operations = "' +   aco + '"\n')
+            fr.write('\t allow_classic_operations = "' +  str(aco) + '"\n')
 
 
     # tags block       

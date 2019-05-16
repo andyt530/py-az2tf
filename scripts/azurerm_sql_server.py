@@ -42,14 +42,14 @@ def azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
-            ver=azr[i]["version"]
-            al=azr[i]["administratorLogin"]
+            ver=azr[i]["properties"]["version"]
+            al=azr[i]["properties"]["administratorLogin"]
 
             fr.write('\t version = "' +  ver + '"\n')
             fr.write('\t administrator_login= "' +  al + '"\n')
             
             try :
-                ap=azr[i]["administratorLoginPassword"]
+                ap=azr[i]["properties"]["administratorLoginPassword"]
                 fr.write('\t administrator_login_password= "' +  ap + '"\n')
             except KeyError:
                 fr.write('\t administrator_login_password= ""\n')

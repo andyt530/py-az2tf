@@ -42,17 +42,6 @@ def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
-    ###############
-    # specific code start
-    ###############
-
-            osdisk=azr[i]["properties"]["storageProfile"]["osDisk"]
-            ostype=azr[i]["properties"]["storageProfile"]["osDisk"]["osType"]
-            osstate=azr[i]["properties"]["storageProfile"]["osDisk"]["osState"]
-            oscache=azr[i]["properties"]["storageProfile"]["osDisk"]["caching"]
-            blob_uri=azr[i]["properties"]["storageProfile"]["osDisk"]["blobUri"]
-
-
 # hardwire this - as source vm may of been deleted after image created
             try:
                 svm=azr[i]["properties"]["sourceVirtualMachine"]["id"]
@@ -64,7 +53,7 @@ def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     osstate=azr[i]["properties"]["storageProfile"]["osDisk"]["osState"]
                     oscache=azr[i]["properties"]["storageProfile"]["osDisk"]["caching"]
 
-                    fr.write('\t os_disk {'  + '"\n')
+                    fr.write('\t os_disk {\n')
                     fr.write('\t os_type = "' +  ostype + '"\n')
                     fr.write('\t os_state = "' +  osstate + '"\n')
                     fr.write('\t caching = "' +  oscache + '"\n')
@@ -78,11 +67,6 @@ def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     pass
 
                 pass
-     
-       
-
-        #
-
 
     # tags block       
             try:

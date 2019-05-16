@@ -68,7 +68,7 @@ def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 snname=subs[j]["name"]
                 snaddr=subs[j]["properties"]["addressPrefix"]
 
-                fr.write('\tsubnet {'  + '\n')
+                fr.write('\tsubnet {\n')
                 fr.write('\t\t name = "'+ snname + '"\n')
                 fr.write('\t\t address_prefix = "' + snaddr + '"\n')
                 try:

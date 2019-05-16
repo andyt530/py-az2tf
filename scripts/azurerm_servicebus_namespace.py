@@ -42,13 +42,8 @@ def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess
             fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
-    ###############
-    # specific code start
-    ###############
-
             sku=azr[i]["sku"]["tier"]
-            cap=azr[i]["sku"]["capacity"]
-        
+            cap=azr[i]["sku"]["capacity"]        
             fr.write('\t sku = "' +  sku + '"\n')
             try :
                 cap=azr[i]["sku"]["capacity"]

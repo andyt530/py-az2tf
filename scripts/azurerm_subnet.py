@@ -85,13 +85,13 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     kcount=len(delegn)
                     for k in range(0, kcount):
                         delegn=subs[j]["properties"]["delegations"][k]["name"]
-                        fr.write('delegation {'  + '\n')
+                        fr.write('delegation {\n')
                         fr.write('\t name = "' + delegn + '"\n')
                         try:
                             sdn=subs[j]["properties"]["delegations"][k]["properties"]["serviceName"]
                             sdact=str(ast.literal_eval(json.dumps(subs[j]["properties"]["delegations"][k]["properties"]["actions"])))                                 
                             sdact=sdact.replace("'",'"')
-                            fr.write('\t service_delegation {'  + '\n')
+                            fr.write('\t service_delegation {\n')
                             fr.write('\t name = "' + sdn + '"\n')
                             #fr.write('\t actions = ' + sdact + '\n')
                             fr.write('\t} \n')
