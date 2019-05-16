@@ -6,8 +6,8 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
     if crf in tfp:
     # REST or cli
         print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/disks"
-        params = {'api-version': '2017-03-30'}
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/microsoft.insights/autoscalesettings"
+        params = {'api-version': '2015-04-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
         if cde:
