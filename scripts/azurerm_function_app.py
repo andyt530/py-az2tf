@@ -53,55 +53,46 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # ********
             #appset=az functionapp config appsettings list -n name -g rg -o json
 
-
             # case issues - so use resource id directly
             # fr.write('\t app_service_plan_id = "${azurerm_app_service_plan. + '__' + .id}'"' prg pnam + '"\n')
-            fr.write('\t app_service_plan_id = "' +  appplid + '"\n')
+            fr.write('\t app_service_plan_id = "' + appplid + '"\n')
     # dummy entry
 
             fr.write('\t https_only = "' + https + '"\n')
             blog=False
             strcon=""
-
+            print "fix appset"
+            appset=""
             jcount=len(appset)
-            if jcount > 0 :
-                for j in range(0,jcount):
+            for j in range(0,jcount):
 
                     aname= appset[j]["name"]
                     aval= appset[j]["value"]
-
-                    
-                    
+            
                     if "AzureWebJobsStorage" in aname: 
                         strcon= aval
                     
-                    
                     if "FUNCTIONS_EXTENSION_VERSION" in aname:
-                        fr.write('\t version =    "' + aval + '"\n')
+                        fr.write('\t version = "' + aval + '"\n')
                     
                      
                     if aname=="null":
-                            aname=aname
+                        aname=aname
                     
-                    else aname == "WEBSITE_CONTENTSHARE" or aname == "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING":
-                    
-                    else  aname=-="AzureWebJobsDashboard":
-            
-                    else aval > 3 :
+                    if aname == "WEBSITE_CONTENTSHARE" or aname == "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING":
+                        aname=aname
+                    if aname=="AzureWebJobsDashboard":
+                        name=aname
+                    if len(aval) > 3 :
                         blog=True
-                
-                    else:         
-                        fr.write('\t app_settings { \n')
-                        fr.write('\t = aname "aval" + '"\n')
-                        fr.write('\t }'  + '\n')
+                             
+                    fr.write('\t app_settings { \n')
+                    fr.write('\t' + aname + '="'+ aval + '"\n')
+                    fr.write('\t }'  + '\n')
                
-
-                
-        
-
-            if len(strcon} >= 3 :
+            if len(strcon) >= 3 :
                 fr.write('\t storage_connection_string = "' + strcon + '" \n')
-            else
+            else:
                 fr.write('\t storage_connection_string = ""\n')
         
 

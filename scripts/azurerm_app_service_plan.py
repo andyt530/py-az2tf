@@ -41,16 +41,10 @@ def azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t name = "' + name + '"\n')
             fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rgs + '"\n')
-
-    ###############
-    # specific code start
-    ###############
             
             tier=azr[i]["sku"]["tier"]
             size=azr[i]["sku"]["size"]
             kind=azr[i]["kind"]
-
-            #if kind" = "app" ][": kind="Windows";
 
             fr.write('\t kind = "' +  kind + '"\n')
 
@@ -78,8 +72,6 @@ def azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             #
             # No tags - used internally
        
-
-
             fr.write('}\n') 
             fr.close()   # close .tf file
 

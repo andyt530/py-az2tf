@@ -42,15 +42,10 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
             fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
-    ###############
-    # specific code start
-    ###############
-
-            en=azr[i]["enabled"]
-            loc=azr[i]["location"]
-            profs=azr[i]["profiles"]
-              
-            #
+            en=azr[i]["properties"]["enabled"]
+            loc=azr[i]["properties"]["location"]
+            profs=azr[i]["properties"]["profiles"]
+        
     # basic settings 
   
             fr.write('enabled = "' + en + '"\n')
@@ -87,7 +82,7 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
                     fr.write('\t\tminimum = "' + cmin + '"\n')
                     fr.write('\t\tmaximum = "' + cmax + '"\n')
                     fr.write('\t}\n')
-    #xed date
+    # fixed date
 
 
                     try :
