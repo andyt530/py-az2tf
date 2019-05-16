@@ -279,6 +279,7 @@ azurerm_dns_zone.azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmes
 # 140_azurerm_lb
 azr=azurerm_lb.azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 150_azurerm_lb_nat_rule
+cde=True
 azurerm_lb_nat_rule.azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr)
 # 160_azurerm_lb_nat_pool
 azurerm_lb_nat_pool.azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr)

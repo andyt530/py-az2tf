@@ -41,7 +41,7 @@ def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     continue  # back to for
             
             rgl=rg.lower()
-            rname=name.replace(".","-")
+            rname=name.replace(".","-").lower()
             prefix=tfp+"."+rg+'__'+rname
             #print prefix
             rfilename=prefix+".tf"

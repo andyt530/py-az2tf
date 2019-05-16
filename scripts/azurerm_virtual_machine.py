@@ -304,6 +304,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
+                    tval=tval.replace('"',"'")
                     fr.write('\t "' + key + '"="' + tval + '"\n')
                 fr.write('}\n')
             except KeyError:
