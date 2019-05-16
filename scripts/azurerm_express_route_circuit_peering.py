@@ -51,7 +51,7 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
                 fr=open(rfilename, 'w')
                 fr.write(az2tfmess)
                 fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
-                fr.write('\t name = "' + name + '"\n')
+                #fr.write('\t name = "' + name + '"\n')
                 #fr.write('\t location = "'+ loc + '"\n')
                 fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
