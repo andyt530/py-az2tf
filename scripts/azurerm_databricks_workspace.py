@@ -42,11 +42,6 @@ def azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess
             fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
-    ###############
-    # specific code start
-    ###############
-
-
 
             sku=azr[i]["properties"]["parameters"]["tier"]["value"]
             if sku == "Standard" : sku="standard" 
@@ -55,14 +50,8 @@ def azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess
             fr.write('\t sku = "' +  sku + '"\n')
             fr.write('}\n')
             outid=azr[i]["properties"]["outputResources"][0]["id"]
-            print echo outid
+            print  outid
             #evalcomm=fr.write('terraform import . + '__' +  " tfp rg rname outid
- 
-
-
-    ###############
-    # specific code end
-    ###############
 
     # tags block       
             try:

@@ -67,25 +67,25 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             if jcount > 0 :
                 for j in range(0,jcount):
 
-                    aname= appset["name"]
-                    aval= appset["value"]
+                    aname= appset[j]["name"]
+                    aval= appset[j]["value"]
 
                     
                     
                     if "AzureWebJobsStorage" in aname: 
                         strcon= aval
                     
-                    else: 
-                        if "FUNCTIONS_EXTENSION_VERSION" in aname:
-                            fr.write('\t version =    "' + aval + '"\n')
                     
-                    else: 
-                        if aname="null":
+                    if "FUNCTIONS_EXTENSION_VERSION" in aname:
+                        fr.write('\t version =    "' + aval + '"\n')
+                    
+                     
+                    if aname=="null":
                             aname=aname
                     
                     else aname == "WEBSITE_CONTENTSHARE" or aname == "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING":
-                        aname=aname
-                    else  aname=-"AzureWebJobsDashboard":
+                    
+                    else  aname=-="AzureWebJobsDashboard":
             
                     else aval > 3 :
                         blog=True
@@ -99,7 +99,7 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 
         
 
-            if [ {'#strcon}' >= 3 :
+            if len(strcon} >= 3 :
                 fr.write('\t storage_connection_string = "' + strcon + '" \n')
             else
                 fr.write('\t storage_connection_string = ""\n')
@@ -107,11 +107,6 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
             fr.write('\t enable_builtin_logging = "' + blog + '"\n')
             fr.write('}\n')
-
-
-    ###############
-    # specific code end
-    ###############
 
     # tags block       
             try:

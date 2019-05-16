@@ -46,41 +46,33 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
     # specific code start
     ###############
 
-            
-
             pname= name
-            name= name | sed s/\(/-/
-            name= name | sed s/\)/-/
-            
-            
-            id=az"]["id"]
+            name= name.replace("(","-")  #| sed s/\(/-/
+            name= name.replace(")","-") # | sed s/\)/-/
+   
             skip="false"
-            if [[ id = *"]["* ]["; :
-                echo "Skipping this soluion pname - can't process currently"
+            if "[" in id or "]" in id :
+                print "Skipping this soluion pname - can't process currently"
                 skip="true"
            
-
-
-            pub=azrplan.publisher"
-            prod=azrplan.product"]
-            soln=azrplan.product" | cut -f2 -d'/']
-            workname=azrproperties.workspaceResourceId"].split("/")[8]
-            workn1=azrname" | cut -d'(' -f2
-            workn= workn1 | cut -d')' -f1
-            workid=azrproperties.workspaceResourceId"]
-            echo "workname=workn"
-            
+            pub=azr[i]["properties"]["plan"]["publisher"]
+            prod=azr[i]["plan"]["product"]
+            soln=azr[i]["plan"]["product"].split("/")[1]
+            workname=azr[i]["properties"]["workspaceResourceId"].split("/")[8]
+            workn1=azr[i]["name"].split("(")[1]
+            workn= workn1.split(")")[0]
+            workid=azr[i]["properties"]["workspaceResourceId"]
+            print "workname=" + workn
             
             if skip != "true" :
                 
-
                 fr.write('\t solution_name = "' +  soln + '"\n')
                 fr.write('\t workspace_name = "' +  workn + '"\n')
                 fr.write('\t workspace_resource_id = "' +  workid + '"\n')
                 
                 fr.write('\t plan {'  + '"\n')
-                fr.write('\t\t publisher =  "pub" + '"\n')
-                fr.write('\t\t product = "' +  "prod" + '"\n')
+                fr.write('\t\t publisher =  "'+pub + '"\n')
+                fr.write('\t\t product = "' + +prod + '"\n')
                 fr.write('\t }'  + '"\n')
 
 # tags cause errors                
