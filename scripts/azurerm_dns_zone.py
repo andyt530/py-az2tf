@@ -43,7 +43,7 @@ def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('resource ' + tfp + ' ' + rgs + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
             #fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rg + '"\n')
+            fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
     ###############
     # specific code start

@@ -28,6 +28,7 @@ def azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2
             id=azr[i]["id"]
         #    rg=azr[i]["resourceGroup"]
             rg=id.split("/")[4].replace(".","-")
+            rgs=id.split("/")[4]
             #print rg
 
             if crg is not None:
@@ -43,7 +44,7 @@ def azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
             fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rg + '"\n')   
+            fr.write('\t resource_group_name = "'+ rgs + '"\n')   
             
 
         # tags block

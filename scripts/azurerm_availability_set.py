@@ -50,7 +50,7 @@ def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('resource ' + tfp + ' ' + rgs + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
             fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rg + '"\n')   
+            fr.write('\t resource_group_name = "'+ rgs + '"\n')   
             fr.write('\t platform_fault_domain_count = "' + fd + '"\n')
             fr.write('\t platform_update_domain_count = "' + ud + '"\n')
             fr.write('\t managed = "' + rmtype + '"\n')

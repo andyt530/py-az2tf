@@ -26,7 +26,7 @@ def azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmes
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-")
-
+            rgs=id.split("/")[4]
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
@@ -40,7 +40,7 @@ def azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmes
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
             fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rg + '"\n')
+            fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
             tier=azr[i]["sku"]["tier"]
             family=azr[i]["sku"]["family"]
