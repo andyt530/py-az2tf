@@ -6,8 +6,8 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
     if crf in tfp:
     # REST or cli
         print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Networks/disks"
-        params = {'api-version': '2017-03-30'}
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/connections"
+        params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
         if cde:
@@ -57,20 +57,22 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
                 peernam=azr[i]["properties"]["localNetworkGateway2"]["id"].split("/")[8].replace(".","-")
     
             
-            authkey=azr[i]["properties"]["authorizationKey"]
+
             enbgp=azr[i]["properties"]["enableBgp"]
             rw=azr[i]["properties"]["routingWeight"]
-           
-            sk=azr[i]["properties"]["shared_key"]
+
             pbs=azr[i]["properties"]["usePolicyBasedTrafficSelectors"]
             
             fr.write('\t type = "' +  ctype + '"\n')
             fr.write('\t\t virtual_network_gateway_id = "${azurerm_virtual_network_gateway.' + vngrg + '__' + vngnam + '.id}"\n')
-            if authkey != "null" :
+            try:
+                authkey=azr[i]["properties"]["authorizationKey"]
                 fr.write('\t authorization_key = "' +  authkey + '"\n')
+            except KeyError:
+                pass
         
             
-            fr.write('\t enable_bgp = "' +  enbgp + '"\n')
+            fr.write('\t enable_bgp = "' +  str(enbgp) + '"\n')
             try:
                 rw=azr[i]["properties"]["routingWeight"] 
                 if rw != 0 :
@@ -85,7 +87,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
                 pass   
 
 
-            fr.write('\t use_policy_based_traffic_selectors = "' +  pbs + '"\n')
+            fr.write('\t use_policy_based_traffic_selectors = "' + str(pbs) + '"\n')
             
             if ctype == "ExpressRoute" :
                 peerid=azr[i]["properties"]["peer"]["id"]
@@ -95,10 +97,10 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
                 
         
             if ctype == "Vnet2Vnet" :
-                fr.write('\t\t peer_virtual_network_gateway_id = "${azurerm_virtual_network_gateway.' + peerrg +'__' + peernam + '.id}"\n')
+                fr.write('\t peer_virtual_network_gateway_id = "${azurerm_virtual_network_gateway.' + peerrg +'__' + peernam + '.id}"\n')
         
             if ctype == "IPsec" :
-                fr.write('\t\t local_network_gateway_id = "${azurerm_local_network_gateway.' + peerrg + '__' + peernam + '.id}" \n')
+                fr.write('\t local_network_gateway_id = "${azurerm_local_network_gateway.' + peerrg + '__' + peernam + '.id}" \n')
         
             
             

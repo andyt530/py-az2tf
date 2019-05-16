@@ -56,16 +56,8 @@ def azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub
                
                     fr.write('\t express_route_circuit_name = "' +  name2 + '"\n')                                  
 
-    # tags block       
-            try:
-                mtags=azr[i]["tags"]
-                fr.write('tags { \n')
-                for key in mtags.keys():
-                    tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
-                fr.write('}\n')
-            except KeyError:
-                pass
+    # no tags       
+ 
 
             fr.write('}\n') 
             fr.close()   # close .tf file

@@ -10,8 +10,7 @@ def azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmes
         params = {'api-version': '2018-01-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
-        if cde:
-            print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
 
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"
@@ -30,6 +29,8 @@ def azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmes
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
+            if cde:
+                print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
             
             rname=name.replace(".","-")
             prefix=tfp+"."+rg+'__'+rname
@@ -52,7 +53,7 @@ def azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmes
             
             fr.write('\t service_provider_name = "' + sp + '"\n')
             fr.write('\t peering_location = "' + pl + '"\n')
-            fr.write('\t bandwidth_in_mbps = "' + bw + '"\n')
+            fr.write('\t bandwidth_in_mbps = "' + str(bw) + '"\n')
             
             fr.write('\t sku {'   + '\n')
             fr.write('\t\t tier = "' +  tier + '"\n')

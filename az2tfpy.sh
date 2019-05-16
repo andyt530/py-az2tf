@@ -83,9 +83,7 @@ rm -f tf*.sh
 cp ../../stub/*.tf .
 
 
-echo "terraform init"
-terraform init 2>&1 | tee -a import.log
-echo $?
+
 
 
 
@@ -120,7 +118,9 @@ fi
 #../../setup-env.sh
 
 
-
+echo "terraform init"
+terraform init 2>&1 | tee -a import.log
+echo $?
 
 
 chmod 755 *state*.sh

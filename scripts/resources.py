@@ -49,10 +49,10 @@ import azurerm_application_gateway
 
 import azurerm_local_network_gateway
 import azurerm_virtual_network_gateway
-#import azurerm_virtual_network_gateway_connection
-#import azurerm_express_route_circuit 
-#import azurerm_express_route_circuit_authorization
-#import azurerm_express_route_circuit_peering
+import azurerm_virtual_network_gateway_connection # --
+import azurerm_express_route_circuit 
+import azurerm_express_route_circuit_authorization
+import azurerm_express_route_circuit_peering  # --
 cde=True
 import azurerm_container_registry
 import azurerm_kubernetes_cluster
@@ -296,16 +296,18 @@ azurerm_application_gateway.azurerm_application_gateway(crf,cde,crg,headers,requ
 azurerm_local_network_gateway.azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 210_azurerm_virtual_network_gateway
 azurerm_virtual_network_gateway.azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-
+cde=True
+#----
 # 220_azurerm_virtual_network_gateway_connection
-# azurerm_virtual_network_gateway_connection.azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_virtual_network_gateway_connection.azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 230_azurerm_express_route_circuit
-# azurerm_express_route_circuit.azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_express_route_circuit.azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 240_azurerm_express_route_circuit_authorization
-# azurerm_express_route_circuit_authorization.azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_express_route_circuit_authorization.azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 250_azurerm_express_route_circuit_peering
-# azurerm_express_route_circuit_peering.azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-
+azurerm_express_route_circuit_peering.azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# ----
+cde=False
 # 260_azurerm_container_registry
 azurerm_container_registry.azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 

@@ -7,11 +7,10 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
     # REST or cli
         print "REST Managed Disk"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/expressRouteCircuits"
-        params = {'api-version': '2017-03-30'}
+        params = {'api-version': '2018-01-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
-        if cde:
-            print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
 
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"
@@ -31,6 +30,8 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
+            if cde:
+                print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
             
             peers=azr[i]["properties"]["peerings"]          
             acount=len(peers)
@@ -51,7 +52,7 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
                 fr.write(az2tfmess)
                 fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
                 fr.write('\t name = "' + name + '"\n')
-                fr.write('\t location = "'+ loc + '"\n')
+                #fr.write('\t location = "'+ loc + '"\n')
                 fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
                 pt= peers[k]["properties"]["peeringType"]
@@ -66,9 +67,9 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
                 fr.write('\t resource_group_name = "' +  rg + '"\n')
                 fr.write('\t primary_peer_address_prefix = "' +  pap + '"\n')
                 fr.write('\t secondary_peer_address_prefix = "' +  sap + '"\n')
-                fr.write('\t vlan_id = "' +  vid + '"\n')
+                fr.write('\t vlan_id = "' +  str(vid) + '"\n')
                 #fr.write('\t shared_key = "' +  sk + '"\n')
-                fr.write('\t peer_asn = "' +  pasn + '"\n')
+                fr.write('\t peer_asn = "' +  str(pasn) + '"\n')
                 
 
                 if pt == "MicrosoftPeering" or "pt" == "AzurePrivatePeering":
@@ -76,20 +77,9 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
                     fr.write('\t microsoft_peering_config {' + '\n')
                     fr.write('\t\t advertised_public_prefixes =  "' + app+ '" \n')
                     fr.write('\t }'  + '\n')
-               
-                
-                fr.write('}\n')
+    
 
-    # tags block       
-            try:
-                mtags=azr[i]["tags"]
-                fr.write('tags { \n')
-                for key in mtags.keys():
-                    tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
-                fr.write('}\n')
-            except KeyError:
-                pass
+    # no tags        
 
             fr.write('}\n') 
             fr.close()   # close .tf file
