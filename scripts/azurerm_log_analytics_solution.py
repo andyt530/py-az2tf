@@ -47,7 +47,7 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
     ###############
 
             
-            name=azrname"]
+
             pname= name
             name= name | sed s/\(/-/
             name= name | sed s/\)/-/

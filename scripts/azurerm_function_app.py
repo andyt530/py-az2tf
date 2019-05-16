@@ -42,12 +42,12 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
-            https=azr[i]["httpsOnly"]
+            https=azr[i]["properties"]["httpsOnly"]
     
-            prg=azr[i]["appServicePlanId"].split("/")[4]
-            pnam=azr[i]["appServicePlanId"].split("/")[8]
-            lcrg=azr[i]["resourceGroup"].lower()
-            appplid=azr[i]["appServicePlanId"]
+            prg=azr[i]["properties"]["appServicePlanId"].split("/")[4]
+            pnam=azr[i]["properties"]["appServicePlanId"].split("/")[8]
+            lcrg=azr[i]["properties"]["resourceGroup"].lower()
+            appplid=azr[i]["properties"]["appServicePlanId"]
             rg= lcrg.replace(".","-")
     
     # ********

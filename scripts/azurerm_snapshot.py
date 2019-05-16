@@ -46,30 +46,30 @@ def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # specific code start
     ###############
 
+            co=azr[i]["creationData.createOption"]
+            sz=azr[i]["diskSizeGb"]
 
+            suri=azr[i]["creationData.sourceUri"]
+            srid=azr[i]["creationData.sourceResourceId"]
+            said=azr[i]["creationData.storageAccountId"]
 
-        co=azr[i]["creationData.createOption"]
-        sz=azr[i]["diskSizeGb"]
-
-        suri=azr[i]["creationData.sourceUri"]
-        srid=azr[i]["creationData.sourceResourceId"]
-        said=azr[i]["creationData.storageAccountId"]
-
-        fr.write('\t create_option = "' +  co + '"\n')
-        
-        if sz" try :
-        fr.write('\t disk_size_gb = "' +  sz + '"\n')
+            fr.write('\t create_option = "' +  co + '"\n')
+            
+            try :
+                sz=azr[i]["diskSizeGb"]
+                fr.write('\t disk_size_gb = "' +  sz + '"\n')
        
-        #if suri" try :
-        #    fr.write('\t source_uri = "' +  suri + '"\n')
-        #fi
-        #if srid" try :
-        #    fr.write('\t source_resource_id = "' +  srid + '"\n')
-        #fi
-        #if said" try :
-        #    fr.write('\t source_account_id = "' +  said + '"\n')
-        #fi        
-
+            #if suri" try :
+            #    fr.write('\t source_uri = "' +  suri + '"\n')
+            #fi
+            #if srid" try :
+            #    fr.write('\t source_resource_id = "' +  srid + '"\n')
+            #fi
+            #if said" try :
+            #    fr.write('\t source_account_id = "' +  said + '"\n')
+            #fi        
+            except KeyError:
+                pass
         
 
     ###############
