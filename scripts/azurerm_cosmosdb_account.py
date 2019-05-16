@@ -6,8 +6,8 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
     # REST or cli
         print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/disks"
-        params = {'api-version': '2017-03-30'}
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.DocumentDB/databaseAccounts"
+        params = {'api-version': '2016-03-31'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
         if cde:
