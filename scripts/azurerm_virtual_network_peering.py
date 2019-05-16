@@ -34,7 +34,7 @@ def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfm
                 fr.write("")
                 fr.write('resource ' + tfp + ' ' + rgs + '__' + rname + ' {\n')
                 fr.write('\t name = "' + name + '"\n')
-                fr.write('\t resource_group_name = "'+ rg + '"\n')
+                fr.write('\t resource_group_name = "'+ rgs + '"\n')
                 fr.write('\t virtual_network_name = "' + vnetname + '"\n')
 
 

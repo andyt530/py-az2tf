@@ -36,6 +36,7 @@ def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                 rname= name.replace(".","-")
                 id=azr[i]["properties"]["probes"][j]["id"]
                 rg=id.split("/")[4].replace(".","-")
+                rgs=id.split("/")[4]
                 lbrg=azr[i]["id"].split("/")[4].replace(".","-")
                 lbname=azr[i]["id"].split("/")[8].replace(".","-")
 
@@ -49,7 +50,7 @@ def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
 
                 fr.write('resource ' + tfp + ' ' + rg + '__' +lbname+ '__'+ rname + ' {\n')
                 fr.write('\t name = "' + name + '"\n')
-                fr.write('\t resource_group_name = "'+ rg + '"\n')
+                fr.write('\t resource_group_name = "'+ rgs + '"\n')
  
                 np=azr[i]["properties"]["probes"][j]["properties"]["numberOfProbes"]
                 port=azr[i]["properties"]["probes"][j]["properties"]["port"]

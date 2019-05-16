@@ -26,7 +26,7 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-")
-
+            rgs=id.split("/")[4]
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
@@ -40,40 +40,12 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
             fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rg + '"\n')
+            fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
     ###############
     # specific code start
     ###############
 
-
-prefixa= 0 | awk -F 'azurerm_' '{'print 2}'' | awk -F '.sh' '{'print 1}'' 
-tfp=fr.write('azurerm_" prefixa
-
-echo TF_VAR_rgtarget
-if 1" != " :
-    rgsource=1
-fi
-
-at=az account get-access-token -o json
-bt= at | jq .accessToken]
-sub= at | jq .subscription]
-
-
-ris=fr.write('curl -s  -X GET -H "'Authorization: Bearer "' -H "'Content-Type: application/json"' https://management.azure.com/subscriptions//resourceGroups//providers/Microsoft.OperationsManagement/solutions?api-version=2015-11-01-preview" bt sub rgsource
-#echo ris
-ret=eval ris
-
-azr2= ret | jq .value
-rg=rgsource
-echo "anal sol=rg"
-count2= azr2 | | len(
-if count2 > 0" :
-    for j in range(0,count2):
-        
-        azr= azr2 | jq ".[j]["
-        count= azr | | len(
-        if count > 0" :
             
             name=azrname"]
             pname= name
@@ -87,11 +59,7 @@ if count2 > 0" :
                 echo "Skipping this soluion pname - can't process currently"
                 skip="true"
            
-            
-            loc=azrlocation"
-            
-            rname= name.replace(".","-")
-            rg= rgsource.replace(".","-")
+
 
             pub=azrplan.publisher"
             prod=azrplan.product"]
@@ -103,12 +71,9 @@ if count2 > 0" :
             echo "workname=workn"
             
             
-            if skip" != "true" :
+            if skip != "true" :
                 
-                fr.write('resource "' +  "' + '__' + "' {' tfp rg rname + '"\n')
-                
-                fr.write('\t location =  "loc" + '"\n')
-                fr.write('\t resource_group_name = "' +  rgsource + '"\n')
+
                 fr.write('\t solution_name = "' +  soln + '"\n')
                 fr.write('\t workspace_name = "' +  workn + '"\n')
                 fr.write('\t workspace_resource_id = "' +  workid + '"\n')
@@ -120,31 +85,6 @@ if count2 > 0" :
 
 # tags cause errors                
                 
-                fr.write('}\n')
-          
-
-           
-            
-            #
-       
-        
-    
-fi
-
-    ###############
-    # specific code end
-    ###############
-
-    # tags block       
-            try:
-                mtags=azr[i]["tags"]
-                fr.write('tags { \n')
-                for key in mtags.keys():
-                    tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
-                fr.write('}\n')
-            except KeyError:
-                pass
 
             fr.write('}\n') 
             fr.close()   # close .tf file

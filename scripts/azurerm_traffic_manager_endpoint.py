@@ -27,6 +27,7 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
                 name=azr2[j]["name"]
                 id=azr2[j]["id"]
                 rg=id.split("/")[4].replace(".","-")
+                rgs=id.split("/")[4]
                 print rg
                 print crg
                 if crg is not None:
@@ -42,7 +43,7 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
                 fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
                 fr.write('\t name = "' + name + '"\n')
                 #fr.write('\t location = "'+ loc + '"\n')
-                fr.write('\t resource_group_name = "'+ rg + '"\n')
+                fr.write('\t resource_group_name = "'+ rgs + '"\n')
                 fr.write('\t profile_name = "' +  pname + '"\n')
                 ttype=azr2[j]["type"].split("/")[2]
                 fr.write('\t type = "' +  ttype + '"\n')

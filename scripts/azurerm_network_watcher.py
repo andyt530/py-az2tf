@@ -26,7 +26,7 @@ def azurerm_network_watcher(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-")
-
+            rgs=id.split("/")[4]
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
@@ -40,47 +40,8 @@ def azurerm_network_watcher(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
             fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rg + '"\n')
+            fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
-    ###############
-    # specific code start
-    ###############
-
-
-
-azr=az network watcher list -o json
-count= azr | | len(
-if count > 0" :
-    for i in range(0,count):
-        name=azr[i]["name"]
-        #name= name | awk '{'print tolower(0)}''
-        rname= name.replace(".","-")
-        rg=azr[i]["resourceGroup"].replace(".","-")
-
-
-        id=azr[i]["id"]
-        loc=azr[i]["location"
-        
-        fr.write('resource "' +  "' + '__' + "' {' tfp rg rname + '"\n')
-        fr.write('\t name = "' +  name + '"\n')
-        #fr.write('\t id = "' +  id + '"\n')
-        fr.write('\t location =  "loc" + '"\n')
-        #fr.write('\t resource_group_name = "${var.rgtarget}'"' + '"\n')
-        fr.write('\t resource_group_name = "' +  rgsource + '"\n')
-            
-        #
-
-            
-        
-        fr.write('}\n')
-        cat outfile
-
-    
-fi
-
-    ###############
-    # specific code end
-    ###############
 
     # tags block       
             try:

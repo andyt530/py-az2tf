@@ -41,7 +41,7 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
             fr.write('resource ' + tfp + ' ' + rgs + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
             fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rg + '"\n')
+            fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
             gtype=azr[i]["properties"]["gatewayType"]
             vpntype=azr[i]["properties"]["vpnType"]

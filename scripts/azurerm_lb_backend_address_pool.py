@@ -22,7 +22,7 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
             lbname=name
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-")
-
+            rgs=id.split("/")[4]
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
@@ -45,7 +45,7 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
 
                 fr.write('resource ' + tfp + ' ' + rg + '__' +lbname+'__'+ rname + ' {\n')
                 fr.write('\t name = "' + name + '"\n')
-                fr.write('\t resource_group_name = "'+ rg + '"\n')
+                fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
                 try:
                     #lbrg=azr[i]["id"].split("/")[4].replace(".","-")

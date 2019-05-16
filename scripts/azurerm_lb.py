@@ -26,7 +26,7 @@ def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-")
-
+            rgs=id.split("/")[4]
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
@@ -40,16 +40,7 @@ def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
             fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rg + '"\n')
-
-    ###############
-    # specific code start
-    ###############
-
-
-
-# azr=az network lb list -g rgsource -o json
-
+            fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
             sku=azr[i]["sku"]["name"]
             fronts=azr[i]["properties"]["frontendIPConfigurations"]

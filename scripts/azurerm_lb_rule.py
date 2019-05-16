@@ -20,7 +20,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
             name=azr[i]["name"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-")
-
+            rgs=id.split("/")[4]
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
@@ -43,7 +43,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                 fr.write(az2tfmess)
                 fr.write('resource ' + tfp + ' ' + rg + '__' + lbname + '__' + rname + ' {\n')
                 fr.write('\t name = "' + name + '"\n')
-                fr.write('\t resource_group_name = "'+ rg + '"\n')
+                fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
 
      
