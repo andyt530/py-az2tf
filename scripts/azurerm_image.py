@@ -6,7 +6,7 @@ def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
     # REST or cli
         print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/imagess"
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/images"
         params = {'api-version': '2019-03-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

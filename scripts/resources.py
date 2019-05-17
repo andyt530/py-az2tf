@@ -61,20 +61,20 @@ import azurerm_virtual_machine
 import azurerm_virtual_machine_scale_set
 import azurerm_automation_account
 import azurerm_log_analytics_workspace
-#import azurerm_log_analytics_solution
-#import azurerm_image
-#import azurerm_snapshot
-#import azurerm_network_watcher
-#import azurerm_cosmosdb_account
-#import azurerm_servicebus_namespace
-#import azurerm_servicebus_queue
-#import azurerm_sql_server
-#import azurerm_sql_database
-#import azurerm_databricks_workspace
-#import azurerm_app_service_plan
-#import azurerm_app_service
-#import azurerm_function_app
-#import azurerm_monitor_autoscale_setting
+import azurerm_log_analytics_solution
+import azurerm_image
+import azurerm_snapshot
+import azurerm_network_watcher
+import azurerm_cosmosdb_account
+import azurerm_servicebus_namespace
+import azurerm_servicebus_queue
+import azurerm_sql_server
+import azurerm_sql_database
+import azurerm_databricks_workspace
+import azurerm_app_service_plan
+import azurerm_app_service
+import azurerm_function_app
+import azurerm_monitor_autoscale_setting
 
 
 
@@ -178,13 +178,15 @@ try:
 except KeyError:
     print "Error getting subscription list"
     exit("ErrorGettingSubscriptionList")
-ssubs=json.dumps(subs)
-if sub not in ssubs: 
-    print "Could not find subscription with ID (Test 1) " + sub + " Exiting ..." 
-    exit("ErrorInvalidSubscriptionID-1")
+#print(json.dumps(subs, indent=4, separators=(',', ': ')))
+#ssubs=json.dumps(subs)
+#print ssubs
+#if sub not in ssubs: 
+#    print "Could not find subscription with ID " + sub + " Exiting ..." 
+#    exit("ErrorInvalidSubscriptionID-1")
 
 
-print(json.dumps(subs, indent=4, separators=(',', ': ')))
+#print(json.dumps(subs, indent=4, separators=(',', ': ')))
 
 FoundSub=False
 count=len(subs)
@@ -325,33 +327,33 @@ azurerm_automation_account.azurerm_automation_account(crf,cde,crg,headers,reques
 # 320_azurerm_log_analytics_workspace
 azurerm_log_analytics_workspace.azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 330_azurerm_log_analytics_solution
-# azurerm_log_analytics_solution.azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_log_analytics_solution.azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 340_azurerm_image
-# azurerm_image.azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_image.azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 350_azurerm_snapshot
-# azurerm_snapshot.azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_snapshot.azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 360_azurerm_network_watcher
-# azurerm_network_watcher.azurerm_network_watcher(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_network_watcher.azurerm_network_watcher(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 400_azurerm_cosmosdb_account
-# azurerm_cosmosdb_account.azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_cosmosdb_account.azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 500_azurerm_servicebus_namespace
-# azurerm_servicebus_namespace.azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_servicebus_namespace.azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 510_azurerm_servicebus_queue
-# azurerm_servicebus_queue.azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_servicebus_queue.azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 540_azurerm_sql_server
-# azurerm_sql_server.azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_sql_server.azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 541_azurerm_sql_database
-# azurerm_sql_database.azurerm_sql_database(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_sql_database.azurerm_sql_database(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 550_azurerm_databricks_workspace
-# azurerm_databricks_workspace.azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_databricks_workspace.azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 600_azurerm_app_service_plan
-# azurerm_app_service_plan.azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_app_service_plan.azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 610_azurerm_app_service
-# azurerm_app_service.azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_app_service.azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 620_azurerm_function_app
-# azurerm_function_app.azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_function_app.azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 650_azurerm_monitor_autoscale_setting
-# azurerm_monitor_autoscale_setting.azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_monitor_autoscale_setting.azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 
 # ******************************************************************************************
 exit()

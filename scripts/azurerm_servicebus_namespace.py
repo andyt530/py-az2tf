@@ -5,11 +5,15 @@ def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess
     azr=""
     if crf in tfp:
     # REST or cli
-        print "REST Managed Disk"
+        print "REST SB namespaces"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.ServiceBus/namespaces"
         params = {'api-version': '2017-04-01'}
         r = requests.get(url, headers=headers, params=params)
-        azr= r.json()["value"]
+        try:
+            azr= r.json()["value"]
+        except KeyError:
+            print "No resources found"
+            return
         if cde:
             print(json.dumps(azr, indent=4, separators=(',', ': ')))
 
@@ -43,7 +47,7 @@ def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess
             fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
             sku=azr[i]["sku"]["tier"]
-            cap=azr[i]["sku"]["capacity"]        
+               
             fr.write('\t sku = "' +  sku + '"\n')
             try :
                 cap=azr[i]["sku"]["capacity"]

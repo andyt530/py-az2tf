@@ -5,11 +5,12 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
     azr=""
     if crf in tfp:
     # REST or cli
-        print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.OperationalInsights/solutions"
-        params = {'api-version': '2015-03-20'}
+        print "REST solutions"
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.OperationsManagement/solutions"
+        params = {'api-version': '2015-11-01-preview'}
         #2015-11-01-preview
         r = requests.get(url, headers=headers, params=params)
+        print(json.dumps(r.json(), indent=4, separators=(',', ': ')))
         azr= r.json()["value"]
         if cde:
             print(json.dumps(azr, indent=4, separators=(',', ': ')))
@@ -33,13 +34,16 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
                     continue  # back to for
             
             rname=name.replace(".","-")
+            rname=rname.replace("(","-")  #| sed s/\(/-/
+            rname=rname.replace(")","-") # | sed s/\)/-/
+
             prefix=tfp+"."+rg+'__'+rname
             #print prefix
             rfilename=prefix+".tf"
             fr=open(rfilename, 'w')
             fr.write(az2tfmess)
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
-            fr.write('\t name = "' + name + '"\n')
+            #fr.write('\t name = "' + name + '"\n')
             fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
@@ -56,7 +60,7 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
                 print "Skipping this soluion pname - can't process currently"
                 skip="true"
            
-            pub=azr[i]["properties"]["plan"]["publisher"]
+            pub=azr[i]["plan"]["publisher"]
             prod=azr[i]["plan"]["product"]
             soln=azr[i]["plan"]["product"].split("/")[1]
             workname=azr[i]["properties"]["workspaceResourceId"].split("/")[8]
@@ -73,8 +77,8 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
                 
                 fr.write('\t plan {\n')
                 fr.write('\t\t publisher =  "'+pub + '"\n')
-                fr.write('\t\t product = "' + +prod + '"\n')
-                fr.write('\t }'  + '"\n')
+                fr.write('\t\t product = "' + prod + '"\n')
+                fr.write('\t }\n')
 
 # tags cause errors                
                 
@@ -89,7 +93,7 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
             tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
-            tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+            tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' "'+id+'"\n'
             tfim.write(tfcomm)  
 
         # end for i loop

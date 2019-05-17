@@ -5,7 +5,7 @@ def azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     azr=""
     if crf in tfp:
     # REST or cli
-        print "REST Managed Disk"
+        print "REST SQL Servers"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Sql/servers"
         params = {'api-version': '2015-05-01-preview'}
         r = requests.get(url, headers=headers, params=params)

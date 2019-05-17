@@ -5,7 +5,7 @@ def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     azr=""
     if crf in tfp:
     # REST or cli
-        print "REST Managed Disk"
+        print "REST snapshot"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/snapshots"
         params = {'api-version': '2018-09-30'}
         r = requests.get(url, headers=headers, params=params)

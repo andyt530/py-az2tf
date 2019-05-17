@@ -31,6 +31,8 @@ def azurerm_sql_database(crf, cde, crg, headers, requests, sub, json, az2tfmess)
                 if rg.lower() != crg.lower():
                     continue  # back to for
 
+            
+
             rname = name.replace(".", "-")
             prefix = tfp+"."+rg+'__'+rname
             # print prefix

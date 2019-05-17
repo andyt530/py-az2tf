@@ -2,7 +2,7 @@
 def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
     tfp="azurerm_lb_nat_pool"
     tcode="160-"
-    print tfp,
+
     if crf in tfp:
     # REST or cli
 
@@ -13,7 +13,7 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        
+        print tfp,
         count=len(azr)
         print count
         for i in range(0, count):
