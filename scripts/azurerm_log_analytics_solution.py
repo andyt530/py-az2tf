@@ -5,12 +5,12 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
     azr=""
     if crf in tfp:
     # REST or cli
-        print "REST solutions"
+        # print "REST solutions"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.OperationsManagement/solutions"
         params = {'api-version': '2015-11-01-preview'}
         #2015-11-01-preview
         r = requests.get(url, headers=headers, params=params)
-        print(json.dumps(r.json(), indent=4, separators=(',', ': ')))
+        
         azr= r.json()["value"]
         if cde:
             print(json.dumps(azr, indent=4, separators=(',', ': ')))
@@ -19,7 +19,7 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print tfp,
+        print "# " + tfp,
         count=len(azr)
         print count
         for i in range(0, count):
@@ -27,7 +27,7 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
-            rg=id.split("/")[4].replace(".","-")
+            rg=id.split("/")[4].replace(".","-").lower()
             rgs=id.split("/")[4]
             if crg is not None:
                 if rg.lower() != crg.lower():
@@ -67,7 +67,6 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
             workn1=azr[i]["name"].split("(")[1]
             workn= workn1.split(")")[0]
             workid=azr[i]["properties"]["workspaceResourceId"]
-            print "workname=" + workn
             
             if skip != "true" :
                 

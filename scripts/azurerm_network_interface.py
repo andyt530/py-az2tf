@@ -4,7 +4,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     azr=""
     if crf in tfp:
     # REST or cli
-        print "REST Managed Disk"
+        # print "REST Managed Disk"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/networkInterfaces"
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
@@ -16,7 +16,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfimf="130-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print tfp,
+        print "# " + tfp,
         count=len(azr)
         print count
         for i in range(0, count):
@@ -25,7 +25,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rgs=id.split("/")[4]
-            rg=id.split("/")[4].replace(".","-")
+            rg=id.split("/")[4].replace(".","-").lower()
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
@@ -53,7 +53,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
             try:
                 snsg=azr[i]["properties"]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
-                snsgrg=azr[i]["properties"]["networkSecurityGroup"]["id"].split("/")[4].replace(".","-")
+                snsgrg=azr[i]["properties"]["networkSecurityGroup"]["id"].split("/")[4].replace(".","-").lower()
                 fr.write('\t network_security_group_id = "${azurerm_network_security_group.' + snsgrg + '__' + snsg + '.id}"\n')
             except KeyError:
                 pass
@@ -62,7 +62,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             for j in range(0,icount):
                 ipcname=azr[i]["properties"]["ipConfigurations"][j]["name"]
                 subname=azr[i]["properties"]["ipConfigurations"][j]["properties"]["subnet"]["id"].split("/")[10].replace(".","-")
-                subrg=azr[i]["properties"]["ipConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-")
+                subrg=azr[i]["properties"]["ipConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-").lower()
                 #subipid=azr[i]["properties"]["ipConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[8]
                 subipalloc=azr[i]["properties"]["ipConfigurations"][j]["properties"]["privateIPAllocationMethod"]
                 privip=azr[i]["properties"]["ipConfigurations"][j]["properties"]["privateIPAddress"]
@@ -78,7 +78,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('\t\t private_ip_address_allocation = "' +    subipalloc + '"\n')
                 try:
                     pubipnam=azr[i]["properties"]["ipConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[8].replace(".","-")
-                    pubiprg=azr[i]["properties"]["ipConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[4].replace(".","-")
+                    pubiprg=azr[i]["properties"]["ipConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[4].replace(".","-").lower()
                     fr.write('\t\t public_ip_address_id = "${azurerm_public_ip.' + pubiprg + '__' + pubipnam + '.id}"\n')
                 except KeyError:
                     pass
@@ -93,7 +93,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     kcount=len(asgs)
                     for k in range(0,kcount):
                         asgnam=azr[i]["properties"]["ipConfigurations"][j]["properties"]["applicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
-                        asgrg=azr[i]["properties"]["ipConfigurations"][j]["properties"]["applicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-")
+                        asgrg=azr[i]["properties"]["ipConfigurations"][j]["properties"]["applicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-").lower()
                         fr.write('\t\t application_security_group_ids = ["${azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}"]\n')
                 except KeyError:
                     pass

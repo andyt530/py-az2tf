@@ -5,7 +5,7 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     azr=""
     if crf in tfp:
         # REST
-        print "REST VNets"
+        # print "REST VNets"
 
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworks"
         params = {'api-version': '2018-07-01'}
@@ -18,7 +18,7 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfimf="070-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print tfp,
+        print "# " + tfp,
         count=len(azr)
         print count
         for i in range(0, count):
@@ -31,7 +31,7 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 name=subs[j]["name"]
                 #loc=subs[j]["location"] subnets don't have location
                 id=subs[j]["id"]
-                rg=id.split("/")[4].replace(".","-")
+                rg=id.split("/")[4].replace(".","-").lower()
                 rgs=id.split("/")[4]
                 if crg is not None:
                     if rg.lower() != crg.lower():
@@ -68,14 +68,14 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 
                 try:
                     snsgid=subs[j]["properties"]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
-                    snsgrg=subs[j]["properties"]["networkSecurityGroup"]["id"].split("/")[4].replace(".","-")
+                    snsgrg=subs[j]["properties"]["networkSecurityGroup"]["id"].split("/")[4].replace(".","-").lower()
                     fr.write('\t network_security_group_id = "${azurerm_network_security_group.' + snsgrg + '__' + snsgid +'.id}"' + '\n')
                 except KeyError:
                     pass
                 
                 try:
                     rtbid=subs[j]["properties"]["routeTable"]["id"].split("/")[8].replace(".","-")
-                    rtrg=subs[j]["properties"]["routeTable"]["id"].split("/")[4].replace(".","-")
+                    rtrg=subs[j]["properties"]["routeTable"]["id"].split("/")[4].replace(".","-").lower()
                     fr.write('\t route_table_id = "${azurerm_route_table.' + rtrg + '__' + rtbid +'.id}"' + '\n')
                 except KeyError:
                     pass   

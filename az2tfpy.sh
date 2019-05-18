@@ -122,7 +122,7 @@ echo "terraform init"
 terraform init 2>&1 | tee -a import.log
 echo $?
 
-
+exit
 chmod 755 *state*.sh
 
 if [ "$f" = "yes" ]; then

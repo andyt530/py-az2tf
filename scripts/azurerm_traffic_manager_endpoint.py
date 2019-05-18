@@ -11,7 +11,7 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
         tfimf="125-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print tfp,
+        print "# " + tfp,
         count=len(azr)
         print count
         for i in range(0, count):
@@ -26,7 +26,7 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
 
                 name=azr2[j]["name"]
                 id=azr2[j]["id"]
-                rg=id.split("/")[4].replace(".","-")
+                rg=id.split("/")[4].replace(".","-").lower()
                 rgs=id.split("/")[4]
                 print rg
                 print crg

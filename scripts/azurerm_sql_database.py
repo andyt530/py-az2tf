@@ -5,7 +5,7 @@ def azurerm_sql_database(crf, cde, crg, headers, requests, sub, json, az2tfmess)
     azr = ""
     if crf in tfp:
     # REST or cli
-        print "REST SQL Servers"
+        # print "REST SQL Servers"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Sql/servers"
         params = {'api-version': '2015-05-01-preview'}
         r = requests.get(url, headers=headers, params=params)
@@ -17,7 +17,7 @@ def azurerm_sql_database(crf, cde, crg, headers, requests, sub, json, az2tfmess)
         tfimf = tcode+tfp+"-stateimp.sh"
         tfrm = open(tfrmf, 'a')
         tfim = open(tfimf, 'a')
-        print tfp,
+        print "# " + tfp,
         count = len(azr)
         print count
         for i in range(0, count):

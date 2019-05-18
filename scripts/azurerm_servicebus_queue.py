@@ -5,11 +5,11 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     azr=""
     if crf in tfp:
     # REST or cli
-        print "REST namespace for queue"
+        # print "REST namespace for queue"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.ServiceBus/namespaces"
         params = {'api-version': '2017-04-01'}
         r = requests.get(url, headers=headers, params=params)
-        print(json.dumps(r.json(), indent=4, separators=(',', ': ')))
+        #print(json.dumps(r.json(), indent=4, separators=(',', ': ')))
         try:
             azr= r.json()["value"]
         except KeyError:
@@ -23,7 +23,7 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print tfp,
+        print "# " + tfp,
         count=len(azr)
         print count
         for i in range(0, count):
@@ -31,7 +31,7 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             nname=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
-            rg=id.split("/")[4].replace(".","-")
+            rg=id.split("/")[4].replace(".","-").lower()
             rgs=id.split("/")[4]
             print id
             if crg is not None:
@@ -66,7 +66,7 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     name= azr2[j]["name"]
                     rname= name.replace(".","-")
                     id= azr2[j]["id"]
-                    rg=id.split("/")[4].replace(".","-")
+                    rg=id.split("/")[4].replace(".","-").lower()
                     rgs=id.split("/")[4]
 
                     rname=name.replace(".","-")

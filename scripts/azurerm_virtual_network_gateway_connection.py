@@ -5,7 +5,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
     azr=""
     if crf in tfp:
     # REST or cli
-        print "REST Managed Disk"
+        # print "REST Managed Disk"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/connections"
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
@@ -17,7 +17,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print tfp,
+        print "# " + tfp,
         count=len(azr)
         print count
         for i in range(0, count):
@@ -25,7 +25,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
-            rg=id.split("/")[4].replace(".","-")
+            rg=id.split("/")[4].replace(".","-").lower()
             rgs=id.split("/")[4]
             if crg is not None:
                 if rg.lower() != crg.lower():
@@ -45,14 +45,14 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
     ##  azr=az network vpn-connection list -g rgsource -o json
         
             ctype=azr[i]["properties"]["connectionType"]
-            vngrg=azr[i]["properties"]["virtualNetworkGateway1"]["id"].split("/")[4].replace(".","-")
+            vngrg=azr[i]["properties"]["virtualNetworkGateway1"]["id"].split("/")[4].replace(".","-").lower()
             vngnam=azr[i]["properties"]["virtualNetworkGateway1"]["id"].split("/")[8].replace(".","-")
             
 
             
             if ctype == "IPsec" :
-                print "is sec"
-                peerrg=azr[i]["properties"]["localNetworkGateway2"]["id"].split("/")[4].replace(".","-")
+                
+                peerrg=azr[i]["properties"]["localNetworkGateway2"]["id"].split("/")[4].replace(".","-").lower()
                 peernam=azr[i]["properties"]["localNetworkGateway2"]["id"].split("/")[8].replace(".","-")
     
             

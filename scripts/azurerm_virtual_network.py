@@ -5,7 +5,7 @@ def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     azr=""
     if crf in tfp:
         # REST
-        print "REST VNets"
+        # print "REST VNets"
 
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworks"
         params = {'api-version': '2018-07-01'}
@@ -18,7 +18,7 @@ def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfimf="060-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print tfp,
+        print "# " + tfp,
         count=len(azr)
         print count
         for i in range(0, count):
@@ -26,7 +26,7 @@ def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
-            rg=id.split("/")[4].replace(".","-")
+            rg=id.split("/")[4].replace(".","-").lower()
             rgs=id.split("/")[4]
             if crg is not None:
                 if rg.lower() != crg.lower():
@@ -74,7 +74,7 @@ def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 try:
                     snnsgid=subs[j]["properties"]["networkSecurityGroup"]["id"]
                     nsgnam=snnsgid.split("/")[8].replace(".","-")
-                    nsgrg=snnsgid.split("/")[4].replace(".","-")          
+                    nsgrg=snnsgid.split("/")[4].replace(".","-").lower()         
                     fr.write('\t\t security_group = "${azurerm_network_security_group.' + nsgrg + '__' + nsgnam + '.id}"' + '\n')
                 except KeyError: 
                     pass

@@ -13,14 +13,14 @@ def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print tfp,
+        print "# " + tfp,
         count=len(azr)
         print count
         for i in range(0, count):
 
             name=azr[i]["name"]
             id=azr[i]["id"]
-            rg=id.split("/")[4].replace(".","-")
+            rg=id.split("/")[4].replace(".","-").lower()
 
             if crg is not None:
                 if rg.lower() != crg.lower():
@@ -35,7 +35,7 @@ def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                 name=azr[i]["properties"]["probes"][j]["name"]
                 rname= name.replace(".","-")
                 id=azr[i]["properties"]["probes"][j]["id"]
-                rg=id.split("/")[4].replace(".","-")
+                rg=id.split("/")[4].replace(".","-").lower()
                 rgs=id.split("/")[4]
                 lbrg=azr[i]["id"].split("/")[4].replace(".","-")
                 lbname=azr[i]["id"].split("/")[8].replace(".","-")

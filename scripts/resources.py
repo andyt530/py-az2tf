@@ -169,7 +169,7 @@ headers = {'Authorization': 'Bearer ' + bt, 'Content-Type': 'application/json'}
 
 # subscription check
 #https://management.azure.com/subscriptions?api-version=2014-04-01
-print "REST Subscriptions ",
+# print "REST Subscriptions ",
 url="https://management.azure.com/subscriptions"
 params = {'api-version': '2014-04-01'}
 try: 
@@ -320,10 +320,10 @@ azurerm_recovery_services_vault.azurerm_recovery_services_vault(crf,cde,crg,head
 # 290_azurerm_virtual_machine
 azurerm_virtual_machine.azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 295_azurerm_virtual_machine_scale_set
-cde=True
+
 azurerm_virtual_machine_scale_set.azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 310_azurerm_automation_account
-cde=False
+
 azurerm_automation_account.azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 320_azurerm_log_analytics_workspace
 azurerm_log_analytics_workspace.azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess)

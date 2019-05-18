@@ -13,7 +13,7 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print tfp,
+        print "# " + tfp,
         count=len(azr)
         print count
         for i in range(0, count):
@@ -21,7 +21,7 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
             name=azr[i]["name"]
             lbname=name
             id=azr[i]["id"]
-            rg=id.split("/")[4].replace(".","-")
+            rg=id.split("/")[4].replace(".","-").lower()
             rgs=id.split("/")[4]
             if crg is not None:
                 if rg.lower() != crg.lower():
@@ -35,7 +35,7 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
                 name=azr[i]["properties"]["backendAddressPools"][j]["name"]
                 rname= name.replace(".","-")
                 id=azr[i]["properties"]["backendAddressPools"][j]["id"]
-                rg=id.split("/")[4].replace(".","-")
+                rg=id.split("/")[4].replace(".","-").lower()
 
                 prefix=tfp+"."+rg+'__'+lbname+'__'+rname
                 #print prefix
@@ -50,7 +50,7 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
                 try:
                     #lbrg=azr[i]["id"].split("/")[4].replace(".","-")
                     #lbname=azr[i]["id"].split("/")[8].replace(".","-")   
-                    lbrg=id.split("/")[4].replace(".","-")
+                    lbrg=id.split("/")[4].replace(".","-").lower()
                     lbname=id.split("/")[8].replace(".","-")          
                     fr.write('\t\t loadbalancer_id = "${azurerm_lb.' + lbrg + '__' + lbname + '.id}" \n')    
                 except KeyError:

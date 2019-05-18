@@ -3,7 +3,7 @@ def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfme
     tfp="azurerm_user_assigned_identity"
     azr=""
     if crf in tfp:
-        print "User assigned Identity"
+        
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.ManagedIdentity/userAssignedIdentities"
         params = {'api-version': '2018-11-30'}
         r = requests.get(url, headers=headers, params=params)
@@ -16,7 +16,7 @@ def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfme
         tfimf="015-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print tfp,
+        print "# " + tfp,
         count=len(azr)
         print count
         for j in range(0, count):
@@ -24,7 +24,7 @@ def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfme
             name=azr[j]["name"]
             loc=azr[j]["location"]
             id=azr[j]["id"]
-            rg=id.split("/")[4].replace(".","-")
+            rg=id.split("/")[4].replace(".","-").lower()
             rgs=id.split("/")[4]
             if crg is not None:
                 print "rgname=" + rg + " crg=" + crg

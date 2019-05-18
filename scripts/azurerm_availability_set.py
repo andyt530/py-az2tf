@@ -4,7 +4,7 @@ def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     azr=""
     if crf in tfp:
 
-        print "REST Avail Set"
+        # print "REST Avail Set"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/availabilitySets"
         params = {'api-version': '2018-10-01'}
         r = requests.get(url, headers=headers, params=params)
@@ -16,7 +16,7 @@ def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfimf="020-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print tfp,
+        print "# " + tfp,
         count=len(azr)
         print count
         for i in range(0, count):
@@ -25,7 +25,7 @@ def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             loc=azr[i]["location"]
             id=azr[i]["id"]
         
-            rg=id.split("/")[4].replace(".","-")
+            rg=id.split("/")[4].replace(".","-").lower()
             rgs=id.split("/")[4]
             fd=str(azr[i]["properties"]["platformFaultDomainCount"])
             ud=str(azr[i]["properties"]["platformUpdateDomainCount"])
@@ -47,7 +47,7 @@ def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             rfilename=prefix+".tf"
             fr=open(rfilename, 'w')
             fr.write("")
-            fr.write('resource ' + tfp + ' ' + rgs + '__' + rname + ' {\n')
+            fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
             fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rgs + '"\n')   

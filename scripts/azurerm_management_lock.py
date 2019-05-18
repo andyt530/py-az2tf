@@ -4,7 +4,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     azr=""
     if crf in tfp:
         # REST
-        print "REST VNets"
+        # # print "REST VNets"
 
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Authorization/locks"
         params = {'api-version': '2017-04-01'}
@@ -18,7 +18,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfimf="002-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print tfp,
+        print "# " + tfp,
         count=len(azr)
         print count
         for j in range(0, count):
@@ -26,7 +26,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             name=azr[j]["name"]
             #loc=azr[j]["location"]
             id=azr[j]["id"]
-            rg=id.split("/")[4].replace(".","-")
+            rg=id.split("/")[4].replace(".","-").lower()
             rgs=id.split("/")[4]
            
             level=azr[j]["properties"]["level"]

@@ -14,7 +14,7 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess
         tfimf="090-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print tfp,
+        print "# " + tfp,
         count=len(azr)
         print count
         for i in range(0, count):
@@ -22,7 +22,7 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
-            rg=id.split("/")[4].replace(".","-")
+            rg=id.split("/")[4].replace(".","-").lower()
             rgs=id.split("/")[4]
 
             if crg is not None:

@@ -2,7 +2,7 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # handle resource groups
     tfp="azurerm_resource_group"
     if crf in tfp:
-        print tfp,
+        print "# " + tfp,
         tfrmf="001-"+tfp+"-staterm.sh"
         tfimf="001-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')

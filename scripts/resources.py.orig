@@ -103,7 +103,7 @@ headers = {'Authorization': 'Bearer ' + bt, 'Content-Type': 'application/json'}
 
 # subscription check
 #https://management.azure.com/subscriptions?api-version=2014-04-01
-print "REST Subscriptions ",
+# print "REST Subscriptions ",
 url="https://management.azure.com/subscriptions"
 params = {'api-version': '2014-04-01'}
 try: 
@@ -152,7 +152,7 @@ if crg is not None:
         exit("ErrorInvalidResourceGroup")
 
 
-print "REST Resources ",
+# print "REST Resources ",
 fresfilename="data.json"
 fres=open(fresfilename, 'w')
 url="https://management.azure.com/subscriptions/" + sub + "/resources"
@@ -436,7 +436,7 @@ if os.path.exists("tf-stateimp.sh"):
 #
 
 tfp="azurerm_resource_group"
-print tfp,
+print "# " + tfp,
 tfrmf="001-"+tfp+"-staterm.sh"
 tfimf="001-"+tfp+"-stateimp.sh"
 tfrm=open(tfrmf, 'a')
@@ -530,7 +530,7 @@ if crf in tfp:
     tfimf="002-"+tfp+"-stateimp.sh"
     tfrm=open(tfrmf, 'a')
     tfim=open(tfimf, 'a')
-    print tfp,
+    print "# " + tfp,
     count=len(azr)
     print count
     for j in range(0, count):
@@ -606,7 +606,7 @@ if crf in tfp:
     tfimf="015-"+tfp+"-stateimp.sh"
     tfrm=open(tfrmf, 'a')
     tfim=open(tfimf, 'a')
-    print tfp,
+    print "# " + tfp,
     count=len(azr)
     print count
     for j in range(0, count):
@@ -668,7 +668,7 @@ tfp="azurerm_availability_set"
 azr=""
 if crf in tfp:
 
-    print "REST Avail Set"
+    # print "REST Avail Set"
     url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/availabilitySets"
     params = {'api-version': '2018-10-01'}
     r = requests.get(url, headers=headers, params=params)
@@ -680,7 +680,7 @@ if crf in tfp:
     tfimf="020-"+tfp+"-stateimp.sh"
     tfrm=open(tfrmf, 'a')
     tfim=open(tfimf, 'a')
-    print tfp,
+    print "# " + tfp,
     count=len(azr)
     print count
     for i in range(0, count):
@@ -689,7 +689,7 @@ if crf in tfp:
         loc=azr[i]["location"]
         id=azr[i]["id"]
         #rg=azr[i]["resourceGroup"]
-        rg=id.split("/")[4].replace(".","-")
+        rg=id.split("/")[4].replace(".","-").lower()
         fd=str(azr[i]["properties"]["platformFaultDomainCount"])
         ud=str(azr[i]["properties"]["platformUpdateDomainCount"])
         #avm=azr[i]["virtualMachines"]
@@ -752,7 +752,7 @@ tfp="azurerm_route_table"
 azr=""
 if crf in tfp:
     # REST
-    print "REST ASG"
+    # print "REST ASG"
     url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/routeTables"
     params = {'api-version': '2018-07-01'}
     r=requests.get(url, headers=headers, params=params)
@@ -766,7 +766,7 @@ if crf in tfp:
     tfimf="030-"+tfp+"-stateimp.sh"
     tfrm=open(tfrmf, 'a')
     tfim=open(tfimf, 'a')
-    print tfp,
+    print "# " + tfp,
     count=len(azr)
     print count
     for i in range(0, count):
@@ -774,7 +774,7 @@ if crf in tfp:
         name=azr[i]["name"]
         loc=azr[i]["location"]
         id=azr[i]["id"]
-        rg=id.split("/")[4].replace(".","-")
+        rg=id.split("/")[4].replace(".","-").lower()
   
         if crg is not None:
             if rg.lower() != crg.lower():
@@ -848,7 +848,7 @@ tfp="azurerm_application_security_group"
 azr=""
 if crf in tfp:
     # REST
-    print "REST ASG"
+    # print "REST ASG"
 
     url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/applicationSecurityGroups"
     params = {'api-version': '2018-07-01'}
@@ -862,7 +862,7 @@ if crf in tfp:
     tfimf="040-"+tfp+"-stateimp.sh"
     tfrm=open(tfrmf, 'a')
     tfim=open(tfimf, 'a')
-    print tfp,
+    print "# " + tfp,
     count=len(azr)
     print count
     for i in range(0, count):
@@ -871,7 +871,7 @@ if crf in tfp:
         loc=azr[i]["location"]
         id=azr[i]["id"]
     #    rg=azr[i]["resourceGroup"]
-        rg=id.split("/")[4].replace(".","-")
+        rg=id.split("/")[4].replace(".","-").lower()
         #print rg
 
         if crg is not None:
@@ -924,7 +924,7 @@ tfp="azurerm_network_security_group"
 azr=""
 if crf in tfp:
     # REST
-    print "REST NSG"
+    # print "REST NSG"
 
     url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/networkSecurityGroups"
     params = {'api-version': '2018-07-01'}
@@ -940,7 +940,7 @@ if crf in tfp:
     tfimf="050-"+tfp+"-stateimp.sh"
     tfrm=open(tfrmf, 'a')
     tfim=open(tfimf, 'a')
-    print tfp,
+    print "# " + tfp,
     count=len(azr)
     print count
     for i in range(0, count):
@@ -949,7 +949,7 @@ if crf in tfp:
         loc=azr[i]["location"]
         id=azr[i]["id"]
     #    rg=azr[i]["resourceGroup"]
-        rg=id.split("/")[4].replace(".","-")
+        rg=id.split("/")[4].replace(".","-").lower()
         #print rg
 
         if crg is not None:
@@ -1098,7 +1098,7 @@ tfp="azurerm_virtual_network"
 azr=""
 if crf in tfp:
     # REST
-    print "REST VNets"
+    # print "REST VNets"
 
     url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworks"
     params = {'api-version': '2018-07-01'}
@@ -1112,7 +1112,7 @@ if crf in tfp:
     tfimf="060-"+tfp+"-stateimp.sh"
     tfrm=open(tfrmf, 'a')
     tfim=open(tfimf, 'a')
-    print tfp,
+    print "# " + tfp,
     count=len(azr)
     print count
     for i in range(0, count):
@@ -1120,7 +1120,7 @@ if crf in tfp:
         name=azr[i]["name"]
         loc=azr[i]["location"]
         id=azr[i]["id"]
-        rg=id.split("/")[4].replace(".","-")
+        rg=id.split("/")[4].replace(".","-").lower()
 
         if crg is not None:
             if rg.lower() != crg.lower():
@@ -1210,7 +1210,7 @@ if crf in tfp:
     tfimf="070-"+tfp+"-stateimp.sh"
     tfrm=open(tfrmf, 'a')
     tfim=open(tfimf, 'a')
-    print tfp,
+    print "# " + tfp,
     count=len(azr)
     print count
     for i in range(0, count):
@@ -1223,7 +1223,7 @@ if crf in tfp:
             name=subs[j]["name"]
             #loc=subs[j]["location"] subnets don't have location
             id=subs[j]["id"]
-            rg=id.split("/")[4].replace(".","-")
+            rg=id.split("/")[4].replace(".","-").lower()
 
             if crg is not None:
                 if rg.lower() != crg.lower():
@@ -1353,7 +1353,7 @@ if crf in tfp:
     tfimf="080-"+tfp+"-stateimp.sh"
     tfrm=open(tfrmf, 'a')
     tfim=open(tfimf, 'a')
-    print tfp,
+    print "# " + tfp,
     count=len(azr)
     print count
     for i in range(0, count):
@@ -1364,7 +1364,7 @@ if crf in tfp:
             name=peers[j]["name"]
             #loc=peers[j]["location"] peers don't have a location
             id=peers[j]["id"]
-            rg=id.split("/")[4].replace(".","-")
+            rg=id.split("/")[4].replace(".","-").lower()
 
             if crg is not None:
                 if rg.lower() != crg.lower():
@@ -1424,7 +1424,7 @@ if crf in tfp:
     tfimf="090-"+tfp+"-stateimp.sh"
     tfrm=open(tfrmf, 'a')
     tfim=open(tfimf, 'a')
-    print tfp,
+    print "# " + tfp,
     count=len(azr)
     print count
     for i in range(0, count):
@@ -1432,7 +1432,7 @@ if crf in tfp:
         name=azr[i]["name"]
         loc=azr[i]["location"]
         id=azr[i]["id"]
-        rg=id.split("/")[4].replace(".","-")
+        rg=id.split("/")[4].replace(".","-").lower()
 
         if crg is not None:
             if rg.lower() != crg.lower():
@@ -1568,7 +1568,7 @@ tfp="azurerm_managed_disk"
 azr=""
 if crf in tfp:
 # REST or cli
-    print "REST Managed Disk"
+    # print "REST Managed Disk"
     url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/disks"
     params = {'api-version': '2017-03-30'}
     r = requests.get(url, headers=headers, params=params)
@@ -1580,7 +1580,7 @@ if crf in tfp:
     tfimf="100-"+tfp+"-stateimp.sh"
     tfrm=open(tfrmf, 'a')
     tfim=open(tfimf, 'a')
-    print tfp,
+    print "# " + tfp,
     count=len(azr)
     print count
     for i in range(0, count):
@@ -1589,7 +1589,7 @@ if crf in tfp:
         name=oname.replace("/.vhd","/_vhd") 
         loc=azr[i]["location"]
         id=azr[i]["id"]
-        rg=id.split("/")[4].replace(".","-")
+        rg=id.split("/")[4].replace(".","-").lower()
         if crg is not None:
             if rg.lower() != crg.lower():
                 continue  # back to for
@@ -1711,7 +1711,7 @@ tfp="azurerm_storage_account"
 azr=""
 if crf in tfp:
 # REST or cli
-    print "REST Managed Disk"
+    # print "REST Managed Disk"
     url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Storage/storageAccounts"
     params = {'api-version': '2017-10-01'}
     r = requests.get(url, headers=headers, params=params)
@@ -1723,7 +1723,7 @@ if crf in tfp:
     tfimf="110-"+tfp+"-stateimp.sh"
     tfrm=open(tfrmf, 'a')
     tfim=open(tfimf, 'a')
-    print tfp,
+    print "# " + tfp,
     count=len(azr)
     print count
     for i in range(0, count):
@@ -1731,7 +1731,7 @@ if crf in tfp:
         name=azr[i]["name"]
         loc=azr[i]["location"]
         id=azr[i]["id"]
-        rg=id.split("/")[4].replace(".","-")
+        rg=id.split("/")[4].replace(".","-").lower()
 
         if crg is not None:
             if rg.lower() != crg.lower():
@@ -1837,7 +1837,7 @@ tfp="azurerm_traffic_manager_profile"
 azr=""
 if crf in tfp:
 # REST or cli
-    print "REST Traffic Manager Profile"
+    # print "REST Traffic Manager Profile"
     url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/trafficmanagerprofiles"
     params = {'api-version': '2017-05-01'}
     r = requests.get(url, headers=headers, params=params)
@@ -1849,7 +1849,7 @@ if crf in tfp:
     tfimf="124-"+tfp+"-stateimp.sh"
     tfrm=open(tfrmf, 'a')
     tfim=open(tfimf, 'a')
-    print tfp,
+    print "# " + tfp,
     count=len(azr)
     print count
     for i in range(0, count):
@@ -1857,7 +1857,7 @@ if crf in tfp:
         name=azr[i]["name"]
         #loc=azr[i]["location"]
         id=azr[i]["id"]
-        rg=id.split("/")[4].replace(".","-")
+        rg=id.split("/")[4].replace(".","-").lower()
 
         if crg is not None:
             if rg.lower() != crg.lower():
@@ -1956,7 +1956,7 @@ if crf in tfp:
     tfimf="125-"+tfp+"-stateimp.sh"
     tfrm=open(tfrmf, 'a')
     tfim=open(tfimf, 'a')
-    print tfp,
+    print "# " + tfp,
     count=len(azr)
     print count
     for i in range(0, count):
@@ -1971,7 +1971,7 @@ if crf in tfp:
 
             name=azr2[j]["name"]
             id=azr2[j]["id"]
-            rg=id.split("/")[4].replace(".","-")
+            rg=id.split("/")[4].replace(".","-").lower()
             print rg
             print crg
             if crg is not None:

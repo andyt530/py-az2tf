@@ -6,19 +6,18 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     
     if crf in tfp:
     # REST or cli
-        print "REST Storage Acc"
+        # print "REST Storage Acc"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Storage/storageAccounts"
         params = {'api-version': '2019-04-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
-        if cde:
-            print(json.dumps(azr, indent=4, separators=(',', ': ')))
+        if cde: print(json.dumps(azr, indent=4, separators=(',', ': ')))
 
         tfrmf="110-"+tfp+"-staterm.sh"
         tfimf="110-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print tfp,
+        print '# '+tfp,
         count=len(azr)
         print count
         for i in range(0, count):
@@ -26,7 +25,7 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
-            rg=id.split("/")[4].replace(".","-")
+            rg=id.split("/")[4].replace(".","-").lower()
             rgs=id.split("/")[4]
             if crg is not None:
                 if rg.lower() != crg.lower():
@@ -65,8 +64,6 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 byp=str(ast.literal_eval(json.dumps(azr[i]["properties"]["networkAcls"]["bypass"])))
                 byp=byp.replace("'",'"')
                 byp=byp.replace(", ",'", "')
-                
-                print "################## " + byp
 
                 ipr=azr[i]["properties"]["networkAcls"]["ipRules"]
                 vnr=azr[i]["properties"]["networkAcls"]["virtualNetworkRules"]

@@ -6,7 +6,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
     azr = ""
     if crf in tfp:
         # REST or cli
-        print "REST Managed Disk"
+        # print "REST Managed Disk"
         url = "https://management.azure.com/subscriptions/" + sub + \
             "/providers/Microsoft.Compute/virtualMachineScaleSets"
         params = {'api-version': '2019-03-01'}
@@ -19,7 +19,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
         tfimf = tcode+tfp+"-stateimp.sh"
         tfrm = open(tfrmf, 'a')
         tfim = open(tfimf, 'a')
-        print tfp,
+        print "# " + tfp,
         count = len(azr)
         print count
         for i in range(0, count):
@@ -27,7 +27,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
             name = azr[i]["name"]
             loc = azr[i]["location"]
             id = azr[i]["id"]
-            rg = id.split("/")[4].replace(".", "-")
+            rg = id.split("/")[4].replace(".", "-").lower()
             rgs=id.split("/")[4]
             if crg is not None:
                 if rg.lower() != crg.lower():

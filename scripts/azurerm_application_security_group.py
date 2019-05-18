@@ -4,7 +4,7 @@ def azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2
     azr=""
     if crf in tfp:
         # REST
-        print "REST ASG"
+        # print "REST ASG"
 
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/applicationSecurityGroups"
         params = {'api-version': '2018-07-01'}
@@ -18,7 +18,7 @@ def azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2
         tfimf="040-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print tfp,
+        print "# " + tfp,
         count=len(azr)
         print count
         for i in range(0, count):
@@ -27,7 +27,7 @@ def azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2
             loc=azr[i]["location"]
             id=azr[i]["id"]
         #    rg=azr[i]["resourceGroup"]
-            rg=id.split("/")[4].replace(".","-")
+            rg=id.split("/")[4].replace(".","-").lower()
             rgs=id.split("/")[4]
             #print rg
 

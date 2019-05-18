@@ -13,7 +13,7 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print tfp,
+        print "# " + tfp,
         count=len(azr)
         print count
         for i in range(0, count):
@@ -21,7 +21,7 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
             name=azr[i]["name"]
          
             id=azr[i]["id"]
-            rg=id.split("/")[4].replace(".","-")
+            rg=id.split("/")[4].replace(".","-").lower()
 
             if crg is not None:
                 if rg.lower() != crg.lower():
@@ -51,14 +51,14 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                     print "********** beap ***********"
                     print(json.dumps(beap, indent=4, separators=(',', ': ')))
                 id=azr[i]["properties"]["inboundNatPools"][j]["id"]
-                rg=id.split("/")[4].replace(".","-")
+                rg=id.split("/")[4].replace(".","-").lower()
                 rgs=id.split("/")[4]
                 if crg is not None:
                     if rg.lower() != crg.lower():
                         continue  # back to for
 
                 prefix=tfp+"."+rg+'__'+rname
-                print prefix
+                
                 rfilename=prefix+".tf"
                 fr=open(rfilename, 'w')
                 fr.write(az2tfmess)

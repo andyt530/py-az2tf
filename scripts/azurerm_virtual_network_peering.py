@@ -8,7 +8,7 @@ def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfimf="080-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print tfp,
+        print "# " + tfp,
         count=len(azr)
         print count
         for i in range(0, count):
@@ -19,7 +19,7 @@ def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfm
                 name=peers[j]["name"]
                 #loc=peers[j]["location"] peers don't have a location
                 id=peers[j]["id"]
-                rg=id.split("/")[4].replace(".","-")
+                rg=id.split("/")[4].replace(".","-").lower()
                 rgs=id.split("/")[4]
 
                 if crg is not None:

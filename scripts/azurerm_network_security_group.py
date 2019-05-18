@@ -5,7 +5,7 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
     azr=""
     if crf in tfp:
         # REST
-        print "REST NSG"
+        # print "REST NSG"
 
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/networkSecurityGroups"
         params = {'api-version': '2018-07-01'}
@@ -19,7 +19,7 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
         tfimf="050-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print tfp,
+        print "# " + tfp,
         count=len(azr)
         print count
         for i in range(0, count):
@@ -28,7 +28,7 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rgs=id.split("/")[4]
-            rg=id.split("/")[4].replace(".","-")
+            rg=id.split("/")[4].replace(".","-").lower()
 
             if crg is not None:
                 if rg.lower() != crg.lower():

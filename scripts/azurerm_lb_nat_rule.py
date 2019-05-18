@@ -11,14 +11,14 @@ def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print tfp,
+        print "# " + tfp,
         count=len(azr)
         print count
         for i in range(0, count):
             try:
                 beap=azr[i]["properties"]["inboundNatRules"] 
                 id=azr[i]["id"]
-                rg=id.split("/")[4].replace(".","-")
+                rg=id.split("/")[4].replace(".","-").lower()
                 if crg is not None:
                     if rg.lower() != crg.lower():
                         continue  # back to for
@@ -31,7 +31,7 @@ def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                     rname=name.replace(".","-")
 
                     id=azr[i]["properties"]["inboundNatRules"][j]["id"]
-                    rg=id.split("/")[4].replace(".","-")
+                    rg=id.split("/")[4].replace(".","-").lower()
                     if crg is not None:
                         if rg.lower() != crg.lower():
                             continue  # back to for

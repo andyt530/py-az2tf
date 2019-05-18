@@ -1,5 +1,5 @@
 def azurerm_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os):
-    print "REST Resources ",
+    # print "REST Resources ",
     fresfilename="data.json"
     fres=open(fresfilename, 'w')
     url="https://management.azure.com/subscriptions/" + sub + "/resources"

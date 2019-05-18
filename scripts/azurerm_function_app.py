@@ -5,7 +5,7 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     azr=""
     if crf in tfp:
     # REST or cli
-        print "REST Function App"
+        # print "REST Function App"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Web/sites"
         params = {'api-version': '2018-02-01'}
         r = requests.get(url, headers=headers, params=params)
@@ -17,7 +17,7 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print tfp,
+        print "# " + tfp,
         count=len(azr)
         print count
         for i in range(0, count):
@@ -28,7 +28,7 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
-            rg=id.split("/")[4].replace(".","-")
+            rg=id.split("/")[4].replace(".","-").lower()
             rgs=id.split("/")[4]
             if crg is not None:
                 if rg.lower() != crg.lower():
@@ -48,13 +48,12 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             https=azr[i]["properties"]["httpsOnly"]
     
 
-            prg=azr[i]["properties"]["serverFarmId"].split("/")[4]
-            pnam=azr[i]["properties"]["serverFarmId"].split("/")[8]
+            #prg=azr[i]["properties"]["serverFarmId"].split("/")[4]
+            #pnam=azr[i]["properties"]["serverFarmId"].split("/")[8]
        
             appplid=azr[i]["properties"]["serverFarmId"]
     
-    # ********
-            #appset=az functionapp config appsettings list -n name -g rg -o json
+
 
             # case issues - so use resource id directly
             # fr.write('\t app_service_plan_id = "${azurerm_app_service_plan. + '__' + .id}'"' prg pnam + '"\n')
@@ -67,7 +66,7 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
 
             url="https://management.azure.com/" + id + "/config/appsettings/list"
-            print url
+            #print url
             params = {'api-version': '2018-02-01'}
             r = requests.post(url, headers=headers, params=params)       
             appset= r.json()
