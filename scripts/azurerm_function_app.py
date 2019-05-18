@@ -71,7 +71,7 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             params = {'api-version': '2018-02-01'}
             r = requests.post(url, headers=headers, params=params)       
             appset= r.json()
-            print(json.dumps(appset, indent=4, separators=(',', ': ')))
+            #print(json.dumps(appset, indent=4, separators=(',', ': ')))
             
             fr.write('\t app_settings { \n')
                     

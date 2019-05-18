@@ -3,10 +3,10 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  110 storage account
     tfp="azurerm_storage_account"
     azr=""
-    cde=True
+    
     if crf in tfp:
     # REST or cli
-        print "REST Managed Disk"
+        print "REST Storage Acc"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Storage/storageAccounts"
         params = {'api-version': '2019-04-01'}
         r = requests.get(url, headers=headers, params=params)
