@@ -276,7 +276,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     if ddcreopt == "Attach" :
                         try:
                             ddmdid= datadisks[j]["managedDisk"]["id"].split("/")[8].replace(".","-")
-                            ddmdrg= datadisks[j]["managedDisk"]["id"].split("/")[4].replace(".","-")
+                            ddmdrg= datadisks[j]["managedDisk"]["id"].split("/")[4].replace(".","-").lower()
                             ## ddmdrg  from cut is upper case - not good
                             ## probably safe to assume managed disk in same RG as VM ??
                             # check id lowercase rg = ddmdrg if so use rg

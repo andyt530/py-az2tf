@@ -111,7 +111,7 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
                 try :
                     ipcpipid= ipc[j]["properties"]["publicIPAddress"]["id"]
                     pipnam= ipcpipid.split("/")[8].replace(".","-")
-                    piprg= ipcpipid.split("/")[4].replace(".","-")
+                    piprg= ipcpipid.split("/")[4].replace(".","-").lower()
                     fr.write('\t\t public_ip_address_id = "${azurerm_public_ip.' + piprg + '__' + pipnam + '.id}"\n')
                 except KeyError:
                     pass
@@ -119,7 +119,7 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
                 try :
                     ipcsubid= ipc[j]["properties"]["subnet"]["id"]
                     subnam= ipcsubid.split("/")[10].replace(".","-")
-                    subrg= ipcsubid.split("/")[4].replace(".","-")
+                    subrg= ipcsubid.split("/")[4].replace(".","-").lower()
                     fr.write('\t\t subnet_id = "${azurerm_subnet.' + subrg + '__' + subnam + '.id}"\n')
                 except KeyError:
                     pass

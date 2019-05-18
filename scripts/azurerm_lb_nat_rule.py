@@ -42,7 +42,7 @@ def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                     fr=open(rfilename, 'w')
                     fr.write(az2tfmess)
                        
-                    lbrg=azr[i]["id"].split("/")[4].replace(".","-")
+                    lbrg=azr[i]["id"].split("/")[4].replace(".","-").lower()
                     lbname=azr[i]["id"].split("/")[8].replace(".","-")
                     
                     fep=azr[i]["properties"]["inboundNatRules"][j]["properties"]["frontendPort"]

@@ -59,7 +59,7 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
                 fr.write('\t endpoint_status = "' +  eps + '"\n')
                 try:
                     #tgtid=azr2[j]["properties"]["targetResourceId"]
-                    tgtrrg=azr2[j]["properties"]["targetResourceId"].split("/")[4].replace(".","-")
+                    tgtrrg=azr2[j]["properties"]["targetResourceId"].split("/")[4].replace(".","-").lower()
                     tgtrid=azr2[j]["properties"]["targetResourceId"].split("/")[8].replace(".","-")          
                     fr.write('\t target_resource_id = "${azurerm_public_ip.' + tgtrrg + '__' + tgtrid + '.id}"\n')
                 except KeyError:

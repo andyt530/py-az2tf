@@ -189,7 +189,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
                             fr.write('\tip_configuration { \n')
                             ipcn = azr[i]["properties"]["virtualMachineProfile"]["networkProfile"]["networkInterfaceConfigurations"][j]["properties"]["ipConfigurations"][k]["name"]
 
-                            ipcsrg = azr[i]["properties"]["virtualMachineProfile"]["networkProfile"]["networkInterfaceConfigurations"][j]["properties"]["ipConfigurations"][k]["properties"]["subnet"]["id"].split("/")[4].replace(".", "-")
+                            ipcsrg = azr[i]["properties"]["virtualMachineProfile"]["networkProfile"]["networkInterfaceConfigurations"][j]["properties"]["ipConfigurations"][k]["properties"]["subnet"]["id"].split("/")[4].replace(".", "-").lower()
                             ipcsn = azr[i]["properties"]["virtualMachineProfile"]["networkProfile"]["networkInterfaceConfigurations"][j]["properties"]["ipConfigurations"][k]["properties"]["subnet"]["id"].split("/")[10].replace(".", "-")
                             beapids = azr[i]["properties"]["virtualMachineProfile"]["networkProfile"]["networkInterfaceConfigurations"][j]["properties"]["ipConfigurations"][k]["properties"]["loadBalancerBackendAddressPools"]
                             #natrids = azr[i]["properties"]["virtualMachineProfile"]["networkProfile"]["networkInterfaceConfigurations"][j]["properties"]["ipConfigurations"][k]["properties"]["loadBalancerInboundNatPools"]
@@ -202,7 +202,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
                                 fr.write('\t\tprimary = ""\n')
                             
                             try:
-                                ipcsrg = azr[i]["properties"]["virtualMachineProfile"]["networkProfile"]["networkInterfaceConfigurations"][j]["properties"]["ipConfigurations"][k]["properties"]["subnet"]["id"].split("/")[4].replace(".", "-")
+                                ipcsrg = azr[i]["properties"]["virtualMachineProfile"]["networkProfile"]["networkInterfaceConfigurations"][j]["properties"]["ipConfigurations"][k]["properties"]["subnet"]["id"].split("/")[4].replace(".", "-").lower()
                                 ipcsn = azr[i]["properties"]["virtualMachineProfile"]["networkProfile"]["networkInterfaceConfigurations"][j]["properties"]["ipConfigurations"][k]["properties"]["subnet"]["id"].split("/")[10].replace(".", "-")
                                 fr.write('\t\tsubnet_id = "${azurerm_subnet.' + ipcsrg + '__' + ipcsn + '.id}"\n')
                             except KeyError:
@@ -269,8 +269,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
                             ddmd = datadisks[j]["managedDisk"]
                             ddmdid = datadisks[j]["managedDisk"]["id"].split(
                                 "/")[8].replace(".", "-")
-                            ddmdrg = datadisks[j]["managedDisk"]["id"].split(
-                                "/")[4].replace(".", "-")
+                            ddmdrg = datadisks[j]["managedDisk"]["id"].split("/")[4].replace(".", "-").lower()
                             # ddmdrg from cut is upper case - not good
                             # probably safe to assume managed disk in same RG as VM ??
                             # check id lowercase rg = ddmdrg if so use rg

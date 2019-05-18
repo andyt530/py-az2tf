@@ -51,7 +51,7 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
             fr.write('enabled = "' + str(en) + '"\n')
    
             try:
-                trrg=azr[i]["properties"]["targetResourceUri"].split("/")[4].replace(".","-")
+                trrg=azr[i]["properties"]["targetResourceUri"].split("/")[4].replace(".","-").lower()
                 trty=azr[i]["properties"]["targetResourceUri"].split("/")[6].replace(".","-")
                 trid=azr[i]["properties"]["targetResourceUri"].split("/")[8].replace(".","-")
                 # assume trty = Microsoft.Compute
@@ -139,7 +139,7 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
                                     mtn="Percentage CPU"
                             
                                 mtid=azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["metricResourceUri"]
-                                mtrrg=azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["metricResourceUri"].split("/")[4].replace(".","-")
+                                mtrrg=azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["metricResourceUri"].split("/")[4].replace(".","-").lower()
                                 mtrid=azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["metricResourceUri"].split("/")[8].replace(".","-")
                                 mtop=azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["operator"]
                                 mtstat=azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["statistic"]

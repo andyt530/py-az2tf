@@ -79,7 +79,7 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                 except:
                     fepe=bep
                 
-                lbrg=azr[i]["id"].split("/")[4].replace(".","-")
+                lbrg=azr[i]["id"].split("/")[4].replace(".","-").lower()
                 lbname=azr[i]["id"].split("/")[8].replace(".","-")
                 
                 fr.write('\t\t loadbalancer_id = "${azurerm_lb.' + lbrg + '__' + lbname + '.id}"\n')

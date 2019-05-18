@@ -56,7 +56,7 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             kv=azr[i]["properties"]["kubernetesVersion"]
             
 
-            #vnsrg=azr[i]["properties"]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[4]
+            #vnsrg=azr[i]["properties"]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[4].lower()
             #vnsid=azr[i]["properties"]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[10]
            
             
@@ -145,7 +145,7 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('\t\t os_type =  "' + ost + '"\n')
 
                 try :
-                    vnsrg=azr[i]["properties"]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[4]
+                    vnsrg=azr[i]["properties"]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[4].lower()
                     vnsid=azr[i]["properties"]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[10]
                     fr.write('\t\t vnet_subnet_id = "${azurerm_subnet.' + vnsrg + '__' + vnsid + '.id}" \n')      
                 except KeyError:

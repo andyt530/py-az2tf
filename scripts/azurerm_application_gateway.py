@@ -80,12 +80,12 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
             icount=len(gwipc)
             for j in range(0,icount):
                 gname=azr[i]["properties"]["gatewayIPConfigurations"][j]["name"]
-                subrg=azr[i]["properties"]["gatewayIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-")
+                subrg=azr[i]["properties"]["gatewayIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-").lower()
                 subname=azr[i]["properties"]["gatewayIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[10].replace(".","-")
                 fr.write('gateway_ip_configuration {' + '\n')
                 fr.write('\t name = "' + gname + '"\n')
                 try:
-                    subrg=azr[i]["properties"]["gatewayIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-")
+                    subrg=azr[i]["properties"]["gatewayIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-").lower()
                     subname=azr[i]["properties"]["gatewayIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[10].replace(".","-")
                     fr.write('\t subnet_id = "${azurerm_subnet.' + subrg + '__' + subname + '.id}" \n')
                 except KeyError:  
@@ -116,7 +116,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                     fr.write('frontend_ip_configuration {\n')
                     fr.write('\t name = "' + fname + '"\n')
                     try :
-                        subrg=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-")
+                        subrg=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-").lower()
                         subname=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[10].replace(".","-")                 
                         fr.write('\t subnet_id = "${azurerm_subnet.' + subrg + '__'  + subname + '.id}" \n')
                     except KeyError:
@@ -135,7 +135,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                         pass
 
                     try :
-                        pubrg=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[4].replace(".","-")
+                        pubrg=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[4].replace(".","-").lower()
                         pubname=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[8].replace(".","-")  
                         fr.write('\t public_ip_address_id = "${azurerm_public_ip.' + pubrg + '__' + pubname + '.id}" \n')
                     except KeyError:

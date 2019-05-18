@@ -37,7 +37,7 @@ def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                 id=azr[i]["properties"]["probes"][j]["id"]
                 rg=id.split("/")[4].replace(".","-").lower()
                 rgs=id.split("/")[4]
-                lbrg=azr[i]["id"].split("/")[4].replace(".","-")
+                lbrg=azr[i]["id"].split("/")[4].replace(".","-").lower()
                 lbname=azr[i]["id"].split("/")[8].replace(".","-")
 
                 prefix=tfp+"."+rg+'__'+lbname+'__'+rname

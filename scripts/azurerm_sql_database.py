@@ -25,7 +25,7 @@ def azurerm_sql_database(crf, cde, crg, headers, requests, sub, json, az2tfmess)
             name = azr[i]["name"]
             loc = azr[i]["location"]
             id = azr[i]["id"]
-            rg = id.split("/")[4].replace(".", "-")
+            rg = id.split("/")[4].replace(".", "-").lower()
             rgs = id.split("/")[4]
             if crg is not None:
                 if rg.lower() != crg.lower():
@@ -50,7 +50,7 @@ def azurerm_sql_database(crf, cde, crg, headers, requests, sub, json, az2tfmess)
                     name = azr2[j]["name"]
                     loc = azr2[j]["location"]
                     id = azr2[j]["id"]
-                    rg = id.split("/")[4].replace(".", "-")
+                    rg = id.split("/")[4].replace(".", "-").lower()
                     rgs = id.split("/")[4]
                     if crg is not None:
                         if rg.lower() != crg.lower():

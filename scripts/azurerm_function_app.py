@@ -48,7 +48,7 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             https=azr[i]["properties"]["httpsOnly"]
     
 
-            #prg=azr[i]["properties"]["serverFarmId"].split("/")[4]
+            #prg=azr[i]["properties"]["serverFarmId"].split("/")[4].lower()
             #pnam=azr[i]["properties"]["serverFarmId"].split("/")[8]
        
             appplid=azr[i]["properties"]["serverFarmId"]

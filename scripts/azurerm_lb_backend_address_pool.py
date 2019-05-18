@@ -48,7 +48,7 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
                 fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
                 try:
-                    #lbrg=azr[i]["id"].split("/")[4].replace(".","-")
+                    #lbrg=azr[i]["id"].split("/")[4].replace(".","-").lower()
                     #lbname=azr[i]["id"].split("/")[8].replace(".","-")   
                     lbrg=id.split("/")[4].replace(".","-").lower()
                     lbname=id.split("/")[8].replace(".","-")          

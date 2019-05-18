@@ -56,7 +56,7 @@ def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('\t frontend_ip_configuration {' + '\n')
                 fr.write('\t\t name = "' +    fname + '"\n')
                 try:
-                    subrg=azr[i]["properties"]["frontendIPConfigurations"][j]["subnet"]["id"].split("/")[4].replace(".","-")
+                    subrg=azr[i]["properties"]["frontendIPConfigurations"][j]["subnet"]["id"].split("/")[4].replace(".","-").lower()
                     subname=azr[i]["properties"]["frontendIPConfigurations"][j]["subnet"]["id"].split("/")[10].replace(".","-")
                     fr.write('\t\t subnet_id = "${azurerm_subnet.' + subrg + '__' + subname +'.id}"\n')
                 except KeyError:
@@ -72,7 +72,7 @@ def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 except KeyError:
                     pass
                 try:
-                    pubrg=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicAddress"]["id"].split("/")[4].replace(".","-")
+                    pubrg=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicAddress"]["id"].split("/")[4].replace(".","-").lower()
                     pubname=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicAddress"]["id"].split("/")[8].replace(".","-")
                     fr.write('\t\t public_ip_address_id = "${azurerm_public_ip.' + pubrg + '__' + pubname + '.id}"\n')
                 except KeyError:
