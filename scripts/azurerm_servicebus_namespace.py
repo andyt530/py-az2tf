@@ -12,7 +12,7 @@ def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess
         try:
             azr= r.json()["value"]
         except KeyError:
-            print "No resources found"
+            if cde: print "No Namespace resources found"
             return
         if cde:
             print(json.dumps(azr, indent=4, separators=(',', ': ')))

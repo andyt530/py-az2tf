@@ -337,7 +337,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
                     try:
                         vmextset=str(ast.literal_eval(json.dumps(azr[i]["properties"]["virtualMachineProfile"]["extensionProfile"]["extensions"][j]["properties"]["settings"])))
                         vmextset=vmextset.replace("'",'\\"')
-                        print "vmextsett=" + vmextset
+                        #print "vmextsett=" + vmextset
                     
                         fr.write('\t settings="' + vmextset + '"\n')                           
 

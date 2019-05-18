@@ -53,7 +53,6 @@ import azurerm_virtual_network_gateway_connection # --
 import azurerm_express_route_circuit 
 import azurerm_express_route_circuit_authorization
 import azurerm_express_route_circuit_peering  # --
-cde=True
 import azurerm_container_registry
 import azurerm_kubernetes_cluster
 import azurerm_recovery_services_vault 
@@ -190,7 +189,6 @@ except KeyError:
 
 FoundSub=False
 count=len(subs)
-print count
 
 for i in range(0, count):
     id=str(subs[i]["subscriptionId"])
@@ -235,7 +233,7 @@ if crf is None:
 
 
 # record and sort resources
-azurerm_resources.azurerm_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os)
+#azurerm_resources.azurerm_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os)
 # 001 Resource Group
 azurerm_resource_group.azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 002 management locks

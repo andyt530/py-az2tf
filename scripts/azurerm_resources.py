@@ -21,7 +21,7 @@ def azurerm_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os):
 
 
     count=len(res)
-    print count
+    print "Resources Found: " + str(count)
     for j in range(0, count):
         
         #name=res[j]['name']

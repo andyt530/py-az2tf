@@ -13,7 +13,7 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         try:
             azr= r.json()["value"]
         except KeyError:
-            print "Found no Namespaces found for Queues"
+            if cde: print "Found no Namespaces for Queues"
             return
 
         if cde:
