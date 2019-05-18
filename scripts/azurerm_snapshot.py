@@ -10,8 +10,7 @@ def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         params = {'api-version': '2018-09-30'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
-        if cde:
-            print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
 
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"
@@ -30,6 +29,8 @@ def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
+            if cde:
+                print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
             
             rname=name.replace(".","-")
             prefix=tfp+"."+rg+'__'+rname
@@ -42,18 +43,13 @@ def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
-    ###############
-    # specific code start
-    ###############
 
-            
-          
 
             #suri=azr[i]["creationData"]["sourceUri"]
             #srid=azr[i]["creationData"]["sourceResourceId"]
             #said=azr[i]["creationData"]["storageAccountId"]
             try:
-                co=azr[i]["proprties"]["creationData"]["createOption"]
+                co=azr[i]["properties"]["creationData"]["createOption"]
                 fr.write('\t create_option = "' +  co + '"\n')
             except KeyError:
                 pass

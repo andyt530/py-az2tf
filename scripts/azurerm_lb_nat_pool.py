@@ -94,16 +94,8 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                     pass
 
 
-        # tags block       
-                try:
-                    mtags=azr[i]["tags"]
-                    fr.write('tags { \n')
-                    for key in mtags.keys():
-                        tval=mtags[key]
-                        fr.write('\t "' + key + '"="' + tval + '"\n')
-                    fr.write('}\n')
-                except KeyError:
-                    pass
+        # no tags block       
+
 
                 fr.write('}\n') 
                 fr.close()   # close .tf file

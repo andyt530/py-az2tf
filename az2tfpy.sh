@@ -122,7 +122,8 @@ echo "terraform init"
 terraform init 2>&1 | tee -a import.log
 echo $?
 
-exit
+
+
 chmod 755 *state*.sh
 
 if [ "$f" = "yes" ]; then
@@ -167,44 +168,6 @@ if [ "$p" = "yes" ]; then
     done
 fi
 
-date
-
-
-echo loop through providers
-
-for com in `ls ../../scripts/*_azurerm*.sh | cut -d'/' -f4 | sort -g`; do
-    gr=`echo $com | awk -F 'azurerm_' '{print $2}' | awk -F '.sh' '{print $1}'`
-    echo $gr
-    lc="1"
-    tc2=`cat resources.txt | grep $gr | wc -l`
-    for l in `cat resources.txt | grep $gr` ; do
-        echo -n $lc of $tc2 " "
-        myrg=`echo $l | cut -d':' -f1`
-        prov=`echo $l | cut -d':' -f2`
-        echo "debug $j prov=$prov rg=$myrg"
-        docomm="../../scripts/$com $myrg"
-        echo "$docomm"
-        if [ "$f" = "no" ]; then
-            eval $docomm 2>&1 | tee -a import.log
-        else
-            grep "$docomm" processed.txt
-            if [ $? -eq 0 ]; then
-                echo "skipping $docomm"
-            else
-                eval $docomm 2>&1 | tee -a import.log
-            fi
-        fi
-        
-        lc=`expr $lc + 1`
-        if grep Error: import.log; then
-            echo "Error in log file exiting ...."
-            exit
-        else
-            echo "$docomm" >> processed.txt
-        fi
-    done
-    rm -f terraform*.backup
-done
 date
 
 if [ "$x" = "yes" ]; then

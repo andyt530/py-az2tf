@@ -1,5 +1,7 @@
+import sys
 def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # handle resource groups
+    isrun=False
     tfp="azurerm_resource_group"
     if crf in tfp:
         print "# " + tfp,
@@ -37,7 +39,10 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             prefix=tfp+"."+rname
             
             rfilename=prefix+".tf"
-            fr=open(rfilename, 'w')
+            if isrun:
+                fr=sys.stdout
+            else:
+                fr=open(rfilename, 'w')
             fr.write("")
             fr.write('resource "' + tfp + '" "' + rname + '" {\n')
             fr.write('\t name = "' + name + '"\n')
@@ -60,7 +65,7 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('}\n')
             
             fr.write('}\n') 
-            fr.close()  # close .tf file
+            if fr is not sys.stdout: fr.close()  # close .tf file
 
             if cde:
                 with open(rfilename) as f: 

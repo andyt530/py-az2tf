@@ -7,8 +7,7 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         params = {'api-version': '2017-03-30'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
-        if cde:
-            print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
 
         tfrmf="100-"+tfp+"-staterm.sh"
         tfimf="100-"+tfp+"-stateimp.sh"
@@ -28,6 +27,8 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
+            if cde:
+                print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
             
             rname=name.replace(".","-")
             prefix=tfp+"."+rg+'__'+rname
@@ -104,6 +105,7 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 stopt=azr[i]["sku"]["name"]
                 fr.write('\t storage_account_type = "' +  stopt + '"\n')
             except KeyError:
+                fr.write('\t storage_account_type = "' +  "Standard_LRS" + '"\n')
                 pass    
             
         
