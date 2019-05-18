@@ -1,11 +1,12 @@
 # azurerm_monitor_autoscale_setting
+import ast
 def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_monitor_autoscale_setting"
     tcode="650-"
     azr=""
     if crf in tfp:
     # REST or cli
-        print "REST Managed Disk"
+        print "REST monitor autoscale"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/microsoft.insights/autoscalesettings"
         params = {'api-version': '2015-04-01'}
         r = requests.get(url, headers=headers, params=params)
@@ -38,17 +39,16 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
             fr=open(rfilename, 'w')
             fr.write(az2tfmess)
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
-            fr.write('\t name = "' + name + '"\n')
-            fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rgs + '"\n')
+            fr.write('name = "' + name + '"\n')
+            fr.write('location = "'+ loc + '"\n')
+            fr.write('resource_group_name = "'+ rgs + '"\n')
 
             en=azr[i]["properties"]["enabled"]
-            loc=azr[i]["properties"]["location"]
             profs=azr[i]["properties"]["profiles"]
         
     # basic settings 
   
-            fr.write('enabled = "' + en + '"\n')
+            fr.write('enabled = "' + str(en) + '"\n')
    
             try:
                 trrg=azr[i]["properties"]["targetResourceUri"].split("/")[4].replace(".","-")
@@ -72,6 +72,9 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
                 for j in range(0,icount):
                     fr.write('profile {\n')
                     pn=azr[i]["properties"]["profiles"][j]["name"]
+                    pn=pn.replace('"',"'")
+                    pn="dummy"
+                    #pn=pn.replace('{','\{')
                     cdef=azr[i]["properties"]["profiles"][j]["capacity"]["default"]
                     cmin=azr[i]["properties"]["profiles"][j]["capacity"]["minimum"]
                     cmax=azr[i]["properties"]["profiles"][j]["capacity"]["maximum"]
@@ -105,15 +108,21 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
                     try :
                         rec=azr[i]["properties"]["profiles"][j]["recurrence"]
                         rfr=azr[i]["properties"]["profiles"][j]["recurrence"]["frequency"]
-                        rsd=azr[i]["properties"]["profiles"][j]["recurrence"]["schedule"]["days"]
-                        rsh=azr[i]["properties"]["profiles"][j]["recurrence"]["schedule"]["hours"]
-                        rsm=azr[i]["properties"]["profiles"][j]["recurrence"]["schedule"]["minutes"]
+                        #dns=str(ast.literal_eval(json.dumps(azr[i]["properties"]["dhcpOptions"]["dnsServers"])))
+                        #dns=dns.replace("'",'"')
+
+                        rsd=str(ast.literal_eval(json.dumps(azr[i]["properties"]["profiles"][j]["recurrence"]["schedule"]["days"])))
+                        rsd=rsd.replace("'",'"')
+                        rsh=str(ast.literal_eval(json.dumps(azr[i]["properties"]["profiles"][j]["recurrence"]["schedule"]["hours"])))
+                        rsh=rsh.replace("'",'"')
+                        rsm=str(ast.literal_eval(json.dumps(azr[i]["properties"]["profiles"][j]["recurrence"]["schedule"]["minutes"])))
+                        rsm=rsm.replace("'",'"')
                         rst=azr[i]["properties"]["profiles"][j]["recurrence"]["schedule"]["timeZone"]
                         fr.write('\trecurrence {\n')
                         fr.write('\t\ttimezone = "' + rst + '"\n')
-                        fr.write('\t\tdays =  "'+ rsd + '"\n')
-                        fr.write('\t\thours =  "'+ rsh + '"\n')
-                        fr.write('\t\tminutes =  "'+ rsm + '"\n')            
+                        fr.write('\t\tdays =  '+ rsd + '\n')
+                        fr.write('\t\thours =  '+ rsh + '\n')
+                        fr.write('\t\tminutes =  '+ rsm + '\n')            
                         fr.write('\t}\n')
                     except KeyError:
                         pass
@@ -170,7 +179,7 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
                     except KeyError:
                         pass        
                         
-                fr.write('}\n')  # end profile
+                    fr.write('}\n')  # end profile
                 
 
         
