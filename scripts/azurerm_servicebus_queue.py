@@ -5,12 +5,17 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     azr=""
     if crf in tfp:
     # REST or cli
-        print "REST namespace"
+        print "REST namespace for queue"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.ServiceBus/namespaces"
         params = {'api-version': '2017-04-01'}
         r = requests.get(url, headers=headers, params=params)
         print(json.dumps(r.json(), indent=4, separators=(',', ': ')))
-        azr= r.json()["value"]
+        try:
+            azr= r.json()["value"]
+        except KeyError:
+            print "Found no Namespaces found for Queues"
+            return
+
         if cde:
             print(json.dumps(azr, indent=4, separators=(',', ': ')))
 
@@ -38,7 +43,12 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             params = {'api-version': '2017-04-01'}
             r = requests.get(url, headers=headers, params=params)
             print(json.dumps(r.json(), indent=4, separators=(',', ': ')))
-            azr2= r.json()["value"]
+            try:
+                azr2= r.json()["value"]
+            except KeyError:
+                print "Found no SB Queues"
+                return
+            
             if cde:
                 print(json.dumps(azr2, indent=4, separators=(',', ': ')))
         
