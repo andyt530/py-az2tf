@@ -46,6 +46,7 @@ def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             try:
                 svm=azr[i]["properties"]["sourceVirtualMachine"]["id"]
                 fr.write('\t source_virtual_machine_id = "' +  svm + '"\n')
+ 
            
                 try :
                     osdisk=azr[i]["properties"]["storageProfile"]["osDisk"]
@@ -57,23 +58,24 @@ def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     fr.write('\t os_type = "' +  ostype + '"\n')
                     fr.write('\t os_state = "' +  osstate + '"\n')
                     fr.write('\t caching = "' +  oscache + '"\n')
-                   
+                    
                     try :
                         blob_uri=azr[i]["properties"]["storageProfile"]["osDisk"]["blobUri"]
                         fr.write('\t blob_uri = "' +  blob_uri + '"\n')
                     except KeyError:
                         pass
                     fr.write('\t}\n')
+            
                 except KeyError:
                     pass
             except KeyError:
                 pass
+
             try:
                 zros=azr[i]["properties"]["storageProfile"]["zoneResilient"]
                 fr.write('\t zone_resilient = "'+ str(zros) + '"\n')
             except KeyError:
                 pass
-
 
     # tags block       
             try:
