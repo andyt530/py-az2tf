@@ -3,6 +3,7 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
     tfp="azurerm_log_analytics_solution"
     tcode="330-"
     azr=""
+    
     if crf in tfp:
     # REST or cli
         # print "REST solutions"
@@ -12,8 +13,7 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
         r = requests.get(url, headers=headers, params=params)
         
         azr= r.json()["value"]
-        if cde:
-            print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
 
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"
@@ -29,9 +29,20 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
             rgs=id.split("/")[4]
+
+            skip="false"
+            print id
+            if "[" in id or "]" in id :
+                print "Skipping this soluion "+ name+ " can't process currently"
+                skip="true"
+                return
+
+
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
+            if cde:
+                print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
             
             rname=name.replace(".","-")
             rname=rname.replace("(","-")  #| sed s/\(/-/
@@ -47,18 +58,11 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
             fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
-    ###############
-    # specific code start
-    ###############
-
             pname= name
             name= name.replace("(","-")  #| sed s/\(/-/
             name= name.replace(")","-") # | sed s/\)/-/
    
-            skip="false"
-            if "[" in id or "]" in id :
-                print "Skipping this soluion pname - can't process currently"
-                skip="true"
+
            
             pub=azr[i]["plan"]["publisher"]
             prod=azr[i]["plan"]["product"]

@@ -197,7 +197,8 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                         vmsshkey=azr[i]["properties"]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys"][0]["keyData"]
                         fr.write('\tssh_keys {\n')
                         fr.write('\t\tpath = "' +   vmsshpath + '"\n')
-                        fr.write('\t\tkey_data = "' +   vmsshkey + '"\n')  
+                        if "----"  not in vmsshkey:
+                            fr.write('\t\tkey_data = "' +   vmsshkey + '"\n')  
                         fr.write('\t}\n')
                     except KeyError:
                         pass

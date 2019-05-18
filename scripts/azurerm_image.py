@@ -46,8 +46,7 @@ def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             try:
                 svm=azr[i]["properties"]["sourceVirtualMachine"]["id"]
                 fr.write('\t source_virtual_machine_id = "' +  svm + '"\n')
- 
-           
+            except KeyError:        
                 try :
                     osdisk=azr[i]["properties"]["storageProfile"]["osDisk"]
                     ostype=azr[i]["properties"]["storageProfile"]["osDisk"]["osType"]
@@ -68,7 +67,7 @@ def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             
                 except KeyError:
                     pass
-            except KeyError:
+                    
                 pass
 
             try:

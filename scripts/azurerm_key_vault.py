@@ -85,36 +85,50 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess
                 fr.write('\t\t tenant_id="' + apten + '"\n')
                 apoid=kvshow["properties"]["accessPolicies"][j]["objectId"]
                 fr.write('\t\t object_id="' + apoid + '"\n')
-                    
-                jkl=kvshow["properties"]["accessPolicies"][j]["permissions"]["keys"]
-                jsl=kvshow["properties"]["accessPolicies"][j]["permissions"]["secrets"]
-                jcl=kvshow["properties"]["accessPolicies"][j]["permissions"]["certificates"]
-                    
-                kl=len(jkl)
-                sl=len(jsl)
-                cl=len(jcl)
-               
-                fr.write('\t\t key_permissions = [ \n')
-                for k in range(0,kl):
-                    tk=kvshow["properties"]["accessPolicies"][j]["permissions"]["keys"][k]
-                    fr.write('\t\t\t "' + tk + '",\n')
-                fr.write('\t\t ]\n')
 
-               
-                fr.write('\t\t secret_permissions = [ \n')
-                for k in range(0,sl):
-                    tk=kvshow["properties"]["accessPolicies"][j]["permissions"]["secrets"][k]
-                    fr.write('\t\t\t "' + tk + '",\n')
-                fr.write('\t\t ]\n')
-                
-                
-                fr.write('\t\t certificate_permissions = [ \n')
-                for k in range(0,cl):
-                    tk=kvshow["properties"]["accessPolicies"][j]["permissions"]["certificates"][k]
-                    fr.write('\t\t\t "' + tk + '",\n')
-                fr.write('\t\t ]\n')                          
-                fr.write('\t} \n') # end access policy
+                try:         
+                    jkl=kvshow["properties"]["accessPolicies"][j]["permissions"]["keys"]    
+                    try:
+                        kl=len(jkl)
+                        fr.write('\t\t key_permissions = [ \n')
+                        for k in range(0,kl):
+                            tk=kvshow["properties"]["accessPolicies"][j]["permissions"]["keys"][k]
+                            fr.write('\t\t\t "' + tk + '",\n')
+                        fr.write('\t\t ]\n') 
+                    except TypeError:
+                        pass 
+                except KeyError:
+                    pass
 
+                try:
+                    jsl=kvshow["properties"]["accessPolicies"][j]["permissions"]["secrets"]
+                    try:
+                        sl=len(jsl)
+                        fr.write('\t\t secret_permissions = [ \n')
+                        for k in range(0,sl):
+                            tk=kvshow["properties"]["accessPolicies"][j]["permissions"]["secrets"][k]
+                            fr.write('\t\t\t "' + tk + '",\n')
+                        fr.write('\t\t ]\n') 
+                    except TypeError:
+                        pass 
+                except KeyError:
+                    pass
+                
+                try:
+                    jcl=kvshow["properties"]["accessPolicies"][j]["permissions"]["certificates"]
+                    try:
+                        cl=len(jcl)
+                        fr.write('\t\t certificate_permissions = [ \n')
+                        for k in range(0,cl):
+                            tk=kvshow["properties"]["accessPolicies"][j]["permissions"]["certificates"][k]
+                            fr.write('\t\t\t "' + tk + '",\n')
+                        fr.write('\t\t ]\n')                          
+                        
+                    except TypeError:
+                        pass       
+                except KeyError:
+                    pass
+                fr.write('\t}\n')
             
     # tags block       
             try:

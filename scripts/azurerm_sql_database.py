@@ -35,10 +35,10 @@ def azurerm_sql_database(crf, cde, crg, headers, requests, sub, json, az2tfmess)
 # azr=az sql db list --server sname -g srg -o json
  
             url="https://management.azure.com/" + id + "/databases"
-            print url
+            
             params = {'api-version': '2017-10-01-preview'}
             r = requests.get(url, headers=headers, params=params)
-            print(json.dumps(r.json(), indent=4, separators=(',', ': ')))
+            
             azr2= r.json()["value"]
             if cde:
                 print(json.dumps(azr2, indent=4, separators=(',', ': ')))
