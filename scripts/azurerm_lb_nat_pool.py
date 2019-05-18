@@ -84,9 +84,9 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                 
                 fr.write('\t\t loadbalancer_id = "${azurerm_lb.' + lbrg + '__' + lbname + '.id}"\n')
                 fr.write('\t\t protocol = "' +    proto + '"\n')
-                fr.write('\t\t frontend_port_start = "' +    feps + '"\n')
-                fr.write('\t\t frontend_port_end = "' +    fepe + '"\n')
-                fr.write('\t\t backend_port = "' +    bep + '"\n')
+                fr.write('\t\t frontend_port_start = "' +    str(feps) + '"\n')
+                fr.write('\t\t frontend_port_end = "' +    str(fepe) + '"\n')
+                fr.write('\t\t backend_port = "' +    str(bep) + '"\n')
                 try:
                     feipc=azr[i]["properties"]["inboundNatPools"][j]["properties"]["frontendConfiguration"]["id"].split("/")[10]
                     fr.write('\t\t frontend_ip_configuration_name = "' +    feipc + '"\n')

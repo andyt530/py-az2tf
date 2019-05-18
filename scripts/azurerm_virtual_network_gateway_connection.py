@@ -48,8 +48,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
             vngrg=azr[i]["properties"]["virtualNetworkGateway1"]["id"].split("/")[4].replace(".","-")
             vngnam=azr[i]["properties"]["virtualNetworkGateway1"]["id"].split("/")[8].replace(".","-")
             
-            peerrg=azr[i]["properties"]["peer"]["id"].split("/")[4].replace(".","-")
-            peernam=azr[i]["properties"]["peer"]["id"].split("/")[8].replace(".","-")
+
             
             if ctype == "IPsec" :
                 print "is sec"
@@ -94,7 +93,8 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
                 fr.write('\t\t express_route_circuit_id = "' +  peerid + '"\n')
                 #fr.write('\t\t express_route_circuit_id = "${azurerm_virtual_network_gateway. + '__' + .id}'"' peerrg peernam + '"\n')
                 peerid=azr[i]["properties"]["peer"]["id"]
-                
+                peerrg=peerid.split("/")[4].replace(".","-")
+                peernam=peerid.split("/")[8].replace(".","-")
         
             if ctype == "Vnet2Vnet" :
                 fr.write('\t peer_virtual_network_gateway_id = "${azurerm_virtual_network_gateway.' + peerrg +'__' + peernam + '.id}"\n')

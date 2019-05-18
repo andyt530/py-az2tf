@@ -46,12 +46,12 @@ def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # specific code start
     ###############
 
-            co=azr[i]["creationData.createOption"]
+            co=azr[i]["creationData"]["createOption"]
             sz=azr[i]["diskSizeGb"]
 
-            suri=azr[i]["creationData.sourceUri"]
-            srid=azr[i]["creationData.sourceResourceId"]
-            said=azr[i]["creationData.storageAccountId"]
+            suri=azr[i]["creationData"]["sourceUri"]
+            srid=azr[i]["creationData"]["sourceResourceId"]
+            said=azr[i]["creationData"]["storageAccountId"]
 
             fr.write('\t create_option = "' +  co + '"\n')
             
@@ -70,11 +70,7 @@ def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             #fi        
             except KeyError:
                 pass
-        
 
-    ###############
-    # specific code end
-    ###############
 
     # tags block       
             try:
