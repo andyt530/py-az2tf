@@ -51,6 +51,9 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
             fr.write('enabled = "' + str(en) + '"\n')
    
             try:
+                triid=azr[i]["properties"]["targetResourceUri"]
+                parts=triid.split("/")
+                print  "parts=" + str(len(parts))
                 trrg=azr[i]["properties"]["targetResourceUri"].split("/")[4].replace(".","-").lower()
                 trty=azr[i]["properties"]["targetResourceUri"].split("/")[6].replace(".","-")
                 trid=azr[i]["properties"]["targetResourceUri"].split("/")[8].replace(".","-")
@@ -58,8 +61,9 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
                 tftyp="azurerm_virtual_machine_scale_set"
                 if  trty == "Microsoft-Web" :
                     tftyp="azurerm_app_service_plan"
-
-                fr.write('target_resource_id = "${'+ tftyp + '.' + trrg + '__' + trid+'.id}"\n')   
+                # case sensitite so use actual ID
+                fr.write('target_resource_id = "'+ triid +'"\n')
+                #fr.write('target_resource_id = "${'+ tftyp + '.' + trrg + '__' + trid+'.id}"\n')   
             except KeyError:
                 pass 
         

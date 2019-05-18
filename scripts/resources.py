@@ -330,7 +330,9 @@ azurerm_log_analytics_workspace.azurerm_log_analytics_workspace(crf,cde,crg,head
 # 330_azurerm_log_analytics_solution
 azurerm_log_analytics_solution.azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 340_azurerm_image
+cde=True
 azurerm_image.azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+cde=False
 # 350_azurerm_snapshot
 azurerm_snapshot.azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 360_azurerm_network_watcher

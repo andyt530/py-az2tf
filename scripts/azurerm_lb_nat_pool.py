@@ -90,7 +90,7 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                     feipc=azr[i]["properties"]["inboundNatPools"][j]["properties"]["frontendConfiguration"]["id"].split("/")[10]
                     fr.write('\t\t frontend_ip_configuration_name = "' +    feipc + '"\n')
                 except KeyError:
-                    fr.write('\t\t frontend_ip_configuration_name = "' +  "ChangeME" + '"\n')
+                    fr.write('\t\t frontend_ip_configuration_name = "' +  "default" + '"\n')
                     pass
 
 

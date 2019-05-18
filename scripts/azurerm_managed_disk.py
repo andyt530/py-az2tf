@@ -105,7 +105,7 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 stopt=azr[i]["sku"]["name"]
                 fr.write('\t storage_account_type = "' +  stopt + '"\n')
             except KeyError:
-                fr.write('\t storage_account_type = "' +  "Standard_LRS" + '"\n')
+                fr.write('\t storage_account_type = "' +  "StandardSSD_LRS" + '"\n')
                 pass    
             
         
