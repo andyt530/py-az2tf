@@ -5,7 +5,7 @@ def azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     azr=""
     if crf in tfp:
     # REST or cli
-        print "REST Managed Disk"
+        print "REST App Service Plan"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Web/serverfarms"
         params = {'api-version': '2018-02-01'}
         r = requests.get(url, headers=headers, params=params)
@@ -48,7 +48,7 @@ def azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
             fr.write('\t kind = "' +  kind + '"\n')
 
-            fr.write('\t sku {' + '"\n')
+            fr.write('\t sku {\n')
             fr.write('\t\t tier = "' +  tier + '"\n')
             fr.write('\t\t size = "' +  size + '"\n')
             fr.write('\t }\n')

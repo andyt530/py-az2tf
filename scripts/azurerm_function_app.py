@@ -5,9 +5,9 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     azr=""
     if crf in tfp:
     # REST or cli
-        print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Web/functions"
-        params = {'api-version': '2018-11-01'}
+        print "REST Function App"
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Web/sites"
+        params = {'api-version': '2018-02-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
         if cde:
@@ -21,7 +21,10 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         count=len(azr)
         print count
         for i in range(0, count):
+            kind=azr[i]["kind"]
 
+            if kind != "functionapp": continue
+            
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
@@ -44,11 +47,11 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
             https=azr[i]["properties"]["httpsOnly"]
     
-            prg=azr[i]["properties"]["appServicePlanId"].split("/")[4]
-            pnam=azr[i]["properties"]["appServicePlanId"].split("/")[8]
-            lcrg=azr[i]["properties"]["resourceGroup"].lower()
-            appplid=azr[i]["properties"]["appServicePlanId"]
-            rg= lcrg.replace(".","-")
+
+            prg=azr[i]["properties"]["serverFarmId"].split("/")[4]
+            pnam=azr[i]["properties"]["serverFarmId"].split("/")[8]
+       
+            appplid=azr[i]["properties"]["serverFarmId"]
     
     # ********
             #appset=az functionapp config appsettings list -n name -g rg -o json
@@ -58,46 +61,87 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t app_service_plan_id = "' + appplid + '"\n')
     # dummy entry
 
-            fr.write('\t https_only = "' + https + '"\n')
+            fr.write('\t https_only = "' + str(https) + '"\n')
             blog=False
             strcon=""
-            print "fix appset"
-            appset=""
-            jcount=len(appset)
-            for j in range(0,jcount):
 
-                    aname= appset[j]["name"]
-                    aval= appset[j]["value"]
+
+            url="https://management.azure.com/" + id + "/config/appsettings/list"
+            print url
+            params = {'api-version': '2018-02-01'}
+            r = requests.post(url, headers=headers, params=params)       
+            appset= r.json()
+            print(json.dumps(appset, indent=4, separators=(',', ': ')))
             
-                    if "AzureWebJobsStorage" in aname: 
-                        strcon= aval
+            fr.write('\t app_settings { \n')
                     
-                    if "FUNCTIONS_EXTENSION_VERSION" in aname:
-                        fr.write('\t version = "' + aval + '"\n')
+            try:
+                strcon=appset["properties"]["AzureWebJobsStorage"]         
+            except KeyError:
+                pass 
                     
-                     
-                    if aname=="null":
-                        aname=aname
+            try:
+                vers=appset["properties"]["FUNCTIONS_EXTENSION_VERSION"]            
+            except KeyError:
+                pass
                     
-                    if aname == "WEBSITE_CONTENTSHARE" or aname == "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING":
-                        aname=aname
-                    if aname=="AzureWebJobsDashboard":
-                        name=aname
-                    if len(aval) > 3 :
-                        blog=True
-                             
-                    fr.write('\t app_settings { \n')
-                    fr.write('\t' + aname + '="'+ aval + '"\n')
-                    fr.write('\t }'  + '\n')
+            try:
+                aval=appset["properties"]["WEBSITE_NODE_DEFAULT_VERSION"]  
+                fr.write('\t WEBSITE_NODE_DEFAULT_VERSION = "' + aval + '"\n')     
+            except KeyError:
+                pass
+
+            try:
+                aval=appset["properties"]["FUNCTIONS_WORKER_RUNTIME"]  
+                fr.write('\t FUNCTIONS_WORKER_RUNTIME = "' + aval + '"\n')     
+            except KeyError:
+                pass  
+
+            try:
+                aval=appset["properties"]["APPINSIGHTS_INSTRUMENTATIONKEY"]  
+                fr.write('\t APPINSIGHTS_INSTRUMENTATIONKEY = "' + aval + '"\n')     
+            except KeyError:
+                pass  
+
+            try:
+                aval=appset["properties"]["mykey"]  
+                fr.write('\t mykey = "' + aval + '"\n')     
+            except KeyError:
+                pass
+
+            try:
+                aval=appset["properties"]["myten"]  
+                fr.write('\t myten = "' + aval + '"\n')     
+            except KeyError:
+                pass
+                        
+            try:
+                aval=appset["properties"]["usern"]  
+                fr.write('\t usern = "' + aval + '"\n')     
+            except KeyError:
+                pass              
+                    
+            #if aname == "WEBSITE_CONTENTSHARE" or aname == "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING":
+                        
+                                      
+            try:
+                aval=appset["properties"]["AzureWebJobsDashboard"] 
+                if len(aval) > 3:
+                    blog=True
+            except KeyError:
+                pass
+                    
+            fr.write('\t }'  + '\n')
+
                
             if len(strcon) >= 3 :
                 fr.write('\t storage_connection_string = "' + strcon + '" \n')
             else:
                 fr.write('\t storage_connection_string = ""\n')
         
+            fr.write('\t version = "' + vers + '"\n')
+            fr.write('\t enable_builtin_logging = "' + str(blog) + '"\n')
 
-            fr.write('\t enable_builtin_logging = "' + blog + '"\n')
-            fr.write('}\n')
 
     # tags block       
             try:

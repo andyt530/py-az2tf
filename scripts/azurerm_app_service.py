@@ -5,7 +5,7 @@ def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     azr=""
     if crf in tfp:
     # REST or cli
-        print "REST Managed Disk"
+        print "REST App Service"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Web/sites"
         params = {'api-version': '2018-02-01'}
         r = requests.get(url, headers=headers, params=params)
@@ -21,6 +21,9 @@ def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         count=len(azr)
         print count
         for i in range(0, count):
+
+            kind=azr[i]["kind"]
+            if kind == "functionapp": continue
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
@@ -45,11 +48,11 @@ def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
     #azr=az webapp list -g rgsource -o json
 
-            prg=azr[i]["appServicePlanId"].split("/")[4]
-            pnam=azr[i]["appServicePlanId"].split("/")[8]
-            lcrg=azr[i]["resourceGroup"].lower()
-            appplid=azr[i]["appServicePlanId"]
-            rg=lcrg.replace(".","-")
+            prg=azr[i]["properties"]["serverFarmId"].split("/")[4]
+            pnam=azr[i]["properties"]["serverFarmId"].split("/")[8]
+       
+            appplid=azr[i]["properties"]["serverFarmId"]
+  
 
             # case issues - so use resource id directly
             # fr.write('\t app_service_plan_id = "${azurerm_app_service_plan. + '__' + .id}'"' prg pnam + '"\n')
