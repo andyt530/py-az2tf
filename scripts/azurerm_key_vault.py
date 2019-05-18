@@ -45,8 +45,8 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess
             kvshow=json.loads(output)
 
             sku=kvshow["properties"]["sku"]["name"]
-            if sku == "premium" : sku="Premium" 
-            if sku == "standard" : sku="Standard" 
+            #if sku == "premium" : sku="Premium" 
+            #if sku == "standard" : sku="Standard" 
     
             fr.write('\t sku {' + '\n')     
             fr.write('\t\t name="' + sku + '"\n')
