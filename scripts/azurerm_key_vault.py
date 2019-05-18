@@ -1,6 +1,7 @@
 def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess):
     #############
     #  090 key vault
+    cde=True
     tfp="azurerm_key_vault"
     azr=""
     if crf in tfp:
@@ -8,8 +9,7 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess
         p = subprocess.Popen('az keyvault list -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output, errors = p.communicate()
         azr=json.loads(output)
-        if cde:
-            print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
         tfrmf="090-"+tfp+"-staterm.sh"
         tfimf="090-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
@@ -28,6 +28,8 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
+            if cde:
+                print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
             
             rname=name.replace(".","-")
             prefix=tfp+"."+rg+'__'+rname
@@ -45,8 +47,8 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess
             kvshow=json.loads(output)
 
             sku=kvshow["properties"]["sku"]["name"]
-            #if sku == "premium" : sku="Premium" 
-            #if sku == "standard" : sku="Standard" 
+            #if sku == "Premium" : sku="premium" 
+            #if sku == "Standard" : sku="standard" 
     
             fr.write('\t sku {' + '\n')     
             fr.write('\t\t name="' + sku + '"\n')
@@ -57,19 +59,21 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess
 
             try: 
                 endep=str(kvshow["properties"]["enabledForDeployment"])
-                fr.write('\t enabled_for_deployment="' +  endep + '"\n')
+                fr.write('\t enabled_for_deployment="' + endep + '"\n')
             except KeyError:
                 pass
             
             try:
                 endisk=str(kvshow["properties"]["enabledForDiskEncryption"])
-                fr.write('\t enabled_for_disk_encryption="' +  endisk + '"\n')
+                if endisk != "None":
+                    fr.write('\t enabled_for_disk_encryption="' + endisk + '"\n')
             except KeyError:
                 pass       
             
             try:
                 entemp=str(kvshow["properties"]["enabledForTemplateDeployment"])
-                fr.write('\t enabled_for_template_deployment="' +  entemp + '"\n')
+                if entemp != "None":
+                    fr.write('\t enabled_for_template_deployment="' +  entemp + '"\n')
             except KeyError:
                 pass
 
