@@ -97,8 +97,8 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
                         fdstart2= fdstart.split("+")[0]
                         fr.write('\tfixed_date {\n')
                         fr.write('\t\ttimezone =  "'+ fdtz + '"\n')
-                        fr.write('\t\tstart = "Z' + fdstart2 + '"\n')
-                        fr.write('\t\tend = "Z' + fdend2 + '"\n')
+                        fr.write('\t\tstart = "' + fdstart2 + '"\n')
+                        fr.write('\t\tend = "' + fdend2 + '"\n')
                         fr.write('\t}\n')
                     except KeyError:
                         pass

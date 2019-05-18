@@ -6,6 +6,11 @@ def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
     # REST or cli
         #if cde:
             #print(json.dumps(azr, indent=4, separators=(',', ': ')))
+        # print "REST Load Balancers"
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/loadBalancers"
+        params = {'api-version': '2019-02-01'}
+        r = requests.get(url, headers=headers, params=params)
+        azr= r.json()["value"]
 
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"
@@ -22,6 +27,8 @@ def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                 if crg is not None:
                     if rg.lower() != crg.lower():
                         continue  # back to for
+                if cde:
+                    print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
    
                 jcount=len(beap)   
                         

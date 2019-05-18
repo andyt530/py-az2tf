@@ -41,7 +41,7 @@ def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t name = "' + name + '"\n')
             fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rgs + '"\n')
-
+            fr.write('\t zone_resilient = "'+ 'false' + '"\n') 
 # hardwire this - as source vm may of been deleted after image created
             try:
                 svm=azr[i]["properties"]["sourceVirtualMachine"]["id"]

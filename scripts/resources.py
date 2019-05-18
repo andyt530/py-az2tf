@@ -263,7 +263,7 @@ azurerm_virtual_network_peering.azurerm_virtual_network_peering(crf,cde,crg,head
 # 090 Key Vault - using cli
 azurerm_key_vault.azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess)
 # 100 managed disk
-cde=True
+
 azurerm_managed_disk.azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 
 #110 storgae account

@@ -6,8 +6,11 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
     if crf in tfp:
     # REST or cli
 
-        if cde:
-            print(json.dumps(azr, indent=4, separators=(',', ': ')))
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/loadBalancers"
+        params = {'api-version': '2019-02-01'}
+        r = requests.get(url, headers=headers, params=params)
+        azr= r.json()["value"]
+
 
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"
@@ -27,12 +30,8 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                 if rg.lower() != crg.lower():
                     continue  # back to for
             
-
-
-    ###############
-    # specific code start
-    ###############
-
+            if cde:
+                print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
     
             beap=azr[i]["properties"]["inboundNatPools"]
             jcount= len(beap)
@@ -91,6 +90,7 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                     feipc=azr[i]["properties"]["inboundNatPools"][j]["properties"]["frontendConfiguration"]["id"].split("/")[10]
                     fr.write('\t\t frontend_ip_configuration_name = "' +    feipc + '"\n')
                 except KeyError:
+                    fr.write('\t\t frontend_ip_configuration_name = "' +  "ChangeME" + '"\n')
                     pass
 
 

@@ -4,6 +4,12 @@ def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfm
     tfp="azurerm_virtual_network_peering"
     if crf in tfp: 
     # peering in vnet
+
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworks"
+        params = {'api-version': '2018-07-01'}
+        r = requests.get(url, headers=headers, params=params)
+        azr= r.json()["value"]
+
         tfrmf="080-"+tfp+"-staterm.sh"
         tfimf="080-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
@@ -25,6 +31,8 @@ def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfm
                 if crg is not None:
                     if rg.lower() != crg.lower():
                         continue  # back to for
+                if cde:
+                    print(json.dumps(azr, indent=4, separators=(',', ': ')))
                     
                 rname=name.replace(".","-")
                 prefix=tfp+"."+rg+'__'+rname
@@ -32,7 +40,7 @@ def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfm
                 rfilename=prefix+".tf"
                 fr=open(rfilename, 'w')
                 fr.write("")
-                fr.write('resource ' + tfp + ' ' + rgs + '__' + rname + ' {\n')
+                fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
                 fr.write('\t name = "' + name + '"\n')
                 fr.write('\t resource_group_name = "'+ rgs + '"\n')
                 fr.write('\t virtual_network_name = "' + vnetname + '"\n')
