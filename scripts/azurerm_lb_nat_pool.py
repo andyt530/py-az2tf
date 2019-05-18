@@ -69,7 +69,7 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
 
                 proto=azr[i]["properties"]["inboundNatPools"][j]["properties"]["protocol"]
                 bep=azr[i]["properties"]["inboundNatPools"][j]["properties"]["backendPort"]
-                feipc=azr[i]["properties"]["inboundNatPools"][j]["properties"]["frontendConfiguration"]["id"].split("/")[10]
+
                 try:
                     feps=azr[i]["properties"]["inboundNatPools"][j]["properties"]["frontendPortStart"]
                 except:
@@ -87,7 +87,11 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
                 fr.write('\t\t frontend_port_start = "' +    feps + '"\n')
                 fr.write('\t\t frontend_port_end = "' +    fepe + '"\n')
                 fr.write('\t\t backend_port = "' +    bep + '"\n')
-                fr.write('\t\t frontend_ip_configuration_name = "' +    feipc + '"\n')
+                try:
+                    feipc=azr[i]["properties"]["inboundNatPools"][j]["properties"]["frontendConfiguration"]["id"].split("/")[10]
+                    fr.write('\t\t frontend_ip_configuration_name = "' +    feipc + '"\n')
+                except KeyError:
+                    pass
 
 
         # tags block       
