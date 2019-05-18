@@ -43,13 +43,13 @@ def azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess
             fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
 
-            sku=azr[i]["properties"]["parameters"]["tier"]["value"]
+            sku=azr[i]["sku"]["name"]
             if sku == "Standard" : sku="standard" 
             if sku == "Premium" : sku="premium" 
 
             fr.write('\t sku = "' +  sku + '"\n')
-            fr.write('}\n')
-            outid=azr[i]["properties"]["outputResources"][0]["id"]
+   
+            outid=azr[i]["id"]
             print  outid
             #evalcomm=fr.write('terraform import . + '__' +  " tfp rg rname outid
 
