@@ -33,7 +33,7 @@ def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfm
                     if rg.lower() != crg.lower():
                         continue  # back to for
                 if cde:
-                    print(json.dumps(azr, indent=4, separators=(',', ': ')))
+                    print(json.dumps(azr[j], indent=4, separators=(',', ': ')))
                     
                 rname=name.replace(".","-")
                 prefix=tfp+"."+rg+'__'+rname

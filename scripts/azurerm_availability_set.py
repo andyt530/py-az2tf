@@ -9,8 +9,6 @@ def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         params = {'api-version': '2018-10-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
-        if cde:
-            print(json.dumps(azr, indent=4, separators=(',', ': ')))
 
         tfrmf="020-"+tfp+"-staterm.sh"
         tfimf="020-"+tfp+"-stateimp.sh"
@@ -39,6 +37,8 @@ def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
+            if cde:
+                print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
             
             rgl=rg.lower()
             rname=name.replace(".","-").lower()

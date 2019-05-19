@@ -10,8 +10,7 @@ def azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
-        if cde:
-            print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
 
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"
@@ -31,6 +30,8 @@ def azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
+            if cde:
+                print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
             
             rname=name.replace(".","-")
             prefix=tfp+"."+rg+'__'+rname

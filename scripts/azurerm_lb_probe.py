@@ -10,9 +10,6 @@ def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
 
-        if cde:
-            print(json.dumps(azr, indent=4, separators=(',', ': ')))
-
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
@@ -29,6 +26,8 @@ def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
+            if cde:
+                print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
 
             beap=azr[i]["properties"]["probes"]
             

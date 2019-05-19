@@ -10,8 +10,7 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         params = {'api-version': '2019-04-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
-        if cde:
-            print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
 
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"

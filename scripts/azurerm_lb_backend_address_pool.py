@@ -10,9 +10,6 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
 
-        if cde:
-            print(json.dumps(azr, indent=4, separators=(',', ': ')))
-
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
@@ -30,6 +27,8 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
+            if cde:
+                print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
             
             beap=azr[i]["properties"]["backendAddressPools"]       
             jcount= len(beap)
