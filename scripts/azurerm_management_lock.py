@@ -11,9 +11,6 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
 
-        if cde:
-            print(json.dumps(azr, indent=4, separators=(',', ': ')))
-
         tfrmf="002-"+tfp+"-staterm.sh"
         tfimf="002-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
