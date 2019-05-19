@@ -1,7 +1,7 @@
 def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess):
     #############
     #  090 key vault
-    cde=True
+    
     tfp="azurerm_key_vault"
     azr=""
     if crf in tfp:
@@ -97,7 +97,8 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess
                         fr.write('\t\t key_permissions = [ \n')
                         for k in range(0,kl):
                             tk=kvshow["properties"]["accessPolicies"][j]["permissions"]["keys"][k]
-                            fr.write('\t\t\t "' + tk + '",\n')
+                            if tk != "all":
+                                fr.write('\t\t\t "' + tk + '",\n')
                         fr.write('\t\t ]\n') 
                     except TypeError:
                         pass 
@@ -111,7 +112,8 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess
                         fr.write('\t\t secret_permissions = [ \n')
                         for k in range(0,sl):
                             tk=kvshow["properties"]["accessPolicies"][j]["permissions"]["secrets"][k]
-                            fr.write('\t\t\t "' + tk + '",\n')
+                            if tk != "all":
+                                fr.write('\t\t\t "' + tk + '",\n')
                         fr.write('\t\t ]\n') 
                     except TypeError:
                         pass 
@@ -125,7 +127,8 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess
                         fr.write('\t\t certificate_permissions = [ \n')
                         for k in range(0,cl):
                             tk=kvshow["properties"]["accessPolicies"][j]["permissions"]["certificates"][k]
-                            fr.write('\t\t\t "' + tk + '",\n')
+                            if tk != "all":    
+                                fr.write('\t\t\t "' + tk + '",\n')
                         fr.write('\t\t ]\n')                          
                         
                     except TypeError:
