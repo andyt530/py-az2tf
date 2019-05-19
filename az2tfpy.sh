@@ -116,7 +116,7 @@ fi
 #
 # uncomment following line if you want to use an SPN login
 #../../setup-env.sh
-
+exit
 
 echo "terraform init"
 terraform init 2>&1 | tee -a import.log

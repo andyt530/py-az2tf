@@ -1,6 +1,6 @@
 def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # management locks
-    
+    cde=True
     tfp="azurerm_management_lock"
     azr=""
     if crf in tfp:
@@ -32,6 +32,13 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             scope1=id.split("/Microsoft.Authorization")[0].rstrip("providers")
             
             scope=scope1.rstrip("/")
+            sc=len(scope.split("/"))
+            print sc
+            sn=scope.split("/")[sc-1].replace(" ","-").lower()
+            sn=sn.replace(".","-")
+
+            print "scope name="+sn
+
             scope=scope.encode('ascii', 'ignore')
 
             if crg is not None:
@@ -46,11 +53,11 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             rname=rname.replace(" ","_")
             rname=rname.encode('ascii', 'ignore')
              
-            prefix=tfp+"."+rg+'__'+rname
+            prefix=tfp+"."+rg+'__'+rname+'__'+sn
             
             rfilename=prefix+".tf"
             fr=open(rfilename, 'w')
-            fr.write('resource ' + tfp + ' "' + rg + '__' + rname + '" {\n')
+            fr.write('resource ' + tfp + ' "' + rg + '__' + rname + '__'+ sn +  '" {\n')
             fr.write('\t name = "' + name + '"\n')
             #fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t lock_level = "'+ level + '"\n')   
@@ -95,9 +102,9 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 with open(rfilename) as f: 
                     print f.read()
 
-            tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+            tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '__' + sn + '\n')
             
-            tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' "'+id+'"\n'
+            tfcomm='terraform import '+tfp+'.'+rg+'__'+rname + '__'+ sn + ' "'+id+'"\n'
             tfim.write('echo "importing ' + str(j) + ' of ' + str(count-1) + '"' + '\n')
             tfcomm=tfcomm.encode('ascii', 'ignore')
             tfim.write(tfcomm)  
