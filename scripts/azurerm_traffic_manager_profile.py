@@ -9,8 +9,7 @@ def azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfm
         params = {'api-version': '2017-05-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
-        if cde:
-            print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
 
         tfrmf="124-"+tfp+"-staterm.sh"
         tfimf="124-"+tfp+"-stateimp.sh"
@@ -29,6 +28,8 @@ def azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfm
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
+            if cde:
+                print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
             
             rname=name.replace(".","-")
             prefix=tfp+"."+rg+'__'+rname

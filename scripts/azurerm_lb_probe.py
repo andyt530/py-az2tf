@@ -19,7 +19,7 @@ def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim=open(tfimf, 'a')
         print "# " + tfp,
         count=len(azr)
-        print count
+        
         for i in range(0, count):
 
             name=azr[i]["name"]
@@ -33,7 +33,7 @@ def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             beap=azr[i]["properties"]["probes"]
             
             icount= len(beap)
-  
+            print icount
             for j in range(0,icount):
                 
                 name=azr[i]["properties"]["probes"][j]["name"]

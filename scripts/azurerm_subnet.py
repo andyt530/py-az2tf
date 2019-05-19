@@ -12,7 +12,6 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
 
-
     # subnet in vnet
         tfrmf="070-"+tfp+"-staterm.sh"
         tfimf="070-"+tfp+"-stateimp.sh"

@@ -19,7 +19,7 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfim=open(tfimf, 'a')
         print "# " + tfp,
         count=len(azr)
-        print count
+        
         for i in range(0, count):
 
             name=azr[i]["name"]
@@ -33,7 +33,7 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
             
             beap=azr[i]["properties"]["backendAddressPools"]       
             jcount= len(beap)
-   
+            print jcount
             for j in range(0,jcount):
                 
                 name=azr[i]["properties"]["backendAddressPools"][j]["name"]
