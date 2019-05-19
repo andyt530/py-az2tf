@@ -1,6 +1,6 @@
 #  100 managed disk
 def azurerm_stub(crf,cde,crg,headers,requests,sub,json,az2tfmess):
-    cde=True
+    
     tfp="azurerm_managed_disk"
     azr=""
     if crf in tfp:

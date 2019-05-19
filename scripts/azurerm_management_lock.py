@@ -1,6 +1,6 @@
 def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # management locks
-    cde=True
+    
     tfp="azurerm_management_lock"
     azr=""
     if crf in tfp:
