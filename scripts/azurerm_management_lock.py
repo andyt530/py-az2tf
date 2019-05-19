@@ -65,7 +65,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
     # tags block       
             try:
-                mtags=azr[i]["tags"]
+                mtags=azr[j]["tags"]
                 fr.write('tags { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
