@@ -35,7 +35,6 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             scope=scope.encode('ascii', 'ignore')
 
             if crg is not None:
-                print "rgname=" + rg + " crg=" + crg
                 if rg.lower() != crg.lower():
                     continue  # back to for
             if cde:
@@ -46,9 +45,9 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             rname=rname.replace("]","-")
             rname=rname.replace(" ","_")
             rname=rname.encode('ascii', 'ignore')
-            print rname 
+             
             prefix=tfp+"."+rg+'__'+rname
-            print prefix
+            
             rfilename=prefix+".tf"
             fr=open(rfilename, 'w')
             fr.write('resource ' + tfp + ' "' + rg + '__' + rname + '" {\n')
@@ -63,19 +62,31 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 pass
             fr.write('\t scope = "'+ scope + '"\n')
         # tags block
+
+    # tags block       
             try:
-                mtags=azr[j]["tags"]
-            except:
-                mtags="{}"
-            tcount=len(mtags)-1
-            if tcount > 1 :
+                mtags=azr[i]["tags"]
                 fr.write('tags { \n')
-                print tcount
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
-                #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
                 fr.write('}\n')
+            except KeyError:
+                pass
+
+            #try:
+            #    mtags=azr[j]["tags"]
+            #except:
+            #    mtags="{}"
+            #tcount=len(mtags)-1
+            #if tcount > 1 :
+            #    fr.write('tags { \n')
+            #    print tcount
+            #    for key in mtags.keys():
+            #        tval=mtags[key]
+            #        fr.write('\t "' + key + '"="' + tval + '"\n')
+            #    #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
+            #    fr.write('}\n')
             
             fr.write('}\n') 
             fr.close()  # close .tf file
