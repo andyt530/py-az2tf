@@ -29,12 +29,12 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
-            #if cde:
-                #print(json.dumps(azr[i]["properties"]["sku"], indent=4, separators=(',', ': ')))
+            if cde:
+                print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
             
             rname=name.replace(".","-")
             prefix=tfp+"."+rg+'__'+rname
-            #print prefix
+            
             rfilename=prefix+".tf"
             fr=open(rfilename, 'w')
             fr.write(az2tfmess)

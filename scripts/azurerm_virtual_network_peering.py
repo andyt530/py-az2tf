@@ -16,11 +16,12 @@ def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfim=open(tfimf, 'a')
         print "# " + tfp,
         count=len(azr)
-        print count
+        
         for i in range(0, count):
             peers=azr[i]["properties"]["virtualNetworkPeerings"]
             vnetname=azr[i]["name"]
             jcount=len(peers)
+            print jcount
             for j in range(0, jcount):
                 name=peers[j]["name"]
                 #loc=peers[j]["location"] peers don't have a location
