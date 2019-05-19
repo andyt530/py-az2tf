@@ -95,6 +95,7 @@ else
 fi
 if [ "$r" != "" ]; then
     lcr=`echo $r | awk '{print tolower($0)}'`
+    rm *$lcr*.tf
     pyc3=" -r $lcr "
 else
     pyc3=" "
@@ -116,7 +117,6 @@ fi
 #
 # uncomment following line if you want to use an SPN login
 #../../setup-env.sh
-exit
 
 echo "terraform init"
 terraform init 2>&1 | tee -a import.log
@@ -184,9 +184,4 @@ echo "Cleanup Cloud Shell"
 #terraform state rm $states
 #
 
-echo "Terraform Plan ..."
-terraform plan .
-echo "---------------------------------------------------------------------------"
-echo "az2tf output files are in generated/tf.$mysub"
-echo "---------------------------------------------------------------------------"
-exit
+
