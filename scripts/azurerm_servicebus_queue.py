@@ -16,9 +16,6 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             if cde: print "Found no Namespaces for Queues"
             return
 
-        if cde:
-            print(json.dumps(azr, indent=4, separators=(',', ': ')))
-
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
@@ -37,6 +34,8 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
+            if cde:
+                print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
             
  
             url="https://management.azure.com/" + id + "/queues"

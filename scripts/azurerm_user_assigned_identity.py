@@ -8,8 +8,7 @@ def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfme
         params = {'api-version': '2018-11-30'}
         r = requests.get(url, headers=headers, params=params)
         azr=r.json()["value"]
-        if cde:
-            print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
 
  
         tfrmf="015-"+tfp+"-staterm.sh"
@@ -30,7 +29,7 @@ def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfme
                 print "rgname=" + rg + " crg=" + crg
                 if rg.lower() != crg.lower():
                     continue  # back to for
-            
+            if cde: print(json.dumps(azr[j], indent=4, separators=(',', ': ')))
             rname=name.replace(".","-")
             prefix=tfp+"."+rg+'__'+rname
             #print prefix

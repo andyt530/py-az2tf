@@ -11,7 +11,6 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         params = {'api-version': '2019-04-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
-        if cde: print(json.dumps(azr, indent=4, separators=(',', ': ')))
 
         tfrmf="110-"+tfp+"-staterm.sh"
         tfimf="110-"+tfp+"-stateimp.sh"
@@ -30,7 +29,7 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
-            
+            if cde: print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
             rname=name.replace(".","-")
             prefix=tfp+"."+rg+'__'+rname
             #print prefix
