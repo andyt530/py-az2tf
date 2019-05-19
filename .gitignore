@@ -8,7 +8,7 @@ generated
 *.bak
 *.pyc
 generated
-tall*
+t*.sh
 check*
 env.sh
 setup-vars.sh
