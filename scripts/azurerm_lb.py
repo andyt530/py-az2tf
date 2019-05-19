@@ -113,5 +113,5 @@ def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
         tfrm.close()
         tfim.close()
-        return azr
+        
     #end stub

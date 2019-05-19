@@ -1,11 +1,10 @@
 # azurerm_lb_nat_rule
-def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
+def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_lb_nat_rule"
     tcode="150-"
     if crf in tfp:
     # REST or cli
-        #if cde:
-            #print(json.dumps(azr, indent=4, separators=(',', ': ')))
+
         # print "REST Load Balancers"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/loadBalancers"
         params = {'api-version': '2019-02-01'}

@@ -1,4 +1,4 @@
-def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess,azr):
+def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #############
     #  080 vnet peering
     tfp="azurerm_virtual_network_peering"

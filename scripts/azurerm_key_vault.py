@@ -1,14 +1,16 @@
-def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess):
+def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #############
     #  090 key vault
-    
+    cde=True
     tfp="azurerm_key_vault"
     azr=""
     if crf in tfp:
         # REST or cli
-        p = subprocess.Popen('az keyvault list -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        output, errors = p.communicate()
-        azr=json.loads(output)
+
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.KeyVault/vaults"
+        params = {'api-version': '2016-10-01'}
+        r = requests.get(url, headers=headers, params=params)
+        azr= r.json()["value"]
 
         tfrmf="090-"+tfp+"-staterm.sh"
         tfimf="090-"+tfp+"-stateimp.sh"
@@ -41,43 +43,39 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess
             fr.write('\t name = "' + name + '"\n')
             fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rgs + '"\n')
-            comm="az keyvault show -n "+name+" -o json"
-            p = subprocess.Popen(comm, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-            output, errors = p.communicate()
-            kvshow=json.loads(output)
 
-            sku=kvshow["properties"]["sku"]["name"]
-            #if sku == "Premium" : sku="premium" 
-            #if sku == "Standard" : sku="standard" 
+            sku=azr[i]["properties"]["sku"]["name"]
+            if sku == "Premium" : sku="premium" 
+            if sku == "Standard" : sku="standard" 
     
             fr.write('\t sku {' + '\n')     
             fr.write('\t\t name="' + sku + '"\n')
             fr.write('\t }' + '\n')
 
-            ten=kvshow["properties"]["tenantId"]     
+            ten=azr[i]["properties"]["tenantId"]     
             fr.write('\t tenant_id="' + ten + '"\n')
 
             try: 
-                endep=str(kvshow["properties"]["enabledForDeployment"])
+                endep=str(azr[i]["properties"]["enabledForDeployment"])
                 fr.write('\t enabled_for_deployment="' + endep + '"\n')
             except KeyError:
                 pass
             
             try:
-                endisk=str(kvshow["properties"]["enabledForDiskEncryption"])
+                endisk=str(azr[i]["properties"]["enabledForDiskEncryption"])
                 if endisk != "None":
                     fr.write('\t enabled_for_disk_encryption="' + endisk + '"\n')
             except KeyError:
                 pass       
             
             try:
-                entemp=str(kvshow["properties"]["enabledForTemplateDeployment"])
+                entemp=str(azr[i]["properties"]["enabledForTemplateDeployment"])
                 if entemp != "None":
                     fr.write('\t enabled_for_template_deployment="' +  entemp + '"\n')
             except KeyError:
                 pass
 
-            ap=kvshow["properties"]["accessPolicies"]
+            ap=azr[i]["properties"]["accessPolicies"]
                     
             #
             # Access Policies
@@ -85,18 +83,18 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess
             pcount=len(ap)
             for j in range(0, pcount):    
                 fr.write('\t access_policy {' + '\n')
-                apten=kvshow["properties"]["accessPolicies"][j]["tenantId"]           
+                apten=azr[i]["properties"]["accessPolicies"][j]["tenantId"]           
                 fr.write('\t\t tenant_id="' + apten + '"\n')
-                apoid=kvshow["properties"]["accessPolicies"][j]["objectId"]
+                apoid=azr[i]["properties"]["accessPolicies"][j]["objectId"]
                 fr.write('\t\t object_id="' + apoid + '"\n')
 
                 try:         
-                    jkl=kvshow["properties"]["accessPolicies"][j]["permissions"]["keys"]    
+                    jkl=azr[i]["properties"]["accessPolicies"][j]["permissions"]["keys"]    
                     try:
                         kl=len(jkl)
                         fr.write('\t\t key_permissions = [ \n')
                         for k in range(0,kl):
-                            tk=kvshow["properties"]["accessPolicies"][j]["permissions"]["keys"][k]
+                            tk=azr[i]["properties"]["accessPolicies"][j]["permissions"]["keys"][k]
                             if tk != "all":
                                 fr.write('\t\t\t "' + tk + '",\n')
                         fr.write('\t\t ]\n') 
@@ -106,12 +104,12 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess
                     pass
 
                 try:
-                    jsl=kvshow["properties"]["accessPolicies"][j]["permissions"]["secrets"]
+                    jsl=azr[i]["properties"]["accessPolicies"][j]["permissions"]["secrets"]
                     try:
                         sl=len(jsl)
                         fr.write('\t\t secret_permissions = [ \n')
                         for k in range(0,sl):
-                            tk=kvshow["properties"]["accessPolicies"][j]["permissions"]["secrets"][k]
+                            tk=azr[i]["properties"]["accessPolicies"][j]["permissions"]["secrets"][k]
                             if tk != "all":
                                 fr.write('\t\t\t "' + tk + '",\n')
                         fr.write('\t\t ]\n') 
@@ -121,12 +119,12 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,subprocess
                     pass
                 
                 try:
-                    jcl=kvshow["properties"]["accessPolicies"][j]["permissions"]["certificates"]
+                    jcl=azr[i]["properties"]["accessPolicies"][j]["permissions"]["certificates"]
                     try:
                         cl=len(jcl)
                         fr.write('\t\t certificate_permissions = [ \n')
                         for k in range(0,cl):
-                            tk=kvshow["properties"]["accessPolicies"][j]["permissions"]["certificates"][k]
+                            tk=azr[i]["properties"]["accessPolicies"][j]["permissions"]["certificates"][k]
                             if tk != "all":    
                                 fr.write('\t\t\t "' + tk + '",\n')
                         fr.write('\t\t ]\n')                          
