@@ -13,10 +13,10 @@ And finally runs a
 There should hopefully be no subsequent additions or deletions reported by the terraform plan command as all the approriate terraform configuration files will have have automatically been created.
 
 ## Requirements & Prerequisites
-+ The tool is written for the bash shell script and has been tested on a MAC
++ The tool is written for the bash shell script & Python2 and has been tested on a MAC
 + Azure cli2 **version 2.0.55 or higher** needs to be installed and you need a login with at least "Read" priviledges
 + terraform **version v0.11.11** needs to be installed
-+ jq see:  https://stedolan.github.io/jq/  (On macOS also available via $ brew install jq)
++ Python v2.7
 
 
 
@@ -61,7 +61,10 @@ To filter the terraform resource type: (eg: just availability sets)
 ```
 ./az2tf.sh -s <Subscription ID> -g <Resource Group> -r azurerm_availability_set
 ```
-
+To filter the terraform resource type: (eg: just availability sets) and fast forward:
+```
+./az2tf.sh -s <Subscription ID> -g <Resource Group> -r azurerm_availability_set -f yes
+```
 
 Be patient - lots of output is given as az2tf:
 
