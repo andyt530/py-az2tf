@@ -7,3 +7,5 @@ terraform*
 generated
 *.bak
 *.pyc
+generated
+tall*
