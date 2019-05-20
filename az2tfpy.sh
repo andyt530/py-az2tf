@@ -71,9 +71,7 @@ if [ "$f" = "no" ]; then
     rm -f import.log *.txt
     rm -f terraform* *.tf *.sh
 else
-    sort -u processed.txt > pt.txt
-    cp pt.txt processed.txt
-    rm -f *state*.sh import.log
+    rm -f *$r*state*.sh import.log
 fi
 
 # cleanup from any previous runs
@@ -81,10 +79,6 @@ rm -f terraform*.backup
 #rm -f terraform.tfstate
 rm -f tf*.sh
 cp ../../stub/*.tf .
-
-
-
-
 
 
 pyc1="python2 ../../scripts/resources.py -s $mysub "
@@ -127,7 +121,7 @@ echo $?
 chmod 755 *state*.sh
 
 if [ "$f" = "yes" ]; then
-for com in `ls *staterm.sh | sort -g`; do
+for com in `ls *$r*staterm.sh | sort -g`; do
     comm=`printf "./%s" $com`
     echo $comm
     eval $comm
@@ -135,24 +129,14 @@ done
 fi
 
 
-for com in `ls *stateimp.sh | sort -g`; do
+for com in `ls *$r*stateimp.sh | sort -g`; do
     comm=`printf "./%s" $com`
     echo $comm
     eval $comm
 done
 
 
-echo "Terraform fmt ..."
-terraform fmt
 
-echo "Terraform Plan ..."
-terraform plan .
-echo "---------------------------------------------------------------------------"
-echo "az2tf output files are in generated/tf.$mysub"
-echo "---------------------------------------------------------------------------"
-
-
-exit
 
 
 # subscription level stuff - roles & policies
@@ -183,5 +167,15 @@ echo "Cleanup Cloud Shell"
 #echo $states
 #terraform state rm $states
 #
+
+
+echo "Terraform fmt ..."
+terraform fmt
+
+echo "Terraform Plan ..."
+terraform plan .
+echo "---------------------------------------------------------------------------"
+echo "az2tf output files are in generated/tf.$mysub"
+echo "---------------------------------------------------------------------------"
 
 
