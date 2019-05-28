@@ -1,4 +1,6 @@
-# az2tf
+# az2tf (Python version)
+
+Work in progress - please report any issues.
 
 This utility 'Azure to Terraform' (az2tf) 
 reads an Azure Subscription and generates all the required terraform configuration files (.tf) from each of the composite Azure Resource Groups
@@ -27,11 +29,6 @@ Running the tool in your local shell (bash) required these steps:
 2. login to the Azure cli2  (az login)
 3. run the tool 
 
-
-## Experimental: using the docker version
-1. Build with: $ docker build --rm -f "Dockerfile" -t az2tf:latest .
-2. If it doesn't already exist make a "generated" directory ($ mkdir generated)
-3. Run with "$ ./runme.sh"
 
 (would appreciate feedback on how to better use docker)
 
