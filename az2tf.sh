@@ -81,7 +81,7 @@ rm -f tf*.sh
 cp ../../stub/*.tf .
 
 
-pyc1="python2 ../../scripts/resources.py -s $mysub "
+pyc1="python2.7 ../../scripts/resources.py -s $mysub "
 if [ "$g" != "" ]; then
     pyc2=" -g $g "
 else
