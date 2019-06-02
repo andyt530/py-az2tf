@@ -42,7 +42,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             scope=scope.encode('ascii', 'ignore')
 
             if crg is not None:
-                if rg.lower() != crg.lower():
+                if rgs.lower() != crg.lower():
                     continue  # back to for
             if cde:
                 print(json.dumps(azr[j], indent=4, separators=(',', ': ')))

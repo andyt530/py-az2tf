@@ -28,7 +28,7 @@ def azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub
             rg=id.split("/")[4].replace(".","-").lower()
             rgs=id.split("/")[4]
             if crg is not None:
-                if rg.lower() != crg.lower():
+                if rgs.lower() != crg.lower():
                     continue  # back to for
             if cde:
                 print(json.dumps(azr[i], indent=4, separators=(',', ': ')))

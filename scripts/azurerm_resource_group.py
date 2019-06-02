@@ -32,7 +32,7 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             loc=rgs[j]["location"]
             id=rgs[j]["id"]
             if crg is not None:
-                if rg.lower() != crg.lower():
+                if rgs.lower() != crg.lower():
                     continue
             
             rname=name.replace(".","-")

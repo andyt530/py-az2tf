@@ -29,7 +29,7 @@ def azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmes
             rgs=id.split("/")[4]
 
             if crg is not None:
-                if rg.lower() != crg.lower():
+                if rgs.lower() != crg.lower():
                     continue  # back to for
             if cde:
                 print(json.dumps(azr[i], indent=4, separators=(',', ': ')))

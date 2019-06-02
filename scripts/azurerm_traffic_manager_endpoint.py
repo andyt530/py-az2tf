@@ -34,7 +34,7 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
                 rgs=id.split("/")[4]
                 
                 if crg is not None:
-                    if rg.lower() != crg.lower():
+                    if rgs.lower() != crg.lower():
                         continue  # back to for
                 if cde:
                     print(json.dumps(azr2[j], indent=4, separators=(',', ': ')))
