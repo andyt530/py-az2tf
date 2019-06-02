@@ -30,6 +30,17 @@ while read p; do
     cat ../scripts/rbauth.py >> $outfile
     echo " " >> $outfile
   else 
-    echo $p >> $outfile
+    f1=`echo $p | cut -f1 -d'.'`
+    f2=`echo $p | cut -f2 -d'.'`
+    if [[ $f1 == azurerm_* ]] ; then
+        echo $f2 >> $outfile
+    else 
+        echo $p >> $outfile
+    fi
   fi
 done <../scripts/resources.py
+
+sed -i .bak -e 's/cde=True/cde=False/g' run.py
+
+#sed -i .bak -e 's/fr.write/print/g' run.py
+cat end.py >> run.py

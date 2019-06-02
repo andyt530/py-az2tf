@@ -131,7 +131,8 @@ if not FoundSub:
 print "Could not find subscription with ID (Test 2) " + sub + " Exiting ..."
 #exit("ErrorInvalidSubscriptionID-2")
 
-# RUNBOOK OFF
+print "Found subscription " + sub + " proceeding ..."
+
 if crg is not None:
 FoundRg=False
 # get and check Resource group
@@ -156,4 +157,12 @@ if os.path.exists("tf-staterm.sh"):
 os.remove('tf-staterm.sh')
 if os.path.exists("tf-stateimp.sh"):
 os.remove('tf-stateimp.sh')
+
+
+
+if crf is None: crf="azurerm"
+# RUNBOOK OFF
+exit()
+
+
 
