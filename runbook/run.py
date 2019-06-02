@@ -6722,7 +6722,7 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
             try:
                 triid = azr[i]["properties"]["targetResourceUri"]
                 parts = triid.split("/")
-                print "parts=" + str(len(parts))
+                #print "parts=" + str(len(parts))
                 trrg = azr[i]["properties"]["targetResourceUri"].split(
                     "/")[4].replace(".", "-").lower()
                 trty = azr[i]["properties"]["targetResourceUri"].split(
@@ -6807,9 +6807,9 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
                     try:
                         rules = azr[i]["properties"]["profiles"][j]["rules"]
                         kcount = len(rules)
-                        print "count of rules= "+str(kcount)
+                        #print "count of rules= "+str(kcount)
                         for k in range(0, kcount):
-                            print k
+                            #print k
                             fr.write('\trule  {\n')
                             # metric trigger
                             mtn = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["metricName"]
@@ -6829,7 +6829,7 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
                             mttw = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["timeWindow"]
                             mttg2 = mttg
                             mttw2 = mttw
-                            print mtthres
+                            #print mtthres
                             # mttg2= mttg.split(":")[1].replace("0","") # sed 's/^0*//'
                             # mttw2= mttw.split(":")[1].replace("0","") #| cut -f2 -d':' | sed 's/^0*//'
 
@@ -6855,7 +6855,7 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
                             sav = azr[i]["properties"]["profiles"][j]["rules"][k]["scaleAction"]["value"]
 
                             fr.write('\t\tscale_action  {\n')
-                            print sac
+                            #print sac
                             # sac2= sac.split(":")[1].replace("0","") #| cut -f2 -d':' | sed 's/^0*//'
                             sac2 = sac
                             fr.write('\t\t\tcooldown = "' + sac2 + '"\n')
@@ -6874,16 +6874,16 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
             try:
                 nots = azr[i]["properties"]["notifications"]
                 ncount = len(nots)
-                print "num notifications=" + str(ncount)
+                #print "num notifications=" + str(ncount)
                 for k in range(0, ncount):
-                    print "k="+str(k)
+                    #print "k="+str(k)
                     nsa = azr[i]["properties"]["notifications"][k]["email"]["sendToSubscriptionAdministrator"]
-                    print "nsa "+str(nsa)
+                    #print "nsa "+str(nsa)
                     nsca = azr[i]["properties"]["notifications"][k]["email"]["sendToSubscriptionCoAdministrators"]
-                    print "nsca "+str(nsca)
+                    #print "nsca "+str(nsca)
                     nce = str(ast.literal_eval(json.dumps(azr[i]["properties"]["notifications"][k]["email"]["customEmails"])))
                     nce = nce.replace("'", '"')
-                    print "nce= "+str(nce)
+                    #print "nce= "+str(nce)
                     fr.write('notification {\n')
                     fr.write('\temail {\n')
 

@@ -11,5 +11,4 @@ fileList = glob.glob(tffile)
 for filePath in fileList:
     with open(filePath) as f: 
         print f.read()
-
-exit()
+print "# END \n"
