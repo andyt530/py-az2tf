@@ -201,7 +201,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                    
                     try :
                         acert=azr[i]["properties"]["backendHttpSettingsCollection"][j]["properties"]["authenticationCertificates"][0]["id"].split("/")[10]
-                        print acert
+                        #print acert
                         fr.write('\t authentication_certificate { \n')
                         fr.write('\t\t name = "' + acert + '"\n')
                         fr.write('\t}\n')

@@ -30,7 +30,7 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
             rgs=id.split("/")[4]
-            print id
+            #print id
             if crg is not None:
                 if rgs.lower() != crg.lower():
                     continue  # back to for

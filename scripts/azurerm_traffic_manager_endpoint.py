@@ -17,7 +17,7 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
         tfim=open(tfimf, 'a')
         print "# " + tfp,
         count=len(azr)
-       
+        print count
         for i in range(0, count):
 
             #loc=azr[i]["location"]
@@ -25,7 +25,7 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
             pname=azr[i]["name"]
             azr2=azr[i]["properties"]["endpoints"]
             jcount=len(azr2)
-            print jcount
+            
             for j in range (0,jcount):
 
                 name=azr2[j]["name"]

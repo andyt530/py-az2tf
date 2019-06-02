@@ -33,11 +33,11 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             
             scope=scope1.rstrip("/")
             sc=len(scope.split("/"))
-            print sc
+            #print sc
             sn=scope.split("/")[sc-1].replace(" ","-").lower()
             sn=sn.replace(".","-")
 
-            print "scope name="+sn
+            #print "scope name="+sn
 
             scope=scope.encode('ascii', 'ignore')
 

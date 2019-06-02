@@ -16,7 +16,7 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim=open(tfimf, 'a')
         print "# " + tfp,
         count=len(azr)
-        
+        print count
         for i in range(0, count):
          
             name=azr[i]["name"]
@@ -33,7 +33,7 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     
             beap=azr[i]["properties"]["inboundNatPools"]
             jcount= len(beap)
-            print jcount
+           
             if cde:
                 print "********** beap ***********"
                 print(json.dumps(beap, indent=4, separators=(',', ': ')))  

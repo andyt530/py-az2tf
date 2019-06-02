@@ -31,7 +31,7 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
             rgs=id.split("/")[4]
 
             skip="false"
-            print id
+            #print id
             if "[" in id or "]" in id :
                 print "Skipping this soluion "+ name+ " can't process currently"
                 skip="true"

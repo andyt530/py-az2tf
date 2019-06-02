@@ -168,11 +168,11 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             
             scope=scope1.rstrip("/")
             sc=len(scope.split("/"))
-            print sc
+            #print sc
             sn=scope.split("/")[sc-1].replace(" ","-").lower()
             sn=sn.replace(".","-")
 
-            print "scope name="+sn
+            #print "scope name="+sn
 
             scope=scope.encode('ascii', 'ignore')
 
@@ -916,12 +916,12 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim=open(tfimf, 'a')
         print "# " + tfp,
         count=len(azr)
-       
+        print count
         for i in range(0, count):
             subs=azr[i]["properties"]["subnets"]
             vnetname=azr[i]["name"]
             jcount=len(subs)
-            print jcount
+            
 
             for j in range(0, jcount):
                 name=subs[j]["name"]
@@ -1093,12 +1093,12 @@ def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfim=open(tfimf, 'a')
         print "# " + tfp,
         count=len(azr)
-        
+        print count
         for i in range(0, count):
             peers=azr[i]["properties"]["virtualNetworkPeerings"]
             vnetname=azr[i]["name"]
             jcount=len(peers)
-            print jcount
+            
             for j in range(0, jcount):
                 name=peers[j]["name"]
                 #loc=peers[j]["location"] peers don't have a location
@@ -1832,7 +1832,7 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
         tfim=open(tfimf, 'a')
         print "# " + tfp,
         count=len(azr)
-       
+        print count
         for i in range(0, count):
 
             #loc=azr[i]["location"]
@@ -1840,7 +1840,7 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
             pname=azr[i]["name"]
             azr2=azr[i]["properties"]["endpoints"]
             jcount=len(azr2)
-            print jcount
+            
             for j in range (0,jcount):
 
                 name=azr2[j]["name"]
@@ -2399,7 +2399,7 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim=open(tfimf, 'a')
         print "# " + tfp,
         count=len(azr)
-        
+        print count
         for i in range(0, count):
          
             name=azr[i]["name"]
@@ -2416,7 +2416,7 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     
             beap=azr[i]["properties"]["inboundNatPools"]
             jcount= len(beap)
-            print jcount
+           
             if cde:
                 print "********** beap ***********"
                 print(json.dumps(beap, indent=4, separators=(',', ': ')))  
@@ -2519,7 +2519,7 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfim=open(tfimf, 'a')
         print "# " + tfp,
         count=len(azr)
-        
+        print count
         for i in range(0, count):
 
             name=azr[i]["name"]
@@ -2535,7 +2535,7 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
             
             beap=azr[i]["properties"]["backendAddressPools"]       
             jcount= len(beap)
-            print jcount
+            
             for j in range(0,jcount):
                 
                 name=azr[i]["properties"]["backendAddressPools"][j]["name"]
@@ -2606,7 +2606,7 @@ def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim=open(tfimf, 'a')
         print "# " + tfp,
         count=len(azr)
-        
+        print count
         for i in range(0, count):
 
             name=azr[i]["name"]
@@ -2622,7 +2622,7 @@ def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             beap=azr[i]["properties"]["probes"]
             
             icount= len(beap)
-            print icount
+            
             for j in range(0,icount):
                 
                 name=azr[i]["properties"]["probes"][j]["name"]
@@ -2708,7 +2708,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim=open(tfimf, 'a')
         print "# " + tfp,
         count=len(azr)
-        
+        print count
         for i in range(0, count):
             name=azr[i]["name"]
             id=azr[i]["id"]
@@ -2722,7 +2722,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
  
             beap=azr[i]["properties"]["loadBalancingRules"]   
             jcount=len(beap)
-            print jcount
+            
             for j in range(0,jcount):
                 
                 name=azr[i]["properties"]["loadBalancingRules"][j]["name"]
@@ -2999,7 +2999,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                    
                     try :
                         acert=azr[i]["properties"]["backendHttpSettingsCollection"][j]["properties"]["authenticationCertificates"][0]["id"].split("/")[10]
-                        print acert
+                        #print acert
                         fr.write('\t authentication_certificate { \n')
                         fr.write('\t\t name = "' + acert + '"\n')
                         fr.write('\t}\n')
@@ -5269,7 +5269,7 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
             rgs=id.split("/")[4]
 
             skip="false"
-            print id
+            #print id
             if "[" in id or "]" in id :
                 print "Skipping this soluion "+ name+ " can't process currently"
                 skip="true"
@@ -5886,7 +5886,7 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
             rgs=id.split("/")[4]
-            print id
+            #print id
             if crg is not None:
                 if rgs.lower() != crg.lower():
                     continue  # back to for
@@ -6245,7 +6245,7 @@ def azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess
             fr.write('\t sku = "' +  sku + '"\n')
    
             outid=azr[i]["id"]
-            print  outid
+            #print  outid
             #evalcomm=fr.write('terraform import . + '__' +  " tfp rg rname outid
 
     # tags block       
@@ -6937,10 +6937,6 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
     # end stub
 
 # RUNBOOK ON
-cde=False
-az2tfmess="# File generated by az2tf see: https://github.com/andyt530/az2tf n"
-
-# RUNBOOK ON
 #
 # runbook get token
 #
@@ -6950,6 +6946,8 @@ sub=str(runas_connection["SubscriptionId"])
 headers = {'Authorization': 'Bearer ' + bt, 'Content-Type': 'application/json'}
 crg=None
 crf="azurerm"
+cde=False
+az2tfmess="# File generated by az2tf see: https://github.com/andyt530/az2tf \n"
  
 
 # record and sort resources
@@ -7079,4 +7077,12 @@ fileList = glob.glob(tffile)
 for filePath in fileList:
     with open(filePath) as f: 
         print f.read()
+
+tffile="*stateimp.sh"
+fileList = glob.glob(tffile) 
+# Iterate over the list of filepaths & remove each file.
+for filePath in fileList:
+    with open(filePath) as f: 
+        print f.read()
+
 exit()

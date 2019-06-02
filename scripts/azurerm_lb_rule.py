@@ -16,7 +16,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim=open(tfimf, 'a')
         print "# " + tfp,
         count=len(azr)
-        
+        print count
         for i in range(0, count):
             name=azr[i]["name"]
             id=azr[i]["id"]
@@ -30,7 +30,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
  
             beap=azr[i]["properties"]["loadBalancingRules"]   
             jcount=len(beap)
-            print jcount
+            
             for j in range(0,jcount):
                 
                 name=azr[i]["properties"]["loadBalancingRules"][j]["name"]

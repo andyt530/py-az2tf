@@ -51,7 +51,7 @@ def azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess
             fr.write('\t sku = "' +  sku + '"\n')
    
             outid=azr[i]["id"]
-            print  outid
+            #print  outid
             #evalcomm=fr.write('terraform import . + '__' +  " tfp rg rname outid
 
     # tags block       
