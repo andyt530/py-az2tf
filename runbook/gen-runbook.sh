@@ -44,3 +44,4 @@ sed -i .bak -e 's/cde=True/cde=False/g' run.py
 
 #sed -i .bak -e 's/fr.write/print/g' run.py
 cat end.py >> run.py
+mv run.py az2tf-runbook.py
