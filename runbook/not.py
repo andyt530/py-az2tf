@@ -9,6 +9,7 @@ head, tail = os.path.split(cwd)
 newd=head+"/scripts"
 os.chdir(newd)
 #print os.getcwd()
+#import azure_resources
 # RUNBOOK OFF
 os.chdir(scwd)
 #print os.getcwd()

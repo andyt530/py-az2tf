@@ -9,6 +9,10 @@ import glob
 import argparse
 import ast
 # RUNBOOK ON
+ 
+#
+# runbook auth
+#
 import automationassets
 
 def get_automation_runas_token():
@@ -40,281 +44,10 @@ def get_automation_runas_token():
     
     # Return the token
     return azure_credential.get('accessToken') 
-def azurerm_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os):
-    # print "REST Resources ",
-    fresfilename="data.json"
-    fres=open(fresfilename, 'w')
-    url="https://management.azure.com/subscriptions/" + sub + "/resources"
-    params = {'api-version': '2018-11-01'}
-    try: 
-        r = requests.get(url, headers=headers, params=params)
-        res= r.json()["value"]
-    except KeyError:
-        print "Error getting resources"
-        exit()
-    fres.write(json.dumps(res, indent=4, separators=(',', ': ')))
-    fres.close()
-
-
-    rfilename="resources2.txt"
-    fr=open(rfilename, 'w')
-    nprfilename="noprovider2.txt"
-    np=open(nprfilename, 'w')
-
-
-    count=len(res)
-    print "Resources Found: " + str(count)
-    for j in range(0, count):
-        
-        #name=res[j]['name']
-        id=res[j]['id']
-        rg1=id.split("/")[4]
-        try:
-            isext=id.split("/")[9]
-        except IndexError:
-            isext=""
-
-        rtype=res[j]['type']
-        rg=rg1.replace(".","-")
-        #print rtype
-
-        if rtype == "Microsoft.Compute/availabilitySets":
-            prov="azurerm_availability_set"
-            fr.write(rg + ":" + prov + "\n")
-        elif rtype == "Microsoft.Network/networkSecurityGroups":
-            prov="azurerm_network_security_group"
-            fr.write(rg + ":" + prov + "\n")
-
-        elif rtype == "Microsoft.Storage/storageAccounts": 
-            prov="azurerm_storage_account"
-            fr.write(rg + ":" + prov + "\n")
-            prov="azurerm_storage_share"
-            fr.write(rg + ":" + prov + "\n")
-            prov="azurerm_storage_container"
-            fr.write(rg + ":" + prov + "\n")
-
-        elif rtype == "Microsoft.Network/networkSecurityGroups":
-            prov="azurerm_network_security_group"
-            fr.write(rg + ":" + prov + "\n")
-
-        elif rtype == "Microsoft.Compute/virtualMachines": 
-            #echo $isext
-            if isext != "extensions":
-                prov="azurerm_virtual_machine"
-                fr.write(rg + ":" + prov + "\n")
-                    
-        elif rtype == "Microsoft.Network/networkInterfaces": 
-            prov="azurerm_network_interface"
-            fr.write(rg + ":" + prov + "\n")
-        
-        elif rtype == "Microsoft.Compute/disks":
-            prov="azurerm_managed_disk"
-            fr.write(rg + ":" + prov + "\n")
-            
-        elif rtype == "Microsoft.Automation/automationAccounts": 
-            prov="azurerm_automation_account"
-            fr.write(rg + ":" + prov + "\n")
-            
-        elif rtype == "Microsoft.Network/virtualNetworks":
-            prov="azurerm_virtual_network"
-            fr.write(rg + ":" + prov + "\n")
-            prov="azurerm_subnet"
-            fr.write(rg + ":" + prov + "\n")
-            prov="azurerm_virtual_network_peering"
-            fr.write(rg + ":" + prov + "\n")
-
-        elif rtype == "Microsoft.Network/publicIPAddresses":
-            prov="azurerm_public_ip"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.Network/loadBalancers":
-            prov="azurerm_lb"
-            fr.write(rg + ":" + prov + "\n")
-            prov="azurerm_lb_nat_rule"
-            fr.write(rg + ":" + prov + "\n")
-            prov="azurerm_lb_nat_pool"
-            fr.write(rg + ":" + prov + "\n")
-            prov="azurerm_lb_backend_address_pool"
-            fr.write(rg + ":" + prov + "\n")
-            prov="azurerm_lb_probe"
-            fr.write(rg + ":" + prov + "\n")
-            prov="azurerm_lb_rule"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.Network/virtualNetworkGateways":
-            prov="azurerm_virtual_network_gateway"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.Network/connections":
-            prov="azurerm_virtual_network_gateway_connection"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.Network/routeTables": 
-            prov="azurerm_route_table"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.OperationalInsights/workspaces":
-            prov="azurerm_log_analytics_workspace"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype ==  "Microsoft.OperationsManagement/solutions":
-            prov="azurerm_log_analytics_solution"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.KeyVault/vaults":
-            prov="azurerm_key_vault"
-            fr.write(rg + ":" + prov + "\n")
-            prov="azurerm_key_vault_secret"
-            fr.write(rg + ":" + prov + "\n")
-
-        elif rtype == "Microsoft.RecoveryServices/vaults":
-            prov="azurerm_recovery_services_vault"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.ContainerRegistry/registries":
-            prov="azurerm_container_registry"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.ContainerService/managedClusters":
-            prov="azurerm_kubernetes_cluster"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.Network/localNetworkGateways":
-            prov="azurerm_local_network_gateway"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.Network/expressRouteCircuits":
-            prov="azurerm_express_route_circuit"
-            fr.write(rg + ":" + prov + "\n")
-            prov="azurerm_express_route_circuit_authorization"
-            fr.write(rg + ":" + prov + "\n")
-            prov="azurerm_express_route_circuit_peering"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.Compute/images": 
-            prov="azurerm_image"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.Network/networkWatchers": 
-            prov="azurerm_network_watcher"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.Network/applicationSecurityGroups":
-            prov="azurerm_application_security_group"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.ContainerInstance/containerGroups":
-            prov="azurerm_container_group"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.Network/applicationGateways": 
-            prov="azurerm_application_gateway"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.DocumentDb/databaseAccounts":
-            prov="azurerm_cosmosdb_account"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.ServiceBus/namespaces": 
-            prov="azurerm_servicebus_namespace"
-            fr.write(rg + ":" + prov + "\n")
-            prov="azurerm_servicebus_queue"
-            fr.write(rg + ":" + prov + "\n")
-                    
-        elif rtype == "Microsoft.Network/trafficmanagerprofiles":
-            prov="azurerm_traffic_manager_profile"
-            fr.write(rg + ":" + prov + "\n")
-            prov="azurerm_traffic_manager_endpoint"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.Web/serverFarms": 
-            prov="azurerm_app_service_plan"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.Web/sites": 
-            prov="azurerm_app_service"
-            fr.write(rg + ":" + prov + "\n")
-            prov="azurerm_function_app"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.Compute/virtualMachineScaleSets":
-            prov="azurerm_virtual_machine_scale_set"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.ManagedIdentity/userAssignedIdentities":
-            prov="azurerm_user_assigned_identity"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.Compute/snapshots":
-            prov="azurerm_snapshot"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.Databricks/workspaces":
-            prov="azurerm_databricks_workspace"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.Sql/servers": 
-            prov="azurerm_sql_server"
-            fr.write(rg + ":" + prov + "\n")
-            prov="azurerm_sql_database"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype == "Microsoft.Network/dnszones": 
-            prov="azurerm_dns_zone"
-            fr.write(rg + ":" + prov + "\n")
-                
-        elif rtype ==  "microsoft.insights/autoscalesettings":
-            prov="azurerm_monitor_autoscale_setting"
-            fr.write(rg + ":" + prov + "\n")
-                
-        else:
-            np.write(rtype + "\n")
-
-    fr.close()
-    np.close()
-
-    print "Optimizing Resources ..."
-    # sort unique and filter for Resource Group
-    rfilename="resources.txt"
-    fr=open(rfilename, 'w')
-    with open('resources2.txt', 'r') as r:
-        for line in sorted(set(r)):
-            trg=line.split(":")[0]
-            trt=line.split(":")[1]
-            #print trt
-            if crg is not None:   # Resource Group Filter
-                if trg == crg :
-                    if crf is not None:   # Resource Filter
-                        if crf in trt:
-                            fr.write(line,)
-                    else:
-                        fr.write(line,)
-            else:
-                if crf is not None:   # Resource Filter
-                    if crf in trt :
-                        fr.write(line,)
-                else:
-                    fr.write(line,)
-    r.close()
-    fr.close()
-
-
-
-
-
-    # sort unique and fileter for Resource Group
-    rfilename="noprovider.txt"
-    fr=open(rfilename, 'w')
-    with open('noprovider2.txt', 'r') as r:
-        for line in sorted(set(r)):
-            fr.write(line,)
-
-    r.close()
-    fr.close()
-    if os.path.exists("tf-staterm.sh"):
-        os.remove('tf-staterm.sh')
-    if os.path.exists("tf-stateimp.sh"):
-        os.remove('tf-stateimp.sh') 
+ 
+#
+# azurerm_resource_group
+#
 import sys
 def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # handle resource groups
@@ -397,6 +130,9 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
         #end resource group 
+#
+# azurerm_management_lock
+#
 def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # management locks
     
@@ -512,6 +248,9 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
         #end management locks 
+#
+# azurerm_user_assigned_identity
+#
 def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # 015 user assigned identity
     tfp="azurerm_user_assigned_identity"
@@ -582,6 +321,9 @@ def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfme
         tfrm.close()
         tfim.close()
         #end user assigned identity 
+#
+# azurerm_availability_set
+#
 def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  020 Avail Sets
     tfp="azurerm_availability_set"
@@ -667,6 +409,9 @@ def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end Avail Set 
+#
+# azurerm_route_table
+#
 def azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  030 Route Table
     tfp="azurerm_route_table"
@@ -767,6 +512,9 @@ def azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end route table 
+#
+# azurerm_application_security_group
+#
 def azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  040 ASG's
     tfp="azurerm_application_security_group"
@@ -843,6 +591,9 @@ def azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2
         tfrm.close()
         tfim.close()
     #end ASG 
+#
+# azurerm_network_security_group
+#
 import ast
 def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  050 NSG's
@@ -1023,6 +774,9 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
         tfrm.close()
         tfim.close()
         #end NSG 
+#
+# azurerm_virtual_network
+#
 import ast
 def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  060 Virtual Networks
@@ -1138,6 +892,9 @@ def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         return azr
     #end VNET
     ############# 
+#
+# azurerm_subnet
+#
 import ast
 def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  070 subnets
@@ -1315,6 +1072,9 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end subnet 
+#
+# azurerm_virtual_network_peering
+#
 def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #############
     #  080 vnet peering
@@ -1390,6 +1150,9 @@ def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfrm.close()
         tfim.close()
     #end peering 
+#
+# azurerm_managed_disk
+#
 def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_managed_disk"
     azr=""
@@ -1538,6 +1301,9 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end managed disk 
+#
+# azurerm_storage_account
+#
 import ast
 def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  110 storage account
@@ -1658,6 +1424,9 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end storage account 
+#
+# azurerm_key_vault
+#
 def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #############
     #  090 key vault
@@ -1826,6 +1595,9 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end key vault 
+#
+# azurerm_public_ip
+#
 def azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_public_ip"
     azr=""
@@ -1921,6 +1693,9 @@ def azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end public ip 
+#
+# azurerm_traffic_manager_profile
+#
 def azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  124 Traffic manager profile
     tfp="azurerm_traffic_manager_profile"
@@ -2035,6 +1810,9 @@ def azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfim.close()
         return azr
     #end traffic manager profile 
+#
+# azurerm_traffic_manager_endpoint
+#
 def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  125 traffic manager endpoint
 
@@ -2127,6 +1905,9 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
         tfrm.close()
         tfim.close()
     #end traffic manager endpoint 
+#
+# azurerm_network_interface
+#
 def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     
     tfp="azurerm_network_interface"
@@ -2261,6 +2042,9 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end stub 
+#
+# azurerm_dns_zone
+#
 # azurerm_dns_zone
 def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_dns_zone"
@@ -2370,6 +2154,9 @@ def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim.close()
     #end stub
  
+#
+# azurerm_lb
+#
 # azurerm_lb
 def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_lb"
@@ -2489,6 +2276,9 @@ def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         
     #end stub
  
+#
+# azurerm_lb_nat_rule
+#
 # azurerm_lb_nat_rule
 def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_lb_nat_rule"
@@ -2588,6 +2378,9 @@ def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
     #end stub
  
+#
+# azurerm_lb_nat_pool
+#
 # azurerm_lb_nat_pool
 def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_lb_nat_pool"
@@ -2705,6 +2498,9 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim.close()
     #end stub
  
+#
+# azurerm_lb_backend_address_pool
+#
 # azurerm_lb_backend_address_pool
 def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_lb_backend_address_pool"
@@ -2789,6 +2585,9 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfim.close()
     #end stub
  
+#
+# azurerm_lb_probe
+#
 # azurerm_lb_probe
 def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_lb_probe"
@@ -2888,6 +2687,9 @@ def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim.close()
     #end stub
  
+#
+# azurerm_lb_rule
+#
 # azurerm_lb_rule
 def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_lb_rule"
@@ -2991,6 +2793,9 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim.close()
     #end stub
  
+#
+# azurerm_application_gateway
+#
 # azurerm_application_gateway
 def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_application_gateway"
@@ -3415,8 +3220,11 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
         tfrm.close()
         tfim.close()
     #end stub
- 
 
+ 
+#
+# azurerm_local_network_gateway
+#
 # azurerm_local_network_gateway
 import ast
 def azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess):
@@ -3524,6 +3332,9 @@ def azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmes
         tfim.close()
     #end stub
  
+#
+# azurerm_virtual_network_gateway
+#
 # azurerm_virtual_network_gateway
 import ast
 def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess):
@@ -3683,6 +3494,9 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfim.close()
     #end stub
  
+#
+# azurerm_virtual_network_gateway_connection
+#
 # azurerm_virtual_network_gateway_connection
 def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_virtual_network_gateway_connection"
@@ -3832,6 +3646,9 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
         tfim.close()
     #end stub
  
+#
+# azurerm_express_route_circuit
+#
 # azurerm_express_route_circuit
 def azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_express_route_circuit"
@@ -3927,6 +3744,9 @@ def azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmes
         tfim.close()
     #end stub
  
+#
+# azurerm_express_route_circuit_authorization
+#
 # azurerm_express_route_circuit_authorization
 def azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_express_route_circuit_authorization"
@@ -4008,6 +3828,9 @@ def azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub
         tfim.close()
     #end stub
  
+#
+# azurerm_express_route_circuit_peering
+#
 # azurerm_express_route_circuit_peering
 def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_express_route_circuit_peering"
@@ -4110,6 +3933,9 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
         tfim.close()
     #end stub
  
+#
+# azurerm_container_registry
+#
 # azurerm_container_registry
 def azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_container_registry"
@@ -4192,6 +4018,9 @@ def azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim.close()
     #end stub
  
+#
+# azurerm_kubernetes_cluster
+#
 # azurerm_kubernetes_cluster
 def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_kubernetes_cluster"
@@ -4388,6 +4217,9 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim.close()
     #end stub
  
+#
+# azurerm_recovery_services_vault
+#
 # azurerm_recovery_services_vault
 def azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_recovery_services_vault"
@@ -4467,6 +4299,9 @@ def azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfim.close()
     #end stub
  
+#
+# azurerm_virtual_machine
+#
 # azurerm_virtual_machine
 def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_virtual_machine"
@@ -4801,6 +4636,9 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim.close()
     #end stub
  
+#
+# azurerm_virtual_machine_scale_set
+#
 # azurerm_virtual_machine_scale_set
 import ast
 def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, json, az2tfmess):
@@ -5216,6 +5054,9 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
         tfim.close()
     # end stub
  
+#
+# azurerm_automation_account
+#
 # azurerm_automation_account
 def azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_automation_account"
@@ -5302,6 +5143,9 @@ def azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim.close()
     #end stub
  
+#
+# azurerm_log_analytics_workspace
+#
 # azurerm_log_analytics_workspace
 def azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_log_analytics_workspace"
@@ -5389,6 +5233,9 @@ def azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfim.close()
     #end stub
  
+#
+# azurerm_log_analytics_solution
+#
 # azurerm_log_analytics_solution
 def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_log_analytics_solution"
@@ -5496,6 +5343,9 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
         tfim.close()
     #end stub
  
+#
+# azurerm_image
+#
 # azurerm_image
 def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_image"
@@ -5605,6 +5455,9 @@ def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim.close()
     #end stub
  
+#
+# azurerm_snapshot
+#
 # azurerm_snapshot
 def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_snapshot"
@@ -5709,6 +5562,9 @@ def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim.close()
     #end stub
  
+#
+# azurerm_network_watcher
+#
 # azurerm_network_watcher
 def azurerm_network_watcher(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_network_watcher"
@@ -5785,6 +5641,9 @@ def azurerm_network_watcher(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim.close()
     #end stub
  
+#
+# azurerm_cosmosdb_account
+#
 # azurerm_cosmosdb_account
 def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_cosmosdb_account"
@@ -5901,6 +5760,9 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim.close()
     #end stub
  
+#
+# azurerm_servicebus_namespace
+#
 # azurerm_servicebus_namespace
 def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_servicebus_namespace"
@@ -5989,6 +5851,9 @@ def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess
         tfim.close()
     #end stub
  
+#
+# azurerm_servicebus_queue
+#
 # azurerm_servicebus_queue
 def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_servicebus_queue"
@@ -6112,6 +5977,9 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim.close()
     #end stub
  
+#
+# azurerm_sql_server
+#
 # azurerm_sql_server
 def azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_sql_server"
@@ -6200,6 +6068,9 @@ def azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim.close()
     #end stub
  
+#
+# azurerm_sql_database
+#
 # azurerm_sql_database
 def azurerm_sql_database(crf, cde, crg, headers, requests, sub, json, az2tfmess):
     tfp = "azurerm_sql_database"
@@ -6318,6 +6189,9 @@ def azurerm_sql_database(crf, cde, crg, headers, requests, sub, json, az2tfmess)
         tfim.close()
     # end stub
  
+#
+# azurerm_databricks_workspace
+#
 # azurerm_databricks_workspace
 def azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_databricks_workspace"
@@ -6404,6 +6278,9 @@ def azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess
         tfim.close()
     #end stub
  
+#
+# azurerm_app_service_plan
+#
 # azurerm_app_service_plan
 def azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_app_service_plan"
@@ -6498,6 +6375,9 @@ def azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim.close()
     #end stub
  
+#
+# azurerm_app_service
+#
 # azurerm_app_service
 def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_app_service"
@@ -6602,6 +6482,9 @@ def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim.close()
     #end stub
  
+#
+# azurerm_function_app
+#
 # azurerm_function_app
 def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_function_app"
@@ -6777,6 +6660,9 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim.close()
     #end stub
  
+#
+# azurerm_monitor_autoscale_setting
+#
 # azurerm_monitor_autoscale_setting
 import ast
 
@@ -7049,7 +6935,6 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
         tfrm.close()
         tfim.close()
     # end stub
- 
 
 # RUNBOOK ON
 cde=False
@@ -7058,18 +6943,20 @@ az2tfmess="# File generated by az2tf see: https://github.com/andyt530/az2tf n"
 # RUNBOOK ON
 print "Found subscription " + sub + " proceeding ..."
 # RUNBOOK ON
-import automationassets
+#
+# runbook get token
+#
 runas_connection = automationassets.get_automation_connection("AzureRunAsConnection")
 bt=get_automation_runas_token()
 sub=str(runas_connection["SubscriptionId"])
-headers = {'Authorization': 'Bearer ' + bt, 'Content-Type': 'application/json'} 
+headers = {'Authorization': 'Bearer ' + bt, 'Content-Type': 'application/json'}
+ 
 
-if crf is None:
-crf="azurerm"
+if crf is None: crf="azurerm"
 
 
 # record and sort resources
-#azurerm_resources.azurerm_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os)
+#azure_resources.azure_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os)
 # 001 Resource Group
 azurerm_resource_group.azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 002 management locks

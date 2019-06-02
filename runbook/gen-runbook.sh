@@ -10,12 +10,23 @@ while read p; do
   fi
   if [[ $p =~ "import azurerm" ]] ; then
     f=`echo "$p" | cut -f2 -d" "`
-    cat ../scripts/$f.py >> $outfile
     echo " " >> $outfile
+    echo "#" >> $outfile
+    echo "# $f" >> $outfile
+    echo "#" >> $outfile
+    cat ../scripts/$f.py >> $outfile
+
   elif [[ $p =~ "# RUNBOOK INLINE1" ]] ; then
+    echo " " >> $outfile
+    echo "#" >> $outfile
+    echo "# runbook auth" >> $outfile
+    echo "#" >> $outfile
     cat ../scripts/runbook_auth.py >> $outfile
     echo " " >> $outfile
   elif [[ $p =~ "# RUNBOOK INLINE2" ]] ; then
+    echo "#" >> $outfile
+    echo "# runbook get token" >> $outfile
+    echo "#" >> $outfile
     cat ../scripts/rbauth.py >> $outfile
     echo " " >> $outfile
   else 

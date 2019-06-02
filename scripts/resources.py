@@ -19,9 +19,9 @@ head, tail = os.path.split(cwd)
 newd=head+"/scripts"
 os.chdir(newd)
 #print os.getcwd()
+#import azure_resources
 # RUNBOOK ON
 # RUNBOOK INLINE1
-import azure_resources
 import azurerm_resource_group
 import azurerm_management_lock
 import azurerm_user_assigned_identity
@@ -232,8 +232,7 @@ if os.path.exists("tf-stateimp.sh"):
 # RUNBOOK ON
 # RUNBOOK INLINE2
 
-if crf is None:
-    crf="azurerm"
+if crf is None: crf="azurerm"
 
 
 # record and sort resources
