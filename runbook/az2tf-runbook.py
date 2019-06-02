@@ -7070,7 +7070,7 @@ azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 650_azurerm_monitor_autoscale_setting
 azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 
-# end.py gen-runbook.sh not.py run.py run.py.bak
+# az2tf-runbook.py end.py gen-runbook.sh not.py run.py run.py.bak
 tffile="*.tf"
 fileList = glob.glob(tffile) 
 # Iterate over the list of filepaths & remove each file.
