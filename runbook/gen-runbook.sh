@@ -1,4 +1,4 @@
-rm -f run.py not.py
+rm -f run1.py not.py run.py
 outfile="not.py"
 while read p; do
   #echo "$p"
@@ -9,17 +9,16 @@ while read p; do
     outfile="not.py"
   fi
   if [[ $p =~ "import azurerm" ]] ; then
-    echo "$p"
     f=`echo "$p" | cut -f2 -d" "`
-    echo $f
     cat ../scripts/$f.py >> $outfile
-  else
+    echo " " >> $outfile
+  elif [[ $p =~ "# RUNBOOK INLINE1" ]] ; then
+    cat ../scripts/runbook_auth.py >> $outfile
+    echo " " >> $outfile
+  elif [[ $p =~ "# RUNBOOK INLINE2" ]] ; then
+    cat ../scripts/rbauth.py >> $outfile
+    echo " " >> $outfile
+  else 
     echo $p >> $outfile
   fi
 done <../scripts/resources.py
-
-
-
-#for line in $(echo ../scripts/resources.py); do
-#done
-##printf "%s\n" "$line"

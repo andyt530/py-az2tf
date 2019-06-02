@@ -1,4 +1,4 @@
-def azurerm_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os):
+def azure_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os):
     # print "REST Resources ",
     fresfilename="data.json"
     fres=open(fresfilename, 'w')

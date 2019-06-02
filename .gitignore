@@ -7,7 +7,6 @@ terraform*
 generated
 *.bak
 *.pyc
-generated
 t*.sh
 check*
 env.sh

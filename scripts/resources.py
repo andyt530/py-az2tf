@@ -20,8 +20,8 @@ newd=head+"/scripts"
 os.chdir(newd)
 #print os.getcwd()
 # RUNBOOK ON
-# RUNBOOK INLINE
-import azurerm_resources
+# RUNBOOK INLINE1
+import azure_resources
 import azurerm_resource_group
 import azurerm_management_lock
 import azurerm_user_assigned_identity
@@ -162,8 +162,6 @@ if csub is not None:
 else:
     sub=sub2.rstrip('\n')
 
-
-
 bt=bt2.rstrip('\n')
 print "Subscription:",sub
 headers = {'Authorization': 'Bearer ' + bt, 'Content-Type': 'application/json'}
@@ -232,12 +230,14 @@ if os.path.exists("tf-stateimp.sh"):
     os.remove('tf-stateimp.sh')
 
 # RUNBOOK ON
+# RUNBOOK INLINE2
+
 if crf is None:
     crf="azurerm"
 
 
 # record and sort resources
-#azurerm_resources.azurerm_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os)
+#azure_resources.azure_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os)
 # 001 Resource Group
 azurerm_resource_group.azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 002 management locks

@@ -91,8 +91,6 @@ sub=csub
 else:
 sub=sub2.rstrip('n')
 
-
-
 bt=bt2.rstrip('n')
 print "Subscription:",sub
 headers = {'Authorization': 'Bearer ' + bt, 'Content-Type': 'application/json'}

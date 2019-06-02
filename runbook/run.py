@@ -9,7 +9,37 @@ import glob
 import argparse
 import ast
 # RUNBOOK ON
-# RUNBOOK INLINE
+import automationassets
+
+def get_automation_runas_token():
+    """ Returs a token that can be used to authenticate against Azure resources """
+    from OpenSSL import crypto
+    import adal
+   
+
+    # Get the Azure Automation RunAs service principal certificate
+    cert = automationassets.get_automation_certificate("AzureRunAsCertificate")
+    sp_cert = crypto.load_pkcs12(cert)
+    pem_pkey = crypto.dump_privatekey(crypto.FILETYPE_PEM, sp_cert.get_privatekey())
+
+    # Get run as connection information for the Azure Automation service principal
+    runas_connection = automationassets.get_automation_connection("AzureRunAsConnection")
+    application_id = runas_connection["ApplicationId"]
+    thumbprint = runas_connection["CertificateThumbprint"]
+    tenant_id = runas_connection["TenantId"]
+
+    # Authenticate with service principal certificate
+    resource = "https://management.core.windows.net/"
+    authority_url = ("https://login.microsoftonline.com/" + tenant_id)
+    context = adal.AuthenticationContext(authority_url)
+    azure_credential = context.acquire_token_with_client_certificate(
+        resource,
+        application_id,
+        pem_pkey,
+        thumbprint)
+    
+    # Return the token
+    return azure_credential.get('accessToken') 
 def azurerm_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os):
     # print "REST Resources ",
     fresfilename="data.json"
@@ -284,7 +314,8 @@ def azurerm_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os):
     if os.path.exists("tf-staterm.sh"):
         os.remove('tf-staterm.sh')
     if os.path.exists("tf-stateimp.sh"):
-        os.remove('tf-stateimp.sh')import sys
+        os.remove('tf-stateimp.sh') 
+import sys
 def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # handle resource groups
     isrun=False
@@ -365,7 +396,8 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         # end for
         tfrm.close()
         tfim.close()
-        #end resource groupdef azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+        #end resource group 
+def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # management locks
     
     tfp="azurerm_management_lock"
@@ -479,7 +511,8 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         # end for
         tfrm.close()
         tfim.close()
-        #end management locksdef azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+        #end management locks 
+def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # 015 user assigned identity
     tfp="azurerm_user_assigned_identity"
     azr=""
@@ -548,7 +581,8 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         # end for
         tfrm.close()
         tfim.close()
-        #end user assigned identitydef azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+        #end user assigned identity 
+def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  020 Avail Sets
     tfp="azurerm_availability_set"
     azr=""
@@ -632,7 +666,8 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
         tfrm.close()
         tfim.close()
-    #end Avail Setdef azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+    #end Avail Set 
+def azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  030 Route Table
     tfp="azurerm_route_table"
     azr=""
@@ -731,7 +766,8 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
         tfrm.close()
         tfim.close()
-    #end route tabledef azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+    #end route table 
+def azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  040 ASG's
     tfp="azurerm_application_security_group"
     azr=""
@@ -806,7 +842,8 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
         tfrm.close()
         tfim.close()
-    #end ASGimport ast
+    #end ASG 
+import ast
 def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  050 NSG's
     tfp="azurerm_network_security_group"
@@ -985,7 +1022,8 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
 
         tfrm.close()
         tfim.close()
-        #end NSGimport ast
+        #end NSG 
+import ast
 def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  060 Virtual Networks
     tfp="azurerm_virtual_network"
@@ -1099,7 +1137,8 @@ def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim.close()
         return azr
     #end VNET
-    #############import ast
+    ############# 
+import ast
 def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  070 subnets
     tfp="azurerm_subnet"
@@ -1275,7 +1314,8 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
         tfrm.close()
         tfim.close()
-    #end subnetdef azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+    #end subnet 
+def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #############
     #  080 vnet peering
     tfp="azurerm_virtual_network_peering"
@@ -1349,7 +1389,8 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
         tfrm.close()
         tfim.close()
-    #end peeringdef azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+    #end peering 
+def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_managed_disk"
     azr=""
     if crf in tfp:
@@ -1496,7 +1537,8 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
         tfrm.close()
         tfim.close()
-    #end managed diskimport ast
+    #end managed disk 
+import ast
 def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  110 storage account
     tfp="azurerm_storage_account"
@@ -1615,7 +1657,8 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
         tfrm.close()
         tfim.close()
-    #end storage accountdef azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+    #end storage account 
+def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #############
     #  090 key vault
     
@@ -1782,7 +1825,8 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
         tfrm.close()
         tfim.close()
-    #end key vaultdef azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+    #end key vault 
+def azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_public_ip"
     azr=""
     if crf in tfp:
@@ -1876,7 +1920,8 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
         tfrm.close()
         tfim.close()
-    #end public ipdef azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+    #end public ip 
+def azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  124 Traffic manager profile
     tfp="azurerm_traffic_manager_profile"
     azr=""
@@ -1989,7 +2034,8 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
         return azr
-    #end traffic manager profiledef azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+    #end traffic manager profile 
+def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  125 traffic manager endpoint
 
     tfp="azurerm_traffic_manager_endpoint"
@@ -2080,7 +2126,8 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
         tfrm.close()
         tfim.close()
-    #end traffic manager endpointdef azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+    #end traffic manager endpoint 
+def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     
     tfp="azurerm_network_interface"
     azr=""
@@ -2213,7 +2260,8 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
         tfrm.close()
         tfim.close()
-    #end stub# azurerm_dns_zone
+    #end stub 
+# azurerm_dns_zone
 def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_dns_zone"
     tcode="131-"
@@ -2321,6 +2369,7 @@ def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_lb
 def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_lb"
@@ -2439,6 +2488,7 @@ def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim.close()
         
     #end stub
+ 
 # azurerm_lb_nat_rule
 def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_lb_nat_rule"
@@ -2537,6 +2587,7 @@ def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfim.close()
 
     #end stub
+ 
 # azurerm_lb_nat_pool
 def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_lb_nat_pool"
@@ -2653,6 +2704,7 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_lb_backend_address_pool
 def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_lb_backend_address_pool"
@@ -2736,6 +2788,7 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_lb_probe
 def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_lb_probe"
@@ -2834,6 +2887,7 @@ def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_lb_rule
 def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_lb_rule"
@@ -2936,6 +2990,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_application_gateway
 def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_application_gateway"
@@ -3360,6 +3415,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
         tfrm.close()
         tfim.close()
     #end stub
+ 
 
 # azurerm_local_network_gateway
 import ast
@@ -3467,6 +3523,7 @@ def azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmes
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_virtual_network_gateway
 import ast
 def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess):
@@ -3625,6 +3682,7 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_virtual_network_gateway_connection
 def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_virtual_network_gateway_connection"
@@ -3773,6 +3831,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_express_route_circuit
 def azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_express_route_circuit"
@@ -3867,6 +3926,7 @@ def azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmes
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_express_route_circuit_authorization
 def azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_express_route_circuit_authorization"
@@ -3947,6 +4007,7 @@ def azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_express_route_circuit_peering
 def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_express_route_circuit_peering"
@@ -4048,6 +4109,7 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_container_registry
 def azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_container_registry"
@@ -4129,6 +4191,7 @@ def azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_kubernetes_cluster
 def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_kubernetes_cluster"
@@ -4324,6 +4387,7 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_recovery_services_vault
 def azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_recovery_services_vault"
@@ -4402,6 +4466,7 @@ def azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_virtual_machine
 def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_virtual_machine"
@@ -4735,6 +4800,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_virtual_machine_scale_set
 import ast
 def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, json, az2tfmess):
@@ -5149,6 +5215,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
         tfrm.close()
         tfim.close()
     # end stub
+ 
 # azurerm_automation_account
 def azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_automation_account"
@@ -5234,6 +5301,7 @@ def azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_log_analytics_workspace
 def azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_log_analytics_workspace"
@@ -5320,6 +5388,7 @@ def azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_log_analytics_solution
 def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_log_analytics_solution"
@@ -5426,6 +5495,7 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_image
 def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_image"
@@ -5534,6 +5604,7 @@ def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_snapshot
 def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_snapshot"
@@ -5637,6 +5708,7 @@ def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_network_watcher
 def azurerm_network_watcher(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_network_watcher"
@@ -5712,6 +5784,7 @@ def azurerm_network_watcher(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_cosmosdb_account
 def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_cosmosdb_account"
@@ -5827,6 +5900,7 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_servicebus_namespace
 def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_servicebus_namespace"
@@ -5914,6 +5988,7 @@ def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_servicebus_queue
 def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_servicebus_queue"
@@ -6036,6 +6111,7 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_sql_server
 def azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_sql_server"
@@ -6123,6 +6199,7 @@ def azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_sql_database
 def azurerm_sql_database(crf, cde, crg, headers, requests, sub, json, az2tfmess):
     tfp = "azurerm_sql_database"
@@ -6240,6 +6317,7 @@ def azurerm_sql_database(crf, cde, crg, headers, requests, sub, json, az2tfmess)
         tfrm.close()
         tfim.close()
     # end stub
+ 
 # azurerm_databricks_workspace
 def azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_databricks_workspace"
@@ -6325,6 +6403,7 @@ def azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_app_service_plan
 def azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_app_service_plan"
@@ -6418,6 +6497,7 @@ def azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_app_service
 def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_app_service"
@@ -6521,6 +6601,7 @@ def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_function_app
 def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_function_app"
@@ -6695,6 +6776,7 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfrm.close()
         tfim.close()
     #end stub
+ 
 # azurerm_monitor_autoscale_setting
 import ast
 
@@ -6967,6 +7049,7 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
         tfrm.close()
         tfim.close()
     # end stub
+ 
 
 # RUNBOOK ON
 cde=False
@@ -6975,6 +7058,12 @@ az2tfmess="# File generated by az2tf see: https://github.com/andyt530/az2tf n"
 # RUNBOOK ON
 print "Found subscription " + sub + " proceeding ..."
 # RUNBOOK ON
+import automationassets
+runas_connection = automationassets.get_automation_connection("AzureRunAsConnection")
+bt=get_automation_runas_token()
+sub=str(runas_connection["SubscriptionId"])
+headers = {'Authorization': 'Bearer ' + bt, 'Content-Type': 'application/json'} 
+
 if crf is None:
 crf="azurerm"
 
