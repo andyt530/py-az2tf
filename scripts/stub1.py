@@ -1,4 +1,7 @@
+def azurerm_stub(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     azr=""
+    tcode="000-"
+    tfp="azurerm_stub"
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"

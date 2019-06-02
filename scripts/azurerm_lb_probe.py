@@ -22,7 +22,7 @@ def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             name=azr[i]["name"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
-
+            rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
                     continue  # back to for
