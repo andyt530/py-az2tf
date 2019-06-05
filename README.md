@@ -1,4 +1,4 @@
-# az2tf (Python version) - now supports Terraform v12
+# az2tf (Python version) - now supports Terraform v0.12
 
 Work in progress - please report any issues.
 
