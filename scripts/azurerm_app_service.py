@@ -3,6 +3,7 @@ def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_app_service"
     tcode="610-"
     azr=""
+    cde=True
     if crf in tfp:
     # REST or cli
         # print "REST App Service"

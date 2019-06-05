@@ -1,7 +1,7 @@
 def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #############
     #  090 key vault
-    cde=True
+    
     tfp="azurerm_key_vault"
     azr=""
     if crf in tfp:
