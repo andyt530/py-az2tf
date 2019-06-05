@@ -1,7 +1,7 @@
 def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #############
     #  090 key vault
-    
+    cde=True
     tfp="azurerm_key_vault"
     azr=""
     if crf in tfp:
@@ -54,6 +54,33 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
             ten=azr[i]["properties"]["tenantId"]     
             fr.write('\t tenant_id="' + ten + '"\n')
+
+
+            try:
+                #netacls=azr[i]["properties"]["networkAcls"]
+                netacldf=azr[i]["properties"]["networkAcls"]["defaultAction"]
+                netaclby=azr[i]["properties"]["networkAcls"]["bypass"]
+                netaclipr=azr[i]["properties"]["networkAcls"]["ipRules"]
+                vnr=azr[i]["properties"]["networkAcls"]["virtualNetworkRules"]
+                vcount=len(vnr)
+
+                print "************************** IN ACL"
+                fr.write('\t network_acls {\n')
+                fr.write('\t\t bypass="' + netaclby + '"\n')
+                fr.write('\t\t default_action="' + netacldf + '"\n')
+                fr.write('\t\t ip_rules=' + json.dumps(netaclipr, indent=4, separators=(',', ': ')) + '\n')
+                if vcount > 0:
+                    fr.write('\t\t virtual_network_subnet_ids = [\n')
+                    for v in range(0, vcount): 
+                        aid=vnr[v]["id"]
+                        fr.write('\t\t\t"'+aid + '",\n')
+                    fr.write('\t\t ]' + '\n')
+                    
+                fr.write('\t }' + '\n')
+            except KeyError:
+                print "************************** skipping net ACL"
+                pass
+
 
             try: 
                 endep=str(azr[i]["properties"]["enabledForDeployment"]).lower()
