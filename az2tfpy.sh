@@ -1,11 +1,12 @@
 usage()
-{ echo "Usage: $0 -s <Subscription ID> [-g <Resource Group>] [-r azurerm_<resource_type>] [-x <yes|no(default)>] [-p <yes|no(default)>] [-f <yes|no(default)>] " 1>&2; exit 1;
+{ echo "Usage: $0 -s <Subscription ID> [-g <Resource Group>] [-r azurerm_<resource_type>] [-x <yes|no(default)>] [-p <yes|no(default)>] [-f <yes|no(default)>] [-d <yes|no(default)>]" 1>&2; exit 1;
 }
 x="no"
 p="no"
 f="no"  # f fast forward switch
 p="no"
-while getopts ":s:g:r:x:p:f:" o; do
+d="no"
+while getopts ":s:g:r:x:p:f:d:" o; do
     case "${o}" in
         s)
             s=${OPTARG}
@@ -25,7 +26,9 @@ while getopts ":s:g:r:x:p:f:" o; do
         f)
             f="yes"
         ;;
-        
+        d)
+            d="yes"
+        ;;   
         *)
             usage
         ;;
@@ -58,6 +61,7 @@ echo "Terraform Resource Type Filter = ${r}"
 echo "Get Subscription Policies & RBAC = ${p}"
 echo "Extract Key Vault Secrets to .tf files (insecure) = ${x}"
 echo "Fast Forward = ${f}"
+echo "Debug = ${f}"
 echo " "
 
 
@@ -77,13 +81,6 @@ rm -f terraform*.backup
 rm -f tf*.sh
 cp ../../stub/*.tf .
 
-pyc4=" "
-# subscription level stuff - roles & policies
-if [ "$p" = "yes" ]; then
-    pyc4=" -p $p "
-fi
-
-
 pyc1="python2.7 ../../scripts/resources.py -s $mysub "
 if [ "$g" != "" ]; then
     pyc2=" -g $g "
@@ -98,18 +95,34 @@ else
     pyc3=" "
 fi
 
+pyc4=" "
+# subscription level stuff - roles & policies
+if [ "$p" = "yes" ]; then
+    pyc4=" -p $p "
+fi
+
+pyc5=" "
+# subscription level stuff - roles & policies
+if [ "$d" = "yes" ]; then
+    pyc5=" -d $d "
+fi
+
+pyc6=" "
+# subscription level stuff - roles & policies
+if [ "$f" = "yes" ]; then
+    pyc6=" -f $f "
+fi
+
 pyc9=" 2>&1 | tee -a import.log"
-pyc=`printf "%s %s %s %s" "$pyc1" "$pyc2" "$pyc3" "$pyc4" "$pyc9"`
 
+pyc=`printf "%s %s %s %s %s %s %s" "$pyc1" "$pyc2" "$pyc3" "$pyc4" "$pyc5" "$pyc6" "$pyc9"`
 echo $pyc
-
 eval $pyc
 grep Error import.log
 if [ $? -eq 0 ]; then
     echo "Error in resources.py"
     exit
 fi
-
 
 #
 # uncomment following line if you want to use an SPN login
@@ -148,7 +161,6 @@ for com in `ls *$r*stateimp.sh | sort -g`; do
     echo $comm
     eval $comm
 done
-
 
 date
 

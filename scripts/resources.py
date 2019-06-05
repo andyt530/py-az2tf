@@ -89,6 +89,7 @@ parser.add_argument('-s', help='Subscription Id')
 parser.add_argument('-g', help='Resource Group')
 parser.add_argument('-r', help='Filter azurerm resource')
 parser.add_argument('-p', help='Subscription Policies & RBAC')
+parser.add_argument('-f', help='Fast Forward')
 parser.add_argument('-d', help='Debug')
 args = parser.parse_args()
 csub=args.s
@@ -96,6 +97,7 @@ crg=args.g
 crf=args.r
 deb=args.d
 pol=args.p
+ff=args.f
     
 
 cde=False
