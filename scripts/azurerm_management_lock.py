@@ -37,9 +37,10 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             sn=scope.split("/")[sc-1].replace(" ","-").lower()
             sn=sn.replace(".","-")
 
-            #print "scope name="+sn
-
             scope=scope.encode('ascii', 'ignore')
+            sn=sn.encode('ascii', 'ignore')
+            #sn=str(sn.encode('utf-8').strip())
+            print "scope name="+sn
 
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -59,7 +60,6 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr=open(rfilename, 'w')
             fr.write('resource ' + tfp + ' "' + rg + '__' + rname + '__'+ sn +  '" {\n')
             fr.write('\t name = "' + name + '"\n')
-            #fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t lock_level = "'+ level + '"\n')   
             
             try:
