@@ -3,7 +3,7 @@ def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_app_service"
     tcode="610-"
     azr=""
-    cde=True
+    
     if crf in tfp:
     # REST or cli
         # print "REST App Service"
@@ -54,7 +54,13 @@ def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             pnam=azr[i]["properties"]["serverFarmId"].split("/")[8]
        
             appplid=azr[i]["properties"]["serverFarmId"]
-  
+
+            try:
+                httpsonly=str(azr[i]["properties"]["httpsOnly"]).lower()
+                fr.write('\t https_only = ' +  httpsonly + '\n')
+            except KeyError:
+                pass
+
             # case issues - so use resource id directly
             # fr.write('\t app_service_plan_id = "${azurerm_app_service_plan. + '__' + .id}'"' prg pnam + '"\n')
             fr.write('\t app_service_plan_id = "' +  appplid + '"\n')
