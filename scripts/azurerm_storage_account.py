@@ -60,6 +60,13 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t enable_https_traffic_only = ' +  sahttps + '\n')
             fr.write('\t account_encryption_source = "' +  saencs + '"\n')
             
+            try:
+                ishns=str(azr[i]["properties"]["isHnsEnabled"]).lower()
+                fr.write('\t is_hns_enabled = ' + ishns + '\n')
+            except KeyError:
+                pass   
+
+
             try:        
                 byp=str(ast.literal_eval(json.dumps(azr[i]["properties"]["networkAcls"]["bypass"])))
                 byp=byp.replace("'",'"')
