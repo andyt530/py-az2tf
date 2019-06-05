@@ -55,8 +55,8 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
             fr.write('\t type = "' + gtype + '"\n')
             fr.write('\t vpn_type = "' +  vpntype + '"\n')
             fr.write('\t sku = "' +  sku + '"\n')
-            fr.write('\t active_active = "' + str(aa) + '"\n')
-            fr.write('\t enable_bgp = "' + str(enbgp) + '"\n')
+            fr.write('\t active_active = "' + str(aa).lower() + '"\n')
+            fr.write('\t enable_bgp = "' + str(enbgp).lower() + '"\n')
             
             try :
                 vadsp=str(ast.literal_eval(json.dumps(azr[i]["properties"]["vpnClientConfiguration"]["vpnClientAddressPool"]["addressPrefixes"])))
@@ -69,10 +69,10 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
                     fr.write('\t\t radius_server_address = "' + radsa + '"\n')
                     fr.write('\t\t radius_server_secret = "' + radss + '"\n')
                 except KeyError:  # = null
-                    fr.write('\t\t root_certificate {'    + '"\n')
+                    fr.write('\t\t root_certificate { \n')
                     fr.write('\t\t\t name = ""\n')
                     fr.write('\t\t\t public_cert_data = ""\n')
-                    fr.write('\t\t }'  + '"\n')
+                    fr.write('\t\t }\n')
                     pass
             
                 try :
@@ -130,7 +130,7 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')

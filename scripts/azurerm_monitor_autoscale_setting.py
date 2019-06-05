@@ -52,7 +52,7 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
 
     # basic settings
 
-            fr.write('enabled = "' + str(en) + '"\n')
+            fr.write('enabled = ' + str(en).lower() + '\n')
 
             try:
                 triid = azr[i]["properties"]["targetResourceUri"]
@@ -243,7 +243,7 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
     # tags block
             try:
                 mtags = azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval = mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')

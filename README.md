@@ -1,4 +1,4 @@
-# az2tf (Python version)
+# az2tf (Python version) - now supports Terraform v12
 
 Work in progress - please report any issues.
 
@@ -16,8 +16,8 @@ There should hopefully be no subsequent additions or deletions reported by the t
 
 ## Requirements & Prerequisites
 + The tool is written for the bash shell script & Python2 and has been tested on a MAC
-+ Azure cli2 **version 2.0.55 or higher** needs to be installed and you need a login with at least "Read" priviledges
-+ terraform **version v0.11.11** needs to be installed
++ Azure cli2 **version 2.0.65 or higher** needs to be installed and you need a login with at least "Read" priviledges
++ terraform **version v0.12.1** needs to be installed
 + Python v2.7
 
 

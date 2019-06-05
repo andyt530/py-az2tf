@@ -65,7 +65,7 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             
             if rbac == "true" :
                 fr.write('\t role_based_access_control { \n')
-                fr.write('\t\t enabled = "true" \n')
+                fr.write('\t\t enabled = true \n')
                 fr.write('\t }\n')
         
             
@@ -167,7 +167,7 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')

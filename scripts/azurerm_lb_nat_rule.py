@@ -68,7 +68,7 @@ def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     fr.write('\t\t frontend_port = "' + str(fep) + '"\n')
                     try:
                         enfip=azr[i]["properties"]["inboundNatRules"][j]["properties"]["enableFloatingIP"]
-                        fr.write('\t\t enable_floating_ip = "' + str(enfip) + '"\n')
+                        fr.write('\t\t enable_floating_ip = ' + str(enfip).lower() + '\n')
                     except KeyError:
                         pass
 

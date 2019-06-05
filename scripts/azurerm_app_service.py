@@ -75,7 +75,7 @@ def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')

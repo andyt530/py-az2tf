@@ -3,6 +3,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
     tfp="azurerm_application_gateway"
     tcode="193-"
     azr=""
+    
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
@@ -239,7 +240,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                         pass
                     try :
                         rsni=azr[i]["properties"]["httpListeners"][j]["properties"]["requireServerNameIndication"]
-                        fr.write('\t require_sni = "' +  str(rsni) + '"\n')
+                        fr.write('\t require_sni = ' +  str(rsni).lower() + '\n')
                     except KeyError:
                         pass
                     fr.write('}\n')
@@ -252,27 +253,30 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                     bname=azr[i]["properties"]["probes"][j]["name"]
                     bproto=azr[i]["properties"]["probes"][j]["properties"]["protocol"]
                     bpath=azr[i]["properties"]["probes"][j]["properties"]["path"]
-                    bhost=azr[i]["properties"]["probes"][j]["properties"]["host"]
                     bint=azr[i]["properties"]["probes"][j]["properties"]["interval"]
                     btimo=azr[i]["properties"]["probes"][j]["properties"]["timeout"]
                     bunth=azr[i]["properties"]["probes"][j]["properties"]["unhealthyThreshold"]
                                    
                                 
-                    bmstat=azr[i]["properties"]["probes"][j]["properties"]["match"]["statusCodes"]
+                    #bmstat=azr[i]["properties"]["probes"][j]["properties"]["match"]["statusCodes"]
 
-                    fr.write('probe{' + '"\n')
+                    fr.write('probe {' + '\n')
                     fr.write('\t name = "' +    bname + '"\n')
                     fr.write('\t protocol = "' +    bproto + '"\n')
                     fr.write('\t path = "' +    bpath + '"\n')
-                    fr.write('\t host = "' +    bhost + '"\n')
-                    fr.write('\t interval = "' +    bint + '"\n')
-                    fr.write('\t timeout = "' +    btimo + '"\n')
-                    fr.write('\t unhealthy_threshold = "' +    bunth + '"\n')
+                    try:
+                        bhost=azr[i]["properties"]["probes"][j]["properties"]["host"]
+                        fr.write('\t host = "' +    bhost + '"\n')
+                    except KeyError:
+                        pass
+                    fr.write('\t interval = "' +  str(bint) + '"\n')
+                    fr.write('\t timeout = "' +    str(btimo) + '"\n')
+                    fr.write('\t unhealthy_threshold = "' +  str(bunth) + '"\n')
 
 
                     try :
                         bmsrv=azr[i]["properties"]["probes"][j]["properties"]["minServers"]
-                        fr.write('\t minimum_servers = "' + bmsrv + '"\n')
+                        fr.write('\t minimum_servers = "' + str(bmsrv) + '"\n')
                     except KeyError:
                         pass
 
@@ -288,6 +292,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                         pass
                 
                     fr.write('\t }\n')
+                    fr.write('}\n')
                     
 
 # routing rules
@@ -298,8 +303,6 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                     bname=azr[i]["properties"]["requestRoutingRules"][j]["name"]
                     btyp=azr[i]["properties"]["requestRoutingRules"][j]["properties"]["ruleType"]
                     blin=azr[i]["properties"]["requestRoutingRules"][j]["properties"]["httpListener"]["id"].split("/")[10]
-                    bapn=azr[i]["properties"]["requestRoutingRules"][j]["properties"]["backendAddressPool"]["id"].split("/")[10]
-                    bhsn=azr[i]["properties"]["requestRoutingRules"][j]["properties"]["backendHttpSettings"]["id"].split("/")[10]
 
                     fr.write('request_routing_rule { \n')
 
@@ -307,10 +310,12 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                     fr.write('\t rule_type = "' + btyp + '"\n')
                     fr.write('\t http_listener_name = "' + blin + '"\n')
                     try :
+                        bapn=azr[i]["properties"]["requestRoutingRules"][j]["properties"]["backendAddressPool"]["id"].split("/")[10]
                         fr.write('\t backend_address_pool_name = "' +    bapn + '"\n')
                     except KeyError:
                         pass
                     try :
+                        bhsn=azr[i]["properties"]["requestRoutingRules"][j]["properties"]["backendHttpSettings"]["id"].split("/")[10]
                         fr.write('\t backend_http_settings_name = "' +    bhsn + '"\n')
                     except KeyError:
                         pass
@@ -368,11 +373,11 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                 rsv=azr[i]["properties"]["webApplicationFirewallConfiguration"]["ruleSetVersion"]
                 fen=azr[i]["properties"]["webApplicationFirewallConfiguration"]["enabled"]
                     
-                fr.write('waf_configuration {' + '"\n')
-                fr.write('\trewall_mode = "' + fmode + '"\n')
+                fr.write('waf_configuration { \n')
+                fr.write('\t firewall_mode = "' + fmode + '"\n')
                 fr.write('\t rule_set_type = "' + rst + '"\n')
                 fr.write('\t rule_set_version = "' + rsv + '"\n')
-                fr.write('\t enabled = "' + fen + '"\n')
+                fr.write('\t enabled = ' + str(fen).lower() + '\n')
                 fr.write('\t }\n') 
             except KeyError:
                 pass         
@@ -396,7 +401,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')

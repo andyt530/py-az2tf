@@ -3,6 +3,7 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_cosmosdb_account"
     tcode="400-"
     azr=""
+    cde=True
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
@@ -46,12 +47,12 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
         #azr=az cosmosdb list -g rgsource -o json
   
-            kind=azr[i]["properties"]["kind"]
+            kind=azr[i]["kind"]
             offer=azr[i]["properties"]["databaseAccountOfferType"]
             cp=azr[i]["properties"]["consistencyPolicy"]["defaultConsistencyLevel"]
             mis=azr[i]["properties"]["consistencyPolicy"]["maxIntervalInSeconds"]
             msp=azr[i]["properties"]["consistencyPolicy"]["maxStalenessPrefix"] 
-            caps=azr[i]["properties"]["capabilities"][0]["name"] 
+            
             geol=azr[i]["properties"]["failoverPolicies"]     
                 
             af=azr[i]["properties"]["enableAutomaticFailover"]      
@@ -61,17 +62,23 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t offer_type = "' +  offer + '"\n')
             fr.write('\t consistency_policy {\n')
             fr.write('\t\t  consistency_level = "' +  cp + '"\n')
-            fr.write('\t\t  max_interval_in_seconds = "' +  mis + '"\n')
-            fr.write('\t\t  max_staleness_prefix = "' +  msp + '"\n')
-            fr.write('\t }' + offer + '"\n')
-            fr.write('\t enable_automatic_failover = "' +  af + '"\n')
+            fr.write('\t\t  max_interval_in_seconds = "' +  str(mis) + '"\n')
+            fr.write('\t\t  max_staleness_prefix = "' +  str(msp) + '"\n')
+            fr.write('\t }\n')
+            fr.write('\t enable_automatic_failover = ' +  str(af).lower() + '\n')
         # capabilities block
 
             # code out terraform error
-            if caps == "EnableTable" or caps == "EnableGremlin" or caps == "EnableCassandra":
-                fr.write('\t capabilities {\n')
-                fr.write('\t\t name = "' +  caps + '"\n')        
-                fr.write('\t }' + caps + '"\n')
+            try:
+                caps=azr[i]["properties"]["capabilities"][0]["name"] 
+                if caps == "EnableTable" or caps == "EnableGremlin" or caps == "EnableCassandra":
+                    fr.write('\t capabilities {\n')
+                    fr.write('\t\t name = "' +  caps + '"\n')        
+                    fr.write('\t }\n')
+            except KeyError:
+                pass
+            except IndexError:
+                pass
             
         # geo location block
                 
@@ -81,13 +88,13 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     fop=azr[i]["properties"]["failoverPolicies"][j]["failoverPriority"]
                     fr.write('\t geo_location {\n')
                     fr.write('\t location = "'+floc + '"\n')
-                    fr.write('\t failover_priority  = "' + fop + '"\n')
+                    fr.write('\t failover_priority  = "' + str(fop) + '"\n')
                     fr.write('}\n')
 
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')

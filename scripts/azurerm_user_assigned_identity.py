@@ -47,7 +47,7 @@ def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfme
                 mtags="{}"
             tcount=len(mtags)-1
             if tcount > 1 :
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 print tcount
                 for key in mtags.keys():
                     tval=mtags[key]

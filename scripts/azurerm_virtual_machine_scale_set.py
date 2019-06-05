@@ -6,7 +6,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
     azr = ""
     if crf in tfp:
         # REST or cli
-        # print "REST Managed Disk"
+       
         url = "https://management.azure.com/subscriptions/" + sub + \
             "/providers/Microsoft.Compute/virtualMachineScaleSets"
         params = {'api-version': '2019-03-01'}
@@ -96,8 +96,8 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
                 pass
 
             fr.write('upgrade_policy_mode = "' + upm + '"\n')
-            fr.write('overprovision = "' + str(op) + '"\n')
-            fr.write('single_placement_group = "' + str(spg) + '"\n')
+            fr.write('overprovision = ' + str(op).lower() + '\n')
+            fr.write('single_placement_group = ' + str(spg).lower() + '\n')
             try:
                 vmpri = azr[i]["properties"]["virtualMachineProfile"]["priority"]
                 fr.write('priority = "' + vmpri + '"\n')
@@ -129,8 +129,8 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
                 try:
                     vmwau = azr[i]["properties"]["virtualMachineProfile"]["osProfile"]["windowsConfiguration"]["enableAutomaticUpdates"]
                     fr.write('os_profile_windows_config {\n')
-                    fr.write('\t enable_automatic_upgrades = "' + vmwau + '"\n')
-                    fr.write('\t provision_vm_agent = "' + vmwvma + '"\n')
+                    fr.write('\t enable_automatic_upgrades = ' + str(vmwau).lower() + '\n')
+                    fr.write('\t provision_vm_agent = ' + str(vmwvma).lower() + '\n')
                     try:
                         vmwtim = azr[i]["properties"]["virtualMachineProfile"]["osProfile"]["windowsConfiguration"]["timeZone"]
                         fr.write('\t timezone =   "' + vmwtim + '"\n')
@@ -155,7 +155,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
                     # osprofile can by null for vhd imported images - must make an artificial one.
                     vmdispw = "false"
 
-                fr.write('\tdisable_password_authentication = "' + str(vmdispw) + '"\n')
+                fr.write('\tdisable_password_authentication = ' + str(vmdispw).lower() + '\n')
                 if vmdispw != "false":
                     fr.write('\tssh_keys { \n')
                     fr.write('\t\tpath = "' + vmsshpath + '"\n')
@@ -180,7 +180,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
                                        
                     try:
                         pri = azr[i]["properties"]["virtualMachineProfile"]["networkProfile"]["networkInterfaceConfigurations"][j]["properties"]["primary"]
-                        fr.write('\tprimary = "' + str(pri) + '"\n')
+                        fr.write('\tprimary = ' + str(pri).lower() + '\n')
                     except KeyError:
                         pass
                     
@@ -200,7 +200,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
                                 ipcp = azr[i]["properties"]["virtualMachineProfile"]["networkProfile"]["networkInterfaceConfigurations"][j]["properties"]["ipConfigurations"][k]["primary"]
                                 fr.write('\t\tprimary = "' + ipcp + '"\n')
                             except KeyError:
-                                fr.write('\t\tprimary = ""\n')
+                                fr.write('\t\tprimary = true\n')
                             
                             try:
                                 ipcsrg = azr[i]["properties"]["virtualMachineProfile"]["networkProfile"]["networkInterfaceConfigurations"][j]["properties"]["ipConfigurations"][k]["properties"]["subnet"]["id"].split("/")[4].replace(".", "-").lower()
@@ -231,7 +231,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
 
             try:
                 vmoswa = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["osDisk"]["writeAcceleratorEnabled"]
-                fr.write('\t write_accelerator_enabled = "' + vmoswa + '"\n')
+                fr.write('\t write_accelerator_enabled = ' + str(vmoswa).lower() + '\n')
             except KeyError:
                 pass
 
@@ -357,7 +357,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
                 vmbten = azr[i]["properties"]["virtualMachineProfile"]["diagnosticsProfile"]["bootDiagnostics"]["enabled"]
                 vmbturi = azr[i]["properties"]["virtualMachineProfile"]["diagnosticsProfile"]["bootDiagnostics"]["storageUri"]
                 fr.write('boot_diagnostics {\n')
-                fr.write('\t enabled = "' + str(vmbten) + '"\n')
+                fr.write('\t enabled = ' + str(vmbten).lower() + '\n')
                 fr.write('\t storage_uri = "' + vmbturi + '"\n')
                 fr.write('}\n')
             except KeyError:
@@ -376,16 +376,20 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
             except KeyError:
                 pass
 
-
-
-
-
     # zones block
+
+            try:
+                zones=azr[i]["zones"]
+                fr.write('zones = ')
+                fr.write(json.dumps(zones, indent=4, separators=(',', ': ')))
+                fr.write('\n')
+            except KeyError:
+                pass
 
     # tags block
             try:
                 mtags = azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval = mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')

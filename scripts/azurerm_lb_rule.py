@@ -54,7 +54,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 bep=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["backendPort"]
                 proto=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["protocol"]
                 feipc=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["frontendIPConfiguration"]["id"].split("/")[10]
-                efip=str(azr[i]["properties"]["loadBalancingRules"][j]["properties"]["enableFloatingIP"])
+                efip=str(azr[i]["properties"]["loadBalancingRules"][j]["properties"]["enableFloatingIP"]).lower()
                 ld=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["loadDistribution"]
                 itm=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["idleTimeoutInMinutes"]
 
@@ -77,7 +77,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     fr.write('\t\t probe_id = "${azurerm_lb_probe.' + prg + '__' + lbname + '__' + pid + '.id}" \n')
                 except KeyError:
                     pass
-                fr.write('\t\t enable_floating_ip = "' + efip + '"\n')
+                fr.write('\t\t enable_floating_ip = ' + efip + '\n')
                 fr.write('\t\t idle_timeout_in_minutes = "' + str(itm) + '"\n')
                 fr.write('\t\t load_distribution = "' + ld + '"\n')
 

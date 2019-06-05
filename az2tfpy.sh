@@ -4,6 +4,7 @@ usage()
 x="no"
 p="no"
 f="no"  # f fast forward switch
+p="no"
 while getopts ":s:g:r:x:p:f:" o; do
     case "${o}" in
         s)
@@ -59,10 +60,6 @@ echo "Extract Key Vault Secrets to .tf files (insecure) = ${x}"
 echo "Fast Forward = ${f}"
 echo " "
 
-res[51]="azurerm_role_definition"
-res[52]="azurerm_role_assignment"
-res[53]="azurerm_policy_definition"
-res[54]="azurerm_policy_assignment"
 
 mkdir -p generated/tf.$mysub
 cd generated/tf.$mysub
@@ -80,6 +77,12 @@ rm -f terraform*.backup
 rm -f tf*.sh
 cp ../../stub/*.tf .
 
+pyc4=" "
+# subscription level stuff - roles & policies
+if [ "$p" = "yes" ]; then
+    pyc4=" -p $p "
+fi
+
 
 pyc1="python2.7 ../../scripts/resources.py -s $mysub "
 if [ "$g" != "" ]; then
@@ -96,7 +99,7 @@ else
 fi
 
 pyc9=" 2>&1 | tee -a import.log"
-pyc=`printf "%s %s %s %s" "$pyc1" "$pyc2" "$pyc3" "$pyc9"`
+pyc=`printf "%s %s %s %s" "$pyc1" "$pyc2" "$pyc3" "$pyc4" "$pyc9"`
 
 echo $pyc
 
@@ -112,10 +115,21 @@ fi
 # uncomment following line if you want to use an SPN login
 #../../setup-env.sh
 
+
 echo "terraform init"
 terraform init 2>&1 | tee -a import.log
-echo $?
+grep Error import.log
+if [ $? -eq 0 ]; then
+    echo "Error with terraform init"
+    exit
+fi
 
+echo "terraform validate"
+terraform validate
+if [ $? -eq 1 ]; then
+    echo "Error Validating"
+    exit
+fi
 
 
 chmod 755 *state*.sh
@@ -136,37 +150,12 @@ for com in `ls *$r*stateimp.sh | sort -g`; do
 done
 
 
-
-
-
-# subscription level stuff - roles & policies
-if [ "$p" = "yes" ]; then
-    for j in `seq 51 54`; do
-        docomm="../../scripts/${res[$j]}.sh $mysub"
-        echo $docomm
-        eval $docomm 2>&1 | tee -a import.log
-        if grep -q Error: import.log ; then
-            echo "Error in log file exiting ...."
-            exit
-        fi
-    done
-fi
-
 date
 
 if [ "$x" = "yes" ]; then
     echo "Attempting to extract secrets"
     ../../scripts/350_key_vault_secret.sh
 fi
-
-
-#
-echo "Cleanup Cloud Shell"
-#rm -f *cloud-shell-storage*.tf
-#states=`terraform state list | grep cloud-shell-storage`
-#echo $states
-#terraform state rm $states
-#
 
 
 echo "Terraform fmt ..."

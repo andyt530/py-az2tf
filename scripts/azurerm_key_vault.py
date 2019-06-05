@@ -56,22 +56,22 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t tenant_id="' + ten + '"\n')
 
             try: 
-                endep=str(azr[i]["properties"]["enabledForDeployment"])
-                fr.write('\t enabled_for_deployment="' + endep + '"\n')
+                endep=str(azr[i]["properties"]["enabledForDeployment"]).lower()
+                fr.write('\t enabled_for_deployment=' + endep + '\n')
             except KeyError:
                 pass
             
             try:
-                endisk=str(azr[i]["properties"]["enabledForDiskEncryption"])
+                endisk=str(azr[i]["properties"]["enabledForDiskEncryption"]).lower()
                 if endisk != "None":
-                    fr.write('\t enabled_for_disk_encryption="' + endisk + '"\n')
+                    fr.write('\t enabled_for_disk_encryption=' + endisk + '\n')
             except KeyError:
                 pass       
             
             try:
-                entemp=str(azr[i]["properties"]["enabledForTemplateDeployment"])
+                entemp=str(azr[i]["properties"]["enabledForTemplateDeployment"]).lower()
                 if entemp != "None":
-                    fr.write('\t enabled_for_template_deployment="' +  entemp + '"\n')
+                    fr.write('\t enabled_for_template_deployment=' +  entemp + '\n')
             except KeyError:
                 pass
 
@@ -138,7 +138,7 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')

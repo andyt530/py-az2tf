@@ -22,49 +22,49 @@ os.chdir(newd)
 #import azure_resources
 # RUNBOOK ON
 # RUNBOOK INLINE1
-import azurerm_resource_group
-import azurerm_management_lock
+import azurerm_resource_group   # v12
+import azurerm_management_lock  # v12
 import azurerm_user_assigned_identity
-import azurerm_availability_set
-import azurerm_route_table
+import azurerm_availability_set    # v12
+import azurerm_route_table    #v12 
 import azurerm_application_security_group
-import azurerm_network_security_group
-import azurerm_virtual_network
-import azurerm_subnet
-import azurerm_virtual_network_peering
-import azurerm_managed_disk
-import azurerm_storage_account
-import azurerm_key_vault
-import azurerm_public_ip
+import azurerm_network_security_group #v12
+import azurerm_virtual_network    #v12
+import azurerm_subnet    #v12
+import azurerm_virtual_network_peering  #v12
+import azurerm_managed_disk #v12
+import azurerm_storage_account #v12
+import azurerm_key_vault #v12
+import azurerm_public_ip   #v12
 import azurerm_traffic_manager_profile
 import azurerm_traffic_manager_endpoint
-import azurerm_network_interface
+import azurerm_network_interface  #v12
 import azurerm_dns_zone
-import azurerm_lb
-import azurerm_lb_nat_rule
-import azurerm_lb_nat_pool
-import azurerm_lb_backend_address_pool
-import azurerm_lb_probe
-import azurerm_lb_rule
+import azurerm_lb   #v12
+import azurerm_lb_nat_rule  #v12
+import azurerm_lb_nat_pool  #v12
+import azurerm_lb_backend_address_pool  #v12
+import azurerm_lb_probe  #v12
+import azurerm_lb_rule  #v12
 import azurerm_application_gateway
 
 import azurerm_local_network_gateway
-import azurerm_virtual_network_gateway
-import azurerm_virtual_network_gateway_connection # --
+import azurerm_virtual_network_gateway    #v12
+import azurerm_virtual_network_gateway_connection # --   #v12
 import azurerm_express_route_circuit 
 import azurerm_express_route_circuit_authorization
 import azurerm_express_route_circuit_peering  # --
-import azurerm_container_registry
+import azurerm_container_registry  #v12
 import azurerm_kubernetes_cluster
-import azurerm_recovery_services_vault 
-import azurerm_virtual_machine
-import azurerm_virtual_machine_scale_set
-import azurerm_automation_account
-import azurerm_log_analytics_workspace
-import azurerm_log_analytics_solution
-import azurerm_image
-import azurerm_snapshot
-import azurerm_network_watcher
+import azurerm_recovery_services_vault #v12
+import azurerm_virtual_machine  #v12
+import azurerm_virtual_machine_scale_set #v12
+import azurerm_automation_account  #v12
+import azurerm_log_analytics_workspace  #v12
+import azurerm_log_analytics_solution   #v12
+import azurerm_image  # v12
+import azurerm_snapshot  # v12
+import azurerm_network_watcher  # v12
 import azurerm_cosmosdb_account
 import azurerm_servicebus_namespace
 import azurerm_servicebus_queue
@@ -76,6 +76,10 @@ import azurerm_app_service
 import azurerm_function_app
 import azurerm_monitor_autoscale_setting
 
+#import azurerm_policy_definition
+#import azurerm_policy_assignment
+#import azurerm_role_definition
+#import azurerm_role_assignment
 # RUNBOOK OFF
 os.chdir(scwd)
 #print os.getcwd()
@@ -84,12 +88,14 @@ parser = argparse.ArgumentParser(description='terraform sub rg')
 parser.add_argument('-s', help='Subscription Id')
 parser.add_argument('-g', help='Resource Group')
 parser.add_argument('-r', help='Filter azurerm resource')
+parser.add_argument('-p', help='Subscription Policies & RBAC')
 parser.add_argument('-d', help='Debug')
 args = parser.parse_args()
 csub=args.s
 crg=args.g
 crf=args.r
 deb=args.d
+pol=args.p
     
 
 cde=False
@@ -102,6 +108,9 @@ if csub is not None:
 if crg is not None:
     print("resource group=" + crg)
     # validate rg
+if pol is not None:
+    print("Policies & RBAC=" + pol)
+    # validate resource
 if crf is not None:
     print("resource filter=" + crf)
     # validate resource
@@ -168,8 +177,7 @@ headers = {'Authorization': 'Bearer ' + bt, 'Content-Type': 'application/json'}
 
 
 # subscription check
-#https://management.azure.com/subscriptions?api-version=2014-04-01
-# print "REST Subscriptions ",
+
 url="https://management.azure.com/subscriptions"
 params = {'api-version': '2014-04-01'}
 try: 
@@ -229,50 +237,55 @@ if os.path.exists("tf-stateimp.sh"):
     os.remove('tf-stateimp.sh')
 
 
-
 if crf is None: crf="azurerm"
+cde=False
+print pol
+#if pol is not None:
+    #azurerm_policy_definition.azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+    #azurerm_policy_assignment.azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+    #azurerm_role_definition.azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+    #azurerm_role_assignment.azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+    #exit()
+
+
 # RUNBOOK ON
 # RUNBOOK INLINE2
 
-# record and sort resources
-#azure_resources.azure_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os)
+# record and sort resources - no longer needed
+# azure_resources.azure_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os)
 # 001 Resource Group
 azurerm_resource_group.azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-# 002 management locks
-
+# 002 management lock
 azurerm_management_lock.azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 015 user assigned identity
 azurerm_user_assigned_identity.azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-#  020 Avail Sets
-
+# 020 Avail Sets
 azurerm_availability_set.azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-
-#  030 Route Table
+# 030 Route Table
 azurerm_route_table.azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-
 # 040 ASG
 azurerm_application_security_group.azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-#  050 NSG's
+# 050 NSG's
 azurerm_network_security_group.azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-#  060 Virtual Networks
+# 060 Virtual Networks
 azurerm_virtual_network.azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-#  070 subnets
+# 070 subnets
 azurerm_subnet.azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-#  080 vnet peering
+# 080 vnet peering
 azurerm_virtual_network_peering.azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 090 Key Vault - using cli
 azurerm_key_vault.azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 100 managed disk
 azurerm_managed_disk.azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-#110 storgae account
+# 110 storgae account
 azurerm_storage_account.azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-#120 public ip
+# 120 public ip
 azurerm_public_ip.azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-#  124 Traffic manager profile
+# 124 Traffic manager profile
 azurerm_traffic_manager_profile.azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-#  125 traffic manager endpoint
+# 125 traffic manager endpoint
 azurerm_traffic_manager_endpoint.azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-#  130 network interface
+# 130 network interface
 azurerm_network_interface.azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 131_azurerm_dns_zone
 azurerm_dns_zone.azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess)
@@ -294,8 +307,6 @@ azurerm_application_gateway.azurerm_application_gateway(crf,cde,crg,headers,requ
 azurerm_local_network_gateway.azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 210_azurerm_virtual_network_gateway
 azurerm_virtual_network_gateway.azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-
-#----
 # 220_azurerm_virtual_network_gateway_connection
 azurerm_virtual_network_gateway_connection.azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 230_azurerm_express_route_circuit
@@ -304,11 +315,8 @@ azurerm_express_route_circuit.azurerm_express_route_circuit(crf,cde,crg,headers,
 azurerm_express_route_circuit_authorization.azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 250_azurerm_express_route_circuit_peering
 azurerm_express_route_circuit_peering.azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-# ----
-
 # 260_azurerm_container_registry
 azurerm_container_registry.azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-
 # 270_azurerm_kubernetes_cluster
 azurerm_kubernetes_cluster.azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 280_azurerm_recovery_services_vault
@@ -316,19 +324,15 @@ azurerm_recovery_services_vault.azurerm_recovery_services_vault(crf,cde,crg,head
 # 290_azurerm_virtual_machine
 azurerm_virtual_machine.azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 295_azurerm_virtual_machine_scale_set
-
 azurerm_virtual_machine_scale_set.azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 310_azurerm_automation_account
-
 azurerm_automation_account.azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 320_azurerm_log_analytics_workspace
 azurerm_log_analytics_workspace.azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 330_azurerm_log_analytics_solution
 azurerm_log_analytics_solution.azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 340_azurerm_image
-
 azurerm_image.azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-cde=False
 # 350_azurerm_snapshot
 azurerm_snapshot.azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 360_azurerm_network_watcher

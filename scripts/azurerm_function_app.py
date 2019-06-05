@@ -61,7 +61,7 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t app_service_plan_id = "' + appplid + '"\n')
     # dummy entry
 
-            fr.write('\t https_only = "' + str(https) + '"\n')
+            fr.write('\t https_only = ' + str(https).lower() + '\n')
             blog=False
             strcon=""
 
@@ -73,7 +73,7 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             appset= r.json()
             #print(json.dumps(appset, indent=4, separators=(',', ': ')))
             
-            fr.write('\t app_settings { \n')
+            fr.write('\t app_settings = { \n')
                     
             try:
                 strcon=appset["properties"]["AzureWebJobsStorage"]         
@@ -140,13 +140,13 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('\t storage_connection_string = ""\n')
         
             fr.write('\t version = "' + vers + '"\n')
-            fr.write('\t enable_builtin_logging = "' + str(blog) + '"\n')
+            fr.write('\t enable_builtin_logging = ' + str(blog).lower() + '\n')
 
 
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')

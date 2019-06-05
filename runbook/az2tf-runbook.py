@@ -106,7 +106,7 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 mtags="{}"
             tcount=len(mtags)-1
             if tcount > 1 :
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 #print tcount
                 for key in mtags.keys():
                     tval=mtags[key]
@@ -208,7 +208,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # tags block       
             try:
                 mtags=azr[j]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -222,7 +222,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             #    mtags="{}"
             #tcount=len(mtags)-1
             #if tcount > 1 :
-            #    fr.write('tags { \n')
+            #    fr.write('tags = { \n')
             #    print tcount
             #    for key in mtags.keys():
             #        tval=mtags[key]
@@ -300,7 +300,7 @@ def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfme
                 mtags="{}"
             tcount=len(mtags)-1
             if tcount > 1 :
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 print tcount
                 for key in mtags.keys():
                     tval=mtags[key]
@@ -385,7 +385,7 @@ def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -484,7 +484,7 @@ def azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -567,7 +567,7 @@ def azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2
             
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -746,7 +746,7 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
         # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -864,7 +864,7 @@ def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -1110,7 +1110,7 @@ def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfm
                     if rgs.lower() != crg.lower():
                         continue  # back to for
                 if cde:
-                    print(json.dumps(azr[j], indent=4, separators=(',', ': ')))
+                    print(json.dumps(peers[j], indent=4, separators=(',', ': ')))
                     
                 rname=name.replace(".","-")
                 prefix=tfp+"."+rg+'__'+rname
@@ -1125,16 +1125,16 @@ def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfm
 
 
                 rvnid=peers[j]["properties"]["remoteVirtualNetwork"]["id"]
-                aft=str(peers[j]["properties"]["allowForwardedTraffic"])
-                agt=str(peers[j]["properties"]["allowGatewayTransit"])
-                avna=str(peers[j]["properties"]["allowVirtualNetworkAccess"])
-                urg=str(peers[j]["properties"]["useRemoteGateways"])
+                aft=str(peers[j]["properties"]["allowForwardedTraffic"]).lower()
+                agt=str(peers[j]["properties"]["allowGatewayTransit"]).lower()
+                avna=str(peers[j]["properties"]["allowVirtualNetworkAccess"]).lower()
+                urg=str(peers[j]["properties"]["useRemoteGateways"]).lower()
 
                 fr.write('\t remote_virtual_network_id = "' +  rvnid + '"\n')
-                fr.write('\t allow_forwarded_traffic = "' +  aft + '"\n')
-                fr.write('\t allow_gateway_transit = "' +  agt + '"\n')
-                fr.write('\t allow_virtual_network_access = "' +  avna + '"\n')
-                fr.write('\t use_remote_gateways = "' +  urg + '"\n')
+                fr.write('\t allow_forwarded_traffic = ' +  aft + '\n')
+                fr.write('\t allow_gateway_transit = ' +  agt + '\n')
+                fr.write('\t allow_virtual_network_access = ' +  avna + '\n')
+                fr.write('\t use_remote_gateways = ' +  urg + '\n')
                             
                 fr.write('}\n') 
                 fr.close()   # close .tf file
@@ -1204,6 +1204,7 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 
             try:
                 creopt=azr[i]["properties"]["creationData"]["createOption"]
+                if creopt == "Restore": creopt="Copy"
                 fr.write('\t create_option = "' +  creopt + '"\n')
             except KeyError:
                 pass
@@ -1229,7 +1230,7 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             try:
                 enc=azr[i]["properties"]["encryptionSettings"]["enabled"]
                 fr.write('\t encryption_settings { \n')
-                fr.write('\t\t enabled = "' +  str(enc) + '"\n')
+                fr.write('\t\t enabled = ' +  str(enc).lower() + '\n')
                 try:
                     kekurl=azr[i]["properties"]["encryptionSettings"]["keyEncryptionKey"]["keyUrl"]
                     kekvltid=azr[i]["properties"]["encryptionSettings"]["keyEncryptionKey"]["sourceVault"]["id"]
@@ -1272,10 +1273,19 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             except KeyError:
                 pass
 
+
+            try:
+                zones=azr[i]["zones"]
+                fr.write('zones = ')
+                fr.write(json.dumps(zones, indent=4, separators=(',', ': ')))
+                fr.write('\n')
+            except KeyError:
+                pass
+
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -1307,6 +1317,7 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 import ast
 def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  110 storage account
+    
     tfp="azurerm_storage_account"
     azr=""
     
@@ -1351,18 +1362,18 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             sakind=azr[i]["kind"]
             
             sartype=azr[i]["sku"]["name"].split("_")[1]
-            saencrypt=str(azr[i]["properties"]["encryption"]["services"]["blob"]["enabled"])
-            fiencrypt=str(azr[i]["properties"]["encryption"]["services"]["file"]["enabled"])
-            sahttps=str(azr[i]["properties"]["supportsHttpsTrafficOnly"])
+            saencrypt=str(azr[i]["properties"]["encryption"]["services"]["blob"]["enabled"]).lower()
+            fiencrypt=str(azr[i]["properties"]["encryption"]["services"]["file"]["enabled"]).lower()
+            sahttps=str(azr[i]["properties"]["supportsHttpsTrafficOnly"]).lower()
             #nrs=azr[i]["properties"]["networkAcls"]
             saencs=azr[i]["properties"]["encryption"]["keySource"]
             
             fr.write('\t account_tier = "' + satier + '"\n')
             fr.write('\t account_kind = "' + sakind + '"\n')
             fr.write('\t account_replication_type = "' +  sartype + '"\n')
-            fr.write('\t enable_blob_encryption = "' +  saencrypt + '"\n')
-            fr.write('\t enable_file_encryption = "' +  fiencrypt + '"\n')
-            fr.write('\t enable_https_traffic_only = "' +  sahttps + '"\n')
+            fr.write('\t enable_blob_encryption = ' +  saencrypt + '\n')
+            fr.write('\t enable_file_encryption = ' +  fiencrypt + '\n')
+            fr.write('\t enable_https_traffic_only = ' +  sahttps + '\n')
             fr.write('\t account_encryption_source = "' +  saencs + '"\n')
             
             try:        
@@ -1371,6 +1382,9 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 byp=byp.replace(", ",'", "')
 
                 ipr=azr[i]["properties"]["networkAcls"]["ipRules"]
+                #print(json.dumps(ipr, indent=4, separators=(',', ': ')))
+
+
                 vnr=azr[i]["properties"]["networkAcls"]["virtualNetworkRules"]
                 
                 icount=len(ipr)
@@ -1382,13 +1396,17 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     fr.write('\t\t bypass = ["' +  byp + '"]\n')
                     
                     if icount > 0:
+                        fr.write('\t\t ip_rules = [')
                         for ic in range(0, icount): 
                             ipa=ipr[ic]["value"]
-                            fr.write('\t\t ip_rules = ["' + ipa + '"]\n')
+                            fr.write('"' + ipa + '",')
+                        fr.write(']\n')
                     if vcount > 0:
+                        fr.write('\t\t virtual_network_subnet_ids = [')
                         for vc in range(0,vcount):
                             vnsid=vnr[vc]["id"]
-                            fr.write('\t\t virtual_network_subnet_ids = ["' + vnsid + '"]\n')
+                            fr.write('\t\t"' + vnsid + '",')
+                        fr.write(']\n')
                     fr.write('}\n')
                 # end if
 
@@ -1398,7 +1416,7 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -1485,22 +1503,22 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t tenant_id="' + ten + '"\n')
 
             try: 
-                endep=str(azr[i]["properties"]["enabledForDeployment"])
-                fr.write('\t enabled_for_deployment="' + endep + '"\n')
+                endep=str(azr[i]["properties"]["enabledForDeployment"]).lower()
+                fr.write('\t enabled_for_deployment=' + endep + '\n')
             except KeyError:
                 pass
             
             try:
-                endisk=str(azr[i]["properties"]["enabledForDiskEncryption"])
+                endisk=str(azr[i]["properties"]["enabledForDiskEncryption"]).lower()
                 if endisk != "None":
-                    fr.write('\t enabled_for_disk_encryption="' + endisk + '"\n')
+                    fr.write('\t enabled_for_disk_encryption=' + endisk + '\n')
             except KeyError:
                 pass       
             
             try:
-                entemp=str(azr[i]["properties"]["enabledForTemplateDeployment"])
+                entemp=str(azr[i]["properties"]["enabledForTemplateDeployment"]).lower()
                 if entemp != "None":
-                    fr.write('\t enabled_for_template_deployment="' +  entemp + '"\n')
+                    fr.write('\t enabled_for_template_deployment=' +  entemp + '\n')
             except KeyError:
                 pass
 
@@ -1567,7 +1585,7 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -1667,7 +1685,7 @@ def azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -1773,7 +1791,8 @@ def azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfm
             fr.write('\t\t port  = "' + str(port) + '"\n')
             try:
                 path=azr[i]["properties"]["monitorConfig"]["path"]
-                fr.write('\t\t path  = "' + path + '"\n')
+                if path is not None:
+                    fr.write('\t\t path  = "' + path + '"\n')
             except KeyError:
                 pass
             fr.write('\t} \n')  
@@ -1783,7 +1802,7 @@ def azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfm
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -1957,8 +1976,8 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             ipcon=azr[i]["properties"]["ipConfigurations"]
           
             #fr.write('\t internal_dns_name_label  = "' +  ipfor + '"\n')
-            fr.write('\t enable_ip_forwarding = "' +  str(ipfor) + '"\n')
-            fr.write('\t enable_accelerated_networking  = "' +  str(netacc) + '"\n')
+            fr.write('\t enable_ip_forwarding = ' +  str(ipfor).lower() + '\n')
+            fr.write('\t enable_accelerated_networking  = ' +  str(netacc).lower() + '\n')
             #fr.write('\t dns_servers  = "' +  ipfor + '"\n')
             #privip0=azr[i]["properties"]["ipConfigurations"][0]["privateIPAddress"]
 
@@ -1998,7 +2017,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 #fr.write('\t\t load_balancer_backend_address_pools_ids = "' +    subipalloc + '"\n')
                 #fr.write('\t\t load_balancer_inbound_nat_rules_ids = "' +    subipalloc + '"\n')
                 #fr.write('\t\t application_security_group_ids = "' +    subipalloc + '"\n')
-                fr.write('\t\t primary = "' + str(prim) + '"\n')
+                fr.write('\t\t primary = ' + str(prim).lower() + '\n')
                 try:
                     asgs=azr[i]["properties"]["ipConfigurations"][j]["properties"]["applicationSecurityGroups"]
                     kcount=len(asgs)
@@ -2016,7 +2035,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -2127,7 +2146,7 @@ def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -2248,7 +2267,7 @@ def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -2349,7 +2368,7 @@ def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     fr.write('\t\t frontend_port = "' + str(fep) + '"\n')
                     try:
                         enfip=azr[i]["properties"]["inboundNatRules"][j]["properties"]["enableFloatingIP"]
-                        fr.write('\t\t enable_floating_ip = "' + str(enfip) + '"\n')
+                        fr.write('\t\t enable_floating_ip = ' + str(enfip).lower() + '\n')
                     except KeyError:
                         pass
 
@@ -2746,7 +2765,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 bep=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["backendPort"]
                 proto=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["protocol"]
                 feipc=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["frontendIPConfiguration"]["id"].split("/")[10]
-                efip=str(azr[i]["properties"]["loadBalancingRules"][j]["properties"]["enableFloatingIP"])
+                efip=str(azr[i]["properties"]["loadBalancingRules"][j]["properties"]["enableFloatingIP"]).lower()
                 ld=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["loadDistribution"]
                 itm=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["idleTimeoutInMinutes"]
 
@@ -2769,7 +2788,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     fr.write('\t\t probe_id = "${azurerm_lb_probe.' + prg + '__' + lbname + '__' + pid + '.id}" \n')
                 except KeyError:
                     pass
-                fr.write('\t\t enable_floating_ip = "' + efip + '"\n')
+                fr.write('\t\t enable_floating_ip = ' + efip + '\n')
                 fr.write('\t\t idle_timeout_in_minutes = "' + str(itm) + '"\n')
                 fr.write('\t\t load_distribution = "' + ld + '"\n')
 
@@ -2801,6 +2820,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
     tfp="azurerm_application_gateway"
     tcode="193-"
     azr=""
+    
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
@@ -3037,7 +3057,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                         pass
                     try :
                         rsni=azr[i]["properties"]["httpListeners"][j]["properties"]["requireServerNameIndication"]
-                        fr.write('\t require_sni = "' +  str(rsni) + '"\n')
+                        fr.write('\t require_sni = ' +  str(rsni).lower() + '\n')
                     except KeyError:
                         pass
                     fr.write('}\n')
@@ -3050,27 +3070,30 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                     bname=azr[i]["properties"]["probes"][j]["name"]
                     bproto=azr[i]["properties"]["probes"][j]["properties"]["protocol"]
                     bpath=azr[i]["properties"]["probes"][j]["properties"]["path"]
-                    bhost=azr[i]["properties"]["probes"][j]["properties"]["host"]
                     bint=azr[i]["properties"]["probes"][j]["properties"]["interval"]
                     btimo=azr[i]["properties"]["probes"][j]["properties"]["timeout"]
                     bunth=azr[i]["properties"]["probes"][j]["properties"]["unhealthyThreshold"]
                                    
                                 
-                    bmstat=azr[i]["properties"]["probes"][j]["properties"]["match"]["statusCodes"]
+                    #bmstat=azr[i]["properties"]["probes"][j]["properties"]["match"]["statusCodes"]
 
-                    fr.write('probe{' + '"\n')
+                    fr.write('probe {' + '\n')
                     fr.write('\t name = "' +    bname + '"\n')
                     fr.write('\t protocol = "' +    bproto + '"\n')
                     fr.write('\t path = "' +    bpath + '"\n')
-                    fr.write('\t host = "' +    bhost + '"\n')
-                    fr.write('\t interval = "' +    bint + '"\n')
-                    fr.write('\t timeout = "' +    btimo + '"\n')
-                    fr.write('\t unhealthy_threshold = "' +    bunth + '"\n')
+                    try:
+                        bhost=azr[i]["properties"]["probes"][j]["properties"]["host"]
+                        fr.write('\t host = "' +    bhost + '"\n')
+                    except KeyError:
+                        pass
+                    fr.write('\t interval = "' +  str(bint) + '"\n')
+                    fr.write('\t timeout = "' +    str(btimo) + '"\n')
+                    fr.write('\t unhealthy_threshold = "' +  str(bunth) + '"\n')
 
 
                     try :
                         bmsrv=azr[i]["properties"]["probes"][j]["properties"]["minServers"]
-                        fr.write('\t minimum_servers = "' + bmsrv + '"\n')
+                        fr.write('\t minimum_servers = "' + str(bmsrv) + '"\n')
                     except KeyError:
                         pass
 
@@ -3086,6 +3109,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                         pass
                 
                     fr.write('\t }\n')
+                    fr.write('}\n')
                     
 
 # routing rules
@@ -3096,8 +3120,6 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                     bname=azr[i]["properties"]["requestRoutingRules"][j]["name"]
                     btyp=azr[i]["properties"]["requestRoutingRules"][j]["properties"]["ruleType"]
                     blin=azr[i]["properties"]["requestRoutingRules"][j]["properties"]["httpListener"]["id"].split("/")[10]
-                    bapn=azr[i]["properties"]["requestRoutingRules"][j]["properties"]["backendAddressPool"]["id"].split("/")[10]
-                    bhsn=azr[i]["properties"]["requestRoutingRules"][j]["properties"]["backendHttpSettings"]["id"].split("/")[10]
 
                     fr.write('request_routing_rule { \n')
 
@@ -3105,10 +3127,12 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                     fr.write('\t rule_type = "' + btyp + '"\n')
                     fr.write('\t http_listener_name = "' + blin + '"\n')
                     try :
+                        bapn=azr[i]["properties"]["requestRoutingRules"][j]["properties"]["backendAddressPool"]["id"].split("/")[10]
                         fr.write('\t backend_address_pool_name = "' +    bapn + '"\n')
                     except KeyError:
                         pass
                     try :
+                        bhsn=azr[i]["properties"]["requestRoutingRules"][j]["properties"]["backendHttpSettings"]["id"].split("/")[10]
                         fr.write('\t backend_http_settings_name = "' +    bhsn + '"\n')
                     except KeyError:
                         pass
@@ -3166,11 +3190,11 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                 rsv=azr[i]["properties"]["webApplicationFirewallConfiguration"]["ruleSetVersion"]
                 fen=azr[i]["properties"]["webApplicationFirewallConfiguration"]["enabled"]
                     
-                fr.write('waf_configuration {' + '"\n')
-                fr.write('\trewall_mode = "' + fmode + '"\n')
+                fr.write('waf_configuration { \n')
+                fr.write('\t firewall_mode = "' + fmode + '"\n')
                 fr.write('\t rule_set_type = "' + rst + '"\n')
                 fr.write('\t rule_set_version = "' + rsv + '"\n')
-                fr.write('\t enabled = "' + fen + '"\n')
+                fr.write('\t enabled = ' + str(fen).lower() + '\n')
                 fr.write('\t }\n') 
             except KeyError:
                 pass         
@@ -3194,7 +3218,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -3305,7 +3329,7 @@ def azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmes
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -3392,8 +3416,8 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
             fr.write('\t type = "' + gtype + '"\n')
             fr.write('\t vpn_type = "' +  vpntype + '"\n')
             fr.write('\t sku = "' +  sku + '"\n')
-            fr.write('\t active_active = "' + str(aa) + '"\n')
-            fr.write('\t enable_bgp = "' + str(enbgp) + '"\n')
+            fr.write('\t active_active = "' + str(aa).lower() + '"\n')
+            fr.write('\t enable_bgp = "' + str(enbgp).lower() + '"\n')
             
             try :
                 vadsp=str(ast.literal_eval(json.dumps(azr[i]["properties"]["vpnClientConfiguration"]["vpnClientAddressPool"]["addressPrefixes"])))
@@ -3406,10 +3430,10 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
                     fr.write('\t\t radius_server_address = "' + radsa + '"\n')
                     fr.write('\t\t radius_server_secret = "' + radss + '"\n')
                 except KeyError:  # = null
-                    fr.write('\t\t root_certificate {'    + '"\n')
+                    fr.write('\t\t root_certificate { \n')
                     fr.write('\t\t\t name = ""\n')
                     fr.write('\t\t\t public_cert_data = ""\n')
-                    fr.write('\t\t }'  + '"\n')
+                    fr.write('\t\t }\n')
                     pass
             
                 try :
@@ -3467,7 +3491,7 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -3571,7 +3595,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
                 pass
         
             
-            fr.write('\t enable_bgp = "' +  str(enbgp) + '"\n')
+            fr.write('\t enable_bgp = ' +  str(enbgp).lower() + '\n')
             try:
                 rw=azr[i]["properties"]["routingWeight"] 
                 if rw != 0 :
@@ -3586,7 +3610,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
                 pass   
 
 
-            fr.write('\t use_policy_based_traffic_selectors = "' + str(pbs) + '"\n')
+            fr.write('\t use_policy_based_traffic_selectors = ' + str(pbs).lower() + '\n')
             
             if ctype == "ExpressRoute" :
                 peerid=azr[i]["properties"]["peer"]["id"]
@@ -3619,7 +3643,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -3711,13 +3735,13 @@ def azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmes
             fr.write('\t\t family = "' +  family + '"\n')
             fr.write('\t }\n')
 
-            fr.write('\t allow_classic_operations = "' +  str(aco) + '"\n')
+            fr.write('\t allow_classic_operations = ' +  str(aco).lower() + '\n')
 
 
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -3897,7 +3921,7 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
 
                 fr.write('\t peering_type = "' +  pt + '"\n')
                 fr.write('\t express_route_circuit_name = "' +  name2 + '"\n')
-                fr.write('\t resource_group_name = "' +  rg + '"\n')
+                #fr.write('\t resource_group_name = "' +  rg + '"\n')
                 fr.write('\t primary_peer_address_prefix = "' +  pap + '"\n')
                 fr.write('\t secondary_peer_address_prefix = "' +  sap + '"\n')
                 fr.write('\t vlan_id = "' +  str(vid) + '"\n')
@@ -3983,7 +4007,7 @@ def azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             admin=azr[i]["properties"]["adminUserEnabled"]
             sku=azr[i]["sku"]["name"]
             
-            fr.write('\t admin_enabled = "' + str(admin) + '"\n')
+            fr.write('\t admin_enabled = ' + str(admin).lower() + '\n')
             fr.write('\t sku = "' + sku + '"\n')
         
   
@@ -3991,7 +4015,7 @@ def azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -4088,7 +4112,7 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             
             if rbac == "true" :
                 fr.write('\t role_based_access_control { \n')
-                fr.write('\t\t enabled = "true" \n')
+                fr.write('\t\t enabled = true \n')
                 fr.write('\t }\n')
         
             
@@ -4190,7 +4214,7 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -4272,7 +4296,7 @@ def azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfm
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -4307,6 +4331,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_virtual_machine"
     tcode="290-"
     azr=""
+    
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
@@ -4384,19 +4409,24 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             # Multiples
             #
             icount=len(netifs)
+            priif=""
             if icount > 0 :
+                fr.write('\t network_interface_ids = [\n')
                 for j in range(0,icount):
                     vmnetpri=False
                     vmnetid=azr[i]["properties"]["networkProfile"]["networkInterfaces"][j]["id"].split("/")[8].replace(".","-")
                     vmnetrg=azr[i]["properties"]["networkProfile"]["networkInterfaces"][j]["id"].split("/")[4].replace(".","-").lower()
                     try:
                         vmnetpri=azr[i]["properties"]["networkProfile"]["networkInterfaces"][j]["properties"]["primary"]
+                        priif='\t primary_network_interface_id = "${azurerm_network_interface.' + vmnetrg + '__' +  vmnetid + '.id}"\n'
                     except KeyError:
                         pass
-                    fr.write('\t network_interface_ids = ["${azurerm_network_interface.' + vmnetrg + '__' + vmnetid + '.id}"]\n')
+                    fr.write('\t "${azurerm_network_interface.' + vmnetrg + '__' + vmnetid + '.id}",')
                     if vmnetpri :
-                        fr.write('\t primary_network_interface_id = "${azurerm_network_interface.' + vmnetrg + '__' +  vmnetid + '.id}"\n')     
-            
+                        priif='\t primary_network_interface_id = "${azurerm_network_interface.' + vmnetrg + '__' +  vmnetid + '.id}"\n'
+                        #print "priif="+priif    
+                fr.write('\t]\n')
+                fr.write(priif) 
             #
             fr.write('\t delete_data_disks_on_termination = "'+ 'false' + '"\n')
             fr.write('\t delete_os_disk_on_termination = "'+ 'false' + '"\n')
@@ -4461,7 +4491,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 vmdiags=azr[i]["properties"]["diagnosticsProfile"]
                 vmbturi=azr[i]["properties"]["diagnosticsProfile"]["bootDiagnostics"]["storageUri"]
                 fr.write('boot_diagnostics {\n')
-                fr.write('\t enabled = "' + 'true' + '"\n')
+                fr.write('\t enabled = true \n')
                 fr.write('\t storage_uri = "' +  vmbturi + '"\n')
                 fr.write('}\n')
             except KeyError:
@@ -4473,8 +4503,8 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     try :
                         vmwau=azr[i]["properties"]["osProfile"]["windowsConfiguration"]["enableAutomaticUpdates"]
                         fr.write('os_profile_windows_config {\n')
-                        fr.write('\t enable_automatic_upgrades = "' +  str(vmwau) + '"\n')
-                        fr.write('\t provision_vm_agent = "' +  str(vmwvma) + '"\n')
+                        fr.write('\t enable_automatic_upgrades = ' +  str(vmwau).lower() + '\n')
+                        fr.write('\t provision_vm_agent = ' +  str(vmwvma).lower() + '\n')
                         try :
                             vmwtim=azr[i]["properties"]["osProfile"]["windowsConfiguration"]["timeZone"]
                             fr.write('\t timezone =   "' + vmwtim + '"\n')
@@ -4494,7 +4524,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 except KeyError:
                     vmdispw="false"
             
-                fr.write('\tdisable_password_authentication = "' +  str(vmdispw) + '"\n')
+                fr.write('\tdisable_password_authentication = ' +  str(vmdispw).lower() + '\n')
                 if vmdispw :
                     try:
                         vmsshpath=azr[i]["properties"]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys"][0]["path"]
@@ -4536,7 +4566,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 pass
             try :
                 vmoswa=azr[i]["properties"]["storageProfile"]["osDisk"]["writeAcceleratorEnabled"]
-                fr.write('\t write_accelerator_enabled = "' +   str(vmoswa) + '"\n')
+                fr.write('\t write_accelerator_enabled = ' +   str(vmoswa).lower() + '\n')
             except KeyError:
                 pass
 
@@ -4605,10 +4635,21 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 except KeyError:
                     pass
         
+
+            try:
+                zones=azr[i]["zones"]
+                fr.write('zones = ')
+                fr.write(json.dumps(zones, indent=4, separators=(',', ': ')))
+                fr.write('\n')
+              
+            except KeyError:
+                pass
+
+
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     tval=tval.replace('"',"'")
@@ -4647,7 +4688,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
     azr = ""
     if crf in tfp:
         # REST or cli
-        # print "REST Managed Disk"
+       
         url = "https://management.azure.com/subscriptions/" + sub + \
             "/providers/Microsoft.Compute/virtualMachineScaleSets"
         params = {'api-version': '2019-03-01'}
@@ -4737,8 +4778,8 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
                 pass
 
             fr.write('upgrade_policy_mode = "' + upm + '"\n')
-            fr.write('overprovision = "' + str(op) + '"\n')
-            fr.write('single_placement_group = "' + str(spg) + '"\n')
+            fr.write('overprovision = ' + str(op).lower() + '\n')
+            fr.write('single_placement_group = ' + str(spg).lower() + '\n')
             try:
                 vmpri = azr[i]["properties"]["virtualMachineProfile"]["priority"]
                 fr.write('priority = "' + vmpri + '"\n')
@@ -4770,8 +4811,8 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
                 try:
                     vmwau = azr[i]["properties"]["virtualMachineProfile"]["osProfile"]["windowsConfiguration"]["enableAutomaticUpdates"]
                     fr.write('os_profile_windows_config {\n')
-                    fr.write('\t enable_automatic_upgrades = "' + vmwau + '"\n')
-                    fr.write('\t provision_vm_agent = "' + vmwvma + '"\n')
+                    fr.write('\t enable_automatic_upgrades = ' + str(vmwau).lower() + '\n')
+                    fr.write('\t provision_vm_agent = ' + str(vmwvma).lower() + '\n')
                     try:
                         vmwtim = azr[i]["properties"]["virtualMachineProfile"]["osProfile"]["windowsConfiguration"]["timeZone"]
                         fr.write('\t timezone =   "' + vmwtim + '"\n')
@@ -4796,7 +4837,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
                     # osprofile can by null for vhd imported images - must make an artificial one.
                     vmdispw = "false"
 
-                fr.write('\tdisable_password_authentication = "' + str(vmdispw) + '"\n')
+                fr.write('\tdisable_password_authentication = ' + str(vmdispw).lower() + '\n')
                 if vmdispw != "false":
                     fr.write('\tssh_keys { \n')
                     fr.write('\t\tpath = "' + vmsshpath + '"\n')
@@ -4821,7 +4862,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
                                        
                     try:
                         pri = azr[i]["properties"]["virtualMachineProfile"]["networkProfile"]["networkInterfaceConfigurations"][j]["properties"]["primary"]
-                        fr.write('\tprimary = "' + str(pri) + '"\n')
+                        fr.write('\tprimary = ' + str(pri).lower() + '\n')
                     except KeyError:
                         pass
                     
@@ -4841,7 +4882,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
                                 ipcp = azr[i]["properties"]["virtualMachineProfile"]["networkProfile"]["networkInterfaceConfigurations"][j]["properties"]["ipConfigurations"][k]["primary"]
                                 fr.write('\t\tprimary = "' + ipcp + '"\n')
                             except KeyError:
-                                fr.write('\t\tprimary = ""\n')
+                                fr.write('\t\tprimary = true\n')
                             
                             try:
                                 ipcsrg = azr[i]["properties"]["virtualMachineProfile"]["networkProfile"]["networkInterfaceConfigurations"][j]["properties"]["ipConfigurations"][k]["properties"]["subnet"]["id"].split("/")[4].replace(".", "-").lower()
@@ -4872,7 +4913,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
 
             try:
                 vmoswa = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["osDisk"]["writeAcceleratorEnabled"]
-                fr.write('\t write_accelerator_enabled = "' + vmoswa + '"\n')
+                fr.write('\t write_accelerator_enabled = ' + str(vmoswa).lower() + '\n')
             except KeyError:
                 pass
 
@@ -4998,7 +5039,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
                 vmbten = azr[i]["properties"]["virtualMachineProfile"]["diagnosticsProfile"]["bootDiagnostics"]["enabled"]
                 vmbturi = azr[i]["properties"]["virtualMachineProfile"]["diagnosticsProfile"]["bootDiagnostics"]["storageUri"]
                 fr.write('boot_diagnostics {\n')
-                fr.write('\t enabled = "' + str(vmbten) + '"\n')
+                fr.write('\t enabled = ' + str(vmbten).lower() + '\n')
                 fr.write('\t storage_uri = "' + vmbturi + '"\n')
                 fr.write('}\n')
             except KeyError:
@@ -5017,16 +5058,20 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
             except KeyError:
                 pass
 
-
-
-
-
     # zones block
+
+            try:
+                zones=azr[i]["zones"]
+                fr.write('zones = ')
+                fr.write(json.dumps(zones, indent=4, separators=(',', ': ')))
+                fr.write('\n')
+            except KeyError:
+                pass
 
     # tags block
             try:
                 mtags = azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval = mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -5116,7 +5161,7 @@ def azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -5206,7 +5251,7 @@ def azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfm
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -5421,14 +5466,14 @@ def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
             try:
                 zros=azr[i]["properties"]["storageProfile"]["zoneResilient"]
-                fr.write('\t zone_resilient = "'+ str(zros) + '"\n')
+                fr.write('\t zone_resilient = '+ str(zros).lower() + '\n')
             except KeyError:
                 pass
 
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -5535,7 +5580,7 @@ def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -5614,7 +5659,7 @@ def azurerm_network_watcher(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -5649,6 +5694,7 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_cosmosdb_account"
     tcode="400-"
     azr=""
+    cde=False
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
@@ -5692,12 +5738,12 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
         #azr=az cosmosdb list -g rgsource -o json
   
-            kind=azr[i]["properties"]["kind"]
+            kind=azr[i]["kind"]
             offer=azr[i]["properties"]["databaseAccountOfferType"]
             cp=azr[i]["properties"]["consistencyPolicy"]["defaultConsistencyLevel"]
             mis=azr[i]["properties"]["consistencyPolicy"]["maxIntervalInSeconds"]
             msp=azr[i]["properties"]["consistencyPolicy"]["maxStalenessPrefix"] 
-            caps=azr[i]["properties"]["capabilities"][0]["name"] 
+            
             geol=azr[i]["properties"]["failoverPolicies"]     
                 
             af=azr[i]["properties"]["enableAutomaticFailover"]      
@@ -5707,17 +5753,23 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t offer_type = "' +  offer + '"\n')
             fr.write('\t consistency_policy {\n')
             fr.write('\t\t  consistency_level = "' +  cp + '"\n')
-            fr.write('\t\t  max_interval_in_seconds = "' +  mis + '"\n')
-            fr.write('\t\t  max_staleness_prefix = "' +  msp + '"\n')
-            fr.write('\t }' + offer + '"\n')
-            fr.write('\t enable_automatic_failover = "' +  af + '"\n')
+            fr.write('\t\t  max_interval_in_seconds = "' +  str(mis) + '"\n')
+            fr.write('\t\t  max_staleness_prefix = "' +  str(msp) + '"\n')
+            fr.write('\t }\n')
+            fr.write('\t enable_automatic_failover = ' +  str(af).lower() + '\n')
         # capabilities block
 
             # code out terraform error
-            if caps == "EnableTable" or caps == "EnableGremlin" or caps == "EnableCassandra":
-                fr.write('\t capabilities {\n')
-                fr.write('\t\t name = "' +  caps + '"\n')        
-                fr.write('\t }' + caps + '"\n')
+            try:
+                caps=azr[i]["properties"]["capabilities"][0]["name"] 
+                if caps == "EnableTable" or caps == "EnableGremlin" or caps == "EnableCassandra":
+                    fr.write('\t capabilities {\n')
+                    fr.write('\t\t name = "' +  caps + '"\n')        
+                    fr.write('\t }\n')
+            except KeyError:
+                pass
+            except IndexError:
+                pass
             
         # geo location block
                 
@@ -5727,13 +5779,13 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     fop=azr[i]["properties"]["failoverPolicies"][j]["failoverPriority"]
                     fr.write('\t geo_location {\n')
                     fr.write('\t location = "'+floc + '"\n')
-                    fr.write('\t failover_priority  = "' + fop + '"\n')
+                    fr.write('\t failover_priority  = "' + str(fop) + '"\n')
                     fr.write('}\n')
 
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -5824,7 +5876,7 @@ def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -5946,13 +5998,13 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     dl= azr2[j]["properties"]["deadLetteringOnMessageExpiration"]
                     
                     fr.write('\t namespace_name = "' +  nname + '"\n')
-                    fr.write('\t enable_partitioning =  "'+str(ep) + '"\n')
-                    fr.write('\t enable_express =  "'+str(ee) + '"\n')
-                    fr.write('\t requires_duplicate_detection ="'+  str(dd) + '"\n')
-                    fr.write('\t requires_session =  "'+str(rs) + '"\n')
+                    fr.write('\t enable_partitioning =  '+str(ep).lower() + '\n')
+                    fr.write('\t enable_express =  '+str(ee).lower() + '\n')
+                    fr.write('\t requires_duplicate_detection ='+  str(dd).lower() + '\n')
+                    fr.write('\t requires_session =  '+ str(rs).lower() + '\n')
                     # tf problem with this one. tf=1k cli=16k
                     #fr.write('\t max_size_in_megabytes =  mx + '"\n')
-                    fr.write('\t dead_lettering_on_message_expiration =  "'+str(dl) + '"\n')
+                    fr.write('\t dead_lettering_on_message_expiration = ' +str(dl).lower() + '\n')
                 
 
         # no tags block       
@@ -6041,7 +6093,7 @@ def azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -6142,13 +6194,13 @@ def azurerm_sql_database(crf, cde, crg, headers, requests, sub, json, az2tfmess)
                     fr.write('\t name = "' + name + '"\n')
                     fr.write('\t location = "' + loc + '"\n')
                     fr.write('\t resource_group_name = "' + rgs + '"\n')
-                    fr.write('\t server_name = "' + sname + '"\n')
+                    #fr.write('\t server_name = "' + sname + '"\n')
                     col=azr2[j]["properties"]["collation"]
                     ed=azr2[j]["properties"]["currentSku"]["tier"]
                     rso=azr2[j]["properties"]["requestedServiceObjectiveName"]
-
+                    fr.write('\t server_name = "' + sname + '"\n')
                     if ed != "System":
-                        fr.write('\t server_name = "' + sname + '"\n')
+                        
                         fr.write('\t collation= "' + col + '"\n')
                         fr.write('\t edition= "' + ed + '"\n')
                         fr.write('\t requested_service_objective_name= "' + rso + '"\n')
@@ -6161,7 +6213,7 @@ def azurerm_sql_database(crf, cde, crg, headers, requests, sub, json, az2tfmess)
             # tags block
                     try:
                         mtags = azr2[j]["tags"]
-                        fr.write('tags { \n')
+                        fr.write('tags = { \n')
                         for key in mtags.keys():
                             tval = mtags[key]
                             fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -6251,7 +6303,7 @@ def azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -6455,7 +6507,7 @@ def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -6548,7 +6600,7 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t app_service_plan_id = "' + appplid + '"\n')
     # dummy entry
 
-            fr.write('\t https_only = "' + str(https) + '"\n')
+            fr.write('\t https_only = ' + str(https).lower() + '\n')
             blog=False
             strcon=""
 
@@ -6560,7 +6612,7 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             appset= r.json()
             #print(json.dumps(appset, indent=4, separators=(',', ': ')))
             
-            fr.write('\t app_settings { \n')
+            fr.write('\t app_settings = { \n')
                     
             try:
                 strcon=appset["properties"]["AzureWebJobsStorage"]         
@@ -6627,13 +6679,13 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('\t storage_connection_string = ""\n')
         
             fr.write('\t version = "' + vers + '"\n')
-            fr.write('\t enable_builtin_logging = "' + str(blog) + '"\n')
+            fr.write('\t enable_builtin_logging = ' + str(blog).lower() + '\n')
 
 
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -6717,7 +6769,7 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
 
     # basic settings
 
-            fr.write('enabled = "' + str(en) + '"\n')
+            fr.write('enabled = ' + str(en).lower() + '\n')
 
             try:
                 triid = azr[i]["properties"]["targetResourceUri"]
@@ -6908,7 +6960,7 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
     # tags block
             try:
                 mtags = azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval = mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -6936,7 +6988,418 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
         tfim.close()
     # end stub
 
-# RUNBOOK ON
+ 
+#
+# azurerm_policy_definition
+#
+import ast
+def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):  
+    tfp="azurerm_policy_definition"
+    azr=""
+    if crf in tfp:
+    # REST or cli
+        # print "REST Managed Disk"
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Authorization/policyDefinitions"
+        params = {'api-version': '2019-01-01'}
+        r = requests.get(url, headers=headers, params=params)
+        azr= r.json()["value"]
+
+
+        tfrmf="100-"+tfp+"-staterm.sh"
+        tfimf="100-"+tfp+"-stateimp.sh"
+        tfrm=open(tfrmf, 'a')
+        tfim=open(tfimf, 'a')
+        print "# " + tfp,
+        count=len(azr)
+        print count
+        for i in range(0, count):
+
+            name=azr[i]["name"]
+            #loc=azr[i]["location"]
+            id=azr[i]["id"]
+            rg=id.split("/")[4].replace(".","-").lower()
+            rgs=id.split("/")[4]
+            rg="policyDefinitions"
+            if crg is not None:
+                if rg.lower() != crg.lower():
+                    continue  # back to for
+
+            
+            rname=name.replace(".","-")
+            prefix=tfp+"."+rg+'__'+rname
+            #print prefix
+            pt=azr[i]["properties"]["policyType"]
+            if pt == "Custom" :
+
+                if cde:
+                    print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
+                rfilename=prefix+".tf"
+                fr=open(rfilename, 'w')
+                fr.write(az2tfmess)
+                fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+                fr.write('\t name = "' + name + '"\n')
+                #fr.write('\t location = "'+ loc + '"\n')
+                fr.write('\t resource_group_name = "'+ rgs + '"\n')
+
+                rdid=azr[i]["name"]            
+                mode=azr[i]["properties"]["mode"]
+                rg="policyDefinitions"
+                                
+
+                
+                try :
+                    dname=azr[i]["properties"]["displayName"]
+                    fr.write('display_name =  "'+dname+'"\n') 
+                except KeyError:
+                    fr.write('display_name = ""\n')
+                    pass
+            
+                fr.write('policy_type = "' + pt +'"\n') 
+                fr.write('mode = "' + mode + '"\n') 
+                try :
+                    desc=azr[i]["properties"]["description"]
+                    fr.write('description =  "'+desc +'"\n') 
+                except KeyError:
+                    pass   
+     
+                print(json.dumps(azr[i]["properties"]["metadata"], indent=4, separators=(',', ': ')))
+                
+                #meta=str(json.dumps(azr[i]["properties"]["metadata"]) 
+                #print "meta="+meta 
+                #meta=meta.replace("'",'"')    
+                fr.write('metadata =<<META \n') 
+                #fr.write('"' + meta +'"\n') 
+                fr.write(json.dumps(azr[i]["properties"]["metadata"])
+                fr.write('META \n') 
+
+
+                prules=str(ast.literal_eval(json.dumps(azr[i]["properties"]["policyRule"])))
+                prules=prules.replace("'",'"') 
+                fr.write('policy_rule =<<POLICY_RULE \n')  
+                fr.write('"'+ prules +'"\n') 
+                fr.write('POLICY_RULE \n') 
+                
+                try:
+                    params=str(ast.literal_eval(json.dumps(azr[i]["properties"]["parameters"])))
+                    params=params.replace("'",'"') 
+                    pl= len(params)
+                    if pl > 0 :
+                        fr.write('parameters =<<PARAMETERS \n') 
+                        fr.write('"'+params +'"\n') 
+                        fr.write('PARAMETERS \n') 
+                except KeyError:
+                    pass
+
+
+                fr.write('}\n') 
+                fr.close()   # close .tf file
+
+                if cde:
+                    with open(rfilename) as f: 
+                        print f.read()
+
+                tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+
+                tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+                tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+                tfim.write(tfcomm)  
+
+        # end for i loop
+
+        tfrm.close()
+        tfim.close()
+    #end stub 
+#
+# azurerm_policy_assignment
+#
+
+def azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+    
+    tfp="azurerm_policy_assignment"
+    azr=""
+    if crf in tfp:
+    # REST or cli
+        # print "REST Managed Disk"
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Authorization/policyAssignments"
+        params = {'api-version': '2019-01-01'}
+
+        r = requests.get(url, headers=headers, params=params)
+        azr= r.json()["value"]
+
+
+        tfrmf="100-"+tfp+"-staterm.sh"
+        tfimf="100-"+tfp+"-stateimp.sh"
+        tfrm=open(tfrmf, 'a')
+        tfim=open(tfimf, 'a')
+        print "# " + tfp,
+        count=len(azr)
+        print count
+        for i in range(0, count):
+
+            name=azr[i]["name"]
+            #loc=azr[i]["location"]
+            id=azr[i]["id"]
+            rg=id.split("/")[4].replace(".","-").lower()
+            rgs=id.split("/")[4]
+            if crg is not None:
+                if rg.lower() != crg.lower():
+                    continue  # back to for
+            if cde:
+                print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
+            
+            rname=name.replace(".","-")
+            prefix=tfp+"."+rg+'__'+rname
+            #print prefix
+            rfilename=prefix+".tf"
+            fr=open(rfilename, 'w')
+            fr.write(az2tfmess)
+            fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+            fr.write('\t name = "' + name + '"\n')
+            #fr.write('\t location = "'+ loc + '"\n')
+            fr.write('\t resource_group_name = "'+ rgs + '"\n')
+
+    ###############
+    # specific code
+           
+            dname=azr[i]["properties"]["displayName"]
+            rdid=azr[i]["name"]
+            desc=azr[i]"properties"]["description"]
+            scope=azr[i]"properties"]["scope"]
+            pdid=azr[i]"properties"]["policyDefinitionId"]
+            id=azr[i]["id"]
+            rg="policyAssignments"
+            
+            params=azr[i]"properties"]["parameters"]
+                
+            fr.write('display_name = "' + dname +'"\n') 
+            fr.write('policy_definition_id = "' + pdid +'"\n') 
+            fr.write('scope = "' +  scope +'"\n') 
+            try :
+                desc=azr[i]"properties"]["description"]
+                fr.write('description =  "'+desc +'"\n') 
+            except KeyError:
+                pass
+
+            pl=len(params)
+            if pl > 0 :
+                fr.write('parameters =<<PARAMETERS \n') 
+                fr.write('"'+params +'"\n')
+                fr.write('PARAMETERS\n') 
+  
+
+            fr.write('}\n') 
+            fr.close()   # close .tf file
+
+            if cde:
+                with open(rfilename) as f: 
+                    print f.read()
+
+            tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+
+            tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+            tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+            tfim.write(tfcomm)  
+
+        # end for i loop
+
+        tfrm.close()
+        tfim.close()
+    #end stub 
+#
+# azurerm_role_definition
+#
+
+def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+    tfp="azurerm_role_definition"
+    
+    azr=""
+    if crf in tfp:
+    # REST or cli
+        # print "REST Managed Disk"
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Authorization/roleDefinitions"
+
+        params = {'api-version': '2018-07-01'}
+        r = requests.get(url, headers=headers, params=params)
+        azr= r.json()["value"]
+
+
+        tfrmf="100-"+tfp+"-staterm.sh"
+        tfimf="100-"+tfp+"-stateimp.sh"
+        tfrm=open(tfrmf, 'a')
+        tfim=open(tfimf, 'a')
+        print "# " + tfp,
+        count=len(azr)
+        print count
+        for i in range(0, count):
+
+            name=azr[i]["name"]
+            #loc=azr[i]["location"]
+            id=azr[i]["id"]
+            rg=id.split("/")[4].replace(".","-").lower()
+            rgs=id.split("/")[4]
+            if crg is not None:
+                if rg.lower() != crg.lower():
+                    continue  # back to for
+            if cde:
+                print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
+            
+            rname=name.replace(".","-")
+            prefix=tfp+"."+rg+'__'+rname
+            #print prefix
+            rfilename=prefix+".tf"
+            fr=open(rfilename, 'w')
+            fr.write(az2tfmess)
+            fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+            fr.write('\t name = "' + name + '"\n')
+            #fr.write('\t location = "'+ loc + '"\n')
+            fr.write('\t resource_group_name = "'+ rgs + '"\n')
+            
+            name=azr[i]["roleName"]
+    
+            rdid=azr[i]["name"]
+            desc=azr[i]["description"]
+            id=azr[i]["id"]
+            rg="roleDefinitions"
+
+            scopes=azr[i]["assignableScopes"]
+            dactions=azr[i]["permissions"][0]["dataActions"]
+            ndactions=azr[i]["permissions"][0]["notDataActions"]
+            actions=azr[i]["permissions"][0]["actions"]
+            nactions=azr[i]["permissions"][0]["notActions"]
+
+            fr.write('role_definition_id = "' + rdid +  '"\n')
+            fr.write('description =  "' +desc + '"\n')
+    #        fr.write('scope = "'\{'data.azurerm_subscription.primary.id}'"'  '"\n')
+    #        fr.write('scope = "'/subscriptions/"' rgsource '"\n')
+            fr.write('scope = "' +   '"\n')
+            #
+            fr.write('permissions {\n')        
+            fr.write('data_actions = \n')
+            fr.write(dactions +'\n')
+            fr.write('not_data_actions = \n')
+            fr.write(ndactions + '\n')
+            fr.write('actions =  \n')
+            fr.write(actions + '\n')
+            fr.write('not_actions = \n')
+            fr.write(nactions + '\n')
+            fr.write('}\n')
+            
+            fr.write('assignable_scopes = \n')
+            fr.write(scopes  + '\n')
+        
+
+            fr.write('}\n') 
+            fr.close()   # close .tf file
+
+            if cde:
+                with open(rfilename) as f: 
+                    print f.read()
+
+            tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+
+            tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+            tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+            tfim.write(tfcomm)  
+
+        # end for i loop
+
+        tfrm.close()
+        tfim.close()
+    #end stub 
+#
+# azurerm_role_assignment
+#
+
+def azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+   
+    tfp="azurerm_role_assignment"
+    azr=""
+    if crf in tfp:
+    # REST or cli
+        # print "REST Managed Disk"
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/disks"
+        params = {'api-version': '2017-03-30'}
+        r = requests.get(url, headers=headers, params=params)
+        azr= r.json()["value"]
+
+
+        tfrmf="100-"+tfp+"-staterm.sh"
+        tfimf="100-"+tfp+"-stateimp.sh"
+        tfrm=open(tfrmf, 'a')
+        tfim=open(tfimf, 'a')
+        print "# " + tfp,
+        count=len(azr)
+        print count
+        for i in range(0, count):
+
+            name=azr[i]["name"]
+            loc=azr[i]["location"]
+            id=azr[i]["id"]
+            rg=id.split("/")[4].replace(".","-").lower()
+            rgs=id.split("/")[4]
+            if crg is not None:
+                if rg.lower() != crg.lower():
+                    continue  # back to for
+            if cde:
+                print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
+            
+            rname=name.replace(".","-")
+            prefix=tfp+"."+rg+'__'+rname
+            #print prefix
+            rfilename=prefix+".tf"
+            fr=open(rfilename, 'w')
+            fr.write(az2tfmess)
+            fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+            fr.write('\t name = "' + name + '"\n')
+            fr.write('\t location = "'+ loc + '"\n')
+            fr.write('\t resource_group_name = "'+ rgs + '"\n')
+
+
+            name=azr[i]["name"]
+        
+            scope=azr[i]["scope"]
+            rdid=azr[i]["name"]
+            prid=azr[i]["principalId"]
+            roledefid=azr[i]["roleDefinitionId"].slpit("/")[6]
+            id=azr[i]["id"]
+            rg="roleAssignments"
+
+            fr.write('role_definition_id = "${azurerm_role_definition.' + "roleDefinitions" + '__' + roledefid + '.id}"' + '\n')
+            
+            fr.write('principal_id ="' +prid +'"\n') 
+            fr.write('scope = "' + scope  +'"\n') 
+    
+            fr.write('}\n')
+
+       
+            try:
+                mtags=azr[i]["tags"]
+                fr.write('tags = { \n')
+                for key in mtags.keys():
+                    tval=mtags[key]
+                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                fr.write('}\n')
+            except KeyError:
+                pass
+
+            fr.write('}\n') 
+            fr.close()   # close .tf file
+
+            if cde:
+                with open(rfilename) as f: 
+                    print f.read()
+
+            tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+
+            tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+            tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+            tfim.write(tfcomm)  
+
+        # end for i loop
+
+        tfrm.close()
+        tfim.close()
+    #end stub# RUNBOOK ON
 #
 # runbook get token
 #
@@ -6950,22 +7413,18 @@ cde=False
 az2tfmess="# File generated by az2tf see: https://github.com/andyt530/az2tf \n"
  
 
-# record and sort resources
-#azure_resources.azure_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os)
+# record and sort resources - no longer needed
+# azure_resources.azure_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os)
 # 001 Resource Group
 azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-# 002 management locks
-
+# 002 management lock
 azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 015 user assigned identity
 azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 020 Avail Sets
-
 azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-
 # 030 Route Table
 azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-
 # 040 ASG
 azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 050 NSG's
@@ -6980,9 +7439,9 @@ azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 100 managed disk
 azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-#110 storgae account
+# 110 storgae account
 azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-#120 public ip
+# 120 public ip
 azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 124 Traffic manager profile
 azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfmess)
@@ -7010,8 +7469,6 @@ azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 210_azurerm_virtual_network_gateway
 azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-
-#----
 # 220_azurerm_virtual_network_gateway_connection
 azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 230_azurerm_express_route_circuit
@@ -7020,11 +7477,8 @@ azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 250_azurerm_express_route_circuit_peering
 azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-# ----
-
 # 260_azurerm_container_registry
 azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-
 # 270_azurerm_kubernetes_cluster
 azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 280_azurerm_recovery_services_vault
@@ -7032,19 +7486,15 @@ azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 290_azurerm_virtual_machine
 azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 295_azurerm_virtual_machine_scale_set
-
 azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 310_azurerm_automation_account
-
 azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 320_azurerm_log_analytics_workspace
 azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 330_azurerm_log_analytics_solution
 azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 340_azurerm_image
-
 azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-cde=False
 # 350_azurerm_snapshot
 azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 360_azurerm_network_watcher
@@ -7070,7 +7520,7 @@ azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 650_azurerm_monitor_autoscale_setting
 azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 
-# az2tf-runbook.py end.py gen-runbook.sh not.py run.py run.py.bak
+# az2tf-runbook.py gen-runbook.sh inline not.py run.py
 tffile="*.tf"
 fileList = glob.glob(tffile) 
 # Iterate over the list of filepaths & remove each file.

@@ -47,8 +47,8 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             ipcon=azr[i]["properties"]["ipConfigurations"]
           
             #fr.write('\t internal_dns_name_label  = "' +  ipfor + '"\n')
-            fr.write('\t enable_ip_forwarding = "' +  str(ipfor) + '"\n')
-            fr.write('\t enable_accelerated_networking  = "' +  str(netacc) + '"\n')
+            fr.write('\t enable_ip_forwarding = ' +  str(ipfor).lower() + '\n')
+            fr.write('\t enable_accelerated_networking  = ' +  str(netacc).lower() + '\n')
             #fr.write('\t dns_servers  = "' +  ipfor + '"\n')
             #privip0=azr[i]["properties"]["ipConfigurations"][0]["privateIPAddress"]
 
@@ -88,7 +88,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 #fr.write('\t\t load_balancer_backend_address_pools_ids = "' +    subipalloc + '"\n')
                 #fr.write('\t\t load_balancer_inbound_nat_rules_ids = "' +    subipalloc + '"\n')
                 #fr.write('\t\t application_security_group_ids = "' +    subipalloc + '"\n')
-                fr.write('\t\t primary = "' + str(prim) + '"\n')
+                fr.write('\t\t primary = ' + str(prim).lower() + '\n')
                 try:
                     asgs=azr[i]["properties"]["ipConfigurations"][j]["properties"]["applicationSecurityGroups"]
                     kcount=len(asgs)
@@ -106,7 +106,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')

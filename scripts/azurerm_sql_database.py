@@ -69,13 +69,13 @@ def azurerm_sql_database(crf, cde, crg, headers, requests, sub, json, az2tfmess)
                     fr.write('\t name = "' + name + '"\n')
                     fr.write('\t location = "' + loc + '"\n')
                     fr.write('\t resource_group_name = "' + rgs + '"\n')
-                    fr.write('\t server_name = "' + sname + '"\n')
+                    #fr.write('\t server_name = "' + sname + '"\n')
                     col=azr2[j]["properties"]["collation"]
                     ed=azr2[j]["properties"]["currentSku"]["tier"]
                     rso=azr2[j]["properties"]["requestedServiceObjectiveName"]
-
+                    fr.write('\t server_name = "' + sname + '"\n')
                     if ed != "System":
-                        fr.write('\t server_name = "' + sname + '"\n')
+                        
                         fr.write('\t collation= "' + col + '"\n')
                         fr.write('\t edition= "' + ed + '"\n')
                         fr.write('\t requested_service_objective_name= "' + rso + '"\n')
@@ -88,7 +88,7 @@ def azurerm_sql_database(crf, cde, crg, headers, requests, sub, json, az2tfmess)
             # tags block
                     try:
                         mtags = azr2[j]["tags"]
-                        fr.write('tags { \n')
+                        fr.write('tags = { \n')
                         for key in mtags.keys():
                             tval = mtags[key]
                             fr.write('\t "' + key + '"="' + tval + '"\n')

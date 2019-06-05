@@ -72,7 +72,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
                 pass
         
             
-            fr.write('\t enable_bgp = "' +  str(enbgp) + '"\n')
+            fr.write('\t enable_bgp = ' +  str(enbgp).lower() + '\n')
             try:
                 rw=azr[i]["properties"]["routingWeight"] 
                 if rw != 0 :
@@ -87,7 +87,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
                 pass   
 
 
-            fr.write('\t use_policy_based_traffic_selectors = "' + str(pbs) + '"\n')
+            fr.write('\t use_policy_based_traffic_selectors = ' + str(pbs).lower() + '\n')
             
             if ctype == "ExpressRoute" :
                 peerid=azr[i]["properties"]["peer"]["id"]
@@ -120,7 +120,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')

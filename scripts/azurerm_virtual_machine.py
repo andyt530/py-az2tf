@@ -3,6 +3,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_virtual_machine"
     tcode="290-"
     azr=""
+    
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
@@ -80,19 +81,24 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             # Multiples
             #
             icount=len(netifs)
+            priif=""
             if icount > 0 :
+                fr.write('\t network_interface_ids = [\n')
                 for j in range(0,icount):
                     vmnetpri=False
                     vmnetid=azr[i]["properties"]["networkProfile"]["networkInterfaces"][j]["id"].split("/")[8].replace(".","-")
                     vmnetrg=azr[i]["properties"]["networkProfile"]["networkInterfaces"][j]["id"].split("/")[4].replace(".","-").lower()
                     try:
                         vmnetpri=azr[i]["properties"]["networkProfile"]["networkInterfaces"][j]["properties"]["primary"]
+                        priif='\t primary_network_interface_id = "${azurerm_network_interface.' + vmnetrg + '__' +  vmnetid + '.id}"\n'
                     except KeyError:
                         pass
-                    fr.write('\t network_interface_ids = ["${azurerm_network_interface.' + vmnetrg + '__' + vmnetid + '.id}"]\n')
+                    fr.write('\t "${azurerm_network_interface.' + vmnetrg + '__' + vmnetid + '.id}",')
                     if vmnetpri :
-                        fr.write('\t primary_network_interface_id = "${azurerm_network_interface.' + vmnetrg + '__' +  vmnetid + '.id}"\n')     
-            
+                        priif='\t primary_network_interface_id = "${azurerm_network_interface.' + vmnetrg + '__' +  vmnetid + '.id}"\n'
+                        #print "priif="+priif    
+                fr.write('\t]\n')
+                fr.write(priif) 
             #
             fr.write('\t delete_data_disks_on_termination = "'+ 'false' + '"\n')
             fr.write('\t delete_os_disk_on_termination = "'+ 'false' + '"\n')
@@ -157,7 +163,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 vmdiags=azr[i]["properties"]["diagnosticsProfile"]
                 vmbturi=azr[i]["properties"]["diagnosticsProfile"]["bootDiagnostics"]["storageUri"]
                 fr.write('boot_diagnostics {\n')
-                fr.write('\t enabled = "' + 'true' + '"\n')
+                fr.write('\t enabled = true \n')
                 fr.write('\t storage_uri = "' +  vmbturi + '"\n')
                 fr.write('}\n')
             except KeyError:
@@ -169,8 +175,8 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     try :
                         vmwau=azr[i]["properties"]["osProfile"]["windowsConfiguration"]["enableAutomaticUpdates"]
                         fr.write('os_profile_windows_config {\n')
-                        fr.write('\t enable_automatic_upgrades = "' +  str(vmwau) + '"\n')
-                        fr.write('\t provision_vm_agent = "' +  str(vmwvma) + '"\n')
+                        fr.write('\t enable_automatic_upgrades = ' +  str(vmwau).lower() + '\n')
+                        fr.write('\t provision_vm_agent = ' +  str(vmwvma).lower() + '\n')
                         try :
                             vmwtim=azr[i]["properties"]["osProfile"]["windowsConfiguration"]["timeZone"]
                             fr.write('\t timezone =   "' + vmwtim + '"\n')
@@ -190,7 +196,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 except KeyError:
                     vmdispw="false"
             
-                fr.write('\tdisable_password_authentication = "' +  str(vmdispw) + '"\n')
+                fr.write('\tdisable_password_authentication = ' +  str(vmdispw).lower() + '\n')
                 if vmdispw :
                     try:
                         vmsshpath=azr[i]["properties"]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys"][0]["path"]
@@ -232,7 +238,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 pass
             try :
                 vmoswa=azr[i]["properties"]["storageProfile"]["osDisk"]["writeAcceleratorEnabled"]
-                fr.write('\t write_accelerator_enabled = "' +   str(vmoswa) + '"\n')
+                fr.write('\t write_accelerator_enabled = ' +   str(vmoswa).lower() + '\n')
             except KeyError:
                 pass
 
@@ -301,10 +307,21 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 except KeyError:
                     pass
         
+
+            try:
+                zones=azr[i]["zones"]
+                fr.write('zones = ')
+                fr.write(json.dumps(zones, indent=4, separators=(',', ': ')))
+                fr.write('\n')
+              
+            except KeyError:
+                pass
+
+
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     tval=tval.replace('"',"'")

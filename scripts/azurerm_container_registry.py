@@ -45,7 +45,7 @@ def azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             admin=azr[i]["properties"]["adminUserEnabled"]
             sku=azr[i]["sku"]["name"]
             
-            fr.write('\t admin_enabled = "' + str(admin) + '"\n')
+            fr.write('\t admin_enabled = ' + str(admin).lower() + '\n')
             fr.write('\t sku = "' + sku + '"\n')
         
   
@@ -53,7 +53,7 @@ def azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')

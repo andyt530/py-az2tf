@@ -33,7 +33,7 @@ def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfm
                     if rgs.lower() != crg.lower():
                         continue  # back to for
                 if cde:
-                    print(json.dumps(azr[j], indent=4, separators=(',', ': ')))
+                    print(json.dumps(peers[j], indent=4, separators=(',', ': ')))
                     
                 rname=name.replace(".","-")
                 prefix=tfp+"."+rg+'__'+rname
@@ -48,16 +48,16 @@ def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfm
 
 
                 rvnid=peers[j]["properties"]["remoteVirtualNetwork"]["id"]
-                aft=str(peers[j]["properties"]["allowForwardedTraffic"])
-                agt=str(peers[j]["properties"]["allowGatewayTransit"])
-                avna=str(peers[j]["properties"]["allowVirtualNetworkAccess"])
-                urg=str(peers[j]["properties"]["useRemoteGateways"])
+                aft=str(peers[j]["properties"]["allowForwardedTraffic"]).lower()
+                agt=str(peers[j]["properties"]["allowGatewayTransit"]).lower()
+                avna=str(peers[j]["properties"]["allowVirtualNetworkAccess"]).lower()
+                urg=str(peers[j]["properties"]["useRemoteGateways"]).lower()
 
                 fr.write('\t remote_virtual_network_id = "' +  rvnid + '"\n')
-                fr.write('\t allow_forwarded_traffic = "' +  aft + '"\n')
-                fr.write('\t allow_gateway_transit = "' +  agt + '"\n')
-                fr.write('\t allow_virtual_network_access = "' +  avna + '"\n')
-                fr.write('\t use_remote_gateways = "' +  urg + '"\n')
+                fr.write('\t allow_forwarded_traffic = ' +  aft + '\n')
+                fr.write('\t allow_gateway_transit = ' +  agt + '\n')
+                fr.write('\t allow_virtual_network_access = ' +  avna + '\n')
+                fr.write('\t use_remote_gateways = ' +  urg + '\n')
                             
                 fr.write('}\n') 
                 fr.close()   # close .tf file

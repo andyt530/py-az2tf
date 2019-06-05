@@ -1,6 +1,7 @@
 import ast
 def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  110 storage account
+    
     tfp="azurerm_storage_account"
     azr=""
     
@@ -45,18 +46,18 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             sakind=azr[i]["kind"]
             
             sartype=azr[i]["sku"]["name"].split("_")[1]
-            saencrypt=str(azr[i]["properties"]["encryption"]["services"]["blob"]["enabled"])
-            fiencrypt=str(azr[i]["properties"]["encryption"]["services"]["file"]["enabled"])
-            sahttps=str(azr[i]["properties"]["supportsHttpsTrafficOnly"])
+            saencrypt=str(azr[i]["properties"]["encryption"]["services"]["blob"]["enabled"]).lower()
+            fiencrypt=str(azr[i]["properties"]["encryption"]["services"]["file"]["enabled"]).lower()
+            sahttps=str(azr[i]["properties"]["supportsHttpsTrafficOnly"]).lower()
             #nrs=azr[i]["properties"]["networkAcls"]
             saencs=azr[i]["properties"]["encryption"]["keySource"]
             
             fr.write('\t account_tier = "' + satier + '"\n')
             fr.write('\t account_kind = "' + sakind + '"\n')
             fr.write('\t account_replication_type = "' +  sartype + '"\n')
-            fr.write('\t enable_blob_encryption = "' +  saencrypt + '"\n')
-            fr.write('\t enable_file_encryption = "' +  fiencrypt + '"\n')
-            fr.write('\t enable_https_traffic_only = "' +  sahttps + '"\n')
+            fr.write('\t enable_blob_encryption = ' +  saencrypt + '\n')
+            fr.write('\t enable_file_encryption = ' +  fiencrypt + '\n')
+            fr.write('\t enable_https_traffic_only = ' +  sahttps + '\n')
             fr.write('\t account_encryption_source = "' +  saencs + '"\n')
             
             try:        
@@ -65,6 +66,9 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 byp=byp.replace(", ",'", "')
 
                 ipr=azr[i]["properties"]["networkAcls"]["ipRules"]
+                #print(json.dumps(ipr, indent=4, separators=(',', ': ')))
+
+
                 vnr=azr[i]["properties"]["networkAcls"]["virtualNetworkRules"]
                 
                 icount=len(ipr)
@@ -76,13 +80,17 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     fr.write('\t\t bypass = ["' +  byp + '"]\n')
                     
                     if icount > 0:
+                        fr.write('\t\t ip_rules = [')
                         for ic in range(0, icount): 
                             ipa=ipr[ic]["value"]
-                            fr.write('\t\t ip_rules = ["' + ipa + '"]\n')
+                            fr.write('"' + ipa + '",')
+                        fr.write(']\n')
                     if vcount > 0:
+                        fr.write('\t\t virtual_network_subnet_ids = [')
                         for vc in range(0,vcount):
                             vnsid=vnr[vc]["id"]
-                            fr.write('\t\t virtual_network_subnet_ids = ["' + vnsid + '"]\n')
+                            fr.write('\t\t"' + vnsid + '",')
+                        fr.write(']\n')
                     fr.write('}\n')
                 # end if
 
@@ -92,7 +100,7 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')

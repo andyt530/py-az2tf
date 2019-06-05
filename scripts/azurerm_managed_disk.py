@@ -49,6 +49,7 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 
             try:
                 creopt=azr[i]["properties"]["creationData"]["createOption"]
+                if creopt == "Restore": creopt="Copy"
                 fr.write('\t create_option = "' +  creopt + '"\n')
             except KeyError:
                 pass
@@ -74,7 +75,7 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             try:
                 enc=azr[i]["properties"]["encryptionSettings"]["enabled"]
                 fr.write('\t encryption_settings { \n')
-                fr.write('\t\t enabled = "' +  str(enc) + '"\n')
+                fr.write('\t\t enabled = ' +  str(enc).lower() + '\n')
                 try:
                     kekurl=azr[i]["properties"]["encryptionSettings"]["keyEncryptionKey"]["keyUrl"]
                     kekvltid=azr[i]["properties"]["encryptionSettings"]["keyEncryptionKey"]["sourceVault"]["id"]
@@ -117,10 +118,19 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             except KeyError:
                 pass
 
+
+            try:
+                zones=azr[i]["zones"]
+                fr.write('zones = ')
+                fr.write(json.dumps(zones, indent=4, separators=(',', ': ')))
+                fr.write('\n')
+            except KeyError:
+                pass
+
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')

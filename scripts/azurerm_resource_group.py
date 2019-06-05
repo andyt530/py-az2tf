@@ -56,7 +56,7 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 mtags="{}"
             tcount=len(mtags)-1
             if tcount > 1 :
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 #print tcount
                 for key in mtags.keys():
                     tval=mtags[key]

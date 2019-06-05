@@ -75,7 +75,8 @@ def azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfm
             fr.write('\t\t port  = "' + str(port) + '"\n')
             try:
                 path=azr[i]["properties"]["monitorConfig"]["path"]
-                fr.write('\t\t path  = "' + path + '"\n')
+                if path is not None:
+                    fr.write('\t\t path  = "' + path + '"\n')
             except KeyError:
                 pass
             fr.write('\t} \n')  
@@ -85,7 +86,7 @@ def azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfm
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')

@@ -60,13 +60,13 @@ def azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmes
             fr.write('\t\t family = "' +  family + '"\n')
             fr.write('\t }\n')
 
-            fr.write('\t allow_classic_operations = "' +  str(aco) + '"\n')
+            fr.write('\t allow_classic_operations = ' +  str(aco).lower() + '\n')
 
 
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')

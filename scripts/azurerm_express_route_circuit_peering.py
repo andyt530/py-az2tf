@@ -64,7 +64,7 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
 
                 fr.write('\t peering_type = "' +  pt + '"\n')
                 fr.write('\t express_route_circuit_name = "' +  name2 + '"\n')
-                fr.write('\t resource_group_name = "' +  rg + '"\n')
+                #fr.write('\t resource_group_name = "' +  rg + '"\n')
                 fr.write('\t primary_peer_address_prefix = "' +  pap + '"\n')
                 fr.write('\t secondary_peer_address_prefix = "' +  sap + '"\n')
                 fr.write('\t vlan_id = "' +  str(vid) + '"\n')

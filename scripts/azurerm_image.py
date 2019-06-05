@@ -73,14 +73,14 @@ def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
             try:
                 zros=azr[i]["properties"]["storageProfile"]["zoneResilient"]
-                fr.write('\t zone_resilient = "'+ str(zros) + '"\n')
+                fr.write('\t zone_resilient = '+ str(zros).lower() + '\n')
             except KeyError:
                 pass
 
     # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')

@@ -90,13 +90,13 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     dl= azr2[j]["properties"]["deadLetteringOnMessageExpiration"]
                     
                     fr.write('\t namespace_name = "' +  nname + '"\n')
-                    fr.write('\t enable_partitioning =  "'+str(ep) + '"\n')
-                    fr.write('\t enable_express =  "'+str(ee) + '"\n')
-                    fr.write('\t requires_duplicate_detection ="'+  str(dd) + '"\n')
-                    fr.write('\t requires_session =  "'+str(rs) + '"\n')
+                    fr.write('\t enable_partitioning =  '+str(ep).lower() + '\n')
+                    fr.write('\t enable_express =  '+str(ee).lower() + '\n')
+                    fr.write('\t requires_duplicate_detection ='+  str(dd).lower() + '\n')
+                    fr.write('\t requires_session =  '+ str(rs).lower() + '\n')
                     # tf problem with this one. tf=1k cli=16k
                     #fr.write('\t max_size_in_megabytes =  mx + '"\n')
-                    fr.write('\t dead_lettering_on_message_expiration =  "'+str(dl) + '"\n')
+                    fr.write('\t dead_lettering_on_message_expiration = ' +str(dl).lower() + '\n')
                 
 
         # no tags block       

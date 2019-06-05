@@ -73,7 +73,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # tags block       
             try:
                 mtags=azr[j]["tags"]
-                fr.write('tags { \n')
+                fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write('\t "' + key + '"="' + tval + '"\n')
@@ -87,7 +87,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             #    mtags="{}"
             #tcount=len(mtags)-1
             #if tcount > 1 :
-            #    fr.write('tags { \n')
+            #    fr.write('tags = { \n')
             #    print tcount
             #    for key in mtags.keys():
             #        tval=mtags[key]

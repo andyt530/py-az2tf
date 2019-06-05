@@ -1,5 +1,4 @@
 *.json
-*.tf
 *.txt
 tf*.sh
 *.log
