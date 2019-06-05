@@ -3,7 +3,7 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_cosmosdb_account"
     tcode="400-"
     azr=""
-    cde=True
+    
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
