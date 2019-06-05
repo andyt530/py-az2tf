@@ -155,20 +155,22 @@ for com in `ls *$r*staterm.sh | sort -g`; do
 done
 fi
 
+echo "state cleaned"
 
 for com in `ls *$r*stateimp.sh | sort -g`; do
     comm=`printf "./%s" $com`
     echo $comm
     eval $comm
 done
+echo "imports completed"
 
-date
-
-if [ "$x" = "yes" ]; then
-    echo "Attempting to extract secrets"
-    ../../scripts/350_key_vault_secret.sh
-fi
-
+#date
+#
+#if [ "$x" = "yes" ]; then
+#    echo "Attempting to extract secrets"
+#    ../../scripts/350_key_vault_secret.sh
+#fi
+##
 
 echo "Terraform fmt ..."
 terraform fmt

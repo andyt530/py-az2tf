@@ -118,6 +118,7 @@ if crf is not None:
     # validate resource
 if deb is not None:
     cde=True
+    print("Debug=" + str(cde))
 
 if sys.version_info[0] > 2:
     #raise Exception("Must be using Python 2")
@@ -240,7 +241,7 @@ if os.path.exists("tf-stateimp.sh"):
 
 
 if crf is None: crf="azurerm"
-cde=False
+
 print pol
 #if pol is not None:
     #azurerm_policy_definition.azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess)

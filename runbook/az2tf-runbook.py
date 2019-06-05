@@ -172,9 +172,10 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             sn=scope.split("/")[sc-1].replace(" ","-").lower()
             sn=sn.replace(".","-")
 
-            #print "scope name="+sn
-
             scope=scope.encode('ascii', 'ignore')
+            sn=sn.encode('ascii', 'ignore')
+            #sn=str(sn.encode('utf-8').strip())
+            print "scope name="+sn
 
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -194,7 +195,6 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr=open(rfilename, 'w')
             fr.write('resource ' + tfp + ' "' + rg + '__' + rname + '__'+ sn +  '" {\n')
             fr.write('\t name = "' + name + '"\n')
-            #fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t lock_level = "'+ level + '"\n')   
             
             try:
@@ -1376,6 +1376,13 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t enable_https_traffic_only = ' +  sahttps + '\n')
             fr.write('\t account_encryption_source = "' +  saencs + '"\n')
             
+            try:
+                ishns=str(azr[i]["properties"]["isHnsEnabled"]).lower()
+                fr.write('\t is_hns_enabled = ' + ishns + '\n')
+            except KeyError:
+                pass   
+
+
             try:        
                 byp=str(ast.literal_eval(json.dumps(azr[i]["properties"]["networkAcls"]["bypass"])))
                 byp=byp.replace("'",'"')
@@ -1501,6 +1508,33 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
             ten=azr[i]["properties"]["tenantId"]     
             fr.write('\t tenant_id="' + ten + '"\n')
+
+
+            try:
+                #netacls=azr[i]["properties"]["networkAcls"]
+                netacldf=azr[i]["properties"]["networkAcls"]["defaultAction"]
+                netaclby=azr[i]["properties"]["networkAcls"]["bypass"]
+                netaclipr=azr[i]["properties"]["networkAcls"]["ipRules"]
+                vnr=azr[i]["properties"]["networkAcls"]["virtualNetworkRules"]
+                vcount=len(vnr)
+
+                print "************************** IN ACL"
+                fr.write('\t network_acls {\n')
+                fr.write('\t\t bypass="' + netaclby + '"\n')
+                fr.write('\t\t default_action="' + netacldf + '"\n')
+                fr.write('\t\t ip_rules=' + json.dumps(netaclipr, indent=4, separators=(',', ': ')) + '\n')
+                if vcount > 0:
+                    fr.write('\t\t virtual_network_subnet_ids = [\n')
+                    for v in range(0, vcount): 
+                        aid=vnr[v]["id"]
+                        fr.write('\t\t\t"'+aid + '",\n')
+                    fr.write('\t\t ]' + '\n')
+                    
+                fr.write('\t }' + '\n')
+            except KeyError:
+                print "************************** skipping net ACL"
+                pass
+
 
             try: 
                 endep=str(azr[i]["properties"]["enabledForDeployment"]).lower()
@@ -5694,7 +5728,7 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_cosmosdb_account"
     tcode="400-"
     azr=""
-    cde=False
+    
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
@@ -6435,6 +6469,7 @@ def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_app_service"
     tcode="610-"
     azr=""
+    
     if crf in tfp:
     # REST or cli
         # print "REST App Service"
@@ -6485,7 +6520,13 @@ def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             pnam=azr[i]["properties"]["serverFarmId"].split("/")[8]
        
             appplid=azr[i]["properties"]["serverFarmId"]
-  
+
+            try:
+                httpsonly=str(azr[i]["properties"]["httpsOnly"]).lower()
+                fr.write('\t https_only = ' +  httpsonly + '\n')
+            except KeyError:
+                pass
+
             # case issues - so use resource id directly
             # fr.write('\t app_service_plan_id = "${azurerm_app_service_plan. + '__' + .id}'"' prg pnam + '"\n')
             fr.write('\t app_service_plan_id = "' +  appplid + '"\n')

@@ -21,13 +21,13 @@ while read p; do
     echo "#" >> $outfile
     echo "# runbook auth" >> $outfile
     echo "#" >> $outfile
-    cat ../scripts/runbook_auth.py >> $outfile
+    cat inline/runbook_auth.py >> $outfile
     echo " " >> $outfile
   elif [[ $p =~ "# RUNBOOK INLINE2" ]] ; then
     echo "#" >> $outfile
     echo "# runbook get token" >> $outfile
     echo "#" >> $outfile
-    cat ../scripts/rbauth.py >> $outfile
+    cat inline/rbauth.py >> $outfile
     echo " " >> $outfile
   else 
     f1=`echo $p | cut -f1 -d'.'`
