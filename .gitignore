@@ -13,3 +13,4 @@ env.sh
 setup-vars.sh
 inorder.sh
 az2tfpy.sh
+Dockerfile
