@@ -223,17 +223,17 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
                     fr.write('\temail {\n')
 
                     
-                    fr.write('\t\tsend_to_subscription_administrator =   "' + str(nsa) + '"\n')
+                    fr.write('\t\tsend_to_subscription_administrator = ' + str(nsa).lower() + '\n')
 
                     
-                    fr.write('\t\tsend_to_subscription_co_administrator =  "' + str(nsca) + '"\n')
+                    fr.write('\t\tsend_to_subscription_co_administrator =  ' + str(nsca).lower() + '\n')
 
                     fr.write('\t\tcustom_emails =   '+nce+'\n')
                     fr.write('\t}\n')
                     nwh = str(ast.literal_eval(json.dumps(
                         azr[i]["properties"]["notifications"][k]["webhooks"])))
                     nwh = nwh.replace("'", '"')
-                    fr.write('webhook =   '+nwh + '\n')
+                    #fr.write('webhook =   '+nwh + '\n')
                     fr.write('}\n')
             
             except Exception as e: print(e)
