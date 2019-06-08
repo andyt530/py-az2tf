@@ -97,6 +97,7 @@ Compute Resources
 * azurerm_image
 * azurerm_managed_disk  (Common)
 * azurerm_virtual_machine  (Common)
+* azurerm_virtual_machine_extension 
 * azurerm_virtual_machine_scale_sets  (Common)
 
 Container Resources
