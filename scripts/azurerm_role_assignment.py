@@ -1,13 +1,13 @@
 
 def azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
-   
+    cde=True
     tfp="azurerm_role_assignment"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/disks"
-        params = {'api-version': '2017-03-30'}
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Authorization/roleAssignments"
+        params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
 
@@ -22,9 +22,9 @@ def azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         for i in range(0, count):
 
             name=azr[i]["name"]
-            loc=azr[i]["location"]
+            #loc=azr[i]["location"]
             id=azr[i]["id"]
-            rg=id.split("/")[4].replace(".","-").lower()
+            rg="roleassignments"
             rgs=id.split("/")[4]
             if crg is not None:
                 if rg.lower() != crg.lower():
@@ -40,18 +40,18 @@ def azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write(az2tfmess)
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
-            fr.write('\t location = "'+ loc + '"\n')
+            #fr.write('\t location = "'+ loc + '"\n')
             fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
 
             name=azr[i]["name"]
         
-            scope=azr[i]["scope"]
+            scope=azr[i]["properties"]["scope"]
             rdid=azr[i]["name"]
-            prid=azr[i]["principalId"]
-            roledefid=azr[i]["roleDefinitionId"].slpit("/")[6]
+            prid=azr[i]["properties"]["principalId"]
+            roledefid=azr[i]["properties"]["roleDefinitionId"].split("/")[6]
             id=azr[i]["id"]
-            rg="roleAssignments"
+          
 
             fr.write('role_definition_id = "${azurerm_role_definition.' + "roleDefinitions" + '__' + roledefid + '.id}"' + '\n')
             

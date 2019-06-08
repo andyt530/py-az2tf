@@ -1,7 +1,7 @@
 import ast
 def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):  
     tfp="azurerm_policy_definition"
-    cde=True
+    
     azr=""
     if crf in tfp:
     # REST or cli
@@ -24,9 +24,9 @@ def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             name=azr[i]["name"]
             #loc=azr[i]["location"]
             id=azr[i]["id"]
-            rg=id.split("/")[4].replace(".","-").lower()
+            rg="policydefinitions"
             rgs=id.split("/")[4]
-            rg="policyDefinitions"
+          
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
@@ -81,10 +81,9 @@ def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write(') \n') 
                 
                 try:
-                    params=str(ast.literal_eval(json.dumps(azr[i]["properties"]["parameters"])))
-                    params=params.replace("'",'"') 
+                    params=azr[i]["properties"]["parameters"]          
                     pl= len(params)
-                    if pl > 2 :
+                    if pl > 0 :
                         fr.write('parameters = jsonencode( \n') 
                         fr.write(json.dumps(azr[i]["properties"]["parameters"])) 
                         fr.write(') \n') 

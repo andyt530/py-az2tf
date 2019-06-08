@@ -1,7 +1,7 @@
-
+import ast
 def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_role_definition"
-    
+    cde=True
     azr=""
     if crf in tfp:
     # REST or cli
@@ -25,7 +25,7 @@ def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             name=azr[i]["name"]
             #loc=azr[i]["location"]
             id=azr[i]["id"]
-            rg=id.split("/")[4].replace(".","-").lower()
+            rg="roledefinitions"
             rgs=id.split("/")[4]
             if crg is not None:
                 if rg.lower() != crg.lower():
@@ -42,43 +42,55 @@ def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
             #fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rgs + '"\n')
+            #fr.write('\t resource_group_name = "'+ rgs + '"\n')
             
-            name=azr[i]["roleName"]
+            name=azr[i]["properties"]["roleName"]
     
             rdid=azr[i]["name"]
-            desc=azr[i]["description"]
+            desc=azr[i]["properties"]["description"]
+            desc=desc.encode('ascii', 'ignore')
             id=azr[i]["id"]
-            rg="roleDefinitions"
+            
 
-            scopes=azr[i]["assignableScopes"]
-            dactions=azr[i]["permissions"][0]["dataActions"]
-            ndactions=azr[i]["permissions"][0]["notDataActions"]
-            actions=azr[i]["permissions"][0]["actions"]
-            nactions=azr[i]["permissions"][0]["notActions"]
+            scopes=azr[i]["properties"]["assignableScopes"]
+            scopes=str(ast.literal_eval(json.dumps(azr[i]["properties"]["assignableScopes"])))
+            scopes=scopes.replace("'",'"')
+            dactions=azr[i]["properties"]["permissions"][0]["dataActions"]
+            ndactions=azr[i]["properties"]["permissions"][0]["notDataActions"]
+            actions=azr[i]["properties"]["permissions"][0]["actions"]
+            nactions=azr[i]["properties"]["permissions"][0]["notActions"]
 
             fr.write('role_definition_id = "' + rdid +  '"\n')
             fr.write('description =  "' +desc + '"\n')
     #        fr.write('scope = "'\{'data.azurerm_subscription.primary.id}'"'  '"\n')
     #        fr.write('scope = "'/subscriptions/"' rgsource '"\n')
-            fr.write('scope = "' +   '"\n')
+            fr.write('assignable_scopes = ' + scopes + '\n')
+            fr.write('scope = ""\n')
             #
-            fr.write('permissions {\n')        
-            fr.write('data_actions = \n')
-            fr.write(dactions +'\n')
-            fr.write('not_data_actions = \n')
-            fr.write(ndactions + '\n')
-            fr.write('actions =  \n')
-            fr.write(actions + '\n')
-            fr.write('not_actions = \n')
-            fr.write(nactions + '\n')
-            fr.write('}\n')
             
-            fr.write('assignable_scopes = \n')
-            fr.write(scopes  + '\n')
+            
+            fr.write('permissions {\n')        
+            """
+            fr.write('data_actions = \n')
+            fr.write(json.dumps(dactions))  
+            
+            fr.write('\nnot_data_actions = \n')
+            fr.write(json.dumps(ndactions)) 
         
-
-            fr.write('}\n') 
+            fr.write('\nactions =  \n')
+            fr.write(json.dumps(actions)) 
+        
+            fr.write('\nnot_actions = \n')
+            fr.write(json.dumps(nactions)) 
+            """
+            fr.write('\n}\n')
+            """
+            fr.write('assignable_scopes = \n')
+            fr.write(json.dumps(scopes)) 
+        
+            """
+            
+            fr.write('\n}\n') 
             fr.close()   # close .tf file
 
             if cde:

@@ -25,6 +25,7 @@ def azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             name=azr[i]["name"]
             #loc=azr[i]["location"]
             id=azr[i]["id"]
+            rg="policyassignments"
             rg=id.split("/")[4].replace(".","-").lower()
             rgs=id.split("/")[4]
             if crg is not None:
@@ -41,37 +42,46 @@ def azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write(az2tfmess)
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
-            #fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rgs + '"\n')
+            try:
+                loc=azr[i]["location"]
+                fr.write('\t location = "'+ loc + '"\n')
+            except KeyError:
+                pass
+            #fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
     ###############
     # specific code
            
             dname=azr[i]["properties"]["displayName"]
             rdid=azr[i]["name"]
-            desc=azr[i]"properties"]["description"]
-            scope=azr[i]"properties"]["scope"]
-            pdid=azr[i]"properties"]["policyDefinitionId"]
+            desc=azr[i]["properties"]["description"]
+            scope=azr[i]["properties"]["scope"]
+            pdid=azr[i]["properties"]["policyDefinitionId"]
             id=azr[i]["id"]
-            rg="policyAssignments"
+
             
-            params=azr[i]"properties"]["parameters"]
+
                 
             fr.write('display_name = "' + dname +'"\n') 
             fr.write('policy_definition_id = "' + pdid +'"\n') 
             fr.write('scope = "' +  scope +'"\n') 
             try :
-                desc=azr[i]"properties"]["description"]
+                desc=azr[i]["properties"]["description"]
                 fr.write('description =  "'+desc +'"\n') 
             except KeyError:
                 pass
-
-            pl=len(params)
-            if pl > 0 :
-                fr.write('parameters =<<PARAMETERS \n') 
-                fr.write('"'+params +'"\n')
-                fr.write('PARAMETERS\n') 
-  
+            
+            try:
+                params=azr[i]["properties"]["parameters"]
+                pl=len(params)
+                print pl
+                print(json.dumps(azr[i]["properties"]["parameters"]))
+                if pl > 0 :
+                    fr.write('parameters = jsonencode( \n') 
+                    fr.write(json.dumps(azr[i]["properties"]["parameters"]))
+                    fr.write(')\n') 
+            except KeyError:
+                pass
 
             fr.write('}\n') 
             fr.close()   # close .tf file

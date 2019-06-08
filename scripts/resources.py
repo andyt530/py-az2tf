@@ -77,9 +77,9 @@ import azurerm_function_app
 import azurerm_monitor_autoscale_setting
 
 import azurerm_policy_definition
-#import azurerm_policy_assignment
-#import azurerm_role_definition
-#import azurerm_role_assignment
+import azurerm_policy_assignment
+import azurerm_role_definition
+import azurerm_role_assignment
 # RUNBOOK OFF
 os.chdir(scwd)
 #print os.getcwd()
@@ -246,10 +246,10 @@ print pol
 if pol is not None:
     print "Pol defn"
     azurerm_policy_definition.azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-    #azurerm_policy_assignment.azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-    #azurerm_role_definition.azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-    #azurerm_role_assignment.azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-    #exit()
+    azurerm_policy_assignment.azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+    azurerm_role_definition.azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+    azurerm_role_assignment.azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+
 
 
 # RUNBOOK ON
