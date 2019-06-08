@@ -3,10 +3,10 @@ def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2t
     tfp="azurerm_virtual_machine_extension"
     tcode="291-"
     azr=""
-    cde=True
+    
     if crf in tfp:
     # REST or cli
-        # print "REST Managed Disk"
+        # print "REST"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/virtualMachines"
         params = {'api-version': '2019-03-01'}
         r = requests.get(url, headers=headers, params=params)
@@ -83,7 +83,7 @@ def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2t
 
     # tags block       
                     try:
-                        mtags=azr[i]["tags"]
+                        mtags=azr2[j]["tags"]
                         fr.write('tags = { \n')
                         for key in mtags.keys():
                             tval=mtags[key]
