@@ -76,7 +76,7 @@ import azurerm_app_service
 import azurerm_function_app
 import azurerm_monitor_autoscale_setting
 
-#import azurerm_policy_definition
+import azurerm_policy_definition
 #import azurerm_policy_assignment
 #import azurerm_role_definition
 #import azurerm_role_assignment
@@ -243,8 +243,9 @@ if os.path.exists("tf-stateimp.sh"):
 if crf is None: crf="azurerm"
 
 print pol
-#if pol is not None:
-    #azurerm_policy_definition.azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+if pol is not None:
+    print "Pol defn"
+    azurerm_policy_definition.azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess)
     #azurerm_policy_assignment.azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess)
     #azurerm_role_definition.azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess)
     #azurerm_role_assignment.azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess)

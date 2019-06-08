@@ -1,10 +1,11 @@
 import ast
 def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):  
     tfp="azurerm_policy_definition"
+    cde=True
     azr=""
     if crf in tfp:
     # REST or cli
-        # print "REST Managed Disk"
+        print "REST Pol Defn"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Authorization/policyDefinitions"
         params = {'api-version': '2019-01-01'}
         r = requests.get(url, headers=headers, params=params)
@@ -45,7 +46,7 @@ def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
                 fr.write('\t name = "' + name + '"\n')
                 #fr.write('\t location = "'+ loc + '"\n')
-                fr.write('\t resource_group_name = "'+ rgs + '"\n')
+                #fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
                 rdid=azr[i]["name"]            
                 mode=azr[i]["properties"]["mode"]
@@ -70,32 +71,25 @@ def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
      
                 print(json.dumps(azr[i]["properties"]["metadata"], indent=4, separators=(',', ': ')))
                 
-                #meta=str(json.dumps(azr[i]["properties"]["metadata"]) 
-                #print "meta="+meta 
-                #meta=meta.replace("'",'"')    
-                fr.write('metadata =<<META \n') 
-                #fr.write('"' + meta +'"\n') 
-                fr.write(json.dumps(azr[i]["properties"]["metadata"])
-                fr.write('META \n') 
-
+                fr.write('metadata = jsonencode(\n') 
+                fr.write(json.dumps(azr[i]["properties"]["metadata"]))
+                fr.write(') \n') 
 
                 prules=str(ast.literal_eval(json.dumps(azr[i]["properties"]["policyRule"])))
-                prules=prules.replace("'",'"') 
-                fr.write('policy_rule =<<POLICY_RULE \n')  
-                fr.write('"'+ prules +'"\n') 
-                fr.write('POLICY_RULE \n') 
+                fr.write('policy_rule = jsonencode( \n')
+                fr.write(json.dumps(azr[i]["properties"]["policyRule"]))  
+                fr.write(') \n') 
                 
                 try:
                     params=str(ast.literal_eval(json.dumps(azr[i]["properties"]["parameters"])))
                     params=params.replace("'",'"') 
                     pl= len(params)
-                    if pl > 0 :
-                        fr.write('parameters =<<PARAMETERS \n') 
-                        fr.write('"'+params +'"\n') 
-                        fr.write('PARAMETERS \n') 
+                    if pl > 2 :
+                        fr.write('parameters = jsonencode( \n') 
+                        fr.write(json.dumps(azr[i]["properties"]["parameters"])) 
+                        fr.write(') \n') 
                 except KeyError:
                     pass
-
 
                 fr.write('}\n') 
                 fr.close()   # close .tf file

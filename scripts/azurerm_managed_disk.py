@@ -49,7 +49,6 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 
             try:
                 creopt=azr[i]["properties"]["creationData"]["createOption"]
-                if creopt == "Restore": creopt="Copy"
                 fr.write('\t create_option = "' +  creopt + '"\n')
             except KeyError:
                 pass
