@@ -1,6 +1,6 @@
 
 def azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
-    cde=True
+    
     tfp="azurerm_role_assignment"
     azr=""
     if crf in tfp:

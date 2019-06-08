@@ -201,10 +201,11 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     try:
                         vmsshpath=azr[i]["properties"]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys"][0]["path"]
                         vmsshkey=azr[i]["properties"]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys"][0]["keyData"]
+                        t1=str(vmsshkey).rstrip()
                         fr.write('\tssh_keys {\n')
                         fr.write('\t\tpath = "' +   vmsshpath + '"\n')
                         if "----"  not in vmsshkey:
-                            fr.write('\t\tkey_data = "' +   vmsshkey + '"\n') 
+                            fr.write('\t\tkey_data = "' + t1 + '"\n') 
                         else:
                              fr.write('\t\tkey_data = "' + '"\n')
                         fr.write('\t}\n')
