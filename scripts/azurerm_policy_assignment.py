@@ -54,7 +54,7 @@ def azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
            
             dname=azr[i]["properties"]["displayName"]
             rdid=azr[i]["name"]
-            desc=azr[i]["properties"]["description"]
+           
             scope=azr[i]["properties"]["scope"]
             pdid=azr[i]["properties"]["policyDefinitionId"]
             id=azr[i]["id"]
