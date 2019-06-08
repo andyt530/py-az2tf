@@ -122,6 +122,9 @@ Load Balancer Resources
 * azurerm_lb_probe (full)
 * azure_nat_pool (full - needs more testing)
 
+Logic App Resources
+* azurerm_logic_app_workflow
+
 Management Resources
 * azurerm_management_lock  (full)
 
