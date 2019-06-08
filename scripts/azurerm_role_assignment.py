@@ -12,8 +12,8 @@ def azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         azr= r.json()["value"]
 
 
-        tfrmf="100-"+tfp+"-staterm.sh"
-        tfimf="100-"+tfp+"-stateimp.sh"
+        tfrmf="007-"+tfp+"-staterm.sh"
+        tfimf="007-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
         print "# " + tfp,
@@ -41,8 +41,7 @@ def azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
             #fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rgs + '"\n')
-
+            #fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
             name=azr[i]["name"]
         
@@ -53,12 +52,12 @@ def azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             id=azr[i]["id"]
           
 
-            fr.write('role_definition_id = "${azurerm_role_definition.' + "roleDefinitions" + '__' + roledefid + '.id}"' + '\n')
+            fr.write('role_definition_id = "${azurerm_role_definition.' + "roledefinitions" + '__' + roledefid + '.id}"' + '\n')
             
             fr.write('principal_id ="' +prid +'"\n') 
             fr.write('scope = "' + scope  +'"\n') 
     
-            fr.write('}\n')
+            #fr.write('}\n')
 
        
             try:

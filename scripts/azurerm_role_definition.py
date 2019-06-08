@@ -1,7 +1,7 @@
 import ast
 def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_role_definition"
-    cde=True
+    
     azr=""
     if crf in tfp:
     # REST or cli
@@ -13,8 +13,8 @@ def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         azr= r.json()["value"]
 
 
-        tfrmf="100-"+tfp+"-staterm.sh"
-        tfimf="100-"+tfp+"-stateimp.sh"
+        tfrmf="006-"+tfp+"-staterm.sh"
+        tfimf="006-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
         print "# " + tfp,
@@ -70,19 +70,19 @@ def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             
             
             fr.write('permissions {\n')        
-            """
-            fr.write('data_actions = \n')
+            print(json.dumps(dactions)) 
+            fr.write('data_actions = ')
             fr.write(json.dumps(dactions))  
             
-            fr.write('\nnot_data_actions = \n')
+            fr.write('\nnot_data_actions = ')
             fr.write(json.dumps(ndactions)) 
         
-            fr.write('\nactions =  \n')
+            fr.write('\nactions = ')
             fr.write(json.dumps(actions)) 
         
-            fr.write('\nnot_actions = \n')
+            fr.write('\nnot_actions = ')
             fr.write(json.dumps(nactions)) 
-            """
+            
             fr.write('\n}\n')
             """
             fr.write('assignable_scopes = \n')

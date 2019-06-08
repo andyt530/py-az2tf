@@ -13,8 +13,8 @@ def azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         azr= r.json()["value"]
 
 
-        tfrmf="100-"+tfp+"-staterm.sh"
-        tfimf="100-"+tfp+"-stateimp.sh"
+        tfrmf="005-"+tfp+"-staterm.sh"
+        tfimf="005-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
         print "# " + tfp,
