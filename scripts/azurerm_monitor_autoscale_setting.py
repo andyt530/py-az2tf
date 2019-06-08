@@ -5,7 +5,7 @@ import ast
 def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, json, az2tfmess):
     tfp = "azurerm_monitor_autoscale_setting"
     tcode = "650-"
-    cde = True
+    
     azr = ""
     if crf in tfp:
         # REST or cli
