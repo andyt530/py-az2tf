@@ -242,9 +242,9 @@ if os.path.exists("tf-stateimp.sh"):
 
 if crf is None: crf="azurerm"
 
-print pol
+
 if pol is not None:
-    print "Pol defn"
+ 
     azurerm_policy_definition.azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess)
     azurerm_policy_assignment.azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess)
     azurerm_role_definition.azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess)

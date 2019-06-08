@@ -60,7 +60,7 @@ def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             actions=azr[i]["properties"]["permissions"][0]["actions"]
             nactions=azr[i]["properties"]["permissions"][0]["notActions"]
 
-            fr.write('role_definition_id = "' + rdid +  '"\n')
+            #fr.write('role_definition_id = "' + rdid +  '"\n')
             fr.write('description =  "' +desc + '"\n')
     #        fr.write('scope = "'\{'data.azurerm_subscription.primary.id}'"'  '"\n')
     #        fr.write('scope = "'/subscriptions/"' rgsource '"\n')
