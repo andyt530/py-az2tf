@@ -6,7 +6,8 @@ p="no"
 f="no"  # f fast forward switch
 p="no"
 d="no"
-while getopts ":s:g:r:x:p:f:d:" o; do
+v="no"
+while getopts ":s:g:r:x:p:f:d:v:" o; do
     case "${o}" in
         s)
             s=${OPTARG}
@@ -29,6 +30,9 @@ while getopts ":s:g:r:x:p:f:d:" o; do
         d)
             d="yes"
         ;;   
+        v)
+            v="yes"
+        ;; 
         *)
             usage
         ;;
@@ -61,6 +65,7 @@ echo "Terraform Resource Type Filter = ${r}"
 echo "Get Subscription Policies & RBAC = ${p}"
 echo "Extract Key Vault Secrets to .tf files (insecure) = ${x}"
 echo "Fast Forward = ${f}"
+echo "Validate Only = ${v}"
 echo "Debug = ${f}"
 echo " "
 
@@ -144,7 +149,9 @@ if [ $? -eq 1 ]; then
     exit
 fi
 
-
+if [ "$v" = "yes" ]; then
+    exit
+fi
 chmod 755 *state*.sh
 
 if [ "$f" = "yes" ]; then

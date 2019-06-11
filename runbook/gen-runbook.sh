@@ -38,7 +38,7 @@ while read p; do
         echo $p >> $outfile
     fi
   fi
-done <../scripts/resources.py
+done <../scripts/az2tf.py
 
 sed -i .bak -e 's/cde=True/cde=False/g' run.py
 

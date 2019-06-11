@@ -27,85 +27,88 @@ def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2t
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
             rgs=id.split("/")[4]
-            res=azr[i]["resources"]
-            rname=name.replace(".","-")
-            if crg is not None:
-                if rgs.lower() != crg.lower():
-                    continue  # back to for        
-            #
-            icount=len(res)
+            try:
+                res=azr[i]["resources"]
+                rname=name.replace(".","-")
+                if crg is not None:
+                    if rgs.lower() != crg.lower():
+                        continue  # back to for        
+                #
+                icount=len(res)
 
-        
-            if icount > 0 :
-                
-                for j in range(0,icount):
-               
-                    url="https://management.azure.com/subscriptions/" + sub + "/resourceGroups/" + rg + "/providers/Microsoft.Compute/virtualMachines/"+name+"/extensions"
-                  
-                    params = {'api-version': '2019-03-01'}
-                    r2 = requests.get(url, headers=headers, params=params)
-                    azr2= r2.json()["value"]
-                    if cde:
-                        print(json.dumps(azr2[j], indent=4, separators=(',', ': ')))
-                    ename=azr2[j]["name"]
-                    ername=ename.replace(".","-")
-                    id=azr2[j]["id"]
-                    prefix=tfp+"."+rg+'__'+ rname +'__'+ ername
-                    #print prefix
-                    rfilename=prefix+".tf"
-                    fr=open(rfilename, 'w')
-                    fr.write(az2tfmess)
-                    ename=azr2[j]["name"]
-                    thv=azr2[j]["properties"]["typeHandlerVersion"]
-                    pub=azr2[j]["properties"]["publisher"]
-                    typ=azr2[j]["properties"]["type"]
-                    auv=azr2[j]["properties"]["autoUpgradeMinorVersion"]
-
-
-                    fr.write('resource ' + tfp + ' ' + rg + '__' + rname + '__'+ername +'{\n')
-                    fr.write('\t name = "' + ename + '"\n')
-                    fr.write('\t location = "'+ loc + '"\n')
-                    fr.write('\t resource_group_name = "'+ rg + '"\n')
-                    fr.write('\t publisher = "'+ pub + '"\n')
-                    fr.write('\t type_handler_version = "'+ thv + '"\n')
-                    fr.write('\t virtual_machine_name = "'+ name + '"\n')
-                    fr.write('\t type = "'+ typ + '"\n')
-                    fr.write('\t auto_upgrade_minor_version = '+ str(auv).lower() + '\n')
-
-
-                    try:
-                        set=typ=azr2[j]["properties"]["settings"]
-                        fr.write('settings = jsonencode( \n') 
-                        fr.write(json.dumps(azr2[j]["properties"]["settings"]))
-                        fr.write(')\n') 
-                    except KeyError:
-                        pass
-
-    # tags block       
-                    try:
-                        mtags=azr2[j]["tags"]
-                        fr.write('tags = { \n')
-                        for key in mtags.keys():
-                            tval=mtags[key]
-                            tval=tval.replace('"',"'")
-                            fr.write('\t "' + key + '"="' + tval + '"\n')
-                        fr.write('}\n')
-                    except KeyError:
-                        pass
-
-                    fr.write('}\n') 
-                    fr.close()   # close .tf file
-
-                    if cde:
-                        with open(rfilename) as f: 
-                            print f.read()
-
-                    tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname +'__'+ername + '\n')
-
-                    tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+            
+                if icount > 0 :
                     
-                    tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+'__'+ername+' '+id+'\n'
-                    tfim.write(tfcomm)  
+                    for j in range(0,icount):
+                
+                        url="https://management.azure.com/subscriptions/" + sub + "/resourceGroups/" + rg + "/providers/Microsoft.Compute/virtualMachines/"+name+"/extensions"
+                    
+                        params = {'api-version': '2019-03-01'}
+                        r2 = requests.get(url, headers=headers, params=params)
+                        azr2= r2.json()["value"]
+                        if cde:
+                            print(json.dumps(azr2[j], indent=4, separators=(',', ': ')))
+                        ename=azr2[j]["name"]
+                        ername=ename.replace(".","-")
+                        id=azr2[j]["id"]
+                        prefix=tfp+"."+rg+'__'+ rname +'__'+ ername
+                        #print prefix
+                        rfilename=prefix+".tf"
+                        fr=open(rfilename, 'w')
+                        fr.write(az2tfmess)
+                        ename=azr2[j]["name"]
+                        thv=azr2[j]["properties"]["typeHandlerVersion"]
+                        pub=azr2[j]["properties"]["publisher"]
+                        typ=azr2[j]["properties"]["type"]
+                        auv=azr2[j]["properties"]["autoUpgradeMinorVersion"]
+
+
+                        fr.write('resource ' + tfp + ' ' + rg + '__' + rname + '__'+ername +'{\n')
+                        fr.write('\t name = "' + ename + '"\n')
+                        fr.write('\t location = "'+ loc + '"\n')
+                        fr.write('\t resource_group_name = "'+ rg + '"\n')
+                        fr.write('\t publisher = "'+ pub + '"\n')
+                        fr.write('\t type_handler_version = "'+ thv + '"\n')
+                        fr.write('\t virtual_machine_name = "'+ name + '"\n')
+                        fr.write('\t type = "'+ typ + '"\n')
+                        fr.write('\t auto_upgrade_minor_version = '+ str(auv).lower() + '\n')
+
+
+                        try:
+                            set=typ=azr2[j]["properties"]["settings"]
+                            fr.write('settings = jsonencode( \n') 
+                            fr.write(json.dumps(azr2[j]["properties"]["settings"]))
+                            fr.write(')\n') 
+                        except KeyError:
+                            pass
+
+        # tags block       
+                        try:
+                            mtags=azr2[j]["tags"]
+                            fr.write('tags = { \n')
+                            for key in mtags.keys():
+                                tval=mtags[key]
+                                tval=tval.replace('"',"'")
+                                fr.write('\t "' + key + '"="' + tval + '"\n')
+                            fr.write('}\n')
+                        except KeyError:
+                            pass
+
+                        fr.write('}\n') 
+                        fr.close()   # close .tf file
+
+                        if cde:
+                            with open(rfilename) as f: 
+                                print f.read()
+
+                        tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname +'__'+ername + '\n')
+
+                        tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+                        
+                        tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+'__'+ername+' '+id+'\n'
+                        tfim.write(tfcomm)  
+            except KeyError:
+                pass
 
         # end for i loop
 

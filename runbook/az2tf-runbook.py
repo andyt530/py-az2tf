@@ -1204,7 +1204,6 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 
             try:
                 creopt=azr[i]["properties"]["creationData"]["createOption"]
-                if creopt == "Restore": creopt="Copy"
                 fr.write('\t create_option = "' +  creopt + '"\n')
             except KeyError:
                 pass
@@ -4563,10 +4562,11 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     try:
                         vmsshpath=azr[i]["properties"]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys"][0]["path"]
                         vmsshkey=azr[i]["properties"]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys"][0]["keyData"]
+                        t1=str(vmsshkey).rstrip()
                         fr.write('\tssh_keys {\n')
                         fr.write('\t\tpath = "' +   vmsshpath + '"\n')
                         if "----"  not in vmsshkey:
-                            fr.write('\t\tkey_data = "' +   vmsshkey + '"\n') 
+                            fr.write('\t\tkey_data = "' + t1 + '"\n') 
                         else:
                              fr.write('\t\tkey_data = "' + '"\n')
                         fr.write('\t}\n')
@@ -4704,6 +4704,127 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
             tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
             tfim.write(tfcomm)  
+
+        # end for i loop
+
+        tfrm.close()
+        tfim.close()
+    #end stub
+ 
+#
+# azurerm_virtual_machine_extension
+#
+# azurerm_virtual_machine
+def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+    tfp="azurerm_virtual_machine_extension"
+    tcode="291-"
+    azr=""
+    
+    if crf in tfp:
+    # REST or cli
+        # print "REST"
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/virtualMachines"
+        params = {'api-version': '2019-03-01'}
+        r = requests.get(url, headers=headers, params=params)
+        azr= r.json()["value"]
+
+
+        tfrmf=tcode+tfp+"-staterm.sh"
+        tfimf=tcode+tfp+"-stateimp.sh"
+        tfrm=open(tfrmf, 'a')
+        tfim=open(tfimf, 'a')
+        print "# " + tfp,
+        count=len(azr)
+        print count
+        for i in range(0, count):
+
+            name=azr[i]["name"]
+            loc=azr[i]["location"]
+            id=azr[i]["id"]
+            rg=id.split("/")[4].replace(".","-").lower()
+            rgs=id.split("/")[4]
+            try:
+                res=azr[i]["resources"]
+                rname=name.replace(".","-")
+                if crg is not None:
+                    if rgs.lower() != crg.lower():
+                        continue  # back to for        
+                #
+                icount=len(res)
+
+            
+                if icount > 0 :
+                    
+                    for j in range(0,icount):
+                
+                        url="https://management.azure.com/subscriptions/" + sub + "/resourceGroups/" + rg + "/providers/Microsoft.Compute/virtualMachines/"+name+"/extensions"
+                    
+                        params = {'api-version': '2019-03-01'}
+                        r2 = requests.get(url, headers=headers, params=params)
+                        azr2= r2.json()["value"]
+                        if cde:
+                            print(json.dumps(azr2[j], indent=4, separators=(',', ': ')))
+                        ename=azr2[j]["name"]
+                        ername=ename.replace(".","-")
+                        id=azr2[j]["id"]
+                        prefix=tfp+"."+rg+'__'+ rname +'__'+ ername
+                        #print prefix
+                        rfilename=prefix+".tf"
+                        fr=open(rfilename, 'w')
+                        fr.write(az2tfmess)
+                        ename=azr2[j]["name"]
+                        thv=azr2[j]["properties"]["typeHandlerVersion"]
+                        pub=azr2[j]["properties"]["publisher"]
+                        typ=azr2[j]["properties"]["type"]
+                        auv=azr2[j]["properties"]["autoUpgradeMinorVersion"]
+
+
+                        fr.write('resource ' + tfp + ' ' + rg + '__' + rname + '__'+ername +'{\n')
+                        fr.write('\t name = "' + ename + '"\n')
+                        fr.write('\t location = "'+ loc + '"\n')
+                        fr.write('\t resource_group_name = "'+ rg + '"\n')
+                        fr.write('\t publisher = "'+ pub + '"\n')
+                        fr.write('\t type_handler_version = "'+ thv + '"\n')
+                        fr.write('\t virtual_machine_name = "'+ name + '"\n')
+                        fr.write('\t type = "'+ typ + '"\n')
+                        fr.write('\t auto_upgrade_minor_version = '+ str(auv).lower() + '\n')
+
+
+                        try:
+                            set=typ=azr2[j]["properties"]["settings"]
+                            fr.write('settings = jsonencode( \n') 
+                            fr.write(json.dumps(azr2[j]["properties"]["settings"]))
+                            fr.write(')\n') 
+                        except KeyError:
+                            pass
+
+        # tags block       
+                        try:
+                            mtags=azr2[j]["tags"]
+                            fr.write('tags = { \n')
+                            for key in mtags.keys():
+                                tval=mtags[key]
+                                tval=tval.replace('"',"'")
+                                fr.write('\t "' + key + '"="' + tval + '"\n')
+                            fr.write('}\n')
+                        except KeyError:
+                            pass
+
+                        fr.write('}\n') 
+                        fr.close()   # close .tf file
+
+                        if cde:
+                            with open(rfilename) as f: 
+                                print f.read()
+
+                        tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname +'__'+ername + '\n')
+
+                        tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+                        
+                        tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+'__'+ername+' '+id+'\n'
+                        tfim.write(tfcomm)  
+            except KeyError:
+                pass
 
         # end for i loop
 
@@ -5132,6 +5253,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
         tfrm.close()
         tfim.close()
     # end stub
+
  
 #
 # azurerm_automation_account
@@ -6754,6 +6876,183 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #end stub
  
 #
+# azurerm_logic_app_workflow
+#
+# azurerm_dns_zone
+def azurerm_logic_app_workflow(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+    tfp="azurerm_logic_app_workflow"
+    tcode="630-"
+    azr=""
+    #cde=False
+    
+    if crf in tfp:
+    # REST or cli
+        # print "REST Managed Disk"
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Logic/workflows"
+        #params = {'api-version': '2016-04-01'}
+        params = {'api-version': '2016-06-01'}       
+        r = requests.get(url, headers=headers, params=params)
+        azr= r.json()["value"]
+
+
+        tfrmf=tcode+tfp+"-staterm.sh"
+        tfimf=tcode+tfp+"-stateimp.sh"
+        tfrm=open(tfrmf, 'a')
+        tfim=open(tfimf, 'a')
+        print "# " + tfp,
+        count=len(azr)
+        print count
+        for i in range(0, count):
+
+            name=azr[i]["name"]
+            loc=azr[i]["location"]
+            id=azr[i]["id"]
+            rg=id.split("/")[4].replace(".","-").lower()
+            rgs=id.split("/")[4]
+
+            if crg is not None:
+                if rgs.lower() != crg.lower():
+                    continue  # back to for
+            if cde:
+                print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
+            
+            rname=name.replace(".","-")
+            prefix=tfp+"."+rg+'__'+rname
+            #print prefix
+            rfilename=prefix+".tf"
+            fr=open(rfilename, 'w')
+            fr.write(az2tfmess)
+            fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+            fr.write('\t name = "' + name + '"\n')
+            fr.write('\t location = "'+ loc + '"\n')
+            fr.write('\t resource_group_name = "'+ rgs + '"\n')
+
+    ###############
+    # specific code start
+    ###############
+            try:
+                params=azr[i]["properties"]["definition"]["parameters"]
+                print params
+                lp=len(params)
+                if lp > 0:
+                    fr.write('parameters = { \n') 
+                    fr.write('"$connections" = "" \n') 
+                    #fr.write(json.dumps(params))
+                    fr.write('}\n')
+            except KeyError:
+                pass      
+
+    
+
+            fr.write('}\n') 
+            fr.close()   # close .tf file
+
+            if cde:
+                with open(rfilename) as f: 
+                    print f.read()
+
+            tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+
+            tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+            tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+            tfim.write(tfcomm)  
+
+        # end for i loop
+
+        tfrm.close()
+        tfim.close()
+    #end stub
+ 
+#
+# azurerm_logic_app_trigger_http_request
+#
+# azurerm_dns_zone
+def azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+    tfp="azurerm_logic_app_trigger_http_request"
+    tcode="631-"
+    azr=""
+    #cde=False
+    
+    if crf in tfp:
+    # REST or cli
+        # print "REST Managed Disk"
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Logic/workflows"
+        #params = {'api-version': '2016-04-01'}
+        params = {'api-version': '2016-06-01'}       
+        r = requests.get(url, headers=headers, params=params)
+        azr= r.json()["value"]
+
+
+        tfrmf=tcode+tfp+"-staterm.sh"
+        tfimf=tcode+tfp+"-stateimp.sh"
+        tfrm=open(tfrmf, 'a')
+        tfim=open(tfimf, 'a')
+        print "# " + tfp,
+        count=len(azr)
+        print count
+        for i in range(0, count):
+
+            ttype=azr[i]["properties"]["definition"]["triggers"]["manual"]["kind"]
+            if ttype != "Http":
+                continue
+            
+            name=azr[i]["name"]
+            loc=azr[i]["location"]
+            id=azr[i]["id"]
+            rg=id.split("/")[4].replace(".","-").lower()
+            rgs=id.split("/")[4]
+
+
+            if crg is not None:
+                if rgs.lower() != crg.lower():
+                    continue  # back to for
+            if cde:
+                print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
+            
+            rname=name.replace(".","-")
+            prefix=tfp+"."+rg+'__'+rname
+            #print prefix
+            rfilename=prefix+".tf"
+            fr=open(rfilename, 'w')
+            fr.write(az2tfmess)
+            fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+            fr.write('\t name = "' + name + '"\n')
+            fr.write('\t logic_app_id = "${azurerm_logic_app_workflow.' + rg + '__' + rname + '.id}"' + '\n')
+
+    ###############
+    # specific code start
+    ###############
+            try:
+                params=azr[i]["properties"]["definition"]["triggers"]["manual"]["inputs"]["schema"]
+                #print(json.dumps(params, indent=4, separators=(',', ': ')))
+                fr.write('schema = jsonencode(\n') 
+                fr.write(json.dumps(params, indent=4, separators=(',', ': ')))
+                fr.write(')\n')
+            except KeyError:
+                pass      
+
+    
+
+            fr.write('}\n') 
+            fr.close()   # close .tf file
+
+            if cde:
+                with open(rfilename) as f: 
+                    print f.read()
+
+            tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+
+            tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+            tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'/triggers/' + name +'\n'
+            tfim.write(tfcomm)  
+
+        # end for i loop
+
+        tfrm.close()
+        tfim.close()
+    #end stub
+ 
+#
 # azurerm_monitor_autoscale_setting
 #
 # azurerm_monitor_autoscale_setting
@@ -6763,7 +7062,7 @@ import ast
 def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, json, az2tfmess):
     tfp = "azurerm_monitor_autoscale_setting"
     tcode = "650-"
-    cde = True
+    
     azr = ""
     if crf in tfp:
         # REST or cli
@@ -6981,17 +7280,17 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
                     fr.write('\temail {\n')
 
                     
-                    fr.write('\t\tsend_to_subscription_administrator =   "' + str(nsa) + '"\n')
+                    fr.write('\t\tsend_to_subscription_administrator = ' + str(nsa).lower() + '\n')
 
                     
-                    fr.write('\t\tsend_to_subscription_co_administrator =  "' + str(nsca) + '"\n')
+                    fr.write('\t\tsend_to_subscription_co_administrator =  ' + str(nsca).lower() + '\n')
 
                     fr.write('\t\tcustom_emails =   '+nce+'\n')
                     fr.write('\t}\n')
                     nwh = str(ast.literal_eval(json.dumps(
                         azr[i]["properties"]["notifications"][k]["webhooks"])))
                     nwh = nwh.replace("'", '"')
-                    fr.write('webhook =   '+nwh + '\n')
+                    #fr.write('webhook =   '+nwh + '\n')
                     fr.write('}\n')
             
             except Exception as e: print(e)
@@ -7036,18 +7335,19 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
 import ast
 def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):  
     tfp="azurerm_policy_definition"
+    
     azr=""
     if crf in tfp:
     # REST or cli
-        # print "REST Managed Disk"
+        print "REST Pol Defn"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Authorization/policyDefinitions"
         params = {'api-version': '2019-01-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
 
 
-        tfrmf="100-"+tfp+"-staterm.sh"
-        tfimf="100-"+tfp+"-stateimp.sh"
+        tfrmf="004-"+tfp+"-staterm.sh"
+        tfimf="004-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
         print "# " + tfp,
@@ -7058,9 +7358,9 @@ def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             name=azr[i]["name"]
             #loc=azr[i]["location"]
             id=azr[i]["id"]
-            rg=id.split("/")[4].replace(".","-").lower()
+            rg="policydefinitions"
             rgs=id.split("/")[4]
-            rg="policyDefinitions"
+          
             if crg is not None:
                 if rg.lower() != crg.lower():
                     continue  # back to for
@@ -7080,7 +7380,7 @@ def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
                 fr.write('\t name = "' + name + '"\n')
                 #fr.write('\t location = "'+ loc + '"\n')
-                fr.write('\t resource_group_name = "'+ rgs + '"\n')
+                #fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
                 rdid=azr[i]["name"]            
                 mode=azr[i]["properties"]["mode"]
@@ -7105,32 +7405,24 @@ def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
      
                 print(json.dumps(azr[i]["properties"]["metadata"], indent=4, separators=(',', ': ')))
                 
-                #meta=str(json.dumps(azr[i]["properties"]["metadata"]) 
-                #print "meta="+meta 
-                #meta=meta.replace("'",'"')    
-                fr.write('metadata =<<META \n') 
-                #fr.write('"' + meta +'"\n') 
-                fr.write(json.dumps(azr[i]["properties"]["metadata"])
-                fr.write('META \n') 
-
+                fr.write('metadata = jsonencode(\n') 
+                fr.write(json.dumps(azr[i]["properties"]["metadata"]))
+                fr.write(') \n') 
 
                 prules=str(ast.literal_eval(json.dumps(azr[i]["properties"]["policyRule"])))
-                prules=prules.replace("'",'"') 
-                fr.write('policy_rule =<<POLICY_RULE \n')  
-                fr.write('"'+ prules +'"\n') 
-                fr.write('POLICY_RULE \n') 
+                fr.write('policy_rule = jsonencode( \n')
+                fr.write(json.dumps(azr[i]["properties"]["policyRule"]))  
+                fr.write(') \n') 
                 
                 try:
-                    params=str(ast.literal_eval(json.dumps(azr[i]["properties"]["parameters"])))
-                    params=params.replace("'",'"') 
+                    params=azr[i]["properties"]["parameters"]          
                     pl= len(params)
                     if pl > 0 :
-                        fr.write('parameters =<<PARAMETERS \n') 
-                        fr.write('"'+params +'"\n') 
-                        fr.write('PARAMETERS \n') 
+                        fr.write('parameters = jsonencode( \n') 
+                        fr.write(json.dumps(azr[i]["properties"]["parameters"])) 
+                        fr.write(') \n') 
                 except KeyError:
                     pass
-
 
                 fr.write('}\n') 
                 fr.close()   # close .tf file
@@ -7168,8 +7460,8 @@ def azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         azr= r.json()["value"]
 
 
-        tfrmf="100-"+tfp+"-staterm.sh"
-        tfimf="100-"+tfp+"-stateimp.sh"
+        tfrmf="005-"+tfp+"-staterm.sh"
+        tfimf="005-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
         print "# " + tfp,
@@ -7180,6 +7472,7 @@ def azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             name=azr[i]["name"]
             #loc=azr[i]["location"]
             id=azr[i]["id"]
+            rg="policyassignments"
             rg=id.split("/")[4].replace(".","-").lower()
             rgs=id.split("/")[4]
             if crg is not None:
@@ -7196,37 +7489,46 @@ def azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write(az2tfmess)
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
-            #fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rgs + '"\n')
+            try:
+                loc=azr[i]["location"]
+                fr.write('\t location = "'+ loc + '"\n')
+            except KeyError:
+                pass
+            #fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
     ###############
     # specific code
            
             dname=azr[i]["properties"]["displayName"]
             rdid=azr[i]["name"]
-            desc=azr[i]"properties"]["description"]
-            scope=azr[i]"properties"]["scope"]
-            pdid=azr[i]"properties"]["policyDefinitionId"]
+           
+            scope=azr[i]["properties"]["scope"]
+            pdid=azr[i]["properties"]["policyDefinitionId"]
             id=azr[i]["id"]
-            rg="policyAssignments"
+
             
-            params=azr[i]"properties"]["parameters"]
+
                 
             fr.write('display_name = "' + dname +'"\n') 
             fr.write('policy_definition_id = "' + pdid +'"\n') 
             fr.write('scope = "' +  scope +'"\n') 
             try :
-                desc=azr[i]"properties"]["description"]
+                desc=azr[i]["properties"]["description"]
                 fr.write('description =  "'+desc +'"\n') 
             except KeyError:
                 pass
-
-            pl=len(params)
-            if pl > 0 :
-                fr.write('parameters =<<PARAMETERS \n') 
-                fr.write('"'+params +'"\n')
-                fr.write('PARAMETERS\n') 
-  
+            
+            try:
+                params=azr[i]["properties"]["parameters"]
+                pl=len(params)
+                print pl
+                print(json.dumps(azr[i]["properties"]["parameters"]))
+                if pl > 0 :
+                    fr.write('parameters = jsonencode( \n') 
+                    fr.write(json.dumps(azr[i]["properties"]["parameters"]))
+                    fr.write(')\n') 
+            except KeyError:
+                pass
 
             fr.write('}\n') 
             fr.close()   # close .tf file
@@ -7249,7 +7551,7 @@ def azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 #
 # azurerm_role_definition
 #
-
+import ast
 def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_role_definition"
     
@@ -7264,8 +7566,8 @@ def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         azr= r.json()["value"]
 
 
-        tfrmf="100-"+tfp+"-staterm.sh"
-        tfimf="100-"+tfp+"-stateimp.sh"
+        tfrmf="006-"+tfp+"-staterm.sh"
+        tfimf="006-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
         print "# " + tfp,
@@ -7276,7 +7578,7 @@ def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             name=azr[i]["name"]
             #loc=azr[i]["location"]
             id=azr[i]["id"]
-            rg=id.split("/")[4].replace(".","-").lower()
+            rg="roledefinitions"
             rgs=id.split("/")[4]
             if crg is not None:
                 if rg.lower() != crg.lower():
@@ -7293,43 +7595,55 @@ def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
             #fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rgs + '"\n')
+            #fr.write('\t resource_group_name = "'+ rgs + '"\n')
             
-            name=azr[i]["roleName"]
+            name=azr[i]["properties"]["roleName"]
     
             rdid=azr[i]["name"]
-            desc=azr[i]["description"]
+            desc=azr[i]["properties"]["description"]
+            desc=desc.encode('ascii', 'ignore')
             id=azr[i]["id"]
-            rg="roleDefinitions"
+            
 
-            scopes=azr[i]["assignableScopes"]
-            dactions=azr[i]["permissions"][0]["dataActions"]
-            ndactions=azr[i]["permissions"][0]["notDataActions"]
-            actions=azr[i]["permissions"][0]["actions"]
-            nactions=azr[i]["permissions"][0]["notActions"]
+            scopes=azr[i]["properties"]["assignableScopes"]
+            scopes=str(ast.literal_eval(json.dumps(azr[i]["properties"]["assignableScopes"])))
+            scopes=scopes.replace("'",'"')
+            dactions=azr[i]["properties"]["permissions"][0]["dataActions"]
+            ndactions=azr[i]["properties"]["permissions"][0]["notDataActions"]
+            actions=azr[i]["properties"]["permissions"][0]["actions"]
+            nactions=azr[i]["properties"]["permissions"][0]["notActions"]
 
-            fr.write('role_definition_id = "' + rdid +  '"\n')
+            #fr.write('role_definition_id = "' + rdid +  '"\n')
             fr.write('description =  "' +desc + '"\n')
     #        fr.write('scope = "'\{'data.azurerm_subscription.primary.id}'"'  '"\n')
     #        fr.write('scope = "'/subscriptions/"' rgsource '"\n')
-            fr.write('scope = "' +   '"\n')
+            fr.write('assignable_scopes = ' + scopes + '\n')
+            fr.write('scope = ""\n')
             #
-            fr.write('permissions {\n')        
-            fr.write('data_actions = \n')
-            fr.write(dactions +'\n')
-            fr.write('not_data_actions = \n')
-            fr.write(ndactions + '\n')
-            fr.write('actions =  \n')
-            fr.write(actions + '\n')
-            fr.write('not_actions = \n')
-            fr.write(nactions + '\n')
-            fr.write('}\n')
             
-            fr.write('assignable_scopes = \n')
-            fr.write(scopes  + '\n')
+            
+            fr.write('permissions {\n')        
+            print(json.dumps(dactions)) 
+            fr.write('data_actions = ')
+            fr.write(json.dumps(dactions))  
+            
+            fr.write('\nnot_data_actions = ')
+            fr.write(json.dumps(ndactions)) 
         
-
-            fr.write('}\n') 
+            fr.write('\nactions = ')
+            fr.write(json.dumps(actions)) 
+        
+            fr.write('\nnot_actions = ')
+            fr.write(json.dumps(nactions)) 
+            
+            fr.write('\n}\n')
+            """
+            fr.write('assignable_scopes = \n')
+            fr.write(json.dumps(scopes)) 
+        
+            """
+            
+            fr.write('\n}\n') 
             fr.close()   # close .tf file
 
             if cde:
@@ -7352,20 +7666,20 @@ def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 #
 
 def azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
-   
+    
     tfp="azurerm_role_assignment"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/disks"
-        params = {'api-version': '2017-03-30'}
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Authorization/roleAssignments"
+        params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
 
 
-        tfrmf="100-"+tfp+"-staterm.sh"
-        tfimf="100-"+tfp+"-stateimp.sh"
+        tfrmf="007-"+tfp+"-staterm.sh"
+        tfimf="007-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
         print "# " + tfp,
@@ -7374,9 +7688,9 @@ def azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         for i in range(0, count):
 
             name=azr[i]["name"]
-            loc=azr[i]["location"]
+            #loc=azr[i]["location"]
             id=azr[i]["id"]
-            rg=id.split("/")[4].replace(".","-").lower()
+            rg="roleassignments"
             rgs=id.split("/")[4]
             if crg is not None:
                 if rg.lower() != crg.lower():
@@ -7392,25 +7706,24 @@ def azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write(az2tfmess)
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
             fr.write('\t name = "' + name + '"\n')
-            fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rgs + '"\n')
-
+            #fr.write('\t location = "'+ loc + '"\n')
+            #fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
             name=azr[i]["name"]
         
-            scope=azr[i]["scope"]
+            scope=azr[i]["properties"]["scope"]
             rdid=azr[i]["name"]
-            prid=azr[i]["principalId"]
-            roledefid=azr[i]["roleDefinitionId"].slpit("/")[6]
+            prid=azr[i]["properties"]["principalId"]
+            roledefid=azr[i]["properties"]["roleDefinitionId"].split("/")[6]
             id=azr[i]["id"]
-            rg="roleAssignments"
+          
 
-            fr.write('role_definition_id = "${azurerm_role_definition.' + "roleDefinitions" + '__' + roledefid + '.id}"' + '\n')
+            fr.write('role_definition_id = "${azurerm_role_definition.' + "roledefinitions" + '__' + roledefid + '.id}"' + '\n')
             
             fr.write('principal_id ="' +prid +'"\n') 
             fr.write('scope = "' + scope  +'"\n') 
     
-            fr.write('}\n')
+            #fr.write('}\n')
 
        
             try:
@@ -7526,6 +7839,8 @@ azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 290_azurerm_virtual_machine
 azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 290_azurerm_virtual_machine_extension
+azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 295_azurerm_virtual_machine_scale_set
 azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 310_azurerm_automation_account
@@ -7558,6 +7873,13 @@ azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 620_azurerm_function_app
 azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 630_azurerm_logic_app_workflow
+azurerm_logic_app_workflow(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+
+# 631_azurerm_logic_app_trigger_http_request
+azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+
+
 # 650_azurerm_monitor_autoscale_setting
 azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 

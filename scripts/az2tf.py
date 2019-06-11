@@ -77,6 +77,7 @@ import azurerm_app_service_plan
 import azurerm_app_service
 import azurerm_function_app
 import azurerm_logic_app_workflow
+import azurerm_logic_app_trigger_http_request
 import azurerm_monitor_autoscale_setting
 
 import azurerm_policy_definition
@@ -366,6 +367,11 @@ azurerm_app_service.azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az
 azurerm_function_app.azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 630_azurerm_logic_app_workflow
 azurerm_logic_app_workflow.azurerm_logic_app_workflow(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+
+# 631_azurerm_logic_app_trigger_http_request
+azurerm_logic_app_trigger_http_request.azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+
+
 # 650_azurerm_monitor_autoscale_setting
 azurerm_monitor_autoscale_setting.azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 
