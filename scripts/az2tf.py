@@ -370,7 +370,7 @@ azurerm_logic_app_workflow.azurerm_logic_app_workflow(crf,cde,crg,headers,reques
 
 # 631_azurerm_logic_app_trigger_http_request
 # AWAITING terraform import fix
-azurerm_logic_app_trigger_http_request.azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+#azurerm_logic_app_trigger_http_request.azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 
 
 # 650_azurerm_monitor_autoscale_setting
