@@ -64,7 +64,7 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 vnr=azr[i]["properties"]["networkAcls"]["virtualNetworkRules"]
                 vcount=len(vnr)
 
-                print "************************** IN ACL"
+                
                 fr.write('\t network_acls {\n')
                 fr.write('\t\t bypass="' + netaclby + '"\n')
                 fr.write('\t\t default_action="' + netacldf + '"\n')
@@ -78,7 +78,6 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     
                 fr.write('\t }' + '\n')
             except KeyError:
-                print "************************** skipping net ACL"
                 pass
 
 

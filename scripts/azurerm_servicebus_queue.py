@@ -41,7 +41,7 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             url="https://management.azure.com/" + id + "/queues"
             params = {'api-version': '2017-04-01'}
             r = requests.get(url, headers=headers, params=params)
-            print(json.dumps(r.json(), indent=4, separators=(',', ': ')))
+            #print(json.dumps(r.json(), indent=4, separators=(',', ': ')))
             try:
                 azr2= r.json()["value"]
             except KeyError:

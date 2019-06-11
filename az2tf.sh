@@ -125,7 +125,7 @@ echo $pyc
 eval $pyc
 grep Error import.log
 if [ $? -eq 0 ]; then
-    echo "Error in resources.py"
+    echo "Error in az2tf.py"
     exit
 fi
 

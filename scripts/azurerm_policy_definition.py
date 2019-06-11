@@ -69,7 +69,7 @@ def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 except KeyError:
                     pass   
      
-                print(json.dumps(azr[i]["properties"]["metadata"], indent=4, separators=(',', ': ')))
+                #print(json.dumps(azr[i]["properties"]["metadata"], indent=4, separators=(',', ': ')))
                 
                 fr.write('metadata = jsonencode(\n') 
                 fr.write(json.dumps(azr[i]["properties"]["metadata"]))

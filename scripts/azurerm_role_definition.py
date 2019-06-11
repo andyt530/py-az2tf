@@ -70,7 +70,7 @@ def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             
             
             fr.write('permissions {\n')        
-            print(json.dumps(dactions)) 
+            #print(json.dumps(dactions)) 
             fr.write('data_actions = ')
             fr.write(json.dumps(dactions))  
             

@@ -298,7 +298,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
     # storage_profile_image_reference block
             try:
                 vmimid = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["imageReference"]["id"]
-                print "do something with image id" + vmimid
+                #print "do something with image id" + vmimid
             except KeyError:
                 try:
                     vmimpublisher = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["imageReference"]["publisher"]

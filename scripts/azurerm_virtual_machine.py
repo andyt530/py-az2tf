@@ -125,7 +125,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
            
             try:
                 vmimid=azr[i]["properties"]["storageProfile"]["imageReference"]["id"]  
-                print "do something with "+vmimid
+                #print "do something with "+vmimid
             except KeyError:
                 try:
                     vmimpublisher=azr[i]["properties"]["storageProfile"]["imageReference"]["publisher"]

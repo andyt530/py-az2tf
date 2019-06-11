@@ -40,7 +40,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             scope=scope.encode('ascii', 'ignore')
             sn=sn.encode('ascii', 'ignore')
             #sn=str(sn.encode('utf-8').strip())
-            print "scope name="+sn
+            #print "scope name="+sn
 
             if crg is not None:
                 if rgs.lower() != crg.lower():

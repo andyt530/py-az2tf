@@ -74,8 +74,8 @@ def azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             try:
                 params=azr[i]["properties"]["parameters"]
                 pl=len(params)
-                print pl
-                print(json.dumps(azr[i]["properties"]["parameters"]))
+                #print pl
+                #print(json.dumps(azr[i]["properties"]["parameters"]))
                 if pl > 0 :
                     fr.write('parameters = jsonencode( \n') 
                     fr.write(json.dumps(azr[i]["properties"]["parameters"]))
