@@ -52,7 +52,7 @@ def azurerm_logic_app_workflow(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     ###############
             try:
                 params=azr[i]["properties"]["definition"]["parameters"]
-                print params
+                #print params
                 lp=len(params)
                 if lp > 0:
                     fr.write('parameters = { \n') 
@@ -62,7 +62,6 @@ def azurerm_logic_app_workflow(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             except KeyError:
                 pass      
 
-    
 
             fr.write('}\n') 
             fr.close()   # close .tf file
