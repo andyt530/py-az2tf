@@ -48,7 +48,7 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
             fr.write('resource_group_name = "' + rgs + '"\n')
 
             en = azr[i]["properties"]["enabled"]
-            profs = azr[i]["properties"]["profiles"]
+            
 
     # basic settings
 
@@ -75,137 +75,139 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
                 pass
 
     #  profiles block
-
-            icount = len(profs)
-            if icount > 0:
-                for j in range(0, icount):
-                    fr.write('profile {\n')
-                    pn = azr[i]["properties"]["profiles"][j]["name"]
-                    pn = pn.replace('"', '\\"')
-                    # pn="dummy"
-                    # pn=pn.replace('{','\{')
-                    cdef = azr[i]["properties"]["profiles"][j]["capacity"]["default"]
-                    cmin = azr[i]["properties"]["profiles"][j]["capacity"]["minimum"]
-                    cmax = azr[i]["properties"]["profiles"][j]["capacity"]["maximum"]
-                    fr.write('\tname =  "'+pn + '"\n')
-    # capacity
-                    fr.write('\tcapacity {\n')
-                    fr.write('\t\tdefault = "' + cdef + '"\n')
-                    fr.write('\t\tminimum = "' + cmin + '"\n')
-                    fr.write('\t\tmaximum = "' + cmax + '"\n')
-                    fr.write('\t}\n')
-    # fixed date
-
-                    try:
-                        fd = azr[i]["properties"]["profiles"][j]["fixedDate"]["end"]
-                        fdend = azr[i]["properties"]["profiles"][j]["fixedDate"]["end"]
-                        fdstart = azr[i]["properties"]["profiles"][j]["fixedDate"]["start"]
-                        fdtz = azr[i]["properties"]["profiles"][j]["fixedDate"]["timeZone"]
-                        fdend2 = fdend.split("+")[0]
-                        fdstart2 = fdstart.split("+")[0]
-                        fr.write('\tfixed_date {\n')
-                        fr.write('\t\ttimezone =  "' + fdtz + '"\n')
-                        fr.write('\t\tstart = "' + fdstart2 + '"\n')
-                        fr.write('\t\tend = "' + fdend2 + '"\n')
+            try:
+                profs = azr[i]["properties"]["profiles"]
+                icount = len(profs)
+                if icount > 0:
+                    for j in range(0, icount):
+                        fr.write('profile {\n')
+                        pn = azr[i]["properties"]["profiles"][j]["name"]
+                        pn = pn.replace('"', '\\"')
+                        # pn="dummy"
+                        # pn=pn.replace('{','\{')
+                        cdef = azr[i]["properties"]["profiles"][j]["capacity"]["default"]
+                        cmin = azr[i]["properties"]["profiles"][j]["capacity"]["minimum"]
+                        cmax = azr[i]["properties"]["profiles"][j]["capacity"]["maximum"]
+                        fr.write('\tname =  "'+pn + '"\n')
+        # capacity
+                        fr.write('\tcapacity {\n')
+                        fr.write('\t\tdefault = "' + cdef + '"\n')
+                        fr.write('\t\tminimum = "' + cmin + '"\n')
+                        fr.write('\t\tmaximum = "' + cmax + '"\n')
                         fr.write('\t}\n')
-                    except KeyError:
-                        pass
+        # fixed date
 
-    # recurance
+                        try:
+                            fd = azr[i]["properties"]["profiles"][j]["fixedDate"]["end"]
+                            fdend = azr[i]["properties"]["profiles"][j]["fixedDate"]["end"]
+                            fdstart = azr[i]["properties"]["profiles"][j]["fixedDate"]["start"]
+                            fdtz = azr[i]["properties"]["profiles"][j]["fixedDate"]["timeZone"]
+                            fdend2 = fdend.split("+")[0]
+                            fdstart2 = fdstart.split("+")[0]
+                            fr.write('\tfixed_date {\n')
+                            fr.write('\t\ttimezone =  "' + fdtz + '"\n')
+                            fr.write('\t\tstart = "' + fdstart2 + '"\n')
+                            fr.write('\t\tend = "' + fdend2 + '"\n')
+                            fr.write('\t}\n')
+                        except KeyError:
+                            pass
 
-                    try:
-                        rec = azr[i]["properties"]["profiles"][j]["recurrence"]
-                        rfr = azr[i]["properties"]["profiles"][j]["recurrence"]["frequency"]
-                        # dns=str(ast.literal_eval(json.dumps(azr[i]["properties"]["dhcpOptions"]["dnsServers"])))
-                        # dns=dns.replace("'",'"')
+        # recurance
 
-                        rsd = str(ast.literal_eval(json.dumps(
-                            azr[i]["properties"]["profiles"][j]["recurrence"]["schedule"]["days"])))
-                        rsd = rsd.replace("'", '"')
-                        rsh = str(ast.literal_eval(json.dumps(
-                            azr[i]["properties"]["profiles"][j]["recurrence"]["schedule"]["hours"])))
-                        rsh = rsh.replace("'", '"')
-                        rsm = str(ast.literal_eval(json.dumps(
-                            azr[i]["properties"]["profiles"][j]["recurrence"]["schedule"]["minutes"])))
-                        rsm = rsm.replace("'", '"')
-                        rst = azr[i]["properties"]["profiles"][j]["recurrence"]["schedule"]["timeZone"]
-                        fr.write('\trecurrence {\n')
-                        fr.write('\t\ttimezone = "' + rst + '"\n')
-                        fr.write('\t\tdays =  ' + rsd + '\n')
-                        fr.write('\t\thours =  ' + rsh + '\n')
-                        fr.write('\t\tminutes =  ' + rsm + '\n')
-                        fr.write('\t}\n')
-                    except KeyError:
-                        pass
+                        try:
+                            rec = azr[i]["properties"]["profiles"][j]["recurrence"]
+                            rfr = azr[i]["properties"]["profiles"][j]["recurrence"]["frequency"]
+                            # dns=str(ast.literal_eval(json.dumps(azr[i]["properties"]["dhcpOptions"]["dnsServers"])))
+                            # dns=dns.replace("'",'"')
 
-    # rules block
-                    try:
-                        rules = azr[i]["properties"]["profiles"][j]["rules"]
-                        kcount = len(rules)
-                        #print "count of rules= "+str(kcount)
-                        for k in range(0, kcount):
-                            #print k
-                            fr.write('\trule  {\n')
-                            # metric trigger
-                            mtn = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["metricName"]
-                            if mtn == "CPU":
-                                mtn = "Percentage CPU"
+                            rsd = str(ast.literal_eval(json.dumps(
+                                azr[i]["properties"]["profiles"][j]["recurrence"]["schedule"]["days"])))
+                            rsd = rsd.replace("'", '"')
+                            rsh = str(ast.literal_eval(json.dumps(
+                                azr[i]["properties"]["profiles"][j]["recurrence"]["schedule"]["hours"])))
+                            rsh = rsh.replace("'", '"')
+                            rsm = str(ast.literal_eval(json.dumps(
+                                azr[i]["properties"]["profiles"][j]["recurrence"]["schedule"]["minutes"])))
+                            rsm = rsm.replace("'", '"')
+                            rst = azr[i]["properties"]["profiles"][j]["recurrence"]["schedule"]["timeZone"]
+                            fr.write('\trecurrence {\n')
+                            fr.write('\t\ttimezone = "' + rst + '"\n')
+                            fr.write('\t\tdays =  ' + rsd + '\n')
+                            fr.write('\t\thours =  ' + rsh + '\n')
+                            fr.write('\t\tminutes =  ' + rsm + '\n')
+                            fr.write('\t}\n')
+                        except KeyError:
+                            pass
 
-                            mtid = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["metricResourceUri"]
-                            mtrrg = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["metricResourceUri"].split(
-                                "/")[4].replace(".", "-").lower()
-                            mtrid = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["metricResourceUri"].split(
-                                "/")[8].replace(".", "-")
-                            mtop = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["operator"]
-                            mtstat = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["statistic"]
-                            mtthres = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["threshold"]
-                            mtta = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["timeAggregation"]
-                            mttg = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["timeGrain"]
-                            mttw = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["timeWindow"]
-                            mttg2 = mttg
-                            mttw2 = mttw
-                            #print mtthres
-                            # mttg2= mttg.split(":")[1].replace("0","") # sed 's/^0*//'
-                            # mttw2= mttw.split(":")[1].replace("0","") #| cut -f2 -d':' | sed 's/^0*//'
+        # rules block
+                        try:
+                            rules = azr[i]["properties"]["profiles"][j]["rules"]
+                            kcount = len(rules)
+                            #print "count of rules= "+str(kcount)
+                            for k in range(0, kcount):
+                                #print k
+                                fr.write('\trule  {\n')
+                                # metric trigger
+                                mtn = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["metricName"]
+                                if mtn == "CPU":
+                                    mtn = "Percentage CPU"
 
-                            # metric trigger block
-                            fr.write('\t\tmetric_trigger {\n')
-                            fr.write('\t\t\tmetric_name = "' + mtn + '"\n')
-                            fr.write(
-                                '\t\t\tmetric_resource_id = "${'+tftyp + '.' + mtrrg + '__' + mtrid + '.id}"\n')
-                            fr.write('\t\t\toperator = "' + mtop + '"\n')
-                            fr.write('\t\t\tstatistic= "' + mtstat + '"\n')
-                            fr.write('\t\t\tthreshold = "' +
-                                     str(mtthres) + '"\n')
-                            fr.write(
-                                '\t\t\ttime_aggregation = "' + mtta + '"\n')
-                            fr.write('\t\t\ttime_grain = "' + mttg2 + '"\n')
-                            fr.write('\t\t\ttime_window = "' + mttw2 + '"\n')
-                            fr.write('\t\t}\n')
+                                mtid = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["metricResourceUri"]
+                                mtrrg = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["metricResourceUri"].split(
+                                    "/")[4].replace(".", "-").lower()
+                                mtrid = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["metricResourceUri"].split(
+                                    "/")[8].replace(".", "-")
+                                mtop = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["operator"]
+                                mtstat = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["statistic"]
+                                mtthres = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["threshold"]
+                                mtta = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["timeAggregation"]
+                                mttg = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["timeGrain"]
+                                mttw = azr[i]["properties"]["profiles"][j]["rules"][k]["metricTrigger"]["timeWindow"]
+                                mttg2 = mttg
+                                mttw2 = mttw
+                                #print mtthres
+                                # mttg2= mttg.split(":")[1].replace("0","") # sed 's/^0*//'
+                                # mttw2= mttw.split(":")[1].replace("0","") #| cut -f2 -d':' | sed 's/^0*//'
 
-                            # scale action block
-                            sac = azr[i]["properties"]["profiles"][j]["rules"][k]["scaleAction"]["cooldown"]
-                            sad = azr[i]["properties"]["profiles"][j]["rules"][k]["scaleAction"]["direction"]
-                            sat = azr[i]["properties"]["profiles"][j]["rules"][k]["scaleAction"]["type"]
-                            sav = azr[i]["properties"]["profiles"][j]["rules"][k]["scaleAction"]["value"]
+                                # metric trigger block
+                                fr.write('\t\tmetric_trigger {\n')
+                                fr.write('\t\t\tmetric_name = "' + mtn + '"\n')
+                                fr.write(
+                                    '\t\t\tmetric_resource_id = "${'+tftyp + '.' + mtrrg + '__' + mtrid + '.id}"\n')
+                                fr.write('\t\t\toperator = "' + mtop + '"\n')
+                                fr.write('\t\t\tstatistic= "' + mtstat + '"\n')
+                                fr.write('\t\t\tthreshold = "' +
+                                        str(mtthres) + '"\n')
+                                fr.write(
+                                    '\t\t\ttime_aggregation = "' + mtta + '"\n')
+                                fr.write('\t\t\ttime_grain = "' + mttg2 + '"\n')
+                                fr.write('\t\t\ttime_window = "' + mttw2 + '"\n')
+                                fr.write('\t\t}\n')
 
-                            fr.write('\t\tscale_action  {\n')
-                            #print sac
-                            # sac2= sac.split(":")[1].replace("0","") #| cut -f2 -d':' | sed 's/^0*//'
-                            sac2 = sac
-                            fr.write('\t\t\tcooldown = "' + sac2 + '"\n')
-                            fr.write('\t\t\tdirection = "' + sad + '"\n')
-                            fr.write('\t\t\ttype = "' + sat + '"\n')
-                            fr.write('\t\t\tvalue = "' + sav + '"\n')
-                            fr.write('\t\t}\n')
+                                # scale action block
+                                sac = azr[i]["properties"]["profiles"][j]["rules"][k]["scaleAction"]["cooldown"]
+                                sad = azr[i]["properties"]["profiles"][j]["rules"][k]["scaleAction"]["direction"]
+                                sat = azr[i]["properties"]["profiles"][j]["rules"][k]["scaleAction"]["type"]
+                                sav = azr[i]["properties"]["profiles"][j]["rules"][k]["scaleAction"]["value"]
 
-                            fr.write('\t}\n')  # end rule
-                    except KeyError:
-                        pass
+                                fr.write('\t\tscale_action  {\n')
+                                #print sac
+                                # sac2= sac.split(":")[1].replace("0","") #| cut -f2 -d':' | sed 's/^0*//'
+                                sac2 = sac
+                                fr.write('\t\t\tcooldown = "' + sac2 + '"\n')
+                                fr.write('\t\t\tdirection = "' + sad + '"\n')
+                                fr.write('\t\t\ttype = "' + sat + '"\n')
+                                fr.write('\t\t\tvalue = "' + sav + '"\n')
+                                fr.write('\t\t}\n')
 
-                    fr.write('}\n')  # end profile
+                                fr.write('\t}\n')  # end rule
+                        except KeyError:
+                            pass
 
-            # notification block
+                        fr.write('}\n')  # end profile
+            except KeyError:
+                pass
+# notification block
             try:
                 nots = azr[i]["properties"]["notifications"]
                 ncount = len(nots)
