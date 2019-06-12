@@ -217,9 +217,9 @@ for i in range(0, count):
     if id == sub:
         FoundSub=True
 
-if not FoundSub:
-    print "Could not find subscription with ID " + sub + " Exiting ..." 
-    exit("Error: InvalidSubscriptionID-2")
+#if not FoundSub:
+#    print "Could not find subscription with ID " + sub + " Exiting ..." 
+    #exit("Error: InvalidSubscriptionID-2")
 
 print "Found subscription " + sub + " proceeding ..."
 

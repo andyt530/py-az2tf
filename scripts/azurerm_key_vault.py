@@ -63,12 +63,22 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 netaclipr=azr[i]["properties"]["networkAcls"]["ipRules"]
                 vnr=azr[i]["properties"]["networkAcls"]["virtualNetworkRules"]
                 vcount=len(vnr)
+                ipcount=len(netaclipr)
 
                 
                 fr.write('\t network_acls {\n')
                 fr.write('\t\t bypass="' + netaclby + '"\n')
                 fr.write('\t\t default_action="' + netacldf + '"\n')
-                fr.write('\t\t ip_rules=' + json.dumps(netaclipr, indent=4, separators=(',', ': ')) + '\n')
+                
+                if ipcount > 0 :
+                    print(json.dumps(netaclipr, indent=4, separators=(',', ': ')))
+                    fr.write('\t\t ip_rules = [\n')
+                    for ip in range(0, ipcount): 
+                        aip=netaclipr[ip]["value"]
+                        fr.write('\t\t\t"'+aip + '",\n')
+                    fr.write('\t\t ]' + '\n')
+                
+                
                 if vcount > 0:
                     fr.write('\t\t virtual_network_subnet_ids = [\n')
                     for v in range(0, vcount): 
