@@ -110,10 +110,22 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
             if jcount > 0 :
                 for j in range(0,jcount):
                     fr.write('\t ipsec_policy {' + '\n')
-                    
                     dhg= ipsec[j]["dhGroup"]
-                    fr.write('\t dh_group {' + dhg + '"\n')
-                ####  more here  ?    
+                    ikee= ipsec[j]["ikeEncryption"]
+                    ikei= ipsec[j]["ikeIntegrity"]
+                    ipsece= ipsec[j]["ipsecEncryption"]
+                    ipseci= ipsec[j]["ipsecIntegrity"]
+                    pfsg= ipsec[j]["pfsGroup"]
+                    sadata= ipsec[j]["saDataSizeKilobytes"]
+                    salife= ipsec[j]["saLifeTimeSeconds"]
+                    fr.write('\t dh_group = "' + dhg + '"\n')
+                    fr.write('\t ike_encryption = "' + ikee + '"\n')
+                    fr.write('\t ike_integrity = "' + ikei + '"\n')
+                    fr.write('\t ipsec_encryption = "' + ipsece + '"\n')
+                    fr.write('\t ipsec_integrity = "' + ipseci + '"\n')
+                    fr.write('\t pfs_group = "' + pfsg + '"\n')
+                    fr.write('\t sa_datasize = "' + sadata + '"\n')
+                    fr.write('\t sa_lifetime = "' + salife + '"\n')
                     fr.write('\t}\n')
                 
     
