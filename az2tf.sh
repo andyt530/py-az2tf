@@ -1,5 +1,5 @@
 usage()
-{ echo "Usage: $0 -s <Subscription ID> [-g <Resource Group>] [-r azurerm_<resource_type>] [-x <yes|no(default)>] [-p <yes|no(default)>] [-f <yes|no(default)>] [-d <yes|no(default)>]" 1>&2; exit 1;
+{ echo "Usage: $0 -s <Subscription ID> [-g <Resource Group>] [-r azurerm_<resource_type>] [-x <yes|no(default)>] [-p <yes|no(default)>] [-f <yes|no(default)>] [-v <yes|no(default)>] [-d <yes|no(default)>]" 1>&2; exit 1;
 }
 x="no"
 p="no"
@@ -71,6 +71,7 @@ echo "Debug = ${f}"
 echo " "
 
 
+
 mkdir -p generated/tf.$mysub
 cd generated/tf.$mysub
 rm -rf .terraform
@@ -103,15 +104,11 @@ fi
 
 pyc4=" "
 # subscription level stuff - roles & policies
-if [ "$p" = "yes" ]; then
-    pyc4=" -p $p "
-fi
+if [ "$p" = "yes" ]; then  pyc4=" -p $p " ;fi
 
 pyc5=" "
 # subscription level stuff - roles & policies
-if [ "$d" = "yes" ]; then
-    pyc5=" -d $d "
-fi
+if [ "$d" = "yes" ]; then  pyc5=" -d $d " ; fi
 
 pyc6=" "
 # subscription level stuff - roles & policies
@@ -150,9 +147,8 @@ if [ $? -eq 1 ]; then
     exit
 fi
 
-if [ "$v" = "yes" ]; then
-    exit
-fi
+if [ "$v" = "yes" ]; then exit ;fi
+
 chmod 755 *state*.sh
 
 if [ "$f" = "yes" ]; then
