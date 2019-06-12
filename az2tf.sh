@@ -57,6 +57,7 @@ fi
 myrg=$g
 export ARM_SUBSCRIPTION_ID="$mysub"
 az account set -s $mysub
+if [ $? -eq 1 ]; then exit; fi
 
 echo " "
 echo "Subscription ID = ${s}"
