@@ -3665,10 +3665,22 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
             if jcount > 0 :
                 for j in range(0,jcount):
                     fr.write('\t ipsec_policy {' + '\n')
-                    
                     dhg= ipsec[j]["dhGroup"]
-                    fr.write('\t dh_group {' + dhg + '"\n')
-                ####  more here  ?    
+                    ikee= ipsec[j]["ikeEncryption"]
+                    ikei= ipsec[j]["ikeIntegrity"]
+                    ipsece= ipsec[j]["ipsecEncryption"]
+                    ipseci= ipsec[j]["ipsecIntegrity"]
+                    pfsg= ipsec[j]["pfsGroup"]
+                    sadata= ipsec[j]["saDataSizeKilobytes"]
+                    salife= ipsec[j]["saLifeTimeSeconds"]
+                    fr.write('\t dh_group = "' + dhg + '"\n')
+                    fr.write('\t ike_encryption = "' + ikee + '"\n')
+                    fr.write('\t ike_integrity = "' + ikei + '"\n')
+                    fr.write('\t ipsec_encryption = "' + ipsece + '"\n')
+                    fr.write('\t ipsec_integrity = "' + ipseci + '"\n')
+                    fr.write('\t pfs_group = "' + pfsg + '"\n')
+                    fr.write('\t sa_datasize = "' + sadata + '"\n')
+                    fr.write('\t sa_lifetime = "' + salife + '"\n')
                     fr.write('\t}\n')
                 
     
@@ -4485,7 +4497,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
            
             try:
                 vmimid=azr[i]["properties"]["storageProfile"]["imageReference"]["id"]  
-                print "do something with "+vmimid
+                #print "do something with "+vmimid
             except KeyError:
                 try:
                     vmimpublisher=azr[i]["properties"]["storageProfile"]["imageReference"]["publisher"]
@@ -5134,7 +5146,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
     # storage_profile_image_reference block
             try:
                 vmimid = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["imageReference"]["id"]
-                print "do something with image id" + vmimid
+                #print "do something with image id" + vmimid
             except KeyError:
                 try:
                     vmimpublisher = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["imageReference"]["publisher"]
@@ -6931,7 +6943,7 @@ def azurerm_logic_app_workflow(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     ###############
             try:
                 params=azr[i]["properties"]["definition"]["parameters"]
-                print params
+                #print params
                 lp=len(params)
                 if lp > 0:
                     fr.write('parameters = { \n') 
@@ -6941,7 +6953,6 @@ def azurerm_logic_app_workflow(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             except KeyError:
                 pass      
 
-    
 
             fr.write('}\n') 
             fr.close()   # close .tf file
@@ -7885,7 +7896,8 @@ azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 azurerm_logic_app_workflow(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 
 # 631_azurerm_logic_app_trigger_http_request
-azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# AWAITING terraform import fix
+#azurerm_logic_app_trigger_http_request.azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 
 
 # 650_azurerm_monitor_autoscale_setting
