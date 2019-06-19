@@ -76,10 +76,16 @@ To filter the terraform resource type: (eg: just availability sets)
 ```
 ./az2tf.sh -s <Subscription ID> -g <Resource Group> -r azurerm_availability_set
 ```
-To filter the terraform resource type: (eg: just availability sets) and fast forward:
+To filter the terraform resource type: (eg: just availability sets) and fast forward - ie. build up resources one after another.:
 ```
+./az2tf.sh -s <Subscription ID> -g <Resource Group> -r azurerm_rsource_group
 ./az2tf.sh -s <Subscription ID> -g <Resource Group> -r azurerm_availability_set -f yes
+./az2tf.sh -s <Subscription ID> -g <Resource Group> -r azurerm_public_ip -f yes
 ```
+
+To use the fast forward option correctly you'll need a good understanding of terraform resource dependancies to ensure you avoid any depenacy errors.
+
+<br>
 
 Be patient - lots of output is given as az2tf:
 
