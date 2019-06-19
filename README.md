@@ -124,6 +124,9 @@ Compute Resources
 * azurerm_availability_set
 * azurerm_image
 * azurerm_managed_disk 
+* azurerm_shared_image_gallery
+* azurerm_shared_image
+* azurerm_shared_image_version
 * azurerm_snapshot 
 * azurerm_virtual_machine 
 * azurerm_virtual_machine_extension 

@@ -1,13 +1,14 @@
 # azurerm_snapshot
-def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess):
-    tfp="azurerm_snapshot"
-    tcode="350-"
+def azurerm_shared_image_gallery(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+    tfp="azurerm_shared_image_gallery"
+    tcode="341-"
     azr=""
+    #cde=True
     if crf in tfp:
     # REST or cli
         # print "REST snapshot"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/snapshots"
-        params = {'api-version': '2018-09-30'}
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/galleries"
+        params = {'api-version': '2019-03-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
 
@@ -44,32 +45,13 @@ def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t resource_group_name = "'+ rgs + '"\n')
 
 
-
-            #suri=azr[i]["creationData"]["sourceUri"]
-            #srid=azr[i]["creationData"]["sourceResourceId"]
-            #said=azr[i]["creationData"]["storageAccountId"]
             try:
-                co=azr[i]["properties"]["creationData"]["createOption"]
-                fr.write('\t create_option = "' +  co + '"\n')
+                co=azr[i]["properties"]["description"]
+                fr.write('\t description = "' +  co + '"\n')
             except KeyError:
                 pass
 
 
-            try :
-                sz=azr[i]["properties"]["diskSizeGb"]
-                fr.write('\t disk_size_gb = "' +  sz + '"\n')
-       
-            #if suri" try :
-            #    fr.write('\t source_uri = "' +  suri + '"\n')
-            #fi
-            #if srid" try :
-            #    fr.write('\t source_resource_id = "' +  srid + '"\n')
-            #fi
-            #if said" try :
-            #    fr.write('\t source_account_id = "' +  said + '"\n')
-            #fi        
-            except KeyError:
-                pass
 
 
     # tags block       

@@ -65,6 +65,9 @@ import azurerm_automation_account  #v12
 import azurerm_log_analytics_workspace  #v12
 import azurerm_log_analytics_solution   #v12
 import azurerm_image  # v12
+import azurerm_shared_image_gallery  # v12
+import azurerm_shared_image  # v12
+import azurerm_shared_image_version  # v12
 import azurerm_snapshot  # v12
 import azurerm_network_watcher  # v12
 import azurerm_cosmosdb_account
@@ -348,6 +351,11 @@ azurerm_log_analytics_workspace.azurerm_log_analytics_workspace(crf,cde,crg,head
 azurerm_log_analytics_solution.azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 340_azurerm_image
 azurerm_image.azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+
+# 341_azurerm_shared_image_gallery
+azurerm_shared_image_gallery.azurerm_shared_image_gallery(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_shared_image.azurerm_shared_image(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_shared_image_version.azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 350_azurerm_snapshot
 azurerm_snapshot.azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 360_azurerm_network_watcher
