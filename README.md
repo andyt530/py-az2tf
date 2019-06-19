@@ -1,6 +1,6 @@
 # az2tf (Python version) - now supports Terraform v0.12
 
-Work in progress - please report any issues.
+Work in progress - please report any issues you find.
 
 This utility 'Azure to Terraform' (az2tf) 
 reads an Azure Subscription and generates all the required terraform configuration files (.tf) from each of the composite Azure Resource Groups
@@ -15,7 +15,7 @@ And finally runs a
 There should hopefully be no subsequent additions or deletions reported by the terraform plan command as all the approriate terraform configuration files will have have automatically been created.
 
 ## Requirements & Prerequisites
-+ The tool is written for the bash shell script & Python2 and has been tested on a MAC
++ The tool is written for the bash shell script & Python2 and has been tested on macOS
 + Azure cli2 **version 2.0.65 or higher** needs to be installed and you need a login with at least "Read" priviledges
 + terraform **version v0.12.1** needs to be installed
 + Python v2.7
@@ -30,11 +30,29 @@ Running the tool in your local shell (bash) required these steps:
 3. run the tool 
 
 
-(would appreciate feedback on how to better use docker)
-
 ## Usage Guide
 
-To generate the terraform files for an entire Azure subscription:
+### The First Run
+To generate the terraform files for a subscription and stop after a "terraform validate":
+```
+./az2tf.sh -s <Subscription ID> -v yes
+```
+
+The above will either show :
+```
+terraform validate
+Success! The configuration is valid.
+```
+
+Or there may be some kind fo python error - if so please open an issue here and paste in the error and it will get fixed.
+
+Once the validation is ok you can use the tool in anger to not only generate the terraform files (-v yes) but also import the resources and perofrm a terraform plan (see below)
+
+---
+
+<br>
+
+To generate the terraform files for an entire Azure subscription, import the resourcs and perform a terraform plan:
 ```
 ./az2tf.sh -s <Subscription ID>
 ```
@@ -77,7 +95,7 @@ Be patient - lots of output is given as az2tf:
 The following terraform resource types are supported by this tool at this time:
 
 Base Resources
-* azurerm_resource_group (full)
+* azurerm_resource_group 
 
 Authorization Resources
 * azurerm_role_definition (subscription level)
@@ -93,83 +111,83 @@ Automation Resources
 * azurerm_automation_account
 
 Compute Resources
-* azurerm_availability_set (full)
+* azurerm_availability_set
 * azurerm_image
-* azurerm_managed_disk  (Common)
-* azurerm_virtual_machine  (Common)
+* azurerm_managed_disk  
+* azurerm_virtual_machine 
 * azurerm_virtual_machine_extension 
-* azurerm_virtual_machine_scale_sets  (Common)
+* azurerm_virtual_machine_scale_sets
 
 Container Resources
-* azurerm_container_registry (full)
+* azurerm_container_registry 
 * azurerm_kubernetes_cluster
 
 CosmosDB (DocumentDB) Resources
-* azurerm_cosmosdb_account (Common)
+* azurerm_cosmosdb_account 
 
 Databricks Resources
 * azurerm_databricks_resources
 
 Key Vault Resources
-* azurerm_key_vault (Common)
-* azurerm_key_vault_secret (full)
+* azurerm_key_vault 
+* azurerm_key_vault_secret
 
 Load Balancer Resources
-* azurerm_lb  (full)
-* azurerm_lb_backend_address_pool (full)
-* azurerm_lb_rule (full)
-* azure_nat_rule (full - needs more testing)
-* azurerm_lb_probe (full)
-* azure_nat_pool (full - needs more testing)
+* azurerm_lb  
+* azurerm_lb_backend_address_pool 
+* azurerm_lb_rule 
+* azure_nat_rule 
+* azurerm_lb_probe
+* azure_nat_pool 
 
 Logic App Resources
 * azurerm_logic_app_workflow
 
 Management Resources
-* azurerm_management_lock  (full)
+* azurerm_management_lock 
 
 Messaging Resources
-* azurerm_servicebus_namespace  (full)
-* azurerm_servicebus_queue  (partial)
+* azurerm_servicebus_namespace 
+* azurerm_servicebus_queue 
 
 Monitoring Resources
 * azurerm_autoscale_setting
 
 Network Resources
 * azurerm_application_gateway 
-* azurerm_application_security_group (full)
-* azurerm_express_route_circuit (full)
-* azurerm_express_route_circuit_authorization (full)
-* azurerm_express_route_circuit_peering (partial)
+* azurerm_application_security_group 
+* azurerm_express_route_circuit 
+* azurerm_express_route_circuit_authorization 
+* azurerm_express_route_circuit_peering 
 * azurerm_local_network_gateway
-* azurerm_network_interface  (Common)
-* azurerm_network_security_group (full)
+* azurerm_network_interface  
+* azurerm_network_security_group 
 * azurerm_network_watcher
-* azurerm_public_ip  (Common)
-* azurerm_route_table (full)
-* azurerm_subnet (full)
-* azurerm_subnet_network_security_group_association (full)
-* azurerm_subnet_route_table_group_association (full)
-* azurerm_traffic_manager_endpoint (partial)
-* azurerm_traffic_manager_profile (partial)
-* azurerm_virtual_network (full)
+* azurerm_public_ip  
+* azurerm_route_table 
+* azurerm_subnet 
+* azurerm_subnet_network_security_group_association 
+* azurerm_subnet_route_table_group_association 
+* azurerm_traffic_manager_endpoint 
+* azurerm_traffic_manager_profile 
+* azurerm_virtual_network 
 * azurerm_virtual_network_gateway
 * azurerm_virtual_network_gateway_connection
-* azurerm_virtual_network_peering (full)
+* azurerm_virtual_network_peering 
   
 Policy Resources
 * azurerm_policy_definition (custom poicies only)
 * azurerm_policy_assignment
 
 OMS Resources
-* azurerm_log_analytics_solution (partial)
-* azurerm_log_analytics_workspace (full)
+* azurerm_log_analytics_solution 
+* azurerm_log_analytics_workspace 
 
 Recovery Services
-* azurerm_recovery_services_vault (full)
+* azurerm_recovery_services_vault 
 
 Storage Resources
-* azurerm_storage_account (Common - tf full support lacking)
+* azurerm_storage_account 
 
 
 (Full) = full support for all terraform attributes
@@ -179,16 +197,29 @@ Storage Resources
 
 ## Planned Additions
 
-+ PaaS databases and apps
-+ Storage firewall rules
++ PaaS databases and other missing providers
 + ongoing better AKS support as AKS evolves
-+ Other terraform providers where terraform & Azure cli2 mutually support
++ Other terraform providers where terraform supports
+
+## Using the Azure runbook code
+
+Within the runbook directory you'll file a file az2tf-runbook.py
+
+You can paste this code into an Azure python2 runbook, your automation account must have an Azure ARM Runas credential setup.
+
+When runs it will leave you subscriptions terraform and terraform import caommands in the runbook output window
+
+Unfortunately this only works for small subscriptions as Azure currently has a limit on how much output it will show in an output window. If your output window is blank - az2tf has worked (see the All Logs tab) but the amount of output has exceeded Azure's limit.
+
+
+If you find any output in the Exceptions tab please open an issue here and report it.
+
 
 ## Known problems
 
 ### Speed
 
-It is quite slow to loop around everything in large subscriptions, there are ways to speed this tool up (make fewer az cli command calls) but it would also make it harder to debug, I may look at doing this after I finish building out support for more providers.
+It can take a lot of time to loop around everything in large subscriptions, in particular the importing of the resources.
 
 ### KeyVault:
 
@@ -203,7 +234,6 @@ These attributes always get reported in terraform plan set to false by default  
 
 ### Storage Account
 
-awaiting terraform support for VNet service endpoints/firewalling
 Can fail if your login/SPN doesn't have acccess the KeyVault used for encryption
 Can also fail of resource locks are in place
 
@@ -218,7 +248,7 @@ No support for MS peering (don't have one to test!)
 
 ### Key Vault
 
-terraform doesn't support the "All" permission
+terraform doesn't support the "All" permission anymore but you may still have vaults using that permission.
 
 ### Virtual Network Gateway
 
