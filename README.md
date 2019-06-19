@@ -108,12 +108,14 @@ Base Resources
 Authorization Resources
 * azurerm_role_definition (subscription level)
 * azurerm_role_assignment (subscription level)
+* azurerm_user_assigned_identity
 
 Active Directory Resources
 
 App Service (Web Apps) Resources
 * azurerm_app_service
 * azurerm_app_service_plan
+* azurerm_function_app
 
 Automation Resources
 * azurerm_automation_account
@@ -121,10 +123,11 @@ Automation Resources
 Compute Resources
 * azurerm_availability_set
 * azurerm_image
-* azurerm_managed_disk  
+* azurerm_managed_disk 
+* azurerm_snapshot 
 * azurerm_virtual_machine 
 * azurerm_virtual_machine_extension 
-* azurerm_virtual_machine_scale_sets
+* azurerm_virtual_machine_scale_set
 
 Container Resources
 * azurerm_container_registry 
@@ -132,6 +135,10 @@ Container Resources
 
 CosmosDB (DocumentDB) Resources
 * azurerm_cosmosdb_account 
+
+Database Resources
+* azurerm_sql_database
+* azurerm_sql_server
 
 Databricks Resources
 * azurerm_databricks_resources
