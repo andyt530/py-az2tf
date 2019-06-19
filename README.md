@@ -203,9 +203,9 @@ Storage Resources
 
 ## Planned Additions
 
-+ PaaS databases and other missing providers
++ PaaS databases and other missing providers (feel free to contribute !)
 + ongoing better AKS support as AKS evolves
-+ Other terraform providers where terraform supports
++ Other terraform providers as terraform supports
 
 ## Using the Azure runbook code
 
