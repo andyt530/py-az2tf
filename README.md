@@ -245,7 +245,7 @@ Can also fail of resource locks are in place
 
 ### OMS
 
-If solutions have '[' & ']' in their names they wil be ignored.
+If solutions have '[' & ']' in their names they will be ignored.
 
 
 ### ExpressRoute
