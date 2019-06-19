@@ -44,7 +44,9 @@ terraform validate
 Success! The configuration is valid.
 ```
 
-Or there may be some kind of python error. If so please open an issue here and paste in the error and it will get fixed.
+Or there may be some kind of python error. (as trying to test everyone's Azure combinations in advance isn't possible)
+
+**If you happen to find one of these errors please open an issue here and paste in the error and it will get fixed.**
 
 Once the validation is ok you can use the tool in anger to not only generate the terraform files (-v yes) but also import the resources and perofrm a terraform plan (see below)
 
