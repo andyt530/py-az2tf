@@ -195,6 +195,7 @@ Network Resources
   
 Policy Resources
 * azurerm_policy_definition (custom poicies only)
+* azurerm_policy_set_definition (custom poicies only)
 * azurerm_policy_assignment
 
 OMS Resources
