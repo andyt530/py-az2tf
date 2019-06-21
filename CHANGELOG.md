@@ -1,6 +1,6 @@
 # az2tf (Python version) - changelog
 
-## (June 19 2019)
+## (June 21 2019)
 * added support for azurerm_policy_set_definition
 
 ## (June 19 2019)
