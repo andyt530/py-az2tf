@@ -58,7 +58,7 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
                 fr.write('\t\t name = "' +  srname + '"\n')
                 try:
                     srdesc=srules[j]["properties"]["description"]                    
-                    fr.write('\t\t description = "' + repr(srdesc) + '"\n')
+                    fr.write('\t\t description = "' + srdesc + '"\n')
                 except KeyError:
                     pass
 
