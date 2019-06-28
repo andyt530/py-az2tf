@@ -58,10 +58,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
             # vmtype=azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["osDisk"]["osType"]
             #datadisks = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["dataDisks"]
 
-            vmosdiskname = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["osDisk"]["name"]
-            vmosdiskcache = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["osDisk"]["caching"]
-            vmosvhdc = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["osDisk"]["vhdContainers"]
-            vmoscreoption = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["osDisk"]["createOption"]
+
             #vmoswa = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["osDisk"]["writeAcceleratorEnabled"]
             #
             osvhd = azr[i]["properties"]["virtualMachineProfile"]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys"][0]["keyData"]
@@ -213,38 +210,45 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
                     fr.write('}\n')
 
     # storage_profile_os_disk  block
-            fr.write('storage_profile_os_disk {\n')
-            fr.write('\tname = "' + vmosdiskname + '"\n')
-            fr.write('\tcaching = "' + vmosdiskcache + '"\n')
-            # look at this
-            # if vmosacctype != "" :
-            ##    fr.write('\tmanaged_disk_type = "' +   vmosacctype + '"\n')
-
-            fr.write('\tcreate_option = "' + vmoscreoption + '"\n')
-
             try:
-                vmtype = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["osDisk"]["osType"]
+                vmosdiskname = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["osDisk"]["name"]
+                vmosdiskcache = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["osDisk"]["caching"]
+                vmoscreoption = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["osDisk"]["createOption"]
+
+                fr.write('storage_profile_os_disk {\n')
+                fr.write('\tname = "' + vmosdiskname + '"\n')
+                fr.write('\tcaching = "' + vmosdiskcache + '"\n')
+                # look at this
+                # if vmosacctype != "" :
+                ##    fr.write('\tmanaged_disk_type = "' +   vmosacctype + '"\n')
+
+                fr.write('\tcreate_option = "' + vmoscreoption + '"\n')
+
+                try:
+                    vmtype = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["osDisk"]["osType"]
+                except KeyError:
+                    vmtype = ""
+                    pass
+                fr.write('\tos_type = "' + vmtype + '"\n')
+
+                try:
+                    vmoswa = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["osDisk"]["writeAcceleratorEnabled"]
+                    fr.write('\t write_accelerator_enabled = ' + str(vmoswa).lower() + '\n')
+                except KeyError:
+                    pass
+
+
+                try:
+                    vmosvhdc = str(ast.literal_eval(json.dumps(azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["osDisk"]["vhdContainers"])))
+                    vmosvhdc=vmosvhdc.replace("'",'"')
+                    fr.write('\tvhd_containers = ' + vmosvhdc + '\n')
+                except KeyError:
+                    pass
+
+                fr.write('}\n')
+                #
             except KeyError:
-                vmtype = ""
                 pass
-            fr.write('\tos_type = "' + vmtype + '"\n')
-
-            try:
-                vmoswa = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["osDisk"]["writeAcceleratorEnabled"]
-                fr.write('\t write_accelerator_enabled = ' + str(vmoswa).lower() + '\n')
-            except KeyError:
-                pass
-
-
-            try:
-                vmosvhdc = str(ast.literal_eval(json.dumps(azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["osDisk"]["vhdContainers"])))
-                vmosvhdc=vmosvhdc.replace("'",'"')
-                fr.write('\tvhd_containers = ' + vmosvhdc + '\n')
-            except KeyError:
-                pass
-
-            fr.write('}\n')
-            #
 
     # storage_profile_data_disk  block
 

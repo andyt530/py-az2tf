@@ -55,10 +55,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             netifs=azr[i]["properties"]["networkProfile"]["networkInterfaces"]
             datadisks=azr[i]["properties"]["storageProfile"]["dataDisks"]
 
-            vmosdiskname=azr[i]["properties"]["storageProfile"]["osDisk"]["name"]
-            vmosdiskcache=azr[i]["properties"]["storageProfile"]["osDisk"]["caching"]
-            #vmosvhd=azr[i]["properties"]["storageProfile"]["osDisk"]["vhd"]["uri"]
-            vmoscreoption=azr[i]["properties"]["storageProfile"]["osDisk"]["createOption"]
+
     
 
             try : 
@@ -219,45 +216,51 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             #
             # OS Disk
             #
-            fr.write('storage_os_disk {\n')
-            fr.write('\t\tname = "' +    vmosdiskname + '"\n')
-            fr.write('\t\tcaching = "' +   vmosdiskcache  + '"\n')
-            fr.write('\t\tcreate_option = "' + vmoscreoption + '"\n')
-            fr.write('\t\tos_type = "' +   vmtype + '"\n')
+            try:
+                vmosdiskname=azr[i]["properties"]["storageProfile"]["osDisk"]["name"]
+                vmosdiskcache=azr[i]["properties"]["storageProfile"]["osDisk"]["caching"]
+                vmoscreoption=azr[i]["properties"]["storageProfile"]["osDisk"]["createOption"]
+                fr.write('storage_os_disk {\n')
+                fr.write('\t\tname = "' +    vmosdiskname + '"\n')
+                fr.write('\t\tcaching = "' +   vmosdiskcache  + '"\n')
+                fr.write('\t\tcreate_option = "' + vmoscreoption + '"\n')
+                fr.write('\t\tos_type = "' +   vmtype + '"\n')
 
-    
-            try :
-                vmossiz=azr[i]["properties"]["storageProfile"]["osDisk"]["diskSizeGB"]
-                fr.write('\t\t disk_size_gb = "' +   str(vmossiz) + '"\n')
-            except KeyError:
-                pass   
-
-            try :
-                vmosvhd=azr[i]["properties"]["storageProfile"]["osDisk"]["vhd"]["uri"]
-                fr.write('\t\tvhd_uri = "' +   vmosvhd + '"\n')
-            except KeyError:
-                pass
-            try :
-                vmoswa=azr[i]["properties"]["storageProfile"]["osDisk"]["writeAcceleratorEnabled"]
-                fr.write('\t write_accelerator_enabled = ' +   str(vmoswa).lower() + '\n')
-            except KeyError:
-                pass
-
-            
-            if vmoscreoption == "Attach" :
-                try :
-                    vmosmdtyp=azr[i]["properties"]["storageProfile"]["osDisk"]["managedDisk"]["storageAccountType"]
-                    fr.write('\tmanaged_disk_type = "' +   vmosmdtyp + '"\n')
-                except KeyError:
-                    pass
-                try :
-                    vmosmdid=azr[i]["properties"]["storageProfile"]["osDisk"]["managedDisk"]["id"]
-                    fr.write('\tmanaged_disk_id = "' +   vmosmdid + '"\n')
-                except KeyError:
-                    pass
         
+                try :
+                    vmossiz=azr[i]["properties"]["storageProfile"]["osDisk"]["diskSizeGB"]
+                    fr.write('\t\t disk_size_gb = "' +   str(vmossiz) + '"\n')
+                except KeyError:
+                    pass   
 
-            fr.write('}\n')
+                try :
+                    vmosvhd=azr[i]["properties"]["storageProfile"]["osDisk"]["vhd"]["uri"]
+                    fr.write('\t\tvhd_uri = "' +   vmosvhd + '"\n')
+                except KeyError:
+                    pass
+                try :
+                    vmoswa=azr[i]["properties"]["storageProfile"]["osDisk"]["writeAcceleratorEnabled"]
+                    fr.write('\t write_accelerator_enabled = ' +   str(vmoswa).lower() + '\n')
+                except KeyError:
+                    pass
+
+                
+                if vmoscreoption == "Attach" :
+                    try :
+                        vmosmdtyp=azr[i]["properties"]["storageProfile"]["osDisk"]["managedDisk"]["storageAccountType"]
+                        fr.write('\tmanaged_disk_type = "' +   vmosmdtyp + '"\n')
+                    except KeyError:
+                        pass
+                    try :
+                        vmosmdid=azr[i]["properties"]["storageProfile"]["osDisk"]["managedDisk"]["id"]
+                        fr.write('\tmanaged_disk_id = "' +   vmosmdid + '"\n')
+                    except KeyError:
+                        pass
+            
+
+                fr.write('}\n')
+            except KeyError:
+                pass
             #if vmosmdid" try :
             #    if [ havesir -eq 0 :
                     #fr.write('storage_image_reference {'}'  + '"\n')
