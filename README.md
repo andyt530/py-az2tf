@@ -224,7 +224,7 @@ You can paste this code into an Azure python2 runbook, your automation account m
 
 When runs it will leave you subscriptions terraform and terraform import caommands in the runbook output window
 
-*Unfortunately this only works for small subscriptions as Azure currently has a limit on how much output it will show in an runbooks output window. If your output window is blank - az2tf has probably worked (see the All Logs tab) but the amount of output has exceeded Azure's limit.*
+*Unfortunately this only works for small subscriptions as Azure currently has a limit on how much output it will show in a runbook output window. If your output window is blank az2tf has probably worked (see the All Logs tab) but the amount of output has exceeded Azure's limit.*
 
 *To workaround this you can download the output aftert he job has run with powershell see*
 https://docs.microsoft.com/azure/automation/automation-runbook-output-and-messages#runbook-output.
