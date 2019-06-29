@@ -48,9 +48,9 @@ def azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 #    sku="Basic"
                 sku="Basic"
 
-                fr.write('\t sku {\n')   
-                fr.write('\t\t name = "' + sku + '"\n')
-                fr.write('\t}\n')
+                
+                fr.write('\t sku_name = "' + sku + '"\n')
+             
             except KeyError:
                 pass
 

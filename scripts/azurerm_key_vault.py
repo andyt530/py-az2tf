@@ -48,9 +48,9 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             if sku == "Premium" : sku="premium" 
             if sku == "Standard" : sku="standard" 
     
-            fr.write('\t sku {' + '\n')     
-            fr.write('\t\t name="' + sku + '"\n')
-            fr.write('\t }' + '\n')
+              
+            fr.write('\t sku_name="' + sku + '"\n')
+          
 
             ten=azr[i]["properties"]["tenantId"]     
             fr.write('\t tenant_id="' + ten + '"\n')
