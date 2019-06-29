@@ -245,7 +245,7 @@ It can take a lot of time to loop around everything in large subscriptions, in p
 Can fail if your login/SPN doesn't have acccess to the KeyVault
 
 ### Virtual machines:
-These attributes always get reported in terraform plan set to false by default  - may need to manually override
+These attributes always get reported in terraform plan set to false by default - may need to manually override
 
 + delete_data_disks_on_termination:           "" => "false"
 + delete_os_disk_on_termination:              "" => "false"
@@ -253,8 +253,8 @@ These attributes always get reported in terraform plan set to false by default  
 
 ### Storage Account
 
-Can fail if your login/SPN doesn't have acccess the KeyVault used for encryption
-Can also fail of resource locks are in place
+Can fail if your login/SPN doesn't have acccess to the KeyVault used for encryption.
+Can also fail if resource locks are in place
 
 ### OMS
 
