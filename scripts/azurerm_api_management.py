@@ -7,11 +7,14 @@ def azurerm_api_management(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
     # REST or cli
         # print "REST Function App"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.ApiManagement/service"
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.ApiManagement/services"
         params = {'api-version': '2019-01-01'}
         r = requests.get(url, headers=headers, params=params)
-        azr= r.json()["value"]
-
+        try:
+            azr= r.json()["value"]
+        except KeyError:
+            print "Skipping api_management for now..."
+            return
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
