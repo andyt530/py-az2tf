@@ -82,6 +82,7 @@ import azurerm_function_app
 import azurerm_logic_app_workflow
 import azurerm_logic_app_trigger_http_request
 import azurerm_monitor_autoscale_setting
+import azurerm_api_management
 
 import azurerm_policy_definition
 import azurerm_policy_set_definition
@@ -382,6 +383,9 @@ azurerm_app_service.azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az
 azurerm_function_app.azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 630_azurerm_logic_app_workflow
 azurerm_logic_app_workflow.azurerm_logic_app_workflow(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 640_azurerm_api_management
+azurerm_api_management.azurerm_api_management(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+
 
 # 631_azurerm_logic_app_trigger_http_request
 # AWAITING terraform import fix
