@@ -67,9 +67,9 @@ def azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmes
                 peerw=azr[i]["properties"]["bgpSettings"]["peerWeight"]
 
                 fr.write('\t bgp_settings {\n')
-                fr.write('\t\t asn = "' + asn + '"\n')
+                fr.write('\t\t asn = "' + str(asn) + '"\n')
                 fr.write('\t\t bgp_peering_address = "' + peera + '"\n')
-                fr.write('\t\t peer_weight = "' + peerw + '"\n')
+                fr.write('\t\t peer_weight = "' + str(peerw) + '"\n')
                 fr.write('\t } \n')
             except KeyError:
                 pass
