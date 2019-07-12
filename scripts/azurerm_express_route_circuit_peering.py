@@ -72,10 +72,10 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
                 fr.write('\t peer_asn = "' +  str(pasn) + '"\n')
                 
 
-                if pt == "MicrosoftPeering" or "pt" == "AzurePrivatePeering":
+                if pt == "MicrosoftPeering" or pt == "AzurePrivatePeering":
                     app= peers[k]["properties"]["microsoftPeeringConfig"]["advertisedPublicPrefixes"]
                     fr.write('\t microsoft_peering_config {' + '\n')
-                    fr.write('\t\t advertised_public_prefixes =  "' + app+ '" \n')
+                    fr.write('\t\t advertised_public_prefixes =  "' + str(app)+ '" \n')
                     fr.write('\t }'  + '\n')
     
 

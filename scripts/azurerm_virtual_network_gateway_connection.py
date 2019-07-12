@@ -124,8 +124,8 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
                     fr.write('\t ipsec_encryption = "' + ipsece + '"\n')
                     fr.write('\t ipsec_integrity = "' + ipseci + '"\n')
                     fr.write('\t pfs_group = "' + pfsg + '"\n')
-                    fr.write('\t sa_datasize = "' + sadata + '"\n')
-                    fr.write('\t sa_lifetime = "' + salife + '"\n')
+                    fr.write('\t sa_datasize = "' + str(sadata) + '"\n')
+                    fr.write('\t sa_lifetime = "' + str(salife) + '"\n')
                     fr.write('\t}\n')
                 
     
