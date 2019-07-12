@@ -1,8 +1,10 @@
 # azurerm_express_route_circuit_peering
+import ast
 def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_express_route_circuit_peering"
     tcode="250-"
     azr=""
+    
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
@@ -73,11 +75,15 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
                 
 
                 if pt == "MicrosoftPeering" or pt == "AzurePrivatePeering":
-                    app= peers[k]["properties"]["microsoftPeeringConfig"]["advertisedPublicPrefixes"]
-                    fr.write('\t microsoft_peering_config {' + '\n')
-                    fr.write('\t\t advertised_public_prefixes =  "' + str(app)+ '" \n')
-                    fr.write('\t }'  + '\n')
-    
+                    try:
+                        app=str(ast.literal_eval(json.dumps(peers[k]["properties"]["microsoftPeeringConfig"]["advertisedPublicPrefixes"])))
+                        app=app.replace("'",'"')
+
+                        fr.write('\t microsoft_peering_config {' + '\n')
+                        fr.write('\t\t advertised_public_prefixes =  ' + app + ' \n')
+                        fr.write('\t }'  + '\n')
+                    except KeyError:
+                        pass
 
     # no tags        
 
