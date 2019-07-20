@@ -2,6 +2,8 @@ def azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     #  030 Route Table
     tfp="azurerm_route_table"
     azr=""
+    # debug - uncomment this line
+    # cde=True
     if crf in tfp:
         # REST
         # print "REST ASG"
@@ -21,12 +23,15 @@ def azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         count=len(azr)
         print count
         for i in range(0, count):
+            try:
+                name=azr[i]["name"]
+                loc=azr[i]["location"]
+                id=azr[i]["id"]
+                rg=id.split("/")[4].replace(".","-").lower()
+                rgs=id.split("/")[4]   
+            except KeyError:
+                continue
 
-            name=azr[i]["name"]
-            loc=azr[i]["location"]
-            id=azr[i]["id"]
-            rg=id.split("/")[4].replace(".","-").lower()
-            rgs=id.split("/")[4]   
             if crg is not None:
                 if rgs.lower() != crg.lower():
                     continue  # back to for
