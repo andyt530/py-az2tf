@@ -5,8 +5,8 @@ import ast
 def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, json, az2tfmess):
     tfp = "azurerm_monitor_autoscale_setting"
     tcode = "650-"
-    
     azr = ""
+    
     if crf in tfp:
         # REST or cli
         # print "REST monitor autoscale"
@@ -37,6 +37,7 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
                 print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
 
             rname = name.replace(".", "-")
+            rname = name.replace(" ", "-")
             prefix = tfp+"."+rg+'__'+rname
             #print prefix
             rfilename = prefix+".tf"

@@ -3,6 +3,7 @@ def azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_automation_account"
     tcode="310-"
     azr=""
+    
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
@@ -56,12 +57,13 @@ def azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
     # tags block       
             try:
-                mtags=azr[i]["tags"]
-                fr.write('tags = { \n')
-                for key in mtags.keys():
-                    tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
-                fr.write('}\n')
+                mtags=azr[i]["tags"]          
+                if mtags is not None:
+                    fr.write('tags = { \n')
+                    for key in mtags.keys():
+                        tval=mtags[key]
+                        fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write('}\n')
             except KeyError:
                 pass
 

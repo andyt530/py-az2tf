@@ -51,9 +51,9 @@ def azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfm
 
             fr.write('\t sku =   "'+sku + '"\n')
             # 7 is not a valid value, but is the default reported from AZ api. If 7, skip to avoid triggering plan difference
-            if rdays != "7" :
+            if str(rdays) != "7" :
                 fr.write('\t retention_in_days = "'+str(rdays) + '"\n')
-
+   
 
     # tags block       
             try:

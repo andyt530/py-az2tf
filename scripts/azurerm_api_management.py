@@ -3,7 +3,7 @@ def azurerm_api_management(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tfp="azurerm_api_management"
     tcode="640-"
     azr=""
-    cde=True
+    
     if crf in tfp:
     # REST or cli
         # print "REST Function App"
