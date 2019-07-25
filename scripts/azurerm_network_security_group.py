@@ -153,7 +153,7 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                     #print tval
                 #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
                 fr.write('}\n')

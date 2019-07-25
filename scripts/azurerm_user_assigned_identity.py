@@ -51,7 +51,7 @@ def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfme
                 #print tcount
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
                 fr.write('}\n')
             

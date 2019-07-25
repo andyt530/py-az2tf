@@ -60,7 +60,7 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 #print tcount
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
                 fr.write('}\n')
             

@@ -110,7 +110,7 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 #print tcount
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
                 fr.write('}\n')
             
@@ -212,7 +212,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -227,7 +227,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             #    print tcount
             #    for key in mtags.keys():
             #        tval=mtags[key]
-            #        fr.write('\t "' + key + '"="' + tval + '"\n')
+            #        fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
             #    #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
             #    fr.write('}\n')
             
@@ -305,7 +305,7 @@ def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfme
                 print tcount
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
                 fr.write('}\n')
             
@@ -389,7 +389,7 @@ def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                     #print tval
                 #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
                 fr.write('}\n')
@@ -488,7 +488,7 @@ def azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                     #print tval
                 #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
                 fr.write('}\n')
@@ -571,7 +571,7 @@ def azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                     #print tval
                 #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
                 fr.write('}\n')
@@ -750,7 +750,7 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                     #print tval
                 #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
                 fr.write('}\n')
@@ -868,7 +868,7 @@ def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -1288,7 +1288,7 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -1426,7 +1426,7 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -1631,7 +1631,7 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -1731,7 +1731,7 @@ def azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -1848,7 +1848,7 @@ def azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfm
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -2081,7 +2081,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -2192,7 +2192,7 @@ def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -2313,7 +2313,7 @@ def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -3264,7 +3264,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -3375,7 +3375,7 @@ def azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmes
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -3537,7 +3537,7 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -3701,7 +3701,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -3799,7 +3799,7 @@ def azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmes
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -4073,7 +4073,7 @@ def azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -4272,7 +4272,7 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -4354,7 +4354,7 @@ def azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfm
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -4712,7 +4712,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 for key in mtags.keys():
                     tval=mtags[key]
                     tval=tval.replace('"',"'")
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -4830,7 +4830,7 @@ def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2t
                             for key in mtags.keys():
                                 tval=mtags[key]
                                 tval=tval.replace('"',"'")
-                                fr.write('\t "' + key + '"="' + tval + '"\n')
+                                fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                             fr.write('}\n')
                         except KeyError:
                             pass
@@ -5258,7 +5258,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval = mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -5349,7 +5349,7 @@ def azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -5439,7 +5439,7 @@ def azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfm
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -5661,7 +5661,7 @@ def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -5750,7 +5750,7 @@ def azurerm_shared_image_gallery(crf,cde,crg,headers,requests,sub,json,az2tfmess
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -5862,7 +5862,7 @@ def azurerm_shared_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     fr.write('tags = { \n')
                     for key in mtags.keys():
                         tval=mtags[key]
-                        fr.write('\t "' + key + '"="' + tval + '"\n')
+                        fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                     fr.write('}\n')
                 except KeyError:
                     pass
@@ -5992,7 +5992,7 @@ def azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess
                         fr.write('tags = { \n')
                         for key in mtags.keys():
                             tval=mtags[key]
-                            fr.write('\t "' + key + '"="' + tval + '"\n')
+                            fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                         fr.write('}\n')
                     except KeyError:
                         pass
@@ -6100,7 +6100,7 @@ def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -6179,7 +6179,7 @@ def azurerm_network_watcher(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -6305,7 +6305,7 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -6396,7 +6396,7 @@ def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -6613,7 +6613,7 @@ def azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -6733,7 +6733,7 @@ def azurerm_sql_database(crf, cde, crg, headers, requests, sub, json, az2tfmess)
                         fr.write('tags = { \n')
                         for key in mtags.keys():
                             tval = mtags[key]
-                            fr.write('\t "' + key + '"="' + tval + '"\n')
+                            fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                         fr.write('}\n')
                     except KeyError:
                         pass
@@ -6823,7 +6823,7 @@ def azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -7034,7 +7034,7 @@ def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -7212,7 +7212,7 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -7674,7 +7674,7 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval = mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -8223,7 +8223,7 @@ def azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass

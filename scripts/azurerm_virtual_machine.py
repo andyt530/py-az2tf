@@ -329,7 +329,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 for key in mtags.keys():
                     tval=mtags[key]
                     tval=tval.replace('"',"'")
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass

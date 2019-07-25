@@ -89,7 +89,7 @@ def azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfm
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write('\t "' + key + '"="' + tval + '"\n')
+                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
                 fr.write('}\n')
             except KeyError:
                 pass
