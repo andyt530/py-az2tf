@@ -167,7 +167,7 @@ Management Resources
 Messaging Resources
 * azurerm_eventhub
 * azurerm_eventhub_namespace
-* azurerm_eventhub_namespace_authorization_rule
+
 * azurerm_servicebus_namespace 
 * azurerm_servicebus_queue 
 
