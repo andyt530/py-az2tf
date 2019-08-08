@@ -73,6 +73,8 @@ import azurerm_network_watcher  # v12
 import azurerm_cosmosdb_account
 import azurerm_servicebus_namespace
 import azurerm_servicebus_queue
+import azurerm_eventhub_namespace
+import azurerm_eventhub
 import azurerm_sql_server
 import azurerm_sql_database
 import azurerm_databricks_workspace
@@ -179,7 +181,12 @@ for line in p.stdout.readlines():
         tk2=tk.replace(",", "")
         bt2=tk2.replace('"', '')
     if "subscription" in line:
-        tk=line.split(":")[1].strip(' ",')
+        try:
+            tk=line.split(":")[1].strip(' ",')
+        except IndexError:
+            print("Error getting subscription - Login again with CLI\n")
+            exit("LoginWithCli")
+
         tk2=tk.replace(",", "")
         sub2=tk2.replace('"', '')
 retval = p.wait()
@@ -369,6 +376,10 @@ azurerm_cosmosdb_account.azurerm_cosmosdb_account(crf,cde,crg,headers,requests,s
 azurerm_servicebus_namespace.azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 510_azurerm_servicebus_queue
 azurerm_servicebus_queue.azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 520_azurerm_eventhub_namespace
+azurerm_eventhub_namespace.azurerm_eventhub_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 521_azurerm_eventhub
+azurerm_eventhub.azurerm_eventhub(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 540_azurerm_sql_server
 azurerm_sql_server.azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 541_azurerm_sql_database

@@ -1,12 +1,16 @@
-# azurerm_servicebus_namespace
-def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess):
-    tfp="azurerm_servicebus_namespace"
-    tcode="500-"
+# azurerm_eventhub
+def azurerm_eventhub_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+
+    tfp="azurerm_eventhub_namespace"
+    tcode="520-"
     azr=""
+    
+    print crf + " "+ tfp
     if crf in tfp:
+   
     # REST or cli
         # print "REST SB namespaces"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.ServiceBus/namespaces"
+        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.EventHub/namespaces"
         params = {'api-version': '2017-04-01'}
         r = requests.get(url, headers=headers, params=params)
         try:
@@ -14,8 +18,7 @@ def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess
         except KeyError:
             if cde: print "No Namespace resources found"
             return
-
-
+        
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
@@ -55,6 +58,14 @@ def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess
                 fr.write('\t capacity = "' +  str(cap) + '"\n')
             except KeyError:
                 pass
+
+            kafka=azr[i]["properties"]["kafkaEnabled"]
+            maxt=azr[i]["properties"]["maximumThroughputUnits"]
+            autoi=azr[i]["properties"]["isAutoInflateEnabled"]
+
+            fr.write('\t auto_inflate_enabled = "' +  str(autoi).lower() + '"\n')
+            fr.write('\t maximum_throughput_units = "' +  str(maxt) + '"\n')
+            fr.write('\t kafka_enabled = "' +  str(kafka).lower() + '"\n')
 
     # tags block       
             try:
