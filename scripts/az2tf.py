@@ -75,6 +75,8 @@ import azurerm_servicebus_namespace
 import azurerm_servicebus_queue
 import azurerm_eventhub_namespace
 import azurerm_eventhub
+import azurerm_eventhub_namespace_authorization_rule
+
 import azurerm_sql_server
 import azurerm_sql_database
 import azurerm_databricks_workspace
@@ -380,6 +382,8 @@ azurerm_servicebus_queue.azurerm_servicebus_queue(crf,cde,crg,headers,requests,s
 azurerm_eventhub_namespace.azurerm_eventhub_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 521_azurerm_eventhub
 azurerm_eventhub.azurerm_eventhub(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+# 522_azurerm_eventhub_namespace_authorization_rule
+azurerm_eventhub_namespace_authorization_rule.azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 540_azurerm_sql_server
 azurerm_sql_server.azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 541_azurerm_sql_database

@@ -1,7 +1,7 @@
-# azurerm_servicebus_queue
-def azurerm_eventhub(crf,cde,crg,headers,requests,sub,json,az2tfmess):
-    tfp="azurerm_eventhub"
-    tcode="521-"
+# azurerm_eventhub_namespace_authorization_rule
+def azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+    tfp="azurerm_eventhub_namespace_authorization_rule"
+    tcode="522-"
     azr=""
     
     if crf in tfp:
@@ -39,14 +39,14 @@ def azurerm_eventhub(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
             
  
-            url="https://management.azure.com/" + id + "/eventhubs"
+            url="https://management.azure.com/" + id + "/authorizationRules"
             params = {'api-version': '2017-04-01'}
             r = requests.get(url, headers=headers, params=params)
             #print(json.dumps(r.json(), indent=4, separators=(',', ': ')))
             try:
                 azr2= r.json()["value"]
             except KeyError:
-                print "Found no EventHubs"
+                print "Found no EventHub Authorizations"
                 return
             
             if cde:
@@ -82,14 +82,24 @@ def azurerm_eventhub(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     fr.write('\t resource_group_name = "'+ rgs + '"\n')
                     fr.write('\t namespace_name = "' +  nname + '"\n')
 
-                    pc= azr2[j]["properties"]["partitionCount"]
-                    mr= azr2[j]["properties"]["messageRetentionInDays"]
-                    
-                    
-                    fr.write('\t partition_count =  '+str(pc) + '\n')
-                    fr.write('\t message_retention =  '+str(mr) + '\n')
+                    rights= azr2[j]["properties"]["rights"]
+   
+                    if "Listen" in str(rights):
+                        fr.write('\t listen = "true"\n')
+                    else:
+                        fr.write('\t listen = "false"\n')
 
-                
+                    if "Send" in str(rights):
+                        fr.write('\t send = "true"\n')
+                    else:
+                        fr.write('\t send = "false"\n')
+
+                    if "Manage" in str(rights):
+                        fr.write('\t manage = "true"\n')
+                    else:
+                        fr.write('\t manage = "false"\n')
+
+                    #fr.write('\t namespace_name = "' +  nname + '"\n')                
 
         # no tags block       
 
