@@ -86,7 +86,7 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                     ee= azr2[j]["properties"]["enableExpress"]
                     dd= azr2[j]["properties"]["requiresDuplicateDetection"]
                     rs= azr2[j]["properties"]["requiresSession"]
-                    mx= azr2[j] ["properties"]["maxSizeInMegabytes"]
+                    mx= azr2[j]["properties"]["maxSizeInMegabytes"]
                     dl= azr2[j]["properties"]["deadLetteringOnMessageExpiration"]
                     
                     fr.write('\t namespace_name = "' +  nname + '"\n')
