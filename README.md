@@ -165,6 +165,8 @@ Management Resources
 * azurerm_management_lock 
 
 Messaging Resources
+* azurerm_eventhub
+* azurerm_eventhub_namespace
 * azurerm_servicebus_namespace 
 * azurerm_servicebus_queue 
 
