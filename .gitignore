@@ -14,3 +14,4 @@ setup-vars.sh
 inorder.sh
 az2tfpy.sh
 validate.sh
+testcases

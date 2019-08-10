@@ -383,7 +383,7 @@ azurerm_eventhub_namespace.azurerm_eventhub_namespace(crf,cde,crg,headers,reques
 # 521_azurerm_eventhub
 azurerm_eventhub.azurerm_eventhub(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 522_azurerm_eventhub_namespace_authorization_rule
-#azurerm_eventhub_namespace_authorization_rule.azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_eventhub_namespace_authorization_rule.azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 540_azurerm_sql_server
 azurerm_sql_server.azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 # 541_azurerm_sql_database

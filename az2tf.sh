@@ -147,7 +147,12 @@ if [ $? -eq 1 ]; then
     exit
 fi
 
-if [ "$v" = "yes" ]; then exit ;fi
+if [ "$v" = "yes" ]; then 
+    echo "---------------------------------------------------------------------------"
+    echo "az2tf output files are in generated/tf.$mysub"
+    echo "---------------------------------------------------------------------------"
+    exit 
+fi
 
 chmod 755 *state*.sh
 

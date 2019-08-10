@@ -1,5 +1,6 @@
 # az2tf (Python version) - changelog
-
+## (August 10 2019)
+* added zurerm_eventhub_namespace_authorization_rule
 ## (August 8 2019)
 * added support for azure_eventhub, azurerm_eventhub_namespace 
 
