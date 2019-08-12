@@ -5,7 +5,6 @@ def azurerm_eventhub_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     tcode="520-"
     azr=""
     
-    print crf + " "+ tfp
     if crf in tfp:
    
     # REST or cli
