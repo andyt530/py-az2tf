@@ -49,7 +49,7 @@ def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t name = "' + name + '"\n')
             rdid=azr[i]["name"]
             desc=azr[i]["properties"]["description"]
-            desc=desc.encode('ascii', 'ignore')
+            desc=desc.encode('utf-8', 'ignore')
             id=azr[i]["id"]
             
 
