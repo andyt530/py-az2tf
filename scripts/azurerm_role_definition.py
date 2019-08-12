@@ -39,13 +39,14 @@ def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             rfilename=prefix+".tf"
             fr=open(rfilename, 'w')
             fr.write(az2tfmess)
+            
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
-            fr.write('\t name = "' + name + '"\n')
+            
             #fr.write('\t location = "'+ loc + '"\n')
             #fr.write('\t resource_group_name = "'+ rgs + '"\n')
             
             name=azr[i]["properties"]["roleName"]
-    
+            fr.write('\t name = "' + name + '"\n')
             rdid=azr[i]["name"]
             desc=azr[i]["properties"]["description"]
             desc=desc.encode('ascii', 'ignore')
