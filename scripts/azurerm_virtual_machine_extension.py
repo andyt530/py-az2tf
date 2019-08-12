@@ -77,7 +77,7 @@ def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2t
                         try:
                             set=azr2[j]["properties"]["settings"]
                             slen=len(str(set))
-                            print slen
+                            
                             if slen > 2:
                                 fr.write('settings = jsonencode( \n') 
                                 fr.write(json.dumps(azr2[j]["properties"]["settings"]))

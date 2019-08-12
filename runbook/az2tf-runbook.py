@@ -156,7 +156,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         for j in range(0, count):
             
             name=azr[j]["name"]
-            name=name.encode('ascii', 'ignore')
+            name=name.encode('utf-8', 'ignore')
             #loc=azr[j]["location"]
             id=azr[j]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
@@ -172,8 +172,8 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             sn=scope.split("/")[sc-1].replace(" ","-").lower()
             sn=sn.replace(".","-")
 
-            scope=scope.encode('ascii', 'ignore')
-            sn=sn.encode('ascii', 'ignore')
+            scope=scope.encode('utf-8', 'ignore')
+            sn=sn.encode('utf-8', 'ignore')
             #sn=str(sn.encode('utf-8').strip())
             #print "scope name="+sn
 
@@ -187,7 +187,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             rname=rname.replace("[","-")
             rname=rname.replace("]","-")
             rname=rname.replace(" ","_")
-            rname=rname.encode('ascii', 'ignore')
+            rname=rname.encode('utf-8', 'ignore')
              
             prefix=tfp+"."+rg+'__'+rname+'__'+sn
             
@@ -199,7 +199,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             
             try:
                 notes=azr[j]["properties"]["notes"]      
-                notes=notes.encode('ascii', 'ignore')          
+                notes=notes.encode('utf-8', 'ignore')          
                 fr.write('\t notes = "'+ notes + '"\n') 
             except KeyError:
                 pass
@@ -242,7 +242,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             
             tfcomm='terraform import '+tfp+'.'+rg+'__'+rname + '__'+ sn + ' "'+id+'"\n'
             tfim.write('echo "importing ' + str(j) + ' of ' + str(count-1) + '"' + '\n')
-            tfcomm=tfcomm.encode('ascii', 'ignore')
+            tfcomm=tfcomm.encode('utf-8', 'ignore')
             tfim.write(tfcomm)  
 
         # end for
@@ -8093,7 +8093,7 @@ def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     
             rdid=azr[i]["name"]
             desc=azr[i]["properties"]["description"]
-            desc=desc.encode('ascii', 'ignore')
+            desc=desc.encode('utf-8', 'ignore')
             id=azr[i]["id"]
             
 
