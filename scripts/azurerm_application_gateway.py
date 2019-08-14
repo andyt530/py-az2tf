@@ -196,7 +196,10 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
                         pass
                     try :
                         bhn=azr[i]["properties"]["backendHttpSettingsCollection"][j]["properties"]["hostName"]
-                        fr.write('\t host_name = "' + bhn + '"\n')
+                        try:
+                            fr.write('\t host_name = "' + bhn + '"\n')
+                        except TypeError:
+                            pass
                     except KeyError:
                         pass               
                    
