@@ -25,6 +25,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             id=azr[i]["id"]
             rgs=id.split("/")[4]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             if crg is not None:
                 if rgs.lower() != crg.lower():
                     continue  # back to for

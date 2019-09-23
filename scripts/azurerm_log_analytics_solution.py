@@ -28,6 +28,7 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
 
             skip="false"

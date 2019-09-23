@@ -66,7 +66,7 @@ def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2t
                         fr.write('resource ' + tfp + ' ' + rg + '__' + rname + '__'+ername +'{\n')
                         fr.write('\t name = "' + ename + '"\n')
                         fr.write('\t location = "'+ loc + '"\n')
-                        fr.write('\t resource_group_name = "'+ rg + '"\n')
+                        fr.write('\t resource_group_name = "'+ rgs + '"\n')
                         fr.write('\t publisher = "'+ pub + '"\n')
                         fr.write('\t type_handler_version = "'+ thv + '"\n')
                         fr.write('\t virtual_machine_name = "'+ name + '"\n')
