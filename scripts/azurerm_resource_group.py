@@ -37,6 +37,8 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             
             rname=name.replace(".","-")
             if rg[0].isdigit(): rg="rg_"+rg
+                
+            if rname[0].isdigit(): rname="rg_"+rname
             prefix=tfp+"."+rname
             
             rfilename=prefix+".tf"
