@@ -31,6 +31,7 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 #loc=subs[j]["location"] subnets don't have location
                 id=subs[j]["id"]
                 rg=id.split("/")[4].replace(".","-").lower()
+                if rg[0].isdigit(): rg="rg_"+rg
                 rgs=id.split("/")[4]
                 if crg is not None:
                     if rgs.lower() != crg.lower():

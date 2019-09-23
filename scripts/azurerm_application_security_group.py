@@ -25,6 +25,7 @@ def azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2
             id=azr[i]["id"]
         #    rg=azr[i]["resourceGroup"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             #print rg
 

@@ -59,6 +59,7 @@ def azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess
                     loc=azr3[k]["location"]
                     id=azr3[k]["id"]
                     rg=id.split("/")[4].replace(".","-").lower()
+                    if rg[0].isdigit(): rg="rg_"+rg
                     rgs=id.split("/")[4]
                     rname = name.replace(".", "-")
                     riname=iname.replace(".", "-")

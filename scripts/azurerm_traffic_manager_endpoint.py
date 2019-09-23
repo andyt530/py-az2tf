@@ -31,6 +31,7 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
                 name=azr2[j]["name"]
                 id=azr2[j]["id"]
                 rg=id.split("/")[4].replace(".","-").lower()
+                if rg[0].isdigit(): rg="rg_"+rg
                 rgs=id.split("/")[4]
                 
                 if crg is not None:

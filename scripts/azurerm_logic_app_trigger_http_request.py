@@ -35,6 +35,7 @@ def azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json
                 loc=azr[i]["location"]
                 id=azr[i]["id"]
                 rg=id.split("/")[4].replace(".","-").lower()
+                if rg[0].isdigit(): rg="rg_"+rg
                 rgs=id.split("/")[4]
 
 

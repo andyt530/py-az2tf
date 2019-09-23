@@ -28,6 +28,7 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():

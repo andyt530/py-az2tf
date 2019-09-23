@@ -24,6 +24,7 @@ def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfme
             loc=azr[j]["location"]
             id=azr[j]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 print "rgname=" + rg + " crg=" + crg

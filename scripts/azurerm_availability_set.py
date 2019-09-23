@@ -24,6 +24,7 @@ def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             id=azr[i]["id"]
         
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             fd=str(azr[i]["properties"]["platformFaultDomainCount"])
             ud=str(azr[i]["properties"]["platformUpdateDomainCount"])

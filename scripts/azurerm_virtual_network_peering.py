@@ -27,6 +27,7 @@ def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfm
                 #loc=peers[j]["location"] peers don't have a location
                 id=peers[j]["id"]
                 rg=id.split("/")[4].replace(".","-").lower()
+                if rg[0].isdigit(): rg="rg_"+rg
                 rgs=id.split("/")[4]
 
                 if crg is not None:

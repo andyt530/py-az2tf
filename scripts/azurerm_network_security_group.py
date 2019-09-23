@@ -26,6 +26,7 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
             id=azr[i]["id"]
             rgs=id.split("/")[4]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
 
             if crg is not None:
                 if rgs.lower() != crg.lower():

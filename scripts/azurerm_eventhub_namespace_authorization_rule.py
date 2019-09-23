@@ -61,6 +61,7 @@ def azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,s
                 loc=azr2[j]["location"]
                 id=azr2[j]["id"]
                 rg=id.split("/")[4].replace(".","-").lower()
+                if rg[0].isdigit(): rg="rg_"+rg
                 rgs=id.split("/")[4]
                 #print id
                 if crg is not None:
