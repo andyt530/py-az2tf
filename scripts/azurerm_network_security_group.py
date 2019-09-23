@@ -129,6 +129,7 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
                     #print "in k k=" + str(k)
                     asgnam=srules[j]["properties"]["sourceApplicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
                     asgrg=srules[j]["properties"]["sourceApplicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-").lower()   
+                    if asgrg[0].isdigit(): asgrg="rg_"+asgrg
                     fr.write('\t\t source_application_security_group_ids = ["${azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}"]' + '\n')
                         
         # destination asg's
@@ -140,6 +141,7 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
                 for k in range(0, kcount):
                     asgnam=srules[j]["properties"]["destinationApplicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
                     asgrg=srules[j]["properties"]["destinationApplicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-").lower()  
+                    if asgrg[0].isdigit(): asgrg="rg_"+asgrg
                     fr.write('\t\t destination_application_security_group_ids = ["${azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}"]' + '\n')
                         
                 fr.write('\t}' + '\n')

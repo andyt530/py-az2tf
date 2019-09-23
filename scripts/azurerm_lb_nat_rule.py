@@ -52,7 +52,7 @@ def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                        
                     lbrg=azr[i]["id"].split("/")[4].replace(".","-").lower()
                     lbname=azr[i]["id"].split("/")[8].replace(".","-")
-                    
+                    if lbrg[0].isdigit(): lbrg="rg_"+lbrg 
                     fep=azr[i]["properties"]["inboundNatRules"][j]["properties"]["frontendPort"]
                     bep=azr[i]["properties"]["inboundNatRules"][j]["properties"]["backendPort"]
                     proto=azr[i]["properties"]["inboundNatRules"][j]["properties"]["protocol"]

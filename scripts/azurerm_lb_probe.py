@@ -62,7 +62,7 @@ def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
              
 
-
+                if lbrg[0].isdigit(): lbrg="rg_"+lbrg 
                 fr.write('\t\t loadbalancer_id = "${azurerm_lb.' + lbrg  + '__' + lbname + '.id}" \n')
                 fr.write('\t\t protocol = "' +    proto + '"\n')
                 fr.write('\t\t port = "' +    str(port) + '"\n')

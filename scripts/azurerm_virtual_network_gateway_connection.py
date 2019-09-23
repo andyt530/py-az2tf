@@ -65,6 +65,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
             pbs=azr[i]["properties"]["usePolicyBasedTrafficSelectors"]
             
             fr.write('\t type = "' +  ctype + '"\n')
+            if vngrg[0].isdigit(): vngrg="rg_"+vngrg
             fr.write('\t\t virtual_network_gateway_id = "${azurerm_virtual_network_gateway.' + vngrg + '__' + vngnam + '.id}"\n')
             try:
                 authkey=azr[i]["properties"]["authorizationKey"]
@@ -96,6 +97,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
                 #fr.write('\t\t express_route_circuit_id = "${azurerm_virtual_network_gateway. + '__' + .id}'"' peerrg peernam + '"\n')
                 peerid=azr[i]["properties"]["peer"]["id"]
                 peerrg=peerid.split("/")[4].replace(".","-").lower()
+                if peerrg[0].isdigit(): peerrg="rg_"+peerrg
                 peernam=peerid.split("/")[8].replace(".","-")
         
             if ctype == "Vnet2Vnet" :

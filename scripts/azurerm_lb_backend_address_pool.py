@@ -55,7 +55,8 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
                     #lbrg=azr[i]["id"].split("/")[4].replace(".","-").lower()
                     #lbname=azr[i]["id"].split("/")[8].replace(".","-")   
                     lbrg=id.split("/")[4].replace(".","-").lower()
-                    lbname=id.split("/")[8].replace(".","-")          
+                    lbname=id.split("/")[8].replace(".","-")    
+                    if lbrg[0].isdigit(): lbrg="rg_"+lbrg      
                     fr.write('\t\t loadbalancer_id = "${azurerm_lb.' + lbrg + '__' + lbname + '.id}" \n')    
                 except KeyError:
                     pass
