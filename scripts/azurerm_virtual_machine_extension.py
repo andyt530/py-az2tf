@@ -27,7 +27,7 @@ def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2t
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
             if rg[0].isdigit(): rg="rg_"+rg
-            rgs=id.split("/")[4]
+            rgs=id.split("/")[4].lower()
             try:
                 res=azr[i]["resources"]
                 rname=name.replace(".","-")

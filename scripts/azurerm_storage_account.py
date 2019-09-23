@@ -9,7 +9,7 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # REST or cli
         # print "REST Storage Acc"
         url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Storage/storageAccounts"
-        params = {'api-version': '2019-04-01'}
+        params = {'api-version': '2019-06-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
 
@@ -60,7 +60,8 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             fr.write('\t enable_file_encryption = ' +  fiencrypt + '\n')
             fr.write('\t enable_https_traffic_only = ' +  sahttps + '\n')
             fr.write('\t account_encryption_source = "' +  saencs + '"\n')
-            
+            #fr.write('\t enable_advanced_threat_protection = ' +  'false' + '\n')
+
             try:
                 ishns=str(azr[i]["properties"]["isHnsEnabled"]).lower()
                 fr.write('\t is_hns_enabled = ' + ishns + '\n')
