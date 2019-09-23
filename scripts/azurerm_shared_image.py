@@ -51,6 +51,7 @@ def azurerm_shared_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 id=azr2[j]["id"]
 
                 rname=name.replace(".","-")
+                
                 prefix=tfp+"."+rg+'__'+gname+'__'+rname
                 #print prefix
                 rfilename=prefix+".tf"

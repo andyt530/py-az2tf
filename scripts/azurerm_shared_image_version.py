@@ -61,14 +61,15 @@ def azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess
                     rg=id.split("/")[4].replace(".","-").lower()
                     rgs=id.split("/")[4]
                     rname = name.replace(".", "-")
-                    prefix=tfp+"."+rg+'__'+gname+'__'+iname+'__'+rname
+                    riname=iname.replace(".", "-")
+                    prefix=tfp+"."+rg+'__'+gname+'__'+riname+'__'+rname
                     
                     #print prefix
                     rfilename=prefix+".tf"
                     fr=open(rfilename, 'w')
                     fr.write(az2tfmess)
                   
-                    fr.write('resource ' + tfp + ' ' + rg + '__' + gname + '__' + iname + '__' + rname + ' {\n')  
+                    fr.write('resource ' + tfp + ' ' + rg + '__' + gname + '__' + riname + '__' + rname + ' {\n')  
                     fr.write('\t name = "' + name + '"\n')
                     fr.write('\t location = "'+ loc + '"\n')
                     fr.write('\t resource_group_name = "'+ rgs + '"\n')
@@ -114,9 +115,9 @@ def azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess
                             print f.read()
 
                    
-                    tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+gname+'__'+iname+'__'+rname + '\n')
+                    tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+gname+'__'+riname+'__'+rname + '\n')
                     tfim.write('echo "importing ' + str(k) + ' of ' + str(kcount-1) + '"' + '\n')
-                    tfcomm='terraform import '+tfp+'.'+rg+'__'+gname+'__'+iname+'__'+rname+' '+id+'\n'
+                    tfcomm='terraform import '+tfp+'.'+rg+'__'+gname+'__'+riname+'__'+rname+' '+id+'\n'
                   
                     tfim.write(tfcomm)  
 
