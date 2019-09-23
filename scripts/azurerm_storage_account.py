@@ -71,7 +71,7 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 byp=str(ast.literal_eval(json.dumps(azr[i]["properties"]["networkAcls"]["bypass"])))
                 byp=byp.replace("'",'"')
                 byp=byp.replace(", ",'", "')
-
+                dfa=azr[i]["properties"]["networkAcls"]["defaultAction"]
                 ipr=azr[i]["properties"]["networkAcls"]["ipRules"]
                 #print(json.dumps(ipr, indent=4, separators=(',', ': ')))
 
@@ -84,6 +84,7 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 # if the only network rule is AzureServices, dont need a network_rules block
                 if "AzureServices" not in byp or icount > 0 or vcount > 0:
                     fr.write('\t network_rules { \n')
+                    fr.write('\t\t default_action = "' +  dfa + '"\n')
                     fr.write('\t\t bypass = ["' +  byp + '"]\n')
                     
                     if icount > 0:

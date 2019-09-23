@@ -1,3 +1,4 @@
+import uuid
 def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     # management locks
     
@@ -39,8 +40,8 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 
             scope=scope.encode('utf-8', 'ignore')
             sn=sn.encode('utf-8', 'ignore')
-            #sn=str(sn.encode('utf-8').strip())
-            #print "scope name="+sn
+            
+         
 
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -52,10 +53,26 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             rname=rname.replace("[","-")
             rname=rname.replace("]","-")
             rname=rname.replace(" ","_")
-            rname=rname.encode('utf-8', 'ignore')
-             
-            prefix=tfp+"."+rg+'__'+rname+'__'+sn
-            
+            try:
+                rname=rname.encode('utf-8', 'ignore')
+            except UnicodeDecodeError:
+                print('Problem with the name of this item: '+name)
+                print('Please rename this item in the Azure Portal')
+                rname=str(uuid.uuid4())
+                rname=rname.encode('utf-8', 'ignore')
+                
+                 
+            try:
+                prefix=tfp+"."+rg+'__'+rname+'__'+sn
+            except UnicodeDecodeError:
+                print('Problem with the scope name: '+scope)
+                print('Please rename this item in the Azure Portal')
+                sn=str(uuid.uuid4())
+                sn=sn.encode('utf-8', 'ignore')
+                prefix=tfp+"."+rg+'__'+rname+'__'+sn
+            #prefix=tfp+"."+rg+'__'+rname
+
+
             rfilename=prefix+".tf"
             fr=open(rfilename, 'w')
             fr.write('resource ' + tfp + ' "' + rg + '__' + rname + '__'+ sn +  '" {\n')
