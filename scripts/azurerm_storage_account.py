@@ -83,25 +83,28 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 icount=len(ipr)
                 vcount=len(vnr)
             
+                # if off skip
+                if "None" not in byp and "Allow" not in dfa :
                 # if the only network rule is AzureServices, dont need a network_rules block
-                if "AzureServices" not in byp or icount > 0 or vcount > 0:
-                    fr.write('\t network_rules { \n')
-                    fr.write('\t\t default_action = "' +  dfa + '"\n')
-                    fr.write('\t\t bypass = ["' +  byp + '"]\n')
-                    
-                    if icount > 0:
-                        fr.write('\t\t ip_rules = [')
-                        for ic in range(0, icount): 
-                            ipa=ipr[ic]["value"]
-                            fr.write('"' + ipa + '",')
-                        fr.write(']\n')
-                    if vcount > 0:
-                        fr.write('\t\t virtual_network_subnet_ids = [')
-                        for vc in range(0,vcount):
-                            vnsid=vnr[vc]["id"]
-                            fr.write('\t\t"' + vnsid + '",')
-                        fr.write(']\n')
-                    fr.write('}\n')
+                    if "AzureServices" not in byp or icount > 0 or vcount > 0:
+                        fr.write('\t network_rules { \n')
+                        fr.write('\t\t default_action = "' +  dfa + '"\n')
+                        fr.write('\t\t bypass = ["' +  byp + '"]\n')
+                        
+                        if icount > 0:
+                            fr.write('\t\t ip_rules = [')
+                            for ic in range(0, icount): 
+                                ipa=ipr[ic]["value"]
+                                fr.write('"' + ipa + '",')
+                            fr.write(']\n')
+                        if vcount > 0:
+                            fr.write('\t\t virtual_network_subnet_ids = [')
+                            for vc in range(0,vcount):
+                                vnsid=vnr[vc]["id"]
+                                fr.write('\t\t"' + vnsid + '",')
+                            fr.write(']\n')
+                        fr.write('}\n')
+                    # end if
                 # end if
 
             except KeyError:
