@@ -157,7 +157,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
                 if vmdispw != "false":
                     fr.write('\tssh_keys { \n')
                     fr.write('\t\tpath = "' + vmsshpath + '"\n')
-                    fr.write('\t\tkey_data = "' +   vmsshkey + '"\n') 
+                    fr.write('\t\tkey_data = "' +   vmsshkey.rstrip() + '"\n') 
                     fr.write('\t}\n')
 
                 fr.write('}\n')
