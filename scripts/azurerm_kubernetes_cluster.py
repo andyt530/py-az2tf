@@ -78,7 +78,7 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
                 fr.write('\t linux_profile {\n')
                 fr.write('\t\t admin_username =  "' +  au + '"\n')
                 fr.write('\t\t ssh_key {\n')
-                fr.write('\t\t\t key_data =    "' + sshk + '"\n')
+                fr.write('\t\t\t key_data = "' + sshk.rstrip() + '"\n')
                 fr.write('\t\t }\n')
                 fr.write('\t }\n')
             #else
