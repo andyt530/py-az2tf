@@ -88,8 +88,8 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
 
     # no tags        
 
-            fr.write('}\n') 
-            fr.close()   # close .tf file
+                fr.write('}\n') 
+                fr.close()   # close .tf file
 
             if cde:
                 with open(rfilename) as f: 

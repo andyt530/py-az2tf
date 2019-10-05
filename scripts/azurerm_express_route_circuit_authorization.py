@@ -58,10 +58,7 @@ def azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub
                
                     fr.write('\t express_route_circuit_name = "' +  name2 + '"\n')                                  
 
-    # no tags       
- 
-
-                fr.write('}\n')
+                    fr.write('}\n')
             fr.close()   # close .tf file
 
             if cde:
