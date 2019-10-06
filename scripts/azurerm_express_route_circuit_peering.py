@@ -91,18 +91,19 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
                 fr.write('}\n') 
                 fr.close()   # close .tf file
 
-            if cde:
-                with open(rfilename) as f: 
-                    print f.read()
+                if cde:
+                    with open(rfilename) as f: 
+                        print f.read()
 
-            tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+                tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
-            tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
-            tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
-            tfim.write(tfcomm)  
+                tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+                tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+                tfim.write(tfcomm) 
+
+            # end k loop
 
         # end for i loop
-
         tfrm.close()
         tfim.close()
     #end stub
