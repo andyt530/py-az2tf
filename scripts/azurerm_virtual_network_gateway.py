@@ -53,9 +53,15 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
             aa=azr[i]["properties"]["activeActive"]
             enbgp=azr[i]["properties"]["enableBgp"]
             
-            fr.write('\t type = "' + gtype + '"\n')
             fr.write('\t vpn_type = "' +  vpntype + '"\n')
-            fr.write('\t sku = "' +  sku + '"\n')
+            fr.write('\t type = "' + gtype + '"\n')
+            try:
+                sku=azr[i]["properties"]["sku"]["name"]        
+                fr.write('\t sku = "' +  sku + '"\n')
+            except KeyError:
+                pass
+            
+            
             fr.write('\t active_active = "' + str(aa).lower() + '"\n')
             fr.write('\t enable_bgp = "' + str(enbgp).lower() + '"\n')
             
