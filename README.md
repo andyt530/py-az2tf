@@ -20,6 +20,10 @@ There should hopefully be no subsequent additions or deletions reported by the t
 + terraform **version v0.12.1 or higher** needs to be installed
 + Python v2.7
 
+### May also be required
++ pip install requests
++ pip install adal
+
 
 
 ## Quickstart guide to using the tool
