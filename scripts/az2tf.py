@@ -197,7 +197,8 @@ if csub is not None:
 else:
     sub=sub2.rstrip('\n')
 
-bt=bt2.rstrip('\n')
+#bt=bt2.rstrip('\n')
+bt=bt2.rstrip()
 print "Subscription:",sub
 headers = {'Authorization': 'Bearer ' + bt, 'Content-Type': 'application/json'}
 
