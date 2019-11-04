@@ -1,5 +1,5 @@
 import ast
-def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     #  050 NSG's
     tfp="azurerm_network_security_group"
     azr=""
@@ -7,7 +7,7 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
         # REST
         # print "REST NSG"
 
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/networkSecurityGroups"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/networkSecurityGroups"
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

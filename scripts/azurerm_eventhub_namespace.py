@@ -1,5 +1,5 @@
 # azurerm_eventhub
-def azurerm_eventhub_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_eventhub_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
 
     tfp="azurerm_eventhub_namespace"
     tcode="520-"
@@ -9,7 +9,7 @@ def azurerm_eventhub_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess):
    
     # REST or cli
         # print "REST SB namespaces"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.EventHub/namespaces"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.EventHub/namespaces"
         params = {'api-version': '2017-04-01'}
         r = requests.get(url, headers=headers, params=params)
         try:

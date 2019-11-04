@@ -1,12 +1,12 @@
 # azurerm_servicebus_namespace
-def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_servicebus_namespace"
     tcode="500-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST SB namespaces"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.ServiceBus/namespaces"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.ServiceBus/namespaces"
         params = {'api-version': '2017-04-01'}
         r = requests.get(url, headers=headers, params=params)
         try:

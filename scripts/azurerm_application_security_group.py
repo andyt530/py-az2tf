@@ -1,4 +1,4 @@
-def azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     #  040 ASG's
     tfp="azurerm_application_security_group"
     azr=""
@@ -6,7 +6,7 @@ def azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2
         # REST
         # print "REST ASG"
 
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/applicationSecurityGroups"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/applicationSecurityGroups"
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

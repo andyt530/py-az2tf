@@ -1,5 +1,5 @@
 # azurerm_eventhub_namespace_authorization_rule
-def azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_eventhub_namespace_authorization_rule"
     tcode="522-"
     azr=""
@@ -7,7 +7,7 @@ def azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,s
     if crf in tfp:
     # REST or cli
         # print "REST namespace for queue"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.EventHub/namespaces"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.EventHub/namespaces"
         params = {'api-version': '2017-04-01'}
         r = requests.get(url, headers=headers, params=params)
         #print(json.dumps(r.json(), indent=4, separators=(',', ': ')))

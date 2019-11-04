@@ -1,11 +1,11 @@
-def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     #  020 Avail Sets
     tfp="azurerm_availability_set"
     azr=""
     if crf in tfp:
 
         # print "REST Avail Set"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/availabilitySets"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Compute/availabilitySets"
         params = {'api-version': '2018-10-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

@@ -1,13 +1,13 @@
 # azurerm_virtual_network_gateway
 import ast
-def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_virtual_network_gateway"
     tcode="210-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworkGateways"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworkGateways"
         params = {'api-version': '2019-04-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

@@ -1,5 +1,5 @@
 # azurerm_dns_zone
-def azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_logic_app_trigger_http_request"
     tcode="631-"
     azr=""
@@ -8,7 +8,7 @@ def azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Logic/workflows"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Logic/workflows"
         #params = {'api-version': '2016-04-01'}
         params = {'api-version': '2016-06-01'}       
         r = requests.get(url, headers=headers, params=params)

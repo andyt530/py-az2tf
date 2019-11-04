@@ -1,12 +1,12 @@
 # azurerm_function_app
-def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_function_app"
     tcode="620-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Function App"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Web/sites"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Web/sites"
         params = {'api-version': '2018-02-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

@@ -1,5 +1,5 @@
 # azurerm_dns_zone
-def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_dns_zone"
     tcode="131-"
     azr=""
@@ -7,7 +7,7 @@ def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/dnszones"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/dnszones"
         #params = {'api-version': '2016-04-01'}
         params = {'api-version': '2018-05-01'}       
         r = requests.get(url, headers=headers, params=params)

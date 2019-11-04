@@ -1,5 +1,5 @@
 # azurerm_log_analytics_solution
-def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_log_analytics_solution"
     tcode="330-"
     azr=""
@@ -7,7 +7,7 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
     if crf in tfp:
     # REST or cli
         # print "REST solutions"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.OperationsManagement/solutions"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.OperationsManagement/solutions"
         params = {'api-version': '2015-11-01-preview'}
         #2015-11-01-preview
         r = requests.get(url, headers=headers, params=params)

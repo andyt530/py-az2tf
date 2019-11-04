@@ -2,7 +2,7 @@ def azure_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os):
     # print "REST Resources ",
     fresfilename="data.json"
     fres=open(fresfilename, 'w')
-    url="https://management.azure.com/subscriptions/" + sub + "/resources"
+    url="https://" + cldurl + "/subscriptions/" + sub + "/resources"
     params = {'api-version': '2018-11-01'}
     try: 
         r = requests.get(url, headers=headers, params=params)

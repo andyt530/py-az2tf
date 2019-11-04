@@ -1,6 +1,6 @@
 # azurerm_express_route_circuit_peering
 import ast
-def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_express_route_circuit_peering"
     tcode="250-"
     azr=""
@@ -8,7 +8,7 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/expressRouteCircuits"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/expressRouteCircuits"
         params = {'api-version': '2018-01-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

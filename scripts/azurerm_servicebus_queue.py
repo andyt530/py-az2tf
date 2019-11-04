@@ -1,12 +1,12 @@
 # azurerm_servicebus_queue
-def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_servicebus_queue"
     tcode="510-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST namespace for queue"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.ServiceBus/namespaces"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.ServiceBus/namespaces"
         params = {'api-version': '2017-04-01'}
         r = requests.get(url, headers=headers, params=params)
         #print(json.dumps(r.json(), indent=4, separators=(',', ': ')))

@@ -1,5 +1,5 @@
 usage()
-{ echo "Usage: $0 -s <Subscription ID> [-g <Resource Group>] [-r azurerm_<resource_type>] [-x <yes|no(default)>] [-p <yes|no(default)>] [-f <yes|no(default)>] [-v <yes|no(default)>] [-d <yes|no(default)>]" 1>&2; exit 1;
+{ echo "Usage: $0 -c <Cloud> -s <Subscription ID> [-g <Resource Group>] [-r azurerm_<resource_type>] [-x <yes|no(default)>] [-p <yes|no(default)>] [-f <yes|no(default)>] [-v <yes|no(default)>] [-d <yes|no(default)>]" 1>&2; exit 1;
 }
 x="no"
 p="no"
@@ -7,8 +7,11 @@ f="no"  # f fast forward switch
 p="no"
 d="no"
 v="no"
-while getopts ":s:g:r:x:p:f:d:v:" o; do
+while getopts ":c:s:g:r:x:p:f:d:v:" o; do
     case "${o}" in
+        c)
+            c=${OPTARG}
+        ;;
         s)
             s=${OPTARG}
         ;;
@@ -44,6 +47,17 @@ if [ -z "${s}" ]; then
     usage
 fi
 
+## Uncomment below and remove second "AzureCloud" in line 57 to require -c parameter. With below, defaults to AzureCloud if not specified.
+if [[ "$c" == "AzureCloud" || "$c" == "AzureChinaCloud" || "$c" == "AzureGermanCloud" || "$c" == "AzureUSGovernment"  ]]; then
+    mycld=$c
+else
+    # echo -n "Enter id of Cloud (AzureCloud, AzureChinaCloud, AzureGermanCloud, AzureUSGovernment) [$mycld] > "
+    # read response
+    # if [ -n "$response" ]; then
+        mycld="AzureCloud" #$response
+    # fi
+fi
+
 if [ "$s" != "" ]; then
     mysub=$s
 else
@@ -56,10 +70,12 @@ fi
 
 myrg=$g
 export ARM_SUBSCRIPTION_ID="$mysub"
+az cloud set -n $mycld
 az account set -s $mysub
 if [ $? -eq 1 ]; then exit; fi
 
 echo " "
+echo "Cloud = $mycld"
 echo "Subscription ID = ${s}"
 echo "Azure Resource Group Filter = ${g}"
 echo "Terraform Resource Type Filter = ${r}"
@@ -88,7 +104,7 @@ rm -f terraform*.backup
 rm -f tf*.sh
 cp ../../stub/*.tf .
 
-pyc1="python2.7 ../../scripts/az2tf.py -s $mysub "
+pyc1="python2.7 ../../scripts/az2tf.py -c $mycld -s $mysub "
 if [ "$g" != "" ]; then
     pyc2=" -g $g "
 else

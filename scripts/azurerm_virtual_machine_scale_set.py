@@ -1,13 +1,13 @@
 # azurerm_virtual_machine_scale_set
 import ast
-def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, json, az2tfmess):
+def azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp = "azurerm_virtual_machine_scale_set"
     tcode = "295-"
     azr = ""
     if crf in tfp:
         # REST or cli
        
-        url = "https://management.azure.com/subscriptions/" + sub + \
+        url = "https://" + cldurl + "/subscriptions/" + sub + \
             "/providers/Microsoft.Compute/virtualMachineScaleSets"
         params = {'api-version': '2019-03-01'}
         r = requests.get(url, headers=headers, params=params)

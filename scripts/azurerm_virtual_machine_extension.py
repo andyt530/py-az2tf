@@ -1,5 +1,5 @@
 # azurerm_virtual_machine
-def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_virtual_machine_extension"
     tcode="291-"
     azr=""
@@ -7,7 +7,7 @@ def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2t
     if crf in tfp:
     # REST or cli
         # print "REST"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/virtualMachines"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Compute/virtualMachines"
         params = {'api-version': '2019-03-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -42,7 +42,7 @@ def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2t
                     
                     for j in range(0,icount):
                 
-                        url="https://management.azure.com/subscriptions/" + sub + "/resourceGroups/" + rg + "/providers/Microsoft.Compute/virtualMachines/"+name+"/extensions"
+                        url="https://" + cldurl + "/subscriptions/" + sub + "/resourceGroups/" + rg + "/providers/Microsoft.Compute/virtualMachines/"+name+"/extensions"
                     
                         params = {'api-version': '2019-03-01'}
                         r2 = requests.get(url, headers=headers, params=params)

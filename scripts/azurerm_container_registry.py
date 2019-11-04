@@ -1,12 +1,12 @@
 # azurerm_container_registry
-def azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_container_registry"
     tcode="260-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.ContainerRegistry/registries"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.ContainerRegistry/registries"
         params = {'api-version': '2017-10-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

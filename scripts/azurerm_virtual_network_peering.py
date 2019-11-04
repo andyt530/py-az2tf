@@ -1,11 +1,11 @@
-def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     #############
     #  080 vnet peering
     tfp="azurerm_virtual_network_peering"
     if crf in tfp: 
     # peering in vnet
 
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworks"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworks"
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
