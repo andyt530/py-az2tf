@@ -414,7 +414,7 @@ azurerm_app_service_plan.azurerm_app_service_plan(crf,cde,crg,headers,requests,s
 azurerm_app_service.azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 
 # 620_azurerm_function_app
-    azurerm_function_app.azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
+azurerm_function_app.azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 
 # 630_azurerm_logic_app_workflow
 azurerm_logic_app_workflow.azurerm_logic_app_workflow(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
