@@ -60,27 +60,27 @@ Once the validation is ok you can use the tool in anger to not only generate the
 
 To generate the terraform files for an entire Azure subscription, import the resourcs and perform a terraform plan:
 ```
-./az2tf.sh -s <Subscription ID>
+./az2tf.sh [-c <Cloud Name>] -s <Subscription ID>
 ```
 
 To include Azure Subscription Policies and RBAC controls and assignments:
 ```
-./az2tf.sh -s <Subscription ID> -p yes
+./az2tf.sh [-c <Cloud Name>] -s <Subscription ID> -p yes
 ```
 
 To generate the terraform files for a specific Resource Group in a subscription:
 ```
-./az2tf.sh -s <Subscription ID> -g <Resource Group>
+./az2tf.sh [-c <Cloud Name>] -s <Subscription ID> -g <Resource Group>
 ```
 
 To include the secrets from a Key Vault in terraform files (secrets will be in plain text):
 ```
-./az2tf.sh -s <Subscription ID> -g <Resource Group> -x yes
+./az2tf.sh [-c <Cloud Name>] -s <Subscription ID> -g <Resource Group> -x yes
 ```
 
 To filter the terraform resource type: (eg: just availability sets)
 ```
-./az2tf.sh -s <Subscription ID> -g <Resource Group> -r azurerm_availability_set
+./az2tf.sh [-c <Cloud Name>] -s <Subscription ID> -g <Resource Group> -r azurerm_availability_set
 ```
 To filter the terraform resource type: (eg: just availability sets) and fast forward - ie. build up resources one after another.:
 ```
@@ -148,7 +148,7 @@ Database Resources
 * azurerm_sql_server
 
 Databricks Resources
-* azurerm_databricks_resources
+* azurerm_databricks_resources (not available for China Azure today)
 
 Key Vault Resources
 * azurerm_key_vault 
@@ -177,7 +177,7 @@ Messaging Resources
 * azurerm_servicebus_queue 
 
 Monitoring Resources
-* azurerm_autoscale_setting
+* azurerm_autoscale_setting  (not available for China Azure today)
 
 Network Resources
 * azurerm_application_gateway 
@@ -216,7 +216,15 @@ Recovery Services
 Storage Resources
 * azurerm_storage_account 
 
+## Other Azure Clouds
 
+Global AzureCloud is used by default. To set a specific regional cloud, use `-c <Cloud Name>`
+
+The following are acceptable values:
+* AzureCloud
+* AzureChinaCloud
+* AzureGermanCloud
+* AzureUSGovernment
 
 ## Planned Additions
 
