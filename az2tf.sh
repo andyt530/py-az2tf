@@ -105,7 +105,7 @@ rm -f tf*.sh
 cp ../../stub/*.tf .
 
 #pyc1="python2.7 ../../scripts/az2tf.py -c $mycld -s $mysub "
-pyc1="python ../../scripts/az2tf.py -c $mycld -s $mysub "
+pyc1="python3 ../../scripts/az2tf.py -c $mycld -s $mysub "
 if [ "$g" != "" ]; then
     pyc2=" -g $g "
 else
