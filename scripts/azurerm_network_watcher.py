@@ -1,12 +1,12 @@
 # azurerm_network_watcher
-def azurerm_network_watcher(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_network_watcher(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_network_watcher"
     tcode="360-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/networkWatchers"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/networkWatchers"
         params = {'api-version': '2019-04-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

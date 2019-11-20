@@ -1,12 +1,12 @@
 import ast
-def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_role_definition"
     
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Authorization/roleDefinitions"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Authorization/roleDefinitions"
 
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)

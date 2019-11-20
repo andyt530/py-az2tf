@@ -1,5 +1,5 @@
 # azurerm_snapshot
-def azurerm_shared_image_gallery(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_shared_image_gallery(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_shared_image_gallery"
     tcode="341-"
     azr=""
@@ -7,7 +7,7 @@ def azurerm_shared_image_gallery(crf,cde,crg,headers,requests,sub,json,az2tfmess
     if crf in tfp:
     # REST or cli
         # print "REST snapshot"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/galleries"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Compute/galleries"
         params = {'api-version': '2019-03-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

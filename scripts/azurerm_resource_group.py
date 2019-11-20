@@ -1,5 +1,5 @@
 import sys
-def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     # handle resource groups
     isrun=False
     tfp="azurerm_resource_group"
@@ -9,7 +9,7 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfimf="001-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        url="https://management.azure.com/subscriptions/" + sub + "/resourceGroups"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/resourceGroups"
         params = {'api-version': '2014-04-01'}
         r = requests.get(url, headers=headers, params=params)
         rgs= r.json()["value"]

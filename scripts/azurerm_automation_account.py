@@ -1,5 +1,5 @@
 # azurerm_automation_account
-def azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_automation_account"
     tcode="310-"
     azr=""
@@ -7,7 +7,7 @@ def azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Automation/automationAccounts"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Automation/automationAccounts"
         params = {'api-version': '2018-06-30'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

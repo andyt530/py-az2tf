@@ -1,11 +1,11 @@
-def azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     #  124 Traffic manager profile
     tfp="azurerm_traffic_manager_profile"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Traffic Manager Profile"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/trafficmanagerprofiles"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/trafficmanagerprofiles"
         params = {'api-version': '2017-05-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

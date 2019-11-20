@@ -1,5 +1,5 @@
 import ast
-def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     #  060 Virtual Networks
     tfp="azurerm_virtual_network"
     azr=""
@@ -7,7 +7,7 @@ def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         # REST
         # print "REST VNets"
 
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworks"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworks"
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

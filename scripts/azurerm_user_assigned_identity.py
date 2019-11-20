@@ -1,10 +1,10 @@
-def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     # 015 user assigned identity
     tfp="azurerm_user_assigned_identity"
     azr=""
     if crf in tfp:
         
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.ManagedIdentity/userAssignedIdentities"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.ManagedIdentity/userAssignedIdentities"
         params = {'api-version': '2018-11-30'}
         r = requests.get(url, headers=headers, params=params)
         azr=r.json()["value"]

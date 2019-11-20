@@ -1,5 +1,5 @@
 # azurerm_snapshot
-def azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_shared_image_version"
     tcode="343-"
     azr=""
@@ -7,7 +7,7 @@ def azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess
     if crf in tfp:
     # REST or cli
         # print "REST snapshot"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/galleries"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Compute/galleries"
         params = {'api-version': '2019-03-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -31,7 +31,7 @@ def azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess
                 if rgs.lower() != crg.lower():
                     continue  # back to for
         
-            url="https://management.azure.com/subscriptions/" + sub + "/resourceGroups/"+rg+"/providers/Microsoft.Compute/galleries/"+gname+"/images"
+            url="https://" + cldurl + "/subscriptions/" + sub + "/resourceGroups/"+rg+"/providers/Microsoft.Compute/galleries/"+gname+"/images"
             params = {'api-version': '2019-03-01'}
             r = requests.get(url, headers=headers, params=params)
             azr2= r.json()["value"]
@@ -42,7 +42,7 @@ def azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess
                 iname=azr2[j]["name"]
                 rname=iname.replace(".","-")
 
-                url="https://management.azure.com/subscriptions/" + sub + "/resourceGroups/"+rg+"/providers/Microsoft.Compute/galleries/"+gname+"/images/"+iname+"/versions"
+                url="https://" + cldurl + "/subscriptions/" + sub + "/resourceGroups/"+rg+"/providers/Microsoft.Compute/galleries/"+gname+"/images/"+iname+"/versions"
                 params = {'api-version': '2019-03-01'}
                 r = requests.get(url, headers=headers, params=params)
                 azr3= r.json()["value"]

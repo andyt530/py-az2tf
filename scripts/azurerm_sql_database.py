@@ -1,12 +1,12 @@
 # azurerm_sql_database
-def azurerm_sql_database(crf, cde, crg, headers, requests, sub, json, az2tfmess):
+def azurerm_sql_database(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp = "azurerm_sql_database"
     tcode = "541-"
     azr = ""
     if crf in tfp:
     # REST or cli
         # print "REST SQL Servers"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Sql/servers"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Sql/servers"
         params = {'api-version': '2015-05-01-preview'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

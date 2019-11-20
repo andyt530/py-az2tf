@@ -1,11 +1,11 @@
-def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     
     tfp="azurerm_network_interface"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/networkInterfaces"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/networkInterfaces"
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

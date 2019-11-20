@@ -1,12 +1,12 @@
 import ast
-def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):  
+def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):  
     tfp="azurerm_policy_definition"
     
     azr=""
     if crf in tfp:
     # REST or cli
         #print "REST Pol Defn"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Authorization/policyDefinitions"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Authorization/policyDefinitions"
         params = {'api-version': '2019-01-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

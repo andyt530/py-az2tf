@@ -1,11 +1,11 @@
 # azurerm_lb_rule
-def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_lb_rule"
     tcode="190-"
     
     if crf in tfp:
     # REST or cli
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/loadBalancers"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/loadBalancers"
         params = {'api-version': '2019-02-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

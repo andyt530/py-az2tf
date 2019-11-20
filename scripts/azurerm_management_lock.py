@@ -1,5 +1,5 @@
 import uuid
-def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     # management locks
     
     tfp="azurerm_management_lock"
@@ -7,7 +7,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
         # REST
         # # print "REST VNets"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Authorization/locks"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Authorization/locks"
         params = {'api-version': '2017-04-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

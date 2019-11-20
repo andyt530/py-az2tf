@@ -1,13 +1,13 @@
 # azurerm_local_network_gateway
 import ast
-def azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_local_network_gateway"
     tcode="200-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Local NW Gateway"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/localNetworkGateways"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/localNetworkGateways"
         params = {'api-version': '2019-04-01'}
         r = requests.get(url, headers=headers, params=params)
         azr=r.json()["value"]

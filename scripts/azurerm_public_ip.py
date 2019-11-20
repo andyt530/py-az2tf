@@ -1,10 +1,10 @@
-def azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_public_ip"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/publicIPAddresses"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/publicIPAddresses"
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

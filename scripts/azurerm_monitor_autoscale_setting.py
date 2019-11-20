@@ -2,7 +2,7 @@
 import ast
 
 
-def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, json, az2tfmess):
+def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp = "azurerm_monitor_autoscale_setting"
     tcode = "650-"
     azr = ""
@@ -10,7 +10,7 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
     if crf in tfp:
         # REST or cli
         # print "REST monitor autoscale"
-        url = "https://management.azure.com/subscriptions/" + \
+        url = "https://" + cldurl + "/subscriptions/" + \
             sub + "/providers/microsoft.insights/autoscalesettings"
         params = {'api-version': '2015-04-01'}
         r = requests.get(url, headers=headers, params=params)

@@ -1,4 +1,4 @@
-def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     #############
     #  090 key vault
     
@@ -7,7 +7,7 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
         # REST or cli
 
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.KeyVault/vaults"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.KeyVault/vaults"
         params = {'api-version': '2016-10-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

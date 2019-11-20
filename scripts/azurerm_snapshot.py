@@ -1,12 +1,12 @@
 # azurerm_snapshot
-def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_snapshot"
     tcode="350-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST snapshot"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/snapshots"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Compute/snapshots"
         params = {'api-version': '2018-09-30'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

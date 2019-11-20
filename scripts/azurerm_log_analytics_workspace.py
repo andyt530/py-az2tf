@@ -1,12 +1,12 @@
 # azurerm_log_analytics_workspace
-def azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_log_analytics_workspace"
     tcode="320-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.OperationalInsights/workspaces"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.OperationalInsights/workspaces"
         params = {'api-version': '2015-03-20'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

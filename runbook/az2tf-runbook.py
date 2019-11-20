@@ -49,7 +49,7 @@ def get_automation_runas_token():
 # azurerm_resource_group
 #
 import sys
-def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     # handle resource groups
     isrun=False
     tfp="azurerm_resource_group"
@@ -59,7 +59,7 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         tfimf="001-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        url="https://management.azure.com/subscriptions/" + sub + "/resourceGroups"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/resourceGroups"
         params = {'api-version': '2014-04-01'}
         r = requests.get(url, headers=headers, params=params)
         rgs= r.json()["value"]
@@ -134,7 +134,7 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_management_lock
 #
 import uuid
-def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     # management locks
     
     tfp="azurerm_management_lock"
@@ -142,7 +142,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
         # REST
         # # print "REST VNets"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Authorization/locks"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Authorization/locks"
         params = {'api-version': '2017-04-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -269,13 +269,13 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 #
 # azurerm_user_assigned_identity
 #
-def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     # 015 user assigned identity
     tfp="azurerm_user_assigned_identity"
     azr=""
     if crf in tfp:
         
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.ManagedIdentity/userAssignedIdentities"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.ManagedIdentity/userAssignedIdentities"
         params = {'api-version': '2018-11-30'}
         r = requests.get(url, headers=headers, params=params)
         azr=r.json()["value"]
@@ -342,14 +342,14 @@ def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfme
 #
 # azurerm_availability_set
 #
-def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     #  020 Avail Sets
     tfp="azurerm_availability_set"
     azr=""
     if crf in tfp:
 
         # print "REST Avail Set"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/availabilitySets"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Compute/availabilitySets"
         params = {'api-version': '2018-10-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -430,7 +430,7 @@ def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 #
 # azurerm_route_table
 #
-def azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     #  030 Route Table
     tfp="azurerm_route_table"
     azr=""
@@ -439,7 +439,7 @@ def azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
         # REST
         # print "REST ASG"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/routeTables"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/routeTables"
         params = {'api-version': '2018-07-01'}
         r=requests.get(url, headers=headers, params=params)
         azr=r.json()["value"]
@@ -538,7 +538,7 @@ def azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 #
 # azurerm_application_security_group
 #
-def azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     #  040 ASG's
     tfp="azurerm_application_security_group"
     azr=""
@@ -546,7 +546,7 @@ def azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2
         # REST
         # print "REST ASG"
 
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/applicationSecurityGroups"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/applicationSecurityGroups"
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -618,7 +618,7 @@ def azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2
 # azurerm_network_security_group
 #
 import ast
-def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     #  050 NSG's
     tfp="azurerm_network_security_group"
     azr=""
@@ -626,7 +626,7 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
         # REST
         # print "REST NSG"
 
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/networkSecurityGroups"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/networkSecurityGroups"
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -801,7 +801,7 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
 # azurerm_virtual_network
 #
 import ast
-def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     #  060 Virtual Networks
     tfp="azurerm_virtual_network"
     azr=""
@@ -809,7 +809,7 @@ def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         # REST
         # print "REST VNets"
 
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworks"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworks"
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -919,7 +919,7 @@ def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_subnet
 #
 import ast
-def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     #  070 subnets
     tfp="azurerm_subnet"
     azr=""
@@ -927,7 +927,7 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         # REST
         # print "REST VNets"
 
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworks"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworks"
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -1098,14 +1098,14 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 #
 # azurerm_virtual_network_peering
 #
-def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     #############
     #  080 vnet peering
     tfp="azurerm_virtual_network_peering"
     if crf in tfp: 
     # peering in vnet
 
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworks"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworks"
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -1176,12 +1176,12 @@ def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfm
 #
 # azurerm_managed_disk
 #
-def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_managed_disk"
     azr=""
     if crf in tfp:
     # REST or cli
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/disks"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Compute/disks"
         params = {'api-version': '2017-03-30'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -1337,7 +1337,7 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_storage_account
 #
 import ast
-def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     #  110 storage account
     
     tfp="azurerm_storage_account"
@@ -1346,7 +1346,7 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
     # REST or cli
         # print "REST Storage Acc"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Storage/storageAccounts"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Storage/storageAccounts"
         params = {'api-version': '2019-04-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -1475,7 +1475,7 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 #
 # azurerm_key_vault
 #
-def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     #############
     #  090 key vault
     
@@ -1484,7 +1484,7 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
         # REST or cli
 
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.KeyVault/vaults"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.KeyVault/vaults"
         params = {'api-version': '2016-10-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -1682,13 +1682,13 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 #
 # azurerm_public_ip
 #
-def azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_public_ip"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/publicIPAddresses"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/publicIPAddresses"
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -1780,14 +1780,14 @@ def azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 #
 # azurerm_traffic_manager_profile
 #
-def azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     #  124 Traffic manager profile
     tfp="azurerm_traffic_manager_profile"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Traffic Manager Profile"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/trafficmanagerprofiles"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/trafficmanagerprofiles"
         params = {'api-version': '2017-05-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -1898,7 +1898,7 @@ def azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfm
 #
 # azurerm_traffic_manager_endpoint
 #
-def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     #  125 traffic manager endpoint
 
     tfp="azurerm_traffic_manager_endpoint"
@@ -1906,7 +1906,7 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
     if crf in tfp:
     # REST or cli
 
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/trafficmanagerprofiles"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/trafficmanagerprofiles"
         params = {'api-version': '2017-05-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -1993,14 +1993,14 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
 #
 # azurerm_network_interface
 #
-def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     
     tfp="azurerm_network_interface"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/networkInterfaces"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/networkInterfaces"
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -2131,7 +2131,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_dns_zone
 #
 # azurerm_dns_zone
-def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_dns_zone"
     tcode="131-"
     azr=""
@@ -2139,7 +2139,7 @@ def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/dnszones"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/dnszones"
         #params = {'api-version': '2016-04-01'}
         params = {'api-version': '2018-05-01'}       
         r = requests.get(url, headers=headers, params=params)
@@ -2243,14 +2243,14 @@ def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_lb
 #
 # azurerm_lb
-def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_lb"
     tcode="140-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Load Balancers"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/loadBalancers"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/loadBalancers"
         params = {'api-version': '2019-02-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -2365,14 +2365,14 @@ def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_lb_nat_rule
 #
 # azurerm_lb_nat_rule
-def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_lb_nat_rule"
     tcode="150-"
     if crf in tfp:
     # REST or cli
 
         # print "REST Load Balancers"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/loadBalancers"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/loadBalancers"
         params = {'api-version': '2019-02-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -2467,13 +2467,13 @@ def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_lb_nat_pool
 #
 # azurerm_lb_nat_pool
-def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_lb_nat_pool"
     tcode="160-"
 
     if crf in tfp:
     # REST or cli
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/loadBalancers"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/loadBalancers"
         params = {'api-version': '2019-02-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -2587,13 +2587,13 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_lb_backend_address_pool
 #
 # azurerm_lb_backend_address_pool
-def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_lb_backend_address_pool"
     tcode="170-"
     
     if crf in tfp:
     # REST or cli
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/loadBalancers"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/loadBalancers"
         params = {'api-version': '2019-02-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -2674,13 +2674,13 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
 # azurerm_lb_probe
 #
 # azurerm_lb_probe
-def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_lb_probe"
     tcode="180-"
     
     if crf in tfp:
     # REST or cli
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/loadBalancers"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/loadBalancers"
         params = {'api-version': '2019-02-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -2776,13 +2776,13 @@ def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_lb_rule
 #
 # azurerm_lb_rule
-def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_lb_rule"
     tcode="190-"
     
     if crf in tfp:
     # REST or cli
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/loadBalancers"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/loadBalancers"
         params = {'api-version': '2019-02-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -2882,7 +2882,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_application_gateway
 #
 # azurerm_application_gateway
-def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_application_gateway"
     tcode="193-"
     azr=""
@@ -2890,7 +2890,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/applicationGateways"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/applicationGateways"
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -3320,14 +3320,14 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
 #
 # azurerm_local_network_gateway
 import ast
-def azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_local_network_gateway"
     tcode="200-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Local NW Gateway"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/localNetworkGateways"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/localNetworkGateways"
         params = {'api-version': '2019-04-01'}
         r = requests.get(url, headers=headers, params=params)
         azr=r.json()["value"]
@@ -3430,14 +3430,14 @@ def azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmes
 #
 # azurerm_virtual_network_gateway
 import ast
-def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_virtual_network_gateway"
     tcode="210-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworkGateways"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/virtualNetworkGateways"
         params = {'api-version': '2019-04-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -3591,14 +3591,14 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
 # azurerm_virtual_network_gateway_connection
 #
 # azurerm_virtual_network_gateway_connection
-def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_virtual_network_gateway_connection"
     tcode="220-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/connections"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/connections"
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -3755,14 +3755,14 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
 # azurerm_express_route_circuit
 #
 # azurerm_express_route_circuit
-def azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_express_route_circuit"
     tcode="230-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers//Microsoft.Network/expressRouteCircuits"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers//Microsoft.Network/expressRouteCircuits"
         params = {'api-version': '2018-01-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -3853,14 +3853,14 @@ def azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmes
 # azurerm_express_route_circuit_authorization
 #
 # azurerm_express_route_circuit_authorization
-def azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_express_route_circuit_authorization"
     tcode="240-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/expressRouteCircuits"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/expressRouteCircuits"
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -3938,7 +3938,7 @@ def azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub
 #
 # azurerm_express_route_circuit_peering
 import ast
-def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_express_route_circuit_peering"
     tcode="250-"
     azr=""
@@ -3946,7 +3946,7 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/expressRouteCircuits"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/expressRouteCircuits"
         params = {'api-version': '2018-01-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -4048,14 +4048,14 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
 # azurerm_container_registry
 #
 # azurerm_container_registry
-def azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_container_registry"
     tcode="260-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.ContainerRegistry/registries"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.ContainerRegistry/registries"
         params = {'api-version': '2017-10-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -4133,14 +4133,14 @@ def azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_kubernetes_cluster
 #
 # azurerm_kubernetes_cluster
-def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_kubernetes_cluster"
     tcode="270-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.ContainerService/managedClusters"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.ContainerService/managedClusters"
         params = {'api-version': '2019-04-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -4332,14 +4332,14 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_recovery_services_vault
 #
 # azurerm_recovery_services_vault
-def azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_recovery_services_vault"
     tcode="280-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.RecoveryServices/vaults"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.RecoveryServices/vaults"
         params = {'api-version': '2018-07-10'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -4414,7 +4414,7 @@ def azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfm
 # azurerm_virtual_machine
 #
 # azurerm_virtual_machine
-def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_virtual_machine"
     tcode="290-"
     azr=""
@@ -4422,7 +4422,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/virtualMachines"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Compute/virtualMachines"
         params = {'api-version': '2019-03-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -4772,7 +4772,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_virtual_machine_extension
 #
 # azurerm_virtual_machine
-def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_virtual_machine_extension"
     tcode="291-"
     azr=""
@@ -4780,7 +4780,7 @@ def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2t
     if crf in tfp:
     # REST or cli
         # print "REST"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/virtualMachines"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Compute/virtualMachines"
         params = {'api-version': '2019-03-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -4814,7 +4814,7 @@ def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2t
                     
                     for j in range(0,icount):
                 
-                        url="https://management.azure.com/subscriptions/" + sub + "/resourceGroups/" + rg + "/providers/Microsoft.Compute/virtualMachines/"+name+"/extensions"
+                        url="https://" + cldurl + "/subscriptions/" + sub + "/resourceGroups/" + rg + "/providers/Microsoft.Compute/virtualMachines/"+name+"/extensions"
                     
                         params = {'api-version': '2019-03-01'}
                         r2 = requests.get(url, headers=headers, params=params)
@@ -4897,14 +4897,14 @@ def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2t
 #
 # azurerm_virtual_machine_scale_set
 import ast
-def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, json, az2tfmess):
+def azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp = "azurerm_virtual_machine_scale_set"
     tcode = "295-"
     azr = ""
     if crf in tfp:
         # REST or cli
        
-        url = "https://management.azure.com/subscriptions/" + sub + \
+        url = "https://" + cldurl + "/subscriptions/" + sub + \
             "/providers/Microsoft.Compute/virtualMachineScaleSets"
         params = {'api-version': '2019-03-01'}
         r = requests.get(url, headers=headers, params=params)
@@ -5323,7 +5323,7 @@ def azurerm_virtual_machine_scale_set(crf, cde, crg, headers, requests, sub, jso
 # azurerm_automation_account
 #
 # azurerm_automation_account
-def azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_automation_account"
     tcode="310-"
     azr=""
@@ -5331,7 +5331,7 @@ def azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Automation/automationAccounts"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Automation/automationAccounts"
         params = {'api-version': '2018-06-30'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -5414,14 +5414,14 @@ def azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_log_analytics_workspace
 #
 # azurerm_log_analytics_workspace
-def azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_log_analytics_workspace"
     tcode="320-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.OperationalInsights/workspaces"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.OperationalInsights/workspaces"
         params = {'api-version': '2015-03-20'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -5504,7 +5504,7 @@ def azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfm
 # azurerm_log_analytics_solution
 #
 # azurerm_log_analytics_solution
-def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_log_analytics_solution"
     tcode="330-"
     azr=""
@@ -5512,7 +5512,7 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
     if crf in tfp:
     # REST or cli
         # print "REST solutions"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.OperationsManagement/solutions"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.OperationsManagement/solutions"
         params = {'api-version': '2015-11-01-preview'}
         #2015-11-01-preview
         r = requests.get(url, headers=headers, params=params)
@@ -5614,14 +5614,14 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
 # azurerm_image
 #
 # azurerm_image
-def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_image"
     tcode="340-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/images"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Compute/images"
         params = {'api-version': '2019-03-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -5726,7 +5726,7 @@ def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_shared_image_gallery
 #
 # azurerm_snapshot
-def azurerm_shared_image_gallery(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_shared_image_gallery(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_shared_image_gallery"
     tcode="341-"
     azr=""
@@ -5734,7 +5734,7 @@ def azurerm_shared_image_gallery(crf,cde,crg,headers,requests,sub,json,az2tfmess
     if crf in tfp:
     # REST or cli
         # print "REST snapshot"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/galleries"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Compute/galleries"
         params = {'api-version': '2019-03-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -5815,7 +5815,7 @@ def azurerm_shared_image_gallery(crf,cde,crg,headers,requests,sub,json,az2tfmess
 # azurerm_shared_image
 #
 # azurerm_snapshot
-def azurerm_shared_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_shared_image(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_shared_image"
     tcode="342-"
     azr=""
@@ -5823,7 +5823,7 @@ def azurerm_shared_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
     # REST or cli
         # print "REST snapshot"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/galleries"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Compute/galleries"
         params = {'api-version': '2019-03-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -5856,7 +5856,7 @@ def azurerm_shared_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
         
 
 
-            url="https://management.azure.com/subscriptions/" + sub + "/resourceGroups/"+rg+"/providers/Microsoft.Compute/galleries/"+gname+"/images"
+            url="https://" + cldurl + "/subscriptions/" + sub + "/resourceGroups/"+rg+"/providers/Microsoft.Compute/galleries/"+gname+"/images"
             params = {'api-version': '2019-03-01'}
             r = requests.get(url, headers=headers, params=params)
             azr2= r.json()["value"]
@@ -5933,7 +5933,7 @@ def azurerm_shared_image(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_shared_image_version
 #
 # azurerm_snapshot
-def azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_shared_image_version"
     tcode="343-"
     azr=""
@@ -5941,7 +5941,7 @@ def azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess
     if crf in tfp:
     # REST or cli
         # print "REST snapshot"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/galleries"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Compute/galleries"
         params = {'api-version': '2019-03-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -5965,7 +5965,7 @@ def azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess
                 if rgs.lower() != crg.lower():
                     continue  # back to for
         
-            url="https://management.azure.com/subscriptions/" + sub + "/resourceGroups/"+rg+"/providers/Microsoft.Compute/galleries/"+gname+"/images"
+            url="https://" + cldurl + "/subscriptions/" + sub + "/resourceGroups/"+rg+"/providers/Microsoft.Compute/galleries/"+gname+"/images"
             params = {'api-version': '2019-03-01'}
             r = requests.get(url, headers=headers, params=params)
             azr2= r.json()["value"]
@@ -5976,7 +5976,7 @@ def azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess
                 iname=azr2[j]["name"]
                 rname=iname.replace(".","-")
 
-                url="https://management.azure.com/subscriptions/" + sub + "/resourceGroups/"+rg+"/providers/Microsoft.Compute/galleries/"+gname+"/images/"+iname+"/versions"
+                url="https://" + cldurl + "/subscriptions/" + sub + "/resourceGroups/"+rg+"/providers/Microsoft.Compute/galleries/"+gname+"/images/"+iname+"/versions"
                 params = {'api-version': '2019-03-01'}
                 r = requests.get(url, headers=headers, params=params)
                 azr3= r.json()["value"]
@@ -6065,14 +6065,14 @@ def azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess
 # azurerm_snapshot
 #
 # azurerm_snapshot
-def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_snapshot"
     tcode="350-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST snapshot"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/snapshots"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Compute/snapshots"
         params = {'api-version': '2018-09-30'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -6172,14 +6172,14 @@ def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_network_watcher
 #
 # azurerm_network_watcher
-def azurerm_network_watcher(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_network_watcher(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_network_watcher"
     tcode="360-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/networkWatchers"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/networkWatchers"
         params = {'api-version': '2019-04-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -6251,7 +6251,7 @@ def azurerm_network_watcher(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_cosmosdb_account
 #
 # azurerm_cosmosdb_account
-def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_cosmosdb_account"
     tcode="400-"
     azr=""
@@ -6259,7 +6259,7 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.DocumentDB/databaseAccounts"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.DocumentDB/databaseAccounts"
         params = {'api-version': '2016-03-31'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -6377,14 +6377,14 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_servicebus_namespace
 #
 # azurerm_servicebus_namespace
-def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_servicebus_namespace"
     tcode="500-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST SB namespaces"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.ServiceBus/namespaces"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.ServiceBus/namespaces"
         params = {'api-version': '2017-04-01'}
         r = requests.get(url, headers=headers, params=params)
         try:
@@ -6468,14 +6468,14 @@ def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess
 # azurerm_servicebus_queue
 #
 # azurerm_servicebus_queue
-def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_servicebus_queue"
     tcode="510-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST namespace for queue"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.ServiceBus/namespaces"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.ServiceBus/namespaces"
         params = {'api-version': '2017-04-01'}
         r = requests.get(url, headers=headers, params=params)
         #print(json.dumps(r.json(), indent=4, separators=(',', ': ')))
@@ -6594,7 +6594,7 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_eventhub_namespace
 #
 # azurerm_eventhub
-def azurerm_eventhub_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_eventhub_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
 
     tfp="azurerm_eventhub_namespace"
     tcode="520-"
@@ -6604,7 +6604,7 @@ def azurerm_eventhub_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess):
    
     # REST or cli
         # print "REST SB namespaces"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.EventHub/namespaces"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.EventHub/namespaces"
         params = {'api-version': '2017-04-01'}
         r = requests.get(url, headers=headers, params=params)
         try:
@@ -6695,7 +6695,7 @@ def azurerm_eventhub_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_eventhub
 #
 # azurerm_servicebus_queue
-def azurerm_eventhub(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_eventhub(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_eventhub"
     tcode="521-"
     azr=""
@@ -6703,7 +6703,7 @@ def azurerm_eventhub(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
     # REST or cli
         # print "REST namespace for queue"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.EventHub/namespaces"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.EventHub/namespaces"
         params = {'api-version': '2017-04-01'}
         r = requests.get(url, headers=headers, params=params)
         #print(json.dumps(r.json(), indent=4, separators=(',', ': ')))
@@ -6813,7 +6813,7 @@ def azurerm_eventhub(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_eventhub_namespace_authorization_rule
 #
 # azurerm_eventhub_namespace_authorization_rule
-def azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_eventhub_namespace_authorization_rule"
     tcode="522-"
     azr=""
@@ -6821,7 +6821,7 @@ def azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,s
     if crf in tfp:
     # REST or cli
         # print "REST namespace for queue"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.EventHub/namespaces"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.EventHub/namespaces"
         params = {'api-version': '2017-04-01'}
         r = requests.get(url, headers=headers, params=params)
         #print(json.dumps(r.json(), indent=4, separators=(',', ': ')))
@@ -6942,14 +6942,14 @@ def azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,s
 # azurerm_sql_server
 #
 # azurerm_sql_server
-def azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_sql_server"
     tcode="540-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST SQL Servers"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Sql/servers"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Sql/servers"
         params = {'api-version': '2015-05-01-preview'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -7033,14 +7033,14 @@ def azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_sql_database
 #
 # azurerm_sql_database
-def azurerm_sql_database(crf, cde, crg, headers, requests, sub, json, az2tfmess):
+def azurerm_sql_database(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp = "azurerm_sql_database"
     tcode = "541-"
     azr = ""
     if crf in tfp:
     # REST or cli
         # print "REST SQL Servers"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Sql/servers"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Sql/servers"
         params = {'api-version': '2015-05-01-preview'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -7154,14 +7154,14 @@ def azurerm_sql_database(crf, cde, crg, headers, requests, sub, json, az2tfmess)
 # azurerm_databricks_workspace
 #
 # azurerm_databricks_workspace
-def azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_databricks_workspace"
     tcode="550-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Databricks/workspaces"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Databricks/workspaces"
         params = {'api-version': '2018-04-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -7243,14 +7243,14 @@ def azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess
 # azurerm_app_service_plan
 #
 # azurerm_app_service_plan
-def azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_app_service_plan"
     tcode="600-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST App Service Plan"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Web/serverfarms"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Web/serverfarms"
         params = {'api-version': '2018-02-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -7340,7 +7340,7 @@ def azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_app_service
 #
 # azurerm_app_service
-def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_app_service"
     tcode="610-"
     azr=""
@@ -7348,7 +7348,7 @@ def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
     # REST or cli
         # print "REST App Service"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Web/sites"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Web/sites"
         params = {'api-version': '2018-02-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -7454,14 +7454,14 @@ def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_function_app
 #
 # azurerm_function_app
-def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_function_app"
     tcode="620-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Function App"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Web/sites"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Web/sites"
         params = {'api-version': '2018-02-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -7632,7 +7632,7 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_logic_app_workflow
 #
 # azurerm_dns_zone
-def azurerm_logic_app_workflow(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_logic_app_workflow(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_logic_app_workflow"
     tcode="630-"
     azr=""
@@ -7641,7 +7641,7 @@ def azurerm_logic_app_workflow(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Logic/workflows"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Logic/workflows"
         #params = {'api-version': '2016-04-01'}
         params = {'api-version': '2016-06-01'}       
         r = requests.get(url, headers=headers, params=params)
@@ -7719,7 +7719,7 @@ def azurerm_logic_app_workflow(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_logic_app_trigger_http_request
 #
 # azurerm_dns_zone
-def azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_logic_app_trigger_http_request"
     tcode="631-"
     azr=""
@@ -7728,7 +7728,7 @@ def azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Logic/workflows"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Logic/workflows"
         #params = {'api-version': '2016-04-01'}
         params = {'api-version': '2016-06-01'}       
         r = requests.get(url, headers=headers, params=params)
@@ -7820,7 +7820,7 @@ def azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json
 import ast
 
 
-def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, json, az2tfmess):
+def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp = "azurerm_monitor_autoscale_setting"
     tcode = "650-"
     azr = ""
@@ -7828,7 +7828,7 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
     if crf in tfp:
         # REST or cli
         # print "REST monitor autoscale"
-        url = "https://management.azure.com/subscriptions/" + \
+        url = "https://" + cldurl + "/subscriptions/" + \
             sub + "/providers/microsoft.insights/autoscalesettings"
         params = {'api-version': '2015-04-01'}
         r = requests.get(url, headers=headers, params=params)
@@ -8096,7 +8096,7 @@ def azurerm_monitor_autoscale_setting(crf, cde, crg, headers, requests, sub, jso
 # azurerm_api_management
 #
 # azurerm_api_management
-def azurerm_api_management(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_api_management(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_api_management"
     tcode="640-"
     azr=""
@@ -8104,7 +8104,7 @@ def azurerm_api_management(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
     # REST or cli
         # print "REST Function App"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.ApiManagement/service"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.ApiManagement/service"
         params = {'api-version': '2019-01-01'}
         r = requests.get(url, headers=headers, params=params)
         try:
@@ -8191,14 +8191,14 @@ def azurerm_api_management(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_policy_definition
 #
 import ast
-def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):  
+def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):  
     tfp="azurerm_policy_definition"
     
     azr=""
     if crf in tfp:
     # REST or cli
         #print "REST Pol Defn"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Authorization/policyDefinitions"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Authorization/policyDefinitions"
         params = {'api-version': '2019-01-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -8305,14 +8305,14 @@ def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 #
 import ast
 
-def azurerm_policy_set_definition(crf, cde, crg, headers, requests, sub, json, az2tfmess):
+def azurerm_policy_set_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp = "azurerm_policy_set_definition"
     
     azr = ""
     if crf in tfp:
         # REST or cli
         #print "REST Pol Defn"
-        url = "https://management.azure.com/subscriptions/" + sub + \
+        url = "https://" + cldurl + "/subscriptions/" + sub + \
             "/providers/Microsoft.Authorization/policySetDefinitions"
         params = {'api-version': '2019-01-01'}
         r = requests.get(url, headers=headers, params=params)
@@ -8425,14 +8425,14 @@ def azurerm_policy_set_definition(crf, cde, crg, headers, requests, sub, json, a
 # azurerm_policy_assignment
 #
 
-def azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     
     tfp="azurerm_policy_assignment"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Authorization/policyAssignments"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Authorization/policyAssignments"
         params = {'api-version': '2019-01-01'}
 
         r = requests.get(url, headers=headers, params=params)
@@ -8531,14 +8531,14 @@ def azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_role_definition
 #
 import ast
-def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_role_definition"
     
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Authorization/roleDefinitions"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Authorization/roleDefinitions"
 
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
@@ -8645,14 +8645,14 @@ def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess):
 # azurerm_role_assignment
 #
 
-def azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     
     tfp="azurerm_role_assignment"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Authorization/roleAssignments"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Authorization/roleAssignments"
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
@@ -8750,133 +8750,133 @@ az2tfmess="# File generated by az2tf see: https://github.com/andyt530/az2tf \n"
 # record and sort resources - no longer needed
 # azure_resources.azure_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os)
 # 001 Resource Group
-azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 002 management lock
-azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 015 user assigned identity
-azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 020 Avail Sets
-azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 030 Route Table
-azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 040 ASG
-azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 050 NSG's
-azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 060 Virtual Networks
-azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 070 subnets
-azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 080 vnet peering
-azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 090 Key Vault - using cli
-azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 100 managed disk
-azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 110 storgae account
-azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 120 public ip
-azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 124 Traffic manager profile
-azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 125 traffic manager endpoint
-azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 130 network interface
-azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 131_azurerm_dns_zone
-azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 140_azurerm_lb
-azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 150_azurerm_lb_nat_rule
-azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 160_azurerm_lb_nat_pool
-azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 170_azurerm_lb_backend_address_pool
-azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 180_azurerm_lb_probe
-azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 190_azurerm_lb_rule
-azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 193_azurerm_application_gateway
-azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 200_azurerm_local_network_gateway
-azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 210_azurerm_virtual_network_gateway
-azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 220_azurerm_virtual_network_gateway_connection
-azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 230_azurerm_express_route_circuit
-azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 240_azurerm_express_route_circuit_authorization
-azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 250_azurerm_express_route_circuit_peering
-azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 260_azurerm_container_registry
-azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 270_azurerm_kubernetes_cluster
-azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 280_azurerm_recovery_services_vault
-azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 290_azurerm_virtual_machine
-azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 290_azurerm_virtual_machine_extension
-azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 295_azurerm_virtual_machine_scale_set
-azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 310_azurerm_automation_account
-azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 320_azurerm_log_analytics_workspace
-azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 330_azurerm_log_analytics_solution
-azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 340_azurerm_image
-azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 
 # 341_azurerm_shared_image_gallery
-azurerm_shared_image_gallery(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-azurerm_shared_image(crf,cde,crg,headers,requests,sub,json,az2tfmess)
-azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_shared_image_gallery(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
+azurerm_shared_image(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
+azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 350_azurerm_snapshot
-azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 360_azurerm_network_watcher
-azurerm_network_watcher(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_network_watcher(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 400_azurerm_cosmosdb_account
-azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 500_azurerm_servicebus_namespace
-azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 510_azurerm_servicebus_queue
-azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 520_azurerm_eventhub_namespace
-azurerm_eventhub_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_eventhub_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 521_azurerm_eventhub
-azurerm_eventhub(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_eventhub(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 522_azurerm_eventhub_namespace_authorization_rule
-azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 540_azurerm_sql_server
-azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 541_azurerm_sql_database
-azurerm_sql_database(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_sql_database(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 550_azurerm_databricks_workspace
-azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 600_azurerm_app_service_plan
-azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 610_azurerm_app_service
-azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 620_azurerm_function_app
-azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 630_azurerm_logic_app_workflow
-azurerm_logic_app_workflow(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_logic_app_workflow(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 640_azurerm_api_management
-azurerm_api_management(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_api_management(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 
 
 # 631_azurerm_logic_app_trigger_http_request
 # AWAITING terraform import fix
-#azurerm_logic_app_trigger_http_request.azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+#azurerm_logic_app_trigger_http_request.azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 
 
 # 650_azurerm_monitor_autoscale_setting
-azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2tfmess)
+azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 
 # az2tf-runbook.py gen-runbook.sh inline not.py run.py
 tffile="*.tf"

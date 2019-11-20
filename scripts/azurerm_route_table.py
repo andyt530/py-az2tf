@@ -1,4 +1,4 @@
-def azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     #  030 Route Table
     tfp="azurerm_route_table"
     azr=""
@@ -7,7 +7,7 @@ def azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess):
     if crf in tfp:
         # REST
         # print "REST ASG"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/routeTables"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/routeTables"
         params = {'api-version': '2018-07-01'}
         r=requests.get(url, headers=headers, params=params)
         azr=r.json()["value"]

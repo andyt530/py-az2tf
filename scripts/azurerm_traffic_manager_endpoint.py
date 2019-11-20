@@ -1,4 +1,4 @@
-def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     #  125 traffic manager endpoint
 
     tfp="azurerm_traffic_manager_endpoint"
@@ -6,7 +6,7 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
     if crf in tfp:
     # REST or cli
 
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/trafficmanagerprofiles"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/trafficmanagerprofiles"
         params = {'api-version': '2017-05-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

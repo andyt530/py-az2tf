@@ -1,12 +1,12 @@
 # azurerm_databricks_workspace
-def azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_databricks_workspace"
     tcode="550-"
     azr=""
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Databricks/workspaces"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Databricks/workspaces"
         params = {'api-version': '2018-04-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

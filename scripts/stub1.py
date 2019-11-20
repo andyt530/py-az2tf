@@ -1,11 +1,11 @@
-def azurerm_stub(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_stub(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     azr=""
     tcode="000-"
     tfp="azurerm_stub"
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Compute/disks"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Compute/disks"
         params = {'api-version': '2017-03-30'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]

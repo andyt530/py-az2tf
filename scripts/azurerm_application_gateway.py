@@ -1,5 +1,5 @@
 # azurerm_application_gateway
-def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess):
+def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_application_gateway"
     tcode="193-"
     azr=""
@@ -7,7 +7,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess)
     if crf in tfp:
     # REST or cli
         # print "REST Managed Disk"
-        url="https://management.azure.com/subscriptions/" + sub + "/providers/Microsoft.Network/applicationGateways"
+        url="https://" + cldurl + "/subscriptions/" + sub + "/providers/Microsoft.Network/applicationGateways"
         params = {'api-version': '2018-07-01'}
         r = requests.get(url, headers=headers, params=params)
         azr= r.json()["value"]
