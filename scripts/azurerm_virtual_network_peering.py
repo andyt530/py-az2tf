@@ -14,9 +14,9 @@ def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfimf="080-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
             peers=azr[i]["properties"]["virtualNetworkPeerings"]
             vnetname=azr[i]["name"]

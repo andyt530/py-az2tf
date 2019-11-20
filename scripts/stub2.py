@@ -9,7 +9,7 @@
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -19,7 +19,7 @@
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 

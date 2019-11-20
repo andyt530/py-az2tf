@@ -54,7 +54,9 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldur
     isrun=False
     tfp="azurerm_resource_group"
     if crf in tfp:
-        print "# " + tfp,
+        
+        print('# ' + tfp,)
+  
         tfrmf="001-"+tfp+"-staterm.sh"
         tfimf="001-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
@@ -74,7 +76,7 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldur
 
 
         count=len(rgs)
-        print count
+        print (count)
         for j in range(0, count):
             
             name=rgs[j]["name"]
@@ -86,6 +88,9 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldur
                     continue
             
             rname=name.replace(".","-")
+            if rg[0].isdigit(): rg="rg_"+rg
+                
+            if rname[0].isdigit(): rname="rg_"+rname
             prefix=tfp+"."+rname
             
             rfilename=prefix+".tf"
@@ -110,7 +115,7 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldur
                 #print tcount
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
                 fr.write('}\n')
             
@@ -119,7 +124,7 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldur
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rname + '\n')
             tfim.write('echo "importing ' + str(j) + ' of ' + str(count-1) + '"' + '\n')
@@ -151,16 +156,19 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
         tfimf="002-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for j in range(0, count):
             
             name=azr[j]["name"]
-            name=name.encode('utf-8', 'ignore')
+            print("name=",name)
+            #name=name.encode('utf-8', 'ignore')
+            print("name=",name)
             #loc=azr[j]["location"]
             id=azr[j]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
            
             level=azr[j]["properties"]["level"]
@@ -173,8 +181,8 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
             sn=scope.split("/")[sc-1].replace(" ","-").lower()
             sn=sn.replace(".","-")
 
-            scope=scope.encode('utf-8', 'ignore')
-            sn=sn.encode('utf-8', 'ignore')
+            #scope=scope.encode('utf-8', 'ignore')
+            #sn=sn.encode('utf-8', 'ignore')
             
          
 
@@ -188,13 +196,13 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
             rname=rname.replace("[","-")
             rname=rname.replace("]","-")
             rname=rname.replace(" ","_")
-            try:
-                rname=rname.encode('utf-8', 'ignore')
-            except UnicodeDecodeError:
-                print('Problem with the name of this item: '+name)
-                print('Please rename this item in the Azure Portal')
-                rname=str(uuid.uuid4())
-                rname=rname.encode('utf-8', 'ignore')
+            #try:
+            #    rname=rname.encode('utf-8', 'ignore')
+            #except UnicodeDecodeError:
+            #    print('Problem with the name of this item: '+name)
+            #    print('Please rename this item in the Azure Portal')
+            #    rname=str(uuid.uuid4())
+            #    #rname=rname.encode('utf-8', 'ignore')
                 
                  
             try:
@@ -203,7 +211,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
                 print('Problem with the scope name: '+scope)
                 print('Please rename this item in the Azure Portal')
                 sn=str(uuid.uuid4())
-                sn=sn.encode('utf-8', 'ignore')
+                #sn=sn.encode('utf-8', 'ignore')
                 prefix=tfp+"."+rg+'__'+rname+'__'+sn
             #prefix=tfp+"."+rg+'__'+rname
 
@@ -216,7 +224,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
             
             try:
                 notes=azr[j]["properties"]["notes"]      
-                notes=notes.encode('utf-8', 'ignore')          
+                #notes=notes.encode('utf-8', 'ignore')          
                 fr.write('\t notes = "'+ notes + '"\n') 
             except KeyError:
                 pass
@@ -229,7 +237,8 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    #fr.write(('\t "' + key + '"="' + tval + '"\n'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -244,7 +253,7 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
             #    print tcount
             #    for key in mtags.keys():
             #        tval=mtags[key]
-            #        fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+            #        fr.write(('\t "' + key + '"="' + tval + '"\n'))
             #    #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
             #    fr.write('}\n')
             
@@ -253,13 +262,13 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '__' + sn + '\n')
             
             tfcomm='terraform import '+tfp+'.'+rg+'__'+rname + '__'+ sn + ' "'+id+'"\n'
             tfim.write('echo "importing ' + str(j) + ' of ' + str(count-1) + '"' + '\n')
-            tfcomm=tfcomm.encode('utf-8', 'ignore')
+            #tfcomm=tfcomm.encode('utf-8', 'ignore')
             tfim.write(tfcomm)  
 
         # end for
@@ -286,18 +295,19 @@ def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfme
         tfimf="015-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for j in range(0, count):
             
             name=azr[j]["name"]
             loc=azr[j]["location"]
             id=azr[j]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
-                print "rgname=" + rg + " crg=" + crg
+                print ("rgname=" + rg + " crg=" + crg)
                 if rgs.lower() != crg.lower():
                     continue  # back to for
             if cde: print(json.dumps(azr[j], indent=4, separators=(',', ': ')))
@@ -322,7 +332,7 @@ def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfme
                 #print tcount
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
                 fr.write('}\n')
             
@@ -358,9 +368,9 @@ def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
         tfimf="020-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
@@ -368,6 +378,7 @@ def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
             id=azr[i]["id"]
         
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             fd=str(azr[i]["properties"]["platformFaultDomainCount"])
             ud=str(azr[i]["properties"]["platformUpdateDomainCount"])
@@ -406,7 +417,7 @@ def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                     #print tval
                 #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
                 fr.write('}\n')
@@ -451,15 +462,16 @@ def azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
         tfimf="030-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
             try:
                 name=azr[i]["name"]
                 loc=azr[i]["location"]
                 id=azr[i]["id"]
                 rg=id.split("/")[4].replace(".","-").lower()
+                if rg[0].isdigit(): rg="rg_"+rg
                 rgs=id.split("/")[4]   
             except KeyError:
                 continue
@@ -510,7 +522,7 @@ def azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                     #print tval
                 #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
                 fr.write('}\n')
@@ -522,7 +534,7 @@ def azurerm_route_table(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()         
+                    print (f.read())         
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
                 
@@ -555,9 +567,9 @@ def azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2
         tfimf="040-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
@@ -565,6 +577,7 @@ def azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2
             id=azr[i]["id"]
         #    rg=azr[i]["resourceGroup"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             #print rg
 
@@ -593,7 +606,7 @@ def azurerm_application_security_group(crf,cde,crg,headers,requests,sub,json,az2
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                     #print tval
                 #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
                 fr.write('}\n')
@@ -635,9 +648,9 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
         tfimf="050-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
@@ -645,6 +658,7 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
             id=azr[i]["id"]
             rgs=id.split("/")[4]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
 
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -747,6 +761,7 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
                     #print "in k k=" + str(k)
                     asgnam=srules[j]["properties"]["sourceApplicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
                     asgrg=srules[j]["properties"]["sourceApplicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-").lower()   
+                    if asgrg[0].isdigit(): asgrg="rg_"+asgrg
                     fr.write('\t\t source_application_security_group_ids = ["${azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}"]' + '\n')
                         
         # destination asg's
@@ -758,6 +773,7 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
                 for k in range(0, kcount):
                     asgnam=srules[j]["properties"]["destinationApplicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
                     asgrg=srules[j]["properties"]["destinationApplicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-").lower()  
+                    if asgrg[0].isdigit(): asgrg="rg_"+asgrg
                     fr.write('\t\t destination_application_security_group_ids = ["${azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}"]' + '\n')
                         
                 fr.write('\t}' + '\n')
@@ -772,7 +788,8 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    #fr.write(('\t "' + key + '"="' + tval + '"\n'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                     #print tval
                 #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
                 fr.write('}\n')
@@ -784,7 +801,7 @@ def azurerm_network_security_group(crf,cde,crg,headers,requests,sub,json,az2tfme
             
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -819,15 +836,16 @@ def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
         tfimf="060-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -877,7 +895,8 @@ def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
                 try:
                     snnsgid=subs[j]["properties"]["networkSecurityGroup"]["id"]
                     nsgnam=snnsgid.split("/")[8].replace(".","-")
-                    nsgrg=snnsgid.split("/")[4].replace(".","-").lower()         
+                    nsgrg=snnsgid.split("/")[4].replace(".","-").lower() 
+                    if nsgrg[0].isdigit(): nsgrg="rg_"+nsgrg        
                     fr.write('\t\t security_group = "${azurerm_network_security_group.' + nsgrg + '__' + nsgnam + '.id}"' + '\n')
                 except KeyError: 
                     pass
@@ -890,7 +909,7 @@ def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -900,7 +919,7 @@ def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -937,9 +956,9 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
         tfimf="070-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
             subs=azr[i]["properties"]["subnets"]
             vnetname=azr[i]["name"]
@@ -951,6 +970,7 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 #loc=subs[j]["location"] subnets don't have location
                 id=subs[j]["id"]
                 rg=id.split("/")[4].replace(".","-").lower()
+                if rg[0].isdigit(): rg="rg_"+rg
                 rgs=id.split("/")[4]
                 if crg is not None:
                     if rgs.lower() != crg.lower():
@@ -988,6 +1008,7 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 try:
                     snsgid=subs[j]["properties"]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
                     snsgrg=subs[j]["properties"]["networkSecurityGroup"]["id"].split("/")[4].replace(".","-").lower()
+                    if snsgrg[0].isdigit(): snsgrg="rg_"+snsgrg
                     fr.write('\t network_security_group_id = "${azurerm_network_security_group.' + snsgrg + '__' + snsgid +'.id}"' + '\n')
                 except KeyError:
                     pass
@@ -995,6 +1016,7 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 try:
                     rtbid=subs[j]["properties"]["routeTable"]["id"].split("/")[8].replace(".","-")
                     rtrg=subs[j]["properties"]["routeTable"]["id"].split("/")[4].replace(".","-").lower()
+                    if rtrg[0].isdigit(): rtrg="rg_"+rtrg
                     fr.write('\t route_table_id = "${azurerm_route_table.' + rtrg + '__' + rtbid +'.id}"' + '\n')
                 except KeyError:
                     pass   
@@ -1033,6 +1055,7 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                     r1="azurerm_subnet_network_security_group_association"
                     fr.write('resource ' + r1 + ' ' + rg + '__' + rname + '__' + snsgid + ' {\n') 
                     fr.write('\tsubnet_id = "${azurerm_subnet.' + rg + '__' + rname + '.id}"' + '\n')
+                    if snsgrg[0].isdigit(): snsgrg="rg_"+snsgrg
                     fr.write('\tnetwork_security_group_id = "${azurerm_network_security_group.' + snsgrg + '__' + snsgid +'.id}"' + '\n')
                     fr.write('}' + ' \n')
                 except KeyError:
@@ -1047,6 +1070,7 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                     r2="azurerm_subnet_route_table_association"
                     fr.write('resource ' + r2 + ' ' + rg + '__' + rname + '__' + rtbid + ' {\n') 
                     fr.write('\tsubnet_id = "${azurerm_subnet.' + rg + '__' + rname + '.id}"' + '\n')
+                    if rtrg[0].isdigit(): rtrg="rg_"+rtrg
                     fr.write('\troute_table_id = "${azurerm_route_table.' + rtrg + '__' + rtbid +'.id}"' + '\n')
                     fr.write('}' + ' \n')
                 except KeyError:
@@ -1114,9 +1138,9 @@ def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfimf="080-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
             peers=azr[i]["properties"]["virtualNetworkPeerings"]
             vnetname=azr[i]["name"]
@@ -1127,6 +1151,7 @@ def azurerm_virtual_network_peering(crf,cde,crg,headers,requests,sub,json,az2tfm
                 #loc=peers[j]["location"] peers don't have a location
                 id=peers[j]["id"]
                 rg=id.split("/")[4].replace(".","-").lower()
+                if rg[0].isdigit(): rg="rg_"+rg
                 rgs=id.split("/")[4]
 
                 if crg is not None:
@@ -1191,9 +1216,9 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
         tfimf="100-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             oname=azr[i]["name"]
@@ -1201,6 +1226,7 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -1310,7 +1336,7 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -1320,7 +1346,7 @@ def azurerm_managed_disk(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -1355,15 +1381,16 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
         tfimf="110-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print '# '+tfp,
+        print ('# '+tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -1397,7 +1424,8 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
             fr.write('\t enable_file_encryption = ' +  fiencrypt + '\n')
             fr.write('\t enable_https_traffic_only = ' +  sahttps + '\n')
             fr.write('\t account_encryption_source = "' +  saencs + '"\n')
-            
+            #fr.write('\t enable_advanced_threat_protection = ' +  'false' + '\n')
+
             try:
                 ishns=str(azr[i]["properties"]["isHnsEnabled"]).lower()
                 fr.write('\t is_hns_enabled = ' + ishns + '\n')
@@ -1419,25 +1447,28 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
                 icount=len(ipr)
                 vcount=len(vnr)
             
+                # if off skip
+                if "None" not in byp and "Allow" not in dfa :
                 # if the only network rule is AzureServices, dont need a network_rules block
-                if "AzureServices" not in byp or icount > 0 or vcount > 0:
-                    fr.write('\t network_rules { \n')
-                    fr.write('\t\t default_action = "' +  dfa + '"\n')
-                    fr.write('\t\t bypass = ["' +  byp + '"]\n')
-                    
-                    if icount > 0:
-                        fr.write('\t\t ip_rules = [')
-                        for ic in range(0, icount): 
-                            ipa=ipr[ic]["value"]
-                            fr.write('"' + ipa + '",')
-                        fr.write(']\n')
-                    if vcount > 0:
-                        fr.write('\t\t virtual_network_subnet_ids = [')
-                        for vc in range(0,vcount):
-                            vnsid=vnr[vc]["id"]
-                            fr.write('\t\t"' + vnsid + '",')
-                        fr.write(']\n')
-                    fr.write('}\n')
+                    if "AzureServices" not in byp or icount > 0 or vcount > 0:
+                        fr.write('\t network_rules { \n')
+                        fr.write('\t\t default_action = "' +  dfa + '"\n')
+                        fr.write('\t\t bypass = ["' +  byp + '"]\n')
+                        
+                        if icount > 0:
+                            fr.write('\t\t ip_rules = [')
+                            for ic in range(0, icount): 
+                                ipa=ipr[ic]["value"]
+                                fr.write('"' + ipa + '",')
+                            fr.write(']\n')
+                        if vcount > 0:
+                            fr.write('\t\t virtual_network_subnet_ids = [')
+                            for vc in range(0,vcount):
+                                vnsid=vnr[vc]["id"]
+                                fr.write('\t\t"' + vnsid + '",')
+                            fr.write(']\n')
+                        fr.write('}\n')
+                    # end if
                 # end if
 
             except KeyError:
@@ -1449,7 +1480,7 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -1459,7 +1490,7 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -1493,15 +1524,16 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
         tfimf="090-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
 
             if crg is not None:
@@ -1654,7 +1686,7 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -1666,7 +1698,7 @@ def azurerm_key_vault(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -1698,15 +1730,16 @@ def azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
         tfimf="120-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
 
             if crg is not None:
@@ -1754,7 +1787,7 @@ def azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -1764,7 +1797,7 @@ def azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -1797,15 +1830,16 @@ def azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfimf="124-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             #loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -1871,7 +1905,7 @@ def azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfm
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -1881,7 +1915,7 @@ def azurerm_traffic_manager_profile(crf,cde,crg,headers,requests,sub,json,az2tfm
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -1915,9 +1949,9 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
         tfimf="125-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             #loc=azr[i]["location"]
@@ -1931,6 +1965,7 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
                 name=azr2[j]["name"]
                 id=azr2[j]["id"]
                 rg=id.split("/")[4].replace(".","-").lower()
+                if rg[0].isdigit(): rg="rg_"+rg
                 rgs=id.split("/")[4]
                 
                 if crg is not None:
@@ -1966,6 +2001,7 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
                     #tgtid=azr2[j]["properties"]["targetResourceId"]
                     tgtrrg=azr2[j]["properties"]["targetResourceId"].split("/")[4].replace(".","-").lower()
                     tgtrid=azr2[j]["properties"]["targetResourceId"].split("/")[8].replace(".","-")          
+                    if tgtrrg[0].isdigit(): tgtrrg="rg_"+tgtrrg
                     fr.write('\t target_resource_id = "${azurerm_public_ip.' + tgtrrg + '__' + tgtrid + '.id}"\n')
                 except KeyError:
                     pass
@@ -1976,7 +2012,7 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
 
                 if cde:
                     with open(rfilename) as f: 
-                        print f.read()
+                        print (f.read())
 
                 tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -2010,9 +2046,9 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
         tfimf="130-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
@@ -2020,6 +2056,8 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
             id=azr[i]["id"]
             rgs=id.split("/")[4]
             rg=id.split("/")[4].replace(".","-").lower()
+            
+            if rg[0].isdigit(): rg="rg_"+rg
             if crg is not None:
                 if rgs.lower() != crg.lower():
                     continue  # back to for
@@ -2050,6 +2088,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
             try:
                 snsg=azr[i]["properties"]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
                 snsgrg=azr[i]["properties"]["networkSecurityGroup"]["id"].split("/")[4].replace(".","-").lower()
+                if snsgrg[0].isdigit(): snsgrg="rg_"+snsgrg
                 fr.write('\t network_security_group_id = "${azurerm_network_security_group.' + snsgrg + '__' + snsg + '.id}"\n')
             except KeyError:
                 pass
@@ -2067,6 +2106,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
                                       
                 fr.write('\t ip_configuration {' + '\n')
                 fr.write('\t\t name = "' + ipcname + '"\n')
+                if subrg[0].isdigit(): subrg="rg_"+subrg
                 fr.write('\t\t subnet_id = "${azurerm_subnet.' + subrg + '__' + subname + '.id}"\n')
                 if subipalloc != "Dynamic":
                     fr.write('\t\t private_ip_address = "' + privip + '"\n')
@@ -2075,6 +2115,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
                 try:
                     pubipnam=azr[i]["properties"]["ipConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[8].replace(".","-")
                     pubiprg=azr[i]["properties"]["ipConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[4].replace(".","-").lower()
+                    if pubiprg[0].isdigit(): pubiprg="rg_"+pubiprg
                     fr.write('\t\t public_ip_address_id = "${azurerm_public_ip.' + pubiprg + '__' + pubipnam + '.id}"\n')
                 except KeyError:
                     pass
@@ -2090,6 +2131,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
                     for k in range(0,kcount):
                         asgnam=azr[i]["properties"]["ipConfigurations"][j]["properties"]["applicationSecurityGroups"][k]["id"].split("/")[8].replace(".","-")
                         asgrg=azr[i]["properties"]["ipConfigurations"][j]["properties"]["applicationSecurityGroups"][k]["id"].split("/")[4].replace(".","-").lower()
+                        if asgrg[0].isdigit(): asgrg="rg_"+asgrg
                         fr.write('\t\t application_security_group_ids = ["${azurerm_application_security_group.' + asgrg + '__' + asgnam + '.id}"]\n')
                 except KeyError:
                     pass
@@ -2104,7 +2146,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -2114,7 +2156,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -2150,15 +2192,16 @@ def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             #loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
 
             if crg is not None:
@@ -2215,7 +2258,7 @@ def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -2225,7 +2268,7 @@ def azurerm_dns_zone(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -2260,15 +2303,16 @@ def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -2303,6 +2347,7 @@ def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 try:
                     subrg=azr[i]["properties"]["frontendIPConfigurations"][j]["subnet"]["id"].split("/")[4].replace(".","-").lower()
                     subname=azr[i]["properties"]["frontendIPConfigurations"][j]["subnet"]["id"].split("/")[10].replace(".","-")
+                    if subrg[0].isdigit(): subrg="rg_"+subrg
                     fr.write('\t\t subnet_id = "${azurerm_subnet.' + subrg + '__' + subname +'.id}"\n')
                 except KeyError:
                     pass
@@ -2319,6 +2364,7 @@ def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 try:
                     pubrg=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicAddress"]["id"].split("/")[4].replace(".","-").lower()
                     pubname=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicAddress"]["id"].split("/")[8].replace(".","-")
+                    if pubrg[0].isdigit(): pubrg="rg_"+pubrg
                     fr.write('\t\t public_ip_address_id = "${azurerm_public_ip.' + pubrg + '__' + pubname + '.id}"\n')
                 except KeyError:
                     pass
@@ -2336,7 +2382,7 @@ def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -2346,7 +2392,7 @@ def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -2381,14 +2427,15 @@ def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
             try:
                 beap=azr[i]["properties"]["inboundNatRules"] 
                 id=azr[i]["id"]
                 rg=id.split("/")[4].replace(".","-").lower()
+                if rg[0].isdigit(): rg="rg_"+rg
                 rgs=id.split("/")[4]
                 if crg is not None:
                     if rgs.lower() != crg.lower():
@@ -2417,7 +2464,7 @@ def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                        
                     lbrg=azr[i]["id"].split("/")[4].replace(".","-").lower()
                     lbname=azr[i]["id"].split("/")[8].replace(".","-")
-                    
+                    if lbrg[0].isdigit(): lbrg="rg_"+lbrg 
                     fep=azr[i]["properties"]["inboundNatRules"][j]["properties"]["frontendPort"]
                     bep=azr[i]["properties"]["inboundNatRules"][j]["properties"]["backendPort"]
                     proto=azr[i]["properties"]["inboundNatRules"][j]["properties"]["protocol"]
@@ -2445,7 +2492,7 @@ def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
 
                     if cde:
                         with open(rfilename) as f: 
-                            print f.read()
+                            print (f.read())
 
                     tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -2482,15 +2529,16 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
          
             name=azr[i]["name"]
          
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -2503,9 +2551,8 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
             jcount= len(beap)
            
             if cde:
-                print "********** beap ***********"
                 print(json.dumps(beap, indent=4, separators=(',', ': ')))  
-                print "j=" +str(jcount)
+      
             
             
             for j in range(0,jcount):
@@ -2513,8 +2560,6 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 name=azr[i]["properties"]["inboundNatPools"][j]["name"]
                 rname=name.replace(".","-")
                 if cde:
-                    print "j=" +str(j)
-                    print "********** beap ***********"
                     print(json.dumps(beap, indent=4, separators=(',', ': ')))
                 id=azr[i]["properties"]["inboundNatPools"][j]["id"]
                 rg=id.split("/")[4].replace(".","-").lower()
@@ -2547,7 +2592,7 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 
                 lbrg=azr[i]["id"].split("/")[4].replace(".","-").lower()
                 lbname=azr[i]["id"].split("/")[8].replace(".","-")
-                
+                if lbrg[0].isdigit(): lbrg="rg_"+lbrg 
                 fr.write('\t\t loadbalancer_id = "${azurerm_lb.' + lbrg + '__' + lbname + '.id}"\n')
                 fr.write('\t\t protocol = "' +    proto + '"\n')
                 fr.write('\t\t frontend_port_start = "' +    str(feps) + '"\n')
@@ -2569,7 +2614,7 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
 
                 if cde:
                     with open(rfilename) as f: 
-                        print f.read()
+                        print (f.read())
 
                 tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -2602,15 +2647,16 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             lbname=name
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -2642,7 +2688,8 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
                     #lbrg=azr[i]["id"].split("/")[4].replace(".","-").lower()
                     #lbname=azr[i]["id"].split("/")[8].replace(".","-")   
                     lbrg=id.split("/")[4].replace(".","-").lower()
-                    lbname=id.split("/")[8].replace(".","-")          
+                    lbname=id.split("/")[8].replace(".","-")    
+                    if lbrg[0].isdigit(): lbrg="rg_"+lbrg      
                     fr.write('\t\t loadbalancer_id = "${azurerm_lb.' + lbrg + '__' + lbname + '.id}" \n')    
                 except KeyError:
                     pass
@@ -2655,7 +2702,7 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
 
                 if cde:
                     with open(rfilename) as f: 
-                        print f.read()
+                        print (f.read())
 
                 tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+lbname+'__'+rname + '\n')
 
@@ -2689,14 +2736,15 @@ def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -2736,7 +2784,7 @@ def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
 
              
 
-
+                if lbrg[0].isdigit(): lbrg="rg_"+lbrg 
                 fr.write('\t\t loadbalancer_id = "${azurerm_lb.' + lbrg  + '__' + lbname + '.id}" \n')
                 fr.write('\t\t protocol = "' +    proto + '"\n')
                 fr.write('\t\t port = "' +    str(port) + '"\n')
@@ -2758,7 +2806,7 @@ def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
 
                 if cde:
                     with open(rfilename) as f: 
-                        print f.read()
+                        print (f.read())
 
                 tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+lbname+'__'+rname + '\n')
 
@@ -2791,13 +2839,14 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
             name=azr[i]["name"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -2834,7 +2883,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 efip=str(azr[i]["properties"]["loadBalancingRules"][j]["properties"]["enableFloatingIP"]).lower()
                 ld=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["loadDistribution"]
                 itm=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["idleTimeoutInMinutes"]
-
+                if lbrg[0].isdigit(): lbrg="rg_"+lbrg 
                 fr.write('\t\t loadbalancer_id = "${azurerm_lb.' + lbrg + '__' + lbname + '.id}" \n')
                 fr.write('\t\t frontend_ip_configuration_name = "' + feipc + '"\n')
                 fr.write('\t\t protocol = "' + proto + '"\n')   
@@ -2844,6 +2893,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 try:
                     beadprg=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["backendAddressPool"]["id"].split("/")[4].replace(".","-").lower()
                     beadpid=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["backendAddressPool"]["id"].split("/")[10].replace(".","-")
+                    if beadprg[0].isdigit(): beadprg="rg_"+beadprg
                     fr.write('\t\t backend_address_pool_id = "${azurerm_lb_backend_address_pool.' + beadprg + '__' + lbname + '__' + beadpid + '.id}"\n')
                 except KeyError:
                     pass
@@ -2851,6 +2901,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 try:
                     prg=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["probe"]["id"].split("/")[4].replace(".","-").lower()
                     pid=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["probe"]["id"].split("/")[10].replace(".","-")
+                    if prg[0].isdigit(): prg="rg_"+prg 
                     fr.write('\t\t probe_id = "${azurerm_lb_probe.' + prg + '__' + lbname + '__' + pid + '.id}" \n')
                 except KeyError:
                     pass
@@ -2864,7 +2915,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
 
                 if cde:
                     with open(rfilename) as f: 
-                        print f.read()
+                        print (f.read())
 
                 tfrm.write('terraform state rm '+tfp+'.'+rg+ '__' + lbname+'__'+rname + '\n')
 
@@ -2900,15 +2951,16 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -2971,6 +3023,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
                 try:
                     subrg=azr[i]["properties"]["gatewayIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-").lower()
                     subname=azr[i]["properties"]["gatewayIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[10].replace(".","-")
+                    if subrg[0].isdigit(): subrg="rg_"+subrg
                     fr.write('\t subnet_id = "${azurerm_subnet.' + subrg + '__' + subname + '.id}" \n')
                 except KeyError:  
                     pass
@@ -3002,6 +3055,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
                     try :
                         subrg=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-").lower()
                         subname=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[10].replace(".","-")                 
+                        if subrg[0].isdigit(): subrg="rg_"+subrg
                         fr.write('\t subnet_id = "${azurerm_subnet.' + subrg + '__'  + subname + '.id}" \n')
                     except KeyError:
                         pass
@@ -3021,6 +3075,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
                     try :
                         pubrg=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[4].replace(".","-").lower()
                         pubname=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[8].replace(".","-")  
+                        if pubrg[0].isdigit(): pubrg="rg_"+pubrg
                         fr.write('\t public_ip_address_id = "${azurerm_public_ip.' + pubrg + '__' + pubname + '.id}" \n')
                     except KeyError:
                         pass
@@ -3290,7 +3345,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -3300,7 +3355,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -3337,15 +3392,16 @@ def azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmes
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
 
             if crg is not None:
@@ -3401,7 +3457,7 @@ def azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmes
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -3411,7 +3467,7 @@ def azurerm_local_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmes
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -3447,15 +3503,16 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -3482,9 +3539,15 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
             aa=azr[i]["properties"]["activeActive"]
             enbgp=azr[i]["properties"]["enableBgp"]
             
-            fr.write('\t type = "' + gtype + '"\n')
             fr.write('\t vpn_type = "' +  vpntype + '"\n')
-            fr.write('\t sku = "' +  sku + '"\n')
+            fr.write('\t type = "' + gtype + '"\n')
+            try:
+                sku=azr[i]["properties"]["sku"]["name"]        
+                fr.write('\t sku = "' +  sku + '"\n')
+            except KeyError:
+                pass
+            
+            
             fr.write('\t active_active = "' + str(aa).lower() + '"\n')
             fr.write('\t enable_bgp = "' + str(enbgp).lower() + '"\n')
             
@@ -3543,6 +3606,7 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
                     ipcpipid= ipc[j]["properties"]["publicIPAddress"]["id"]
                     pipnam= ipcpipid.split("/")[8].replace(".","-")
                     piprg= ipcpipid.split("/")[4].replace(".","-").lower()
+                    if piprg[0].isdigit(): piprg="rg_"+piprg
                     fr.write('\t\t public_ip_address_id = "${azurerm_public_ip.' + piprg + '__' + pipnam + '.id}"\n')
                 except KeyError:
                     pass
@@ -3551,6 +3615,7 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
                     ipcsubid= ipc[j]["properties"]["subnet"]["id"]
                     subnam= ipcsubid.split("/")[10].replace(".","-")
                     subrg= ipcsubid.split("/")[4].replace(".","-").lower()
+                    if subrg[0].isdigit(): subrg="rg_"+subrg
                     fr.write('\t\t subnet_id = "${azurerm_subnet.' + subrg + '__' + subnam + '.id}"\n')
                 except KeyError:
                     pass
@@ -3563,7 +3628,7 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -3573,7 +3638,7 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -3608,15 +3673,16 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -3656,6 +3722,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
             pbs=azr[i]["properties"]["usePolicyBasedTrafficSelectors"]
             
             fr.write('\t type = "' +  ctype + '"\n')
+            if vngrg[0].isdigit(): vngrg="rg_"+vngrg
             fr.write('\t\t virtual_network_gateway_id = "${azurerm_virtual_network_gateway.' + vngrg + '__' + vngnam + '.id}"\n')
             try:
                 authkey=azr[i]["properties"]["authorizationKey"]
@@ -3687,6 +3754,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
                 #fr.write('\t\t express_route_circuit_id = "${azurerm_virtual_network_gateway. + '__' + .id}'"' peerrg peernam + '"\n')
                 peerid=azr[i]["properties"]["peer"]["id"]
                 peerrg=peerid.split("/")[4].replace(".","-").lower()
+                if peerrg[0].isdigit(): peerrg="rg_"+peerrg
                 peernam=peerid.split("/")[8].replace(".","-")
         
             if ctype == "Vnet2Vnet" :
@@ -3727,7 +3795,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -3737,7 +3805,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -3772,15 +3840,16 @@ def azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmes
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -3825,7 +3894,7 @@ def azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmes
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -3835,7 +3904,7 @@ def azurerm_express_route_circuit(crf,cde,crg,headers,requests,sub,json,az2tfmes
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -3870,9 +3939,9 @@ def azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
@@ -3880,6 +3949,7 @@ def azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -3911,15 +3981,12 @@ def azurerm_express_route_circuit_authorization(crf,cde,crg,headers,requests,sub
                
                     fr.write('\t express_route_circuit_name = "' +  name2 + '"\n')                                  
 
-    # no tags       
- 
-
-                fr.write('}\n')
+                    fr.write('}\n')
             fr.close()   # close .tf file
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -3956,9 +4023,9 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
@@ -3966,6 +4033,7 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -4025,21 +4093,22 @@ def azurerm_express_route_circuit_peering(crf,cde,crg,headers,requests,sub,json,
 
     # no tags        
 
-            fr.write('}\n') 
-            fr.close()   # close .tf file
+                fr.write('}\n') 
+                fr.close()   # close .tf file
 
-            if cde:
-                with open(rfilename) as f: 
-                    print f.read()
+                if cde:
+                    with open(rfilename) as f: 
+                        print (f.read())
 
-            tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+                tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
-            tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
-            tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
-            tfim.write(tfcomm)  
+                tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
+                tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+                tfim.write(tfcomm) 
+
+            # end k loop
 
         # end for i loop
-
         tfrm.close()
         tfim.close()
     #end stub
@@ -4065,15 +4134,16 @@ def azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess,c
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -4105,7 +4175,7 @@ def azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess,c
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -4115,7 +4185,7 @@ def azurerm_container_registry(crf,cde,crg,headers,requests,sub,json,az2tfmess,c
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -4150,15 +4220,16 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess,c
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
 
             if crg is not None:
@@ -4211,7 +4282,7 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess,c
                 fr.write('\t linux_profile {\n')
                 fr.write('\t\t admin_username =  "' +  au + '"\n')
                 fr.write('\t\t ssh_key {\n')
-                fr.write('\t\t\t key_data =    "' + sshk + '"\n')
+                fr.write('\t\t\t key_data = "' + sshk.rstrip() + '"\n')
                 fr.write('\t\t }\n')
                 fr.write('\t }\n')
             #else
@@ -4280,6 +4351,7 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess,c
                 try :
                     vnsrg=azr[i]["properties"]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[4].lower()
                     vnsid=azr[i]["properties"]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[10]
+                    if vnsrg[0].isdigit(): vnsrg="rg_"+vnsrg
                     fr.write('\t\t vnet_subnet_id = "${azurerm_subnet.' + vnsrg + '__' + vnsid + '.id}" \n')      
                 except KeyError:
                     pass
@@ -4304,7 +4376,7 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess,c
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -4314,7 +4386,7 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess,c
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -4349,15 +4421,16 @@ def azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -4386,7 +4459,7 @@ def azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfm
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -4396,7 +4469,7 @@ def azurerm_recovery_services_vault(crf,cde,crg,headers,requests,sub,json,az2tfm
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -4432,15 +4505,16 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
 
             if crg is not None:
@@ -4476,7 +4550,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
             try : 
                 avsid=azr[i]["properties"]["availabilitySet"]["id"].split("/")[8].replace(".","-").lower()
                 avsrg=azr[i]["properties"]["availabilitySet"]["id"].split("/")[4].replace(".","-").lower()
-                
+                if avsrg[0].isdigit(): avsrg="rg_"+avsrg
                 fr.write('\t availability_set_id = "${azurerm_availability_set.' + avsrg + '__' +avsid + '.id}"\n')
             except KeyError:
                 pass
@@ -4500,6 +4574,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
                     vmnetpri=False
                     vmnetid=azr[i]["properties"]["networkProfile"]["networkInterfaces"][j]["id"].split("/")[8].replace(".","-")
                     vmnetrg=azr[i]["properties"]["networkProfile"]["networkInterfaces"][j]["id"].split("/")[4].replace(".","-").lower()
+                    if vmnetrg[0].isdigit(): vmnetrg="rg_"+vmnetrg
                     try:
                         vmnetpri=azr[i]["properties"]["networkProfile"]["networkInterfaces"][j]["properties"]["primary"]
                         priif='\t primary_network_interface_id = "${azurerm_network_interface.' + vmnetrg + '__' +  vmnetid + '.id}"\n'
@@ -4744,7 +4819,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
                 for key in mtags.keys():
                     tval=mtags[key]
                     tval=tval.replace('"',"'")
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -4754,7 +4829,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -4790,16 +4865,17 @@ def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2t
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
-            rgs=id.split("/")[4]
+            if rg[0].isdigit(): rg="rg_"+rg
+            rgs=id.split("/")[4].lower()
             try:
                 res=azr[i]["resources"]
                 rname=name.replace(".","-")
@@ -4865,7 +4941,7 @@ def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2t
                             for key in mtags.keys():
                                 tval=mtags[key]
                                 tval=tval.replace('"',"'")
-                                fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                                fr.write(('\t "' + key + '"="' + tval + '"\n'))
                             fr.write('}\n')
                         except KeyError:
                             pass
@@ -4875,7 +4951,7 @@ def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2t
 
                         if cde:
                             with open(rfilename) as f: 
-                                print f.read()
+                                print (f.read())
 
                         tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname +'__'+ername + '\n')
 
@@ -4915,15 +4991,16 @@ def azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2t
         tfimf = tcode+tfp+"-stateimp.sh"
         tfrm = open(tfrmf, 'a')
         tfim = open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count = len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name = azr[i]["name"]
             loc = azr[i]["location"]
             id = azr[i]["id"]
             rg = id.split("/")[4].replace(".", "-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -5053,7 +5130,7 @@ def azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2t
                 if vmdispw != "false":
                     fr.write('\tssh_keys { \n')
                     fr.write('\t\tpath = "' + vmsshpath + '"\n')
-                    fr.write('\t\tkey_data = "' +   vmsshkey + '"\n') 
+                    fr.write('\t\tkey_data = "' +   vmsshkey.rstrip() + '"\n') 
                     fr.write('\t}\n')
 
                 fr.write('}\n')
@@ -5099,6 +5176,7 @@ def azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2t
                             try:
                                 ipcsrg = azr[i]["properties"]["virtualMachineProfile"]["networkProfile"]["networkInterfaceConfigurations"][j]["properties"]["ipConfigurations"][k]["properties"]["subnet"]["id"].split("/")[4].replace(".", "-").lower()
                                 ipcsn = azr[i]["properties"]["virtualMachineProfile"]["networkProfile"]["networkInterfaceConfigurations"][j]["properties"]["ipConfigurations"][k]["properties"]["subnet"]["id"].split("/")[10].replace(".", "-")
+                                if ipcsrg[0].isdigit(): ipcsrg="rg_"+ipcsrg
                                 fr.write('\t\tsubnet_id = "${azurerm_subnet.' + ipcsrg + '__' + ipcsn + '.id}"\n')
                             except KeyError:
                                 pass
@@ -5293,7 +5371,7 @@ def azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2t
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval = mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -5303,7 +5381,7 @@ def azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2t
 
             if cde:
                 with open(rfilename) as f:
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -5340,15 +5418,16 @@ def azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess,c
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -5386,7 +5465,7 @@ def azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess,c
                     fr.write('tags = { \n')
                     for key in mtags.keys():
                         tval=mtags[key]
-                        fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                        fr.write(('\t "' + key + '"="' + tval + '"\n'))
                     fr.write('}\n')
             except KeyError:
                 pass
@@ -5396,7 +5475,7 @@ def azurerm_automation_account(crf,cde,crg,headers,requests,sub,json,az2tfmess,c
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -5431,15 +5510,16 @@ def azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfm
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
 
             if crg is not None:
@@ -5476,7 +5556,7 @@ def azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfm
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -5486,7 +5566,7 @@ def azurerm_log_analytics_workspace(crf,cde,crg,headers,requests,sub,json,az2tfm
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -5524,21 +5604,22 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
 
             skip="false"
             #print id
             if "[" in id or "]" in id :
-                print "Skipping this soluion "+ name+ " can't process currently"
+                print ("Skipping this soluion "+ name+ " can't process currently")
                 skip="true"
                 return
 
@@ -5596,7 +5677,7 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -5631,15 +5712,16 @@ def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -5698,7 +5780,7 @@ def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -5708,7 +5790,7 @@ def azurerm_image(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -5744,15 +5826,16 @@ def azurerm_shared_image_gallery(crf,cde,crg,headers,requests,sub,json,az2tfmess
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -5787,7 +5870,7 @@ def azurerm_shared_image_gallery(crf,cde,crg,headers,requests,sub,json,az2tfmess
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -5797,7 +5880,7 @@ def azurerm_shared_image_gallery(crf,cde,crg,headers,requests,sub,json,az2tfmess
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -5841,12 +5924,8 @@ def azurerm_shared_image(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
             gloc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
-            if rg[0].isdigit():
-                rg="rg_"+rg
-
-
-
-            rgs=id.split("/")[4]
+            if rg[0].isdigit(): rg="rg_"+rg
+            rgs=id.split("/")[4].lower()
             if crg is not None:
                 if rgs.lower() != crg.lower():
                     continue  # back to for
@@ -5861,8 +5940,8 @@ def azurerm_shared_image(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
             r = requests.get(url, headers=headers, params=params)
             azr2= r.json()["value"]
             jcount=len(azr2)
-            print "# " + tfp,
-            print jcount
+            print ("# " + tfp,)
+            print (jcount)
             for j in range(0, jcount):
                 
                 if cde:
@@ -5905,7 +5984,7 @@ def azurerm_shared_image(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
                     fr.write('tags = { \n')
                     for key in mtags.keys():
                         tval=mtags[key]
-                        fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                        fr.write(('\t "' + key + '"="' + tval + '"\n'))
                     fr.write('}\n')
                 except KeyError:
                     pass
@@ -5915,7 +5994,7 @@ def azurerm_shared_image(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 
                 if cde:
                     with open(rfilename) as f: 
-                        print f.read()
+                        print (f.read())
 
                 tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+gname+'__'+rname + '\n')
 
@@ -5981,8 +6060,8 @@ def azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess
                 r = requests.get(url, headers=headers, params=params)
                 azr3= r.json()["value"]
                 kcount=len(azr3)
-                print "# " + tfp,
-                print kcount
+                print ("# " + tfp,)
+                print (kcount)
                 for k in range(0, kcount):
 
                     if cde:
@@ -5993,6 +6072,7 @@ def azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess
                     loc=azr3[k]["location"]
                     id=azr3[k]["id"]
                     rg=id.split("/")[4].replace(".","-").lower()
+                    if rg[0].isdigit(): rg="rg_"+rg
                     rgs=id.split("/")[4]
                     rname = name.replace(".", "-")
                     riname=iname.replace(".", "-")
@@ -6036,7 +6116,7 @@ def azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess
                         fr.write('tags = { \n')
                         for key in mtags.keys():
                             tval=mtags[key]
-                            fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                            fr.write(('\t "' + key + '"="' + tval + '"\n'))
                         fr.write('}\n')
                     except KeyError:
                         pass
@@ -6046,7 +6126,7 @@ def azurerm_shared_image_version(crf,cde,crg,headers,requests,sub,json,az2tfmess
 
                     if cde:
                         with open(rfilename) as f: 
-                            print f.read()
+                            print (f.read())
 
                    
                     tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+gname+'__'+riname+'__'+rname + '\n')
@@ -6082,15 +6162,16 @@ def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -6144,7 +6225,7 @@ def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -6154,7 +6235,7 @@ def azurerm_snapshot(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -6189,15 +6270,16 @@ def azurerm_network_watcher(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -6223,7 +6305,7 @@ def azurerm_network_watcher(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -6233,7 +6315,7 @@ def azurerm_network_watcher(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -6269,15 +6351,16 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -6349,7 +6432,7 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -6359,7 +6442,7 @@ def azurerm_cosmosdb_account(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -6390,7 +6473,7 @@ def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess
         try:
             azr= r.json()["value"]
         except KeyError:
-            if cde: print "No Namespace resources found"
+            if cde: print ("No Namespace resources found")
             return
 
 
@@ -6398,15 +6481,16 @@ def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -6440,7 +6524,7 @@ def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -6450,7 +6534,7 @@ def azurerm_servicebus_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -6482,16 +6566,16 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
         try:
             azr= r.json()["value"]
         except KeyError:
-            if cde: print "Found no Namespaces for Queues"
+            if cde: print ("Found no Namespaces for Queues")
             return
 
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             nname=azr[i]["name"]
@@ -6514,7 +6598,7 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
             try:
                 azr2= r.json()["value"]
             except KeyError:
-                print "Found no SB Queues"
+                print ("Found no SB Queues")
                 return
             
             if cde:
@@ -6535,6 +6619,7 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
                     rname= name.replace(".","-")
                     id= azr2[j]["id"]
                     rg=id.split("/")[4].replace(".","-").lower()
+                    if rg[0].isdigit(): rg="rg_"+rg
                     rgs=id.split("/")[4]
 
                     rname=name.replace(".","-")
@@ -6576,7 +6661,7 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
 
                     if cde:
                         with open(rfilename) as f: 
-                            print f.read()
+                            print (f.read())
 
                     tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -6610,22 +6695,23 @@ def azurerm_eventhub_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess,c
         try:
             azr= r.json()["value"]
         except KeyError:
-            if cde: print "No Namespace resources found"
+            if cde: print ("No Namespace resources found")
             return
         
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -6667,7 +6753,7 @@ def azurerm_eventhub_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess,c
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -6677,7 +6763,7 @@ def azurerm_eventhub_namespace(crf,cde,crg,headers,requests,sub,json,az2tfmess,c
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -6710,22 +6796,23 @@ def azurerm_eventhub(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
         try:
             azr= r.json()["value"]
         except KeyError:
-            if cde: print "Found no Namespaces for EventHubs"
+            if cde: print ("Found no Namespaces for EventHubs")
             return
 
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             nname=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             #print id
             if crg is not None:
@@ -6742,7 +6829,7 @@ def azurerm_eventhub(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
             try:
                 azr2= r.json()["value"]
             except KeyError:
-                print "Found no EventHubs"
+                print ("Found no EventHubs")
                 return
             
             if cde:
@@ -6795,7 +6882,7 @@ def azurerm_eventhub(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
 
                     if cde:
                         with open(rfilename) as f: 
-                            print f.read()
+                            print (f.read())
 
                     tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -6828,16 +6915,16 @@ def azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,s
         try:
             azr= r.json()["value"]
         except KeyError:
-            if cde: print "Found no Namespaces for EventHubs"
+            if cde: print ("Found no Namespaces for EventHubs")
             return
 
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             nname=azr[i]["name"]
@@ -6850,7 +6937,7 @@ def azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,s
                 if rgs.lower() != crg.lower():
                     continue  # back to for
             if cde:
-                print "azr"
+                print ("azr")
                 print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
             
             url="https://management.azure.com/" + id + "/AuthorizationRules"
@@ -6861,7 +6948,7 @@ def azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,s
             try:
                 azr2= r.json()["value"]
             except KeyError:
-                print "Found no EventHub"
+                print ("Found no EventHub")
                 return
             
             if cde:
@@ -6875,6 +6962,7 @@ def azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,s
                 loc=azr2[j]["location"]
                 id=azr2[j]["id"]
                 rg=id.split("/")[4].replace(".","-").lower()
+                if rg[0].isdigit(): rg="rg_"+rg
                 rgs=id.split("/")[4]
                 #print id
                 if crg is not None:
@@ -6923,7 +7011,7 @@ def azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,s
 
                 if cde:
                     with open(rfilename) as f: 
-                        print f.read()
+                        print (f.read())
 
                 tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -6959,15 +7047,16 @@ def azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -7005,7 +7094,7 @@ def azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -7015,7 +7104,7 @@ def azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -7050,15 +7139,16 @@ def azurerm_sql_database(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
         tfimf = tcode+tfp+"-stateimp.sh"
         tfrm = open(tfrmf, 'a')
         tfim = open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count = len(azr)
-        print count
+        print (count)
         for i in range(0, count):
             
             name = azr[i]["name"]
             loc = azr[i]["location"]
             id = azr[i]["id"]
             rg = id.split("/")[4].replace(".", "-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs = id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -7125,7 +7215,7 @@ def azurerm_sql_database(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
                         fr.write('tags = { \n')
                         for key in mtags.keys():
                             tval = mtags[key]
-                            fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                            fr.write(('\t "' + key + '"="' + tval + '"\n'))
                         fr.write('}\n')
                     except KeyError:
                         pass
@@ -7135,7 +7225,7 @@ def azurerm_sql_database(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 
                     if cde:
                         with open(rfilename) as f:
-                            print f.read()
+                            print (f.read())
 
                     tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -7171,15 +7261,16 @@ def azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -7215,7 +7306,7 @@ def azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -7225,7 +7316,7 @@ def azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -7260,15 +7351,16 @@ def azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -7322,7 +7414,7 @@ def azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -7358,9 +7450,9 @@ def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             kind=azr[i]["kind"]
@@ -7370,6 +7462,7 @@ def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
 
             if crg is not None:
@@ -7426,17 +7519,91 @@ def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
+
+
+            url="https://management.azure.com/" + id + "/config/appsettings/list"
+            #print url
+            params = {'api-version': '2018-02-01'}
+            r = requests.post(url, headers=headers, params=params)
+            appset= r.json()
+            #print(json.dumps(appset, indent=4, separators=(',', ': ')))
+
+            fr.write('\t app_settings = { \n')
+
+            try:
+                strcon=appset["properties"]["AzureWebJobsStorage"]
+            except KeyError:
+                pass
+
+            try:
+                vers=appset["properties"]["FUNCTIONS_EXTENSION_VERSION"]
+            except KeyError:
+                pass
+
+            try:
+                runfrompackage=appset["properties"]["WEBSITE_RUN_FROM_PACKAGE"]
+                fr.write('\t WEBSITE_RUN_FROM_PACKAGE = "' + runfrompackage + '"\n')
+            except KeyError:
+                pass
+
+            try:
+                aval=appset["properties"]["WEBSITE_NODE_DEFAULT_VERSION"]
+                fr.write('\t WEBSITE_NODE_DEFAULT_VERSION = "' + aval + '"\n')
+            except KeyError:
+                pass
+
+            try:
+                aval=appset["properties"]["FUNCTIONS_WORKER_RUNTIME"]
+                fr.write('\t FUNCTIONS_WORKER_RUNTIME = "' + aval + '"\n')
+            except KeyError:
+                pass
+
+            try:
+                aval=appset["properties"]["APPINSIGHTS_INSTRUMENTATIONKEY"]
+                fr.write('\t APPINSIGHTS_INSTRUMENTATIONKEY = "' + aval + '"\n')
+            except KeyError:
+                pass
+
+            try:
+                aval=appset["properties"]["mykey"]
+                fr.write('\t mykey = "' + aval + '"\n')
+            except KeyError:
+                pass
+
+            try:
+                aval=appset["properties"]["myten"]
+                fr.write('\t myten = "' + aval + '"\n')
+            except KeyError:
+                pass
+
+            try:
+                aval=appset["properties"]["usern"]
+                fr.write('\t usern = "' + aval + '"\n')
+            except KeyError:
+                pass
+
+                #if aname == "WEBSITE_CONTENTSHARE" or aname == "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING":
+
+
+            try:
+                aval=appset["properties"]["AzureWebJobsDashboard"]
+                if len(aval) > 3:
+                    blog=True
+            except KeyError:
+                pass
+
+            fr.write('\t }'  + '\n')
 
             fr.write('}\n') 
             fr.close()   # close .tf file
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -7471,9 +7638,9 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
             kind=azr[i]["kind"]
 
@@ -7483,6 +7650,7 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -7604,7 +7772,7 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -7614,7 +7782,7 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -7652,15 +7820,16 @@ def azurerm_logic_app_workflow(crf,cde,crg,headers,requests,sub,json,az2tfmess,c
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
 
             if crg is not None:
@@ -7701,7 +7870,7 @@ def azurerm_logic_app_workflow(crf,cde,crg,headers,requests,sub,json,az2tfmess,c
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -7739,9 +7908,9 @@ def azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
             try:
                 ttype=azr[i]["properties"]["definition"]["triggers"]["manual"]["kind"]
@@ -7755,6 +7924,7 @@ def azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json
                 loc=azr[i]["location"]
                 id=azr[i]["id"]
                 rg=id.split("/")[4].replace(".","-").lower()
+                if rg[0].isdigit(): rg="rg_"+rg
                 rgs=id.split("/")[4]
 
 
@@ -7776,6 +7946,7 @@ def azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json
                 fr.write(az2tfmess)
                 fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
                 fr.write('\t name = "' + name + '"\n')
+
                 fr.write('\t logic_app_id = "${azurerm_logic_app_workflow.' + rg + '__' + rname + '.id}"' + '\n')
 
         ###############
@@ -7797,7 +7968,7 @@ def azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json
 
                 if cde:
                     with open(rfilename) as f: 
-                        print f.read()
+                        print (f.read())
 
                 tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -7838,15 +8009,16 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
         tfimf = tcode+tfp+"-stateimp.sh"
         tfrm = open(tfrmf, 'a')
         tfim = open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count = len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name = azr[i]["name"]
             loc = azr[i]["location"]
             id = azr[i]["id"]
             rg = id.split("/")[4].replace(".", "-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs = id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -8067,7 +8239,7 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval = mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -8077,7 +8249,7 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
 
             if cde:
                 with open(rfilename) as f:
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -8110,15 +8282,15 @@ def azurerm_api_management(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldur
         try:
             azr= r.json()["value"]
         except KeyError:
-            print "Skipping api_management for now..."
+            print ("Skipping api_management for now...")
             return
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             
@@ -8126,6 +8298,7 @@ def azurerm_api_management(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldur
             loc=azr[i]["location"]
             id=azr[i]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
+            if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
                 if rgs.lower() != crg.lower():
@@ -8162,7 +8335,7 @@ def azurerm_api_management(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldur
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -8172,7 +8345,7 @@ def azurerm_api_management(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldur
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -8208,9 +8381,9 @@ def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
         tfimf="004-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
@@ -8287,7 +8460,7 @@ def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
 
                 if cde:
                     with open(rfilename) as f: 
-                        print f.read()
+                        print (f.read())
 
                 tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -8322,9 +8495,9 @@ def azurerm_policy_set_definition(crf,cde,crg,headers,requests,sub,json,az2tfmes
         tfimf = "008-"+tfp+"-stateimp.sh"
         tfrm = open(tfrmf, 'a')
         tfim = open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count = len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name = azr[i]["name"]
@@ -8407,7 +8580,7 @@ def azurerm_policy_set_definition(crf,cde,crg,headers,requests,sub,json,az2tfmes
 
                 if cde:
                     with open(rfilename) as f:
-                        print f.read()
+                        print (f.read())
 
                 tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -8443,9 +8616,9 @@ def azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
         tfimf="005-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
@@ -8514,7 +8687,7 @@ def azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -8549,9 +8722,9 @@ def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
         tfimf="006-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
@@ -8581,7 +8754,7 @@ def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
             fr.write('\t name = "' + name + '"\n')
             rdid=azr[i]["name"]
             desc=azr[i]["properties"]["description"]
-            desc=desc.encode('utf-8', 'ignore')
+            #desc=desc.encode('utf-8', 'ignore')
             id=azr[i]["id"]
             
 
@@ -8628,7 +8801,7 @@ def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -8662,9 +8835,9 @@ def azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
         tfimf="007-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
@@ -8711,7 +8884,7 @@ def azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -8721,7 +8894,7 @@ def azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
@@ -8856,25 +9029,29 @@ azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,sub,j
 azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 541_azurerm_sql_database
 azurerm_sql_database(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
+if ccld != 'AzureChinaCloud':
 # 550_azurerm_databricks_workspace
 azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 600_azurerm_app_service_plan
 azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 610_azurerm_app_service
 azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
+
 # 620_azurerm_function_app
 azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
+
 # 630_azurerm_logic_app_workflow
 azurerm_logic_app_workflow(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
+
+
 # 640_azurerm_api_management
 azurerm_api_management(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
-
 
 # 631_azurerm_logic_app_trigger_http_request
 # AWAITING terraform import fix
 #azurerm_logic_app_trigger_http_request.azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 
-
+if ccld != 'AzureChinaCloud':
 # 650_azurerm_monitor_autoscale_setting
 azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 
@@ -8884,12 +9061,12 @@ fileList = glob.glob(tffile)
 # Iterate over the list of filepaths & remove each file.
 for filePath in fileList:
     with open(filePath) as f: 
-        print f.read()
+        print (f.read())
 
 tffile="*stateimp.sh"
 fileList = glob.glob(tffile) 
 # Iterate over the list of filepaths & remove each file.
 for filePath in fileList:
     with open(filePath) as f: 
-        print f.read()
+        print (f.read())
 print "# END \n"

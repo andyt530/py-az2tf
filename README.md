@@ -17,8 +17,8 @@ There should hopefully be no subsequent additions or deletions reported by the t
 ## Requirements & Prerequisites
 + The tool is written for the bash shell script & Python2 and has been tested on macOS
 + Azure cli2 **version 2.0.65 or higher** needs to be installed and you need a login with at least "Read" priviledges
-+ terraform **version v0.12.1 or higher** needs to be installed
-+ Python v2.7
++ terraform **version v0.12.8 or higher** needs to be installed
++ Python v3.6.1 or newer
 
 ### May also be required
 + pip install requests

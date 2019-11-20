@@ -15,9 +15,9 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
         tfimf="125-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             #loc=azr[i]["location"]
@@ -78,7 +78,7 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
 
                 if cde:
                     with open(rfilename) as f: 
-                        print f.read()
+                        print (f.read())
 
                 tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 

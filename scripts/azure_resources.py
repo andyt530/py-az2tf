@@ -1,4 +1,4 @@
-def azure_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os):
+def azure_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os,cldurl):
     # print "REST Resources ",
     fresfilename="data.json"
     fres=open(fresfilename, 'w')
@@ -8,7 +8,7 @@ def azure_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os):
         r = requests.get(url, headers=headers, params=params)
         res= r.json()["value"]
     except KeyError:
-        print "Error getting resources"
+        print ("Error getting resources")
         exit()
     fres.write(json.dumps(res, indent=4, separators=(',', ': ')))
     fres.close()
@@ -21,7 +21,7 @@ def azure_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os):
 
 
     count=len(res)
-    print "Resources Found: " + str(count)
+    print ("Resources Found: " + str(count))
     for j in range(0, count):
         
         #name=res[j]['name']
@@ -231,7 +231,7 @@ def azure_resources(crf,cde,crg,headers,requests,sub,json,az2tfmess,os):
     fr.close()
     np.close()
 
-    print "Optimizing Resources ..."
+    print ("Optimizing Resources ...")
     # sort unique and filter for Resource Group
     rfilename="resources.txt"
     fr=open(rfilename, 'w')

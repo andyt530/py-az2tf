@@ -4,7 +4,9 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldur
     isrun=False
     tfp="azurerm_resource_group"
     if crf in tfp:
-        print "# " + tfp,
+        
+        print('# ' + tfp,)
+  
         tfrmf="001-"+tfp+"-staterm.sh"
         tfimf="001-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
@@ -24,7 +26,7 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldur
 
 
         count=len(rgs)
-        print count
+        print (count)
         for j in range(0, count):
             
             name=rgs[j]["name"]
@@ -63,7 +65,7 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldur
                 #print tcount
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
                 fr.write('}\n')
             
@@ -72,7 +74,7 @@ def azurerm_resource_group(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldur
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rname + '\n')
             tfim.write('echo "importing ' + str(j) + ' of ' + str(count-1) + '"' + '\n')

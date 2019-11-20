@@ -14,9 +14,9 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
          
             name=azr[i]["name"]
@@ -36,9 +36,8 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
             jcount= len(beap)
            
             if cde:
-                print "********** beap ***********"
                 print(json.dumps(beap, indent=4, separators=(',', ': ')))  
-                print "j=" +str(jcount)
+      
             
             
             for j in range(0,jcount):
@@ -46,8 +45,6 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 name=azr[i]["properties"]["inboundNatPools"][j]["name"]
                 rname=name.replace(".","-")
                 if cde:
-                    print "j=" +str(j)
-                    print "********** beap ***********"
                     print(json.dumps(beap, indent=4, separators=(',', ': ')))
                 id=azr[i]["properties"]["inboundNatPools"][j]["id"]
                 rg=id.split("/")[4].replace(".","-").lower()
@@ -102,7 +99,7 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
 
                 if cde:
                     with open(rfilename) as f: 
-                        print f.read()
+                        print (f.read())
 
                 tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 

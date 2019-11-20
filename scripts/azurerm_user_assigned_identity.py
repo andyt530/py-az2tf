@@ -15,9 +15,9 @@ def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfme
         tfimf="015-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for j in range(0, count):
             
             name=azr[j]["name"]
@@ -27,7 +27,7 @@ def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfme
             if rg[0].isdigit(): rg="rg_"+rg
             rgs=id.split("/")[4]
             if crg is not None:
-                print "rgname=" + rg + " crg=" + crg
+                print ("rgname=" + rg + " crg=" + crg)
                 if rgs.lower() != crg.lower():
                     continue  # back to for
             if cde: print(json.dumps(azr[j], indent=4, separators=(',', ': ')))
@@ -52,7 +52,7 @@ def azurerm_user_assigned_identity(crf,cde,crg,headers,requests,sub,json,az2tfme
                 #print tcount
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
                 fr.write('}\n')
             

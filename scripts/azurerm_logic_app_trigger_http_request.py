@@ -19,9 +19,9 @@ def azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
             try:
                 ttype=azr[i]["properties"]["definition"]["triggers"]["manual"]["kind"]
@@ -79,7 +79,7 @@ def azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json
 
                 if cde:
                     with open(rfilename) as f: 
-                        print f.read()
+                        print (f.read())
 
                 tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 

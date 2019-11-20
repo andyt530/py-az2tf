@@ -41,8 +41,8 @@ def azurerm_shared_image(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
             r = requests.get(url, headers=headers, params=params)
             azr2= r.json()["value"]
             jcount=len(azr2)
-            print "# " + tfp,
-            print jcount
+            print ("# " + tfp,)
+            print (jcount)
             for j in range(0, jcount):
                 
                 if cde:
@@ -85,7 +85,7 @@ def azurerm_shared_image(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
                     fr.write('tags = { \n')
                     for key in mtags.keys():
                         tval=mtags[key]
-                        fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                        fr.write(('\t "' + key + '"="' + tval + '"\n'))
                     fr.write('}\n')
                 except KeyError:
                     pass
@@ -95,7 +95,7 @@ def azurerm_shared_image(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 
                 if cde:
                     with open(rfilename) as f: 
-                        print f.read()
+                        print (f.read())
 
                 tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+gname+'__'+rname + '\n')
 

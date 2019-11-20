@@ -19,9 +19,9 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
@@ -34,7 +34,7 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
             skip="false"
             #print id
             if "[" in id or "]" in id :
-                print "Skipping this soluion "+ name+ " can't process currently"
+                print ("Skipping this soluion "+ name+ " can't process currently")
                 skip="true"
                 return
 
@@ -92,7 +92,7 @@ def azurerm_log_analytics_solution(crf,cde,crg,headers,requests,sub,json,az2tfme
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 

@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python
 # RUNBOOK ON
 import subprocess
 import requests
@@ -136,7 +136,7 @@ if csub is not None:
    
     # validate sub
     if len(csub) != 36:
-        print "Expected subscription id to be 36 characters long got " + str(len(csub)) + " characters in " + csub
+        print ("Expected subscription id to be 36 characters long got " + str(len(csub)) + " characters in " + csub)
         exit("Error: SubLength")
 
 
@@ -153,9 +153,9 @@ if deb is not None:
     cde=True
     print("Debug=" + str(cde))
 
-if sys.version_info[0] > 2:
+if sys.version_info[0] < 3:
     #raise Exception("Must be using Python 2")
-    print("Python version ", sys.version_info[0], " version 2 required, Exiting")
+    print("Python version ", sys.version_info[0], " version 3 required, Exiting")
     exit()
 
 def printf(format, *values):
@@ -189,12 +189,18 @@ def printf(format, *values):
 #r = requests.get(url, headers=headers, params=params)
 #print(json.dumps(r.json(), indent=4, separators=(',', ': ')))
 
-print "Get Access Token from CLI"
+print ("Get Access Token from CLI")
 p = subprocess.Popen('az account get-access-token -o json', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 c=0
-for line in p.stdout.readlines():
+for rline in p.stdout.readlines():
+   
+    line=str(rline)[5:]
+    #line=line[5:]
+    #print("---",line)
     if "accessToken" in line:
-        tk=line.split(":")[1].strip(' ",')
+        #tk=line.split(":")[1]
+        tk=line.split('"')[2]
+        #print("tk=",tk)
         tk2=tk.replace(",", "")
         bt2=tk2.replace('"', '')
     if "subscription" in line:
@@ -214,7 +220,7 @@ else:
 
 #bt=bt2.rstrip('\n')
 bt=bt2.rstrip()
-print "Subscription:",sub
+print ("Subscription:",sub)
 headers = {'Authorization': 'Bearer ' + bt, 'Content-Type': 'application/json'}
 # print "CloudURL:",cldurl
 # print "BearerToken:",bt
@@ -222,12 +228,15 @@ headers = {'Authorization': 'Bearer ' + bt, 'Content-Type': 'application/json'}
 # subscription check
 
 url="https://" + cldurl + "/subscriptions/"
+#print("url=",url)
+#print("headers=",headers)
 params = {'api-version': '2014-04-01'}
 try: 
     r = requests.get(url, headers=headers, params=params)
+    print(str(r))
     subs = r.json()["value"]
 except KeyError:
-    print "Error getting subscription list"
+    print ("Error getting subscription list")
     exit("ErrorGettingSubscriptionList")
 #print(json.dumps(subs, indent=4, separators=(',', ': ')))
 #ssubs=json.dumps(subs)
@@ -252,7 +261,7 @@ for i in range(0, count):
 #    print "Could not find subscription with ID " + sub + " Exiting ..." 
     #exit("Error: InvalidSubscriptionID-2")
 
-print "Found subscription " + sub + " proceeding ..."
+print ("Found subscription " + sub + " proceeding ...")
 
 if crg is not None:
     FoundRg=False
@@ -266,11 +275,11 @@ if crg is not None:
     for j in range(0, count):    
         name=rgs[j]["name"]
         if crg.lower() == name.lower():
-            print "Found Resource Group" + crg
+            print ("Found Resource Group" + crg)
             FoundRg=True
 
     if not FoundRg:
-        print "Could not find Resource Group " + crg + " in subscription " + sub + " Exiting ..." 
+        print ("Could not find Resource Group " + crg + " in subscription " + sub + " Exiting ...")
         exit("ErrorInvalidResourceGroup")
 
 

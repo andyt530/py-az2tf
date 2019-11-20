@@ -17,9 +17,9 @@ def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
         tfimf="006-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
@@ -49,7 +49,7 @@ def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
             fr.write('\t name = "' + name + '"\n')
             rdid=azr[i]["name"]
             desc=azr[i]["properties"]["description"]
-            desc=desc.encode('utf-8', 'ignore')
+            #desc=desc.encode('utf-8', 'ignore')
             id=azr[i]["id"]
             
 
@@ -96,7 +96,7 @@ def azurerm_role_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 

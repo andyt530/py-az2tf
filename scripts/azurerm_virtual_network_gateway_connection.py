@@ -16,9 +16,9 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
@@ -138,7 +138,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                 fr.write('}\n')
             except KeyError:
                 pass
@@ -148,7 +148,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
 
             if cde:
                 with open(rfilename) as f: 
-                    print f.read()
+                    print (f.read())
 
             tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 

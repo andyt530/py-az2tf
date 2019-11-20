@@ -14,16 +14,16 @@ def azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,s
         try:
             azr= r.json()["value"]
         except KeyError:
-            if cde: print "Found no Namespaces for EventHubs"
+            if cde: print ("Found no Namespaces for EventHubs")
             return
 
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             nname=azr[i]["name"]
@@ -36,7 +36,7 @@ def azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,s
                 if rgs.lower() != crg.lower():
                     continue  # back to for
             if cde:
-                print "azr"
+                print ("azr")
                 print(json.dumps(azr[i], indent=4, separators=(',', ': ')))
             
             url="https://management.azure.com/" + id + "/AuthorizationRules"
@@ -47,7 +47,7 @@ def azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,s
             try:
                 azr2= r.json()["value"]
             except KeyError:
-                print "Found no EventHub"
+                print ("Found no EventHub")
                 return
             
             if cde:
@@ -110,7 +110,7 @@ def azurerm_eventhub_namespace_authorization_rule(crf,cde,crg,headers,requests,s
 
                 if cde:
                     with open(rfilename) as f: 
-                        print f.read()
+                        print (f.read())
 
                 tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 

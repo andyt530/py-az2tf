@@ -14,16 +14,16 @@ def azurerm_eventhub(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
         try:
             azr= r.json()["value"]
         except KeyError:
-            if cde: print "Found no Namespaces for EventHubs"
+            if cde: print ("Found no Namespaces for EventHubs")
             return
 
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             nname=azr[i]["name"]
@@ -47,7 +47,7 @@ def azurerm_eventhub(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
             try:
                 azr2= r.json()["value"]
             except KeyError:
-                print "Found no EventHubs"
+                print ("Found no EventHubs")
                 return
             
             if cde:
@@ -100,7 +100,7 @@ def azurerm_eventhub(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
 
                     if cde:
                         with open(rfilename) as f: 
-                            print f.read()
+                            print (f.read())
 
                     tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 

@@ -1,4 +1,8 @@
 # az2tf (Python version) - changelog
+## (November 2019)
+* Major change - now uses python3 ahead of depreciation of python2
+* Support multiple clouds AzureCloud, AzureChinaCloud, AzureGermanCloud & AzureUSGovernment
+
 ## (August 10 2019)
 * added zurerm_eventhub_namespace_authorization_rule
 ## (August 8 2019)

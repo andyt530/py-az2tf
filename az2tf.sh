@@ -1,5 +1,5 @@
 usage()
-{ echo "Usage: $0 -c <Cloud> -s <Subscription ID> [-g <Resource Group>] [-r azurerm_<resource_type>] [-x <yes|no(default)>] [-p <yes|no(default)>] [-f <yes|no(default)>] [-v <yes|no(default)>] [-d <yes|no(default)>]" 1>&2; exit 1;
+{ echo "Usage: $0 [-c <Cloud>] -s <Subscription ID> [-g <Resource Group>] [-r azurerm_<resource_type>] [-x <yes|no(default)>] [-p <yes|no(default)>] [-f <yes|no(default)>] [-v <yes|no(default)>] [-d <yes|no(default)>]" 1>&2; exit 1;
 }
 x="no"
 p="no"
@@ -104,7 +104,8 @@ rm -f terraform*.backup
 rm -f tf*.sh
 cp ../../stub/*.tf .
 
-pyc1="python2.7 ../../scripts/az2tf.py -c $mycld -s $mysub "
+#pyc1="python2.7 ../../scripts/az2tf.py -c $mycld -s $mysub "
+pyc1="python ../../scripts/az2tf.py -c $mycld -s $mysub "
 if [ "$g" != "" ]; then
     pyc2=" -g $g "
 else

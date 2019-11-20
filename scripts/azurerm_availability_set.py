@@ -14,9 +14,9 @@ def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
         tfimf="020-"+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             name=azr[i]["name"]
@@ -63,7 +63,7 @@ def azurerm_availability_set(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
                 fr.write('tags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
-                    fr.write(('\t "' + key + '"="' + tval + '"\n').encode('utf-8'))
+                    fr.write(('\t "' + key + '"="' + tval + '"\n'))
                     #print tval
                 #print(json.dumps(mtags, indent=4, separators=(',', ': ')))
                 fr.write('}\n')

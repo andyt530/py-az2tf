@@ -13,16 +13,16 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
         try:
             azr= r.json()["value"]
         except KeyError:
-            if cde: print "Found no Namespaces for Queues"
+            if cde: print ("Found no Namespaces for Queues")
             return
 
         tfrmf=tcode+tfp+"-staterm.sh"
         tfimf=tcode+tfp+"-stateimp.sh"
         tfrm=open(tfrmf, 'a')
         tfim=open(tfimf, 'a')
-        print "# " + tfp,
+        print ("# " + tfp,)
         count=len(azr)
-        print count
+        print (count)
         for i in range(0, count):
 
             nname=azr[i]["name"]
@@ -45,7 +45,7 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
             try:
                 azr2= r.json()["value"]
             except KeyError:
-                print "Found no SB Queues"
+                print ("Found no SB Queues")
                 return
             
             if cde:
@@ -108,7 +108,7 @@ def azurerm_servicebus_queue(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
 
                     if cde:
                         with open(rfilename) as f: 
-                            print f.read()
+                            print (f.read())
 
                     tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
 
