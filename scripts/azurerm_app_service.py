@@ -91,6 +91,80 @@ def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess):
             except KeyError:
                 pass
 
+
+            url="https://management.azure.com/" + id + "/config/appsettings/list"
+            #print url
+            params = {'api-version': '2018-02-01'}
+            r = requests.post(url, headers=headers, params=params)
+            appset= r.json()
+            #print(json.dumps(appset, indent=4, separators=(',', ': ')))
+
+            fr.write('\t app_settings = { \n')
+
+            try:
+                strcon=appset["properties"]["AzureWebJobsStorage"]
+            except KeyError:
+                pass
+
+            try:
+                vers=appset["properties"]["FUNCTIONS_EXTENSION_VERSION"]
+            except KeyError:
+                pass
+
+            try:
+                runfrompackage=appset["properties"]["WEBSITE_RUN_FROM_PACKAGE"]
+                fr.write('\t WEBSITE_RUN_FROM_PACKAGE = "' + runfrompackage + '"\n')
+            except KeyError:
+                pass
+
+            try:
+                aval=appset["properties"]["WEBSITE_NODE_DEFAULT_VERSION"]
+                fr.write('\t WEBSITE_NODE_DEFAULT_VERSION = "' + aval + '"\n')
+            except KeyError:
+                pass
+
+            try:
+                aval=appset["properties"]["FUNCTIONS_WORKER_RUNTIME"]
+                fr.write('\t FUNCTIONS_WORKER_RUNTIME = "' + aval + '"\n')
+            except KeyError:
+                pass
+
+            try:
+                aval=appset["properties"]["APPINSIGHTS_INSTRUMENTATIONKEY"]
+                fr.write('\t APPINSIGHTS_INSTRUMENTATIONKEY = "' + aval + '"\n')
+            except KeyError:
+                pass
+
+            try:
+                aval=appset["properties"]["mykey"]
+                fr.write('\t mykey = "' + aval + '"\n')
+            except KeyError:
+                pass
+
+            try:
+                aval=appset["properties"]["myten"]
+                fr.write('\t myten = "' + aval + '"\n')
+            except KeyError:
+                pass
+
+            try:
+                aval=appset["properties"]["usern"]
+                fr.write('\t usern = "' + aval + '"\n')
+            except KeyError:
+                pass
+
+                #if aname == "WEBSITE_CONTENTSHARE" or aname == "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING":
+
+
+            try:
+                aval=appset["properties"]["AzureWebJobsDashboard"]
+                if len(aval) > 3:
+                    blog=True
+            except KeyError:
+                pass
+
+            fr.write('\t }'  + '\n')
+
             fr.write('}\n') 
             fr.close()   # close .tf file
 
