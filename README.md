@@ -1,4 +1,4 @@
-# az2tf (Python version) - now supports Terraform v0.12
+# az2tf (Python3 version) - now supports Terraform v0.12 
 
 Work in progress - please report any issues you find.
 
@@ -18,12 +18,11 @@ There should hopefully be no subsequent additions or deletions reported by the t
 + The tool is written for the bash shell script & Python2 and has been tested on macOS
 + Azure cli2 **version 2.0.65 or higher** needs to be installed and you need a login with at least "Read" priviledges
 + terraform **version v0.12.8 or higher** needs to be installed
-+ Python v3.6.1 or newer
++ Python **version 3.6.1 or higher**
 
 ### May also be required
 + pip install requests
 + pip install adal
-
 
 
 ## Quickstart guide to using the tool
@@ -60,7 +59,12 @@ Once the validation is ok you can use the tool in anger to not only generate the
 
 To generate the terraform files for an entire Azure subscription, import the resourcs and perform a terraform plan:
 ```
-./az2tf.sh [-c <Cloud Name>] -s <Subscription ID>
+./az2tf.sh -s <Subscription ID>
+```
+
+If your resources are in Azure US Government:
+```
+./az2tf.sh -c AzureUSGovernment -s <Subscription ID>
 ```
 
 To include Azure Subscription Policies and RBAC controls and assignments:
