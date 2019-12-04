@@ -24,7 +24,7 @@ def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
             name=azr[i]["name"]
             #loc=azr[i]["location"]
             id=azr[i]["id"]
-            rg="policydefinitions"
+            rg="policyDefinitions"
             rgs=id.split("/")[4]
           
             if crg is not None:
