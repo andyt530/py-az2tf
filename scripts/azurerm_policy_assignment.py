@@ -52,7 +52,7 @@ def azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
     ###############
     # specific code
            
-            dname=azr[i]["properties"]["displayName"]
+            
             rdid=azr[i]["name"]
            
             scope=azr[i]["properties"]["scope"]
@@ -60,9 +60,12 @@ def azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
             id=azr[i]["id"]
 
             
+            try:
+                dname=azr[i]["properties"]["displayName"]
+                fr.write('display_name = "' + dname +'"\n') 
+            except KeyError:
+                pass      
 
-                
-            fr.write('display_name = "' + dname +'"\n') 
             fr.write('policy_definition_id = "' + pdid +'"\n') 
             fr.write('scope = "' +  scope +'"\n') 
             try :

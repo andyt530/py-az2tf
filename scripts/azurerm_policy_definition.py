@@ -70,15 +70,21 @@ def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
                     pass   
      
                 #print(json.dumps(azr[i]["properties"]["metadata"], indent=4, separators=(',', ': ')))
-                
-                fr.write('metadata = jsonencode(\n') 
-                fr.write(json.dumps(azr[i]["properties"]["metadata"]))
-                fr.write(') \n') 
-
-                prules=str(ast.literal_eval(json.dumps(azr[i]["properties"]["policyRule"])))
-                fr.write('policy_rule = jsonencode( \n')
-                fr.write(json.dumps(azr[i]["properties"]["policyRule"]))  
-                fr.write(') \n') 
+                try:
+                    mtd=azr[i]["properties"]["metadata"]
+                    fr.write('metadata = jsonencode(\n') 
+                    fr.write(json.dumps(azr[i]["properties"]["metadata"]))
+                    fr.write(') \n') 
+                except KeyError:
+                    pass  
+                #prules=str(ast.literal_eval(json.dumps(azr[i]["properties"]["policyRule"])))
+                try:
+                    prs=azr[i]["properties"]["policyRule"]             
+                    fr.write('policy_rule = jsonencode( \n')
+                    fr.write(json.dumps(azr[i]["properties"]["policyRule"]))  
+                    fr.write(') \n') 
+                except KeyError:
+                    pass        
                 
                 try:
                     params=azr[i]["properties"]["parameters"]          
