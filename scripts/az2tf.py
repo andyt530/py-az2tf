@@ -17,6 +17,7 @@ os.chdir(head)
 cwd=os.getcwd()
 head, tail = os.path.split(cwd)
 newd=head+"/scripts"
+# chdir scripts
 os.chdir(newd)
 #print os.getcwd()
 #import azure_resources

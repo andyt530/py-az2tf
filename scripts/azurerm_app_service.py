@@ -63,7 +63,7 @@ def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 pass
 
             # case issues - so use resource id directly
-            # fr.write('\t app_service_plan_id = "${azurerm_app_service_plan. + '__' + .id}'"' prg pnam + '"\n')
+            # fr.write('\t app_service_plan_id = azurerm_app_service_plan. + '__' + '.id' prg pnam + '"\n')
             fr.write('\t app_service_plan_id = "' +  appplid + '"\n')
 
     # geo location block

@@ -58,7 +58,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
                 snsg=azr[i]["properties"]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
                 snsgrg=azr[i]["properties"]["networkSecurityGroup"]["id"].split("/")[4].replace(".","-").lower()
                 if snsgrg[0].isdigit(): snsgrg="rg_"+snsgrg
-                fr.write('\t network_security_group_id = "${azurerm_network_security_group.' + snsgrg + '__' + snsg + '.id}"\n')
+                fr.write('\t network_security_group_id = azurerm_network_security_group.' + snsgrg + '__' + snsg + '.id\n')
             except KeyError:
                 pass
                
@@ -76,7 +76,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
                 fr.write('\t ip_configuration {' + '\n')
                 fr.write('\t\t name = "' + ipcname + '"\n')
                 if subrg[0].isdigit(): subrg="rg_"+subrg
-                fr.write('\t\t subnet_id = "${azurerm_subnet.' + subrg + '__' + subname + '.id}"\n')
+                fr.write('\t\t subnet_id = azurerm_subnet.' + subrg + '__' + subname + '.id\n')
                 if subipalloc != "Dynamic":
                     fr.write('\t\t private_ip_address = "' + privip + '"\n')
                
@@ -85,7 +85,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
                     pubipnam=azr[i]["properties"]["ipConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[8].replace(".","-")
                     pubiprg=azr[i]["properties"]["ipConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[4].replace(".","-").lower()
                     if pubiprg[0].isdigit(): pubiprg="rg_"+pubiprg
-                    fr.write('\t\t public_ip_address_id = "${azurerm_public_ip.' + pubiprg + '__' + pubipnam + '.id}"\n')
+                    fr.write('\t\t public_ip_address_id = azurerm_public_ip.' + pubiprg + '__' + pubipnam + '.id\n')
                 except KeyError:
                     pass
 

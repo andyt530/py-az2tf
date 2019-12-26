@@ -70,7 +70,7 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                     snsgid=subs[j]["properties"]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
                     snsgrg=subs[j]["properties"]["networkSecurityGroup"]["id"].split("/")[4].replace(".","-").lower()
                     if snsgrg[0].isdigit(): snsgrg="rg_"+snsgrg
-                    fr.write('\t network_security_group_id = "${azurerm_network_security_group.' + snsgrg + '__' + snsgid +'.id}"' + '\n')
+                #    fr.write('\t network_security_group_id = azurerm_network_security_group.' + snsgrg + '__' + snsgid +'.id' + '\n')
                 except KeyError:
                     pass
                 
@@ -78,7 +78,7 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                     rtbid=subs[j]["properties"]["routeTable"]["id"].split("/")[8].replace(".","-")
                     rtrg=subs[j]["properties"]["routeTable"]["id"].split("/")[4].replace(".","-").lower()
                     if rtrg[0].isdigit(): rtrg="rg_"+rtrg
-                    fr.write('\t route_table_id = "${azurerm_route_table.' + rtrg + '__' + rtbid +'.id}"' + '\n')
+                    #fr.write('\t route_table_id = azurerm_route_table.' + rtrg + '__' + rtbid +'.id' + '\n')
                 except KeyError:
                     pass   
 
@@ -115,9 +115,9 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                     snsgid=subs[j]["properties"]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
                     r1="azurerm_subnet_network_security_group_association"
                     fr.write('resource ' + r1 + ' ' + rg + '__' + rname + '__' + snsgid + ' {\n') 
-                    fr.write('\tsubnet_id = "${azurerm_subnet.' + rg + '__' + rname + '.id}"' + '\n')
+                    fr.write('\tsubnet_id = azurerm_subnet.' + rg + '__' + rname + '.id' + '\n')
                     if snsgrg[0].isdigit(): snsgrg="rg_"+snsgrg
-                    fr.write('\tnetwork_security_group_id = "${azurerm_network_security_group.' + snsgrg + '__' + snsgid +'.id}"' + '\n')
+                    fr.write('\tnetwork_security_group_id = azurerm_network_security_group.' + snsgrg + '__' + snsgid +'.id' + '\n')
                     fr.write('}' + ' \n')
                 except KeyError:
                     pass
@@ -130,9 +130,9 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                     rtbid=subs[j]["properties"]["routeTable"]["id"].split("/")[8].replace(".","-")
                     r2="azurerm_subnet_route_table_association"
                     fr.write('resource ' + r2 + ' ' + rg + '__' + rname + '__' + rtbid + ' {\n') 
-                    fr.write('\tsubnet_id = "${azurerm_subnet.' + rg + '__' + rname + '.id}"' + '\n')
+                    fr.write('\tsubnet_id = azurerm_subnet.' + rg + '__' + rname + '.id' + '\n')
                     if rtrg[0].isdigit(): rtrg="rg_"+rtrg
-                    fr.write('\troute_table_id = "${azurerm_route_table.' + rtrg + '__' + rtbid +'.id}"' + '\n')
+                    fr.write('\troute_table_id = azurerm_route_table.' + rtrg + '__' + rtbid +'.id' + '\n')
                     fr.write('}' + ' \n')
                 except KeyError:
                     pass

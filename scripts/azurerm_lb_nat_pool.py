@@ -78,7 +78,7 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 lbrg=azr[i]["id"].split("/")[4].replace(".","-").lower()
                 lbname=azr[i]["id"].split("/")[8].replace(".","-")
                 if lbrg[0].isdigit(): lbrg="rg_"+lbrg 
-                fr.write('\t\t loadbalancer_id = "${azurerm_lb.' + lbrg + '__' + lbname + '.id}"\n')
+                fr.write('\t\t loadbalancer_id = azurerm_lb.' + lbrg + '__' + lbname + '.id\n')
                 fr.write('\t\t protocol = "' +    proto + '"\n')
                 fr.write('\t\t frontend_port_start = "' +    str(feps) + '"\n')
                 fr.write('\t\t frontend_port_end = "' +    str(fepe) + '"\n')

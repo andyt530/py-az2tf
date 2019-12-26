@@ -59,7 +59,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 ld=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["loadDistribution"]
                 itm=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["idleTimeoutInMinutes"]
                 if lbrg[0].isdigit(): lbrg="rg_"+lbrg 
-                fr.write('\t\t loadbalancer_id = "${azurerm_lb.' + lbrg + '__' + lbname + '.id}" \n')
+                fr.write('\t\t loadbalancer_id = azurerm_lb.' + lbrg + '__' + lbname + '.id \n')
                 fr.write('\t\t frontend_ip_configuration_name = "' + feipc + '"\n')
                 fr.write('\t\t protocol = "' + proto + '"\n')   
                 fr.write('\t\t frontend_port = "' + str(fep) + '"\n')
@@ -69,7 +69,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                     beadprg=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["backendAddressPool"]["id"].split("/")[4].replace(".","-").lower()
                     beadpid=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["backendAddressPool"]["id"].split("/")[10].replace(".","-")
                     if beadprg[0].isdigit(): beadprg="rg_"+beadprg
-                    fr.write('\t\t backend_address_pool_id = "${azurerm_lb_backend_address_pool.' + beadprg + '__' + lbname + '__' + beadpid + '.id}"\n')
+                    fr.write('\t\t backend_address_pool_id = azurerm_lb_backend_address_pool.' + beadprg + '__' + lbname + '__' + beadpid + '.id\n')
                 except KeyError:
                     pass
                 
@@ -77,7 +77,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                     prg=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["probe"]["id"].split("/")[4].replace(".","-").lower()
                     pid=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["probe"]["id"].split("/")[10].replace(".","-")
                     if prg[0].isdigit(): prg="rg_"+prg 
-                    fr.write('\t\t probe_id = "${azurerm_lb_probe.' + prg + '__' + lbname + '__' + pid + '.id}" \n')
+                    fr.write('\t\t probe_id = azurerm_lb_probe.' + prg + '__' + lbname + '__' + pid + '.id \n')
                 except KeyError:
                     pass
                 fr.write('\t\t enable_floating_ip = ' + efip + '\n')

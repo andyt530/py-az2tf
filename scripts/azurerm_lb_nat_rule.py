@@ -62,7 +62,7 @@ def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
 
                     fr.write('\t\t name = "' +    name + '"\n')
                     fr.write('\t\t resource_group_name = "' +  rg + '"\n')
-                    fr.write('\t\t loadbalancer_id = "${azurerm_lb.' + lbrg + '__' + lbname + '.id}" \n')
+                    fr.write('\t\t loadbalancer_id = azurerm_lb.' + lbrg + '__' + lbname + '.id \n')
                     fr.write('\t\t frontend_ip_configuration_name = "' +    feipc + '"\n')
                     fr.write('\t\t protocol = "' + proto + '"\n')
                     fr.write('\t\t backend_port = "' + str(bep) + '"\n')

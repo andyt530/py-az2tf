@@ -63,7 +63,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
                 avsid=azr[i]["properties"]["availabilitySet"]["id"].split("/")[8].replace(".","-").lower()
                 avsrg=azr[i]["properties"]["availabilitySet"]["id"].split("/")[4].replace(".","-").lower()
                 if avsrg[0].isdigit(): avsrg="rg_"+avsrg
-                fr.write('\t availability_set_id = "${azurerm_availability_set.' + avsrg + '__' +avsid + '.id}"\n')
+                fr.write('\t availability_set_id = azurerm_availability_set.' + avsrg + '__' +avsid + '.id\n')
             except KeyError:
                 pass
 
@@ -89,12 +89,12 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
                     if vmnetrg[0].isdigit(): vmnetrg="rg_"+vmnetrg
                     try:
                         vmnetpri=azr[i]["properties"]["networkProfile"]["networkInterfaces"][j]["properties"]["primary"]
-                        priif='\t primary_network_interface_id = "${azurerm_network_interface.' + vmnetrg + '__' +  vmnetid + '.id}"\n'
+                        priif='\t primary_network_interface_id = azurerm_network_interface.' + vmnetrg + '__' +  vmnetid + '.id\n'
                     except KeyError:
                         pass
-                    fr.write('\t "${azurerm_network_interface.' + vmnetrg + '__' + vmnetid + '.id}",')
+                    fr.write('\t azurerm_network_interface.' + vmnetrg + '__' + vmnetid + '.id,')
                     if vmnetpri :
-                        priif='\t primary_network_interface_id = "${azurerm_network_interface.' + vmnetrg + '__' +  vmnetid + '.id}"\n'
+                        priif='\t primary_network_interface_id = azurerm_network_interface.' + vmnetrg + '__' +  vmnetid + '.id\n'
                         #print "priif="+priif    
                 fr.write('\t]\n')
                 fr.write(priif) 
@@ -299,7 +299,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
                             #if not will have to get from terraform state - convert ddmdrg to lc and terraform state output
                             #
                             
-                            fr.write('\t managed_disk_id = "${azurerm_managed_disk.' + rg + '__' + ddmdid + '.id} \n')
+                            fr.write('\t managed_disk_id = azurerm_managed_disk.' + rg + '__' + ddmdid + '.id \n')
                         except KeyError:
                             pass
                 

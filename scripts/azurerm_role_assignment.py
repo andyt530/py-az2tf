@@ -52,7 +52,7 @@ def azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
             id=azr[i]["id"]
           
 
-            fr.write('role_definition_id = "${azurerm_role_definition.' + "roledefinitions" + '__' + roledefid + '.id}"' + '\n')
+            fr.write('role_definition_id = azurerm_role_definition.' + "roledefinitions" + '__' + roledefid + '.id' + '\n')
             
             fr.write('principal_id ="' +prid +'"\n') 
             fr.write('scope = "' + scope  +'"\n') 

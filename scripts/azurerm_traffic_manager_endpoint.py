@@ -68,7 +68,7 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
                     tgtrrg=azr2[j]["properties"]["targetResourceId"].split("/")[4].replace(".","-").lower()
                     tgtrid=azr2[j]["properties"]["targetResourceId"].split("/")[8].replace(".","-")          
                     if tgtrrg[0].isdigit(): tgtrrg="rg_"+tgtrrg
-                    fr.write('\t target_resource_id = "${azurerm_public_ip.' + tgtrrg + '__' + tgtrid + '.id}"\n')
+                    fr.write('\t target_resource_id = azurerm_public_ip.' + tgtrrg + '__' + tgtrid + '.id\n')
                 except KeyError:
                     pass
 

@@ -204,7 +204,7 @@ def azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2t
                                 ipcsrg = azr[i]["properties"]["virtualMachineProfile"]["networkProfile"]["networkInterfaceConfigurations"][j]["properties"]["ipConfigurations"][k]["properties"]["subnet"]["id"].split("/")[4].replace(".", "-").lower()
                                 ipcsn = azr[i]["properties"]["virtualMachineProfile"]["networkProfile"]["networkInterfaceConfigurations"][j]["properties"]["ipConfigurations"][k]["properties"]["subnet"]["id"].split("/")[10].replace(".", "-")
                                 if ipcsrg[0].isdigit(): ipcsrg="rg_"+ipcsrg
-                                fr.write('\t\tsubnet_id = "${azurerm_subnet.' + ipcsrg + '__' + ipcsn + '.id}"\n')
+                                fr.write('\t\tsubnet_id = azurerm_subnet.' + ipcsrg + '__' + ipcsn + '.id\n')
                             except KeyError:
                                 pass
                             fr.write('\t}\n')
@@ -285,7 +285,7 @@ def azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2t
                             #
 
                             fr.write(
-                                '\t managed_disk_id = "${azurerm_managed_disk.' + rg + '__' + ddmdid + '.id}"\n')
+                                '\t managed_disk_id = azurerm_managed_disk.' + rg + '__' + ddmdid + '.id\n')
                         except KeyError:
                             pass
 

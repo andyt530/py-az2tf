@@ -897,7 +897,7 @@ def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
                     nsgnam=snnsgid.split("/")[8].replace(".","-")
                     nsgrg=snnsgid.split("/")[4].replace(".","-").lower() 
                     if nsgrg[0].isdigit(): nsgrg="rg_"+nsgrg        
-                    fr.write('\t\t security_group = "${azurerm_network_security_group.' + nsgrg + '__' + nsgnam + '.id}"' + '\n')
+                    fr.write('\t\t security_group = azurerm_network_security_group.' + nsgrg + '__' + nsgnam + '.id' + '\n')
                 except KeyError: 
                     pass
                 
@@ -1009,7 +1009,7 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                     snsgid=subs[j]["properties"]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
                     snsgrg=subs[j]["properties"]["networkSecurityGroup"]["id"].split("/")[4].replace(".","-").lower()
                     if snsgrg[0].isdigit(): snsgrg="rg_"+snsgrg
-                    fr.write('\t network_security_group_id = "${azurerm_network_security_group.' + snsgrg + '__' + snsgid +'.id}"' + '\n')
+                #    fr.write('\t network_security_group_id = azurerm_network_security_group.' + snsgrg + '__' + snsgid +'.id' + '\n')
                 except KeyError:
                     pass
                 
@@ -1017,7 +1017,7 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                     rtbid=subs[j]["properties"]["routeTable"]["id"].split("/")[8].replace(".","-")
                     rtrg=subs[j]["properties"]["routeTable"]["id"].split("/")[4].replace(".","-").lower()
                     if rtrg[0].isdigit(): rtrg="rg_"+rtrg
-                    fr.write('\t route_table_id = "${azurerm_route_table.' + rtrg + '__' + rtbid +'.id}"' + '\n')
+                    #fr.write('\t route_table_id = azurerm_route_table.' + rtrg + '__' + rtbid +'.id' + '\n')
                 except KeyError:
                     pass   
 
@@ -1054,9 +1054,9 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                     snsgid=subs[j]["properties"]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
                     r1="azurerm_subnet_network_security_group_association"
                     fr.write('resource ' + r1 + ' ' + rg + '__' + rname + '__' + snsgid + ' {\n') 
-                    fr.write('\tsubnet_id = "${azurerm_subnet.' + rg + '__' + rname + '.id}"' + '\n')
+                    fr.write('\tsubnet_id = azurerm_subnet.' + rg + '__' + rname + '.id' + '\n')
                     if snsgrg[0].isdigit(): snsgrg="rg_"+snsgrg
-                    fr.write('\tnetwork_security_group_id = "${azurerm_network_security_group.' + snsgrg + '__' + snsgid +'.id}"' + '\n')
+                    fr.write('\tnetwork_security_group_id = azurerm_network_security_group.' + snsgrg + '__' + snsgid +'.id' + '\n')
                     fr.write('}' + ' \n')
                 except KeyError:
                     pass
@@ -1069,9 +1069,9 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                     rtbid=subs[j]["properties"]["routeTable"]["id"].split("/")[8].replace(".","-")
                     r2="azurerm_subnet_route_table_association"
                     fr.write('resource ' + r2 + ' ' + rg + '__' + rname + '__' + rtbid + ' {\n') 
-                    fr.write('\tsubnet_id = "${azurerm_subnet.' + rg + '__' + rname + '.id}"' + '\n')
+                    fr.write('\tsubnet_id = azurerm_subnet.' + rg + '__' + rname + '.id' + '\n')
                     if rtrg[0].isdigit(): rtrg="rg_"+rtrg
-                    fr.write('\troute_table_id = "${azurerm_route_table.' + rtrg + '__' + rtbid +'.id}"' + '\n')
+                    fr.write('\troute_table_id = azurerm_route_table.' + rtrg + '__' + rtbid +'.id' + '\n')
                     fr.write('}' + ' \n')
                 except KeyError:
                     pass
@@ -2002,7 +2002,7 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
                     tgtrrg=azr2[j]["properties"]["targetResourceId"].split("/")[4].replace(".","-").lower()
                     tgtrid=azr2[j]["properties"]["targetResourceId"].split("/")[8].replace(".","-")          
                     if tgtrrg[0].isdigit(): tgtrrg="rg_"+tgtrrg
-                    fr.write('\t target_resource_id = "${azurerm_public_ip.' + tgtrrg + '__' + tgtrid + '.id}"\n')
+                    fr.write('\t target_resource_id = azurerm_public_ip.' + tgtrrg + '__' + tgtrid + '.id\n')
                 except KeyError:
                     pass
 
@@ -2089,7 +2089,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
                 snsg=azr[i]["properties"]["networkSecurityGroup"]["id"].split("/")[8].replace(".","-")
                 snsgrg=azr[i]["properties"]["networkSecurityGroup"]["id"].split("/")[4].replace(".","-").lower()
                 if snsgrg[0].isdigit(): snsgrg="rg_"+snsgrg
-                fr.write('\t network_security_group_id = "${azurerm_network_security_group.' + snsgrg + '__' + snsg + '.id}"\n')
+                fr.write('\t network_security_group_id = azurerm_network_security_group.' + snsgrg + '__' + snsg + '.id\n')
             except KeyError:
                 pass
                
@@ -2107,7 +2107,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
                 fr.write('\t ip_configuration {' + '\n')
                 fr.write('\t\t name = "' + ipcname + '"\n')
                 if subrg[0].isdigit(): subrg="rg_"+subrg
-                fr.write('\t\t subnet_id = "${azurerm_subnet.' + subrg + '__' + subname + '.id}"\n')
+                fr.write('\t\t subnet_id = azurerm_subnet.' + subrg + '__' + subname + '.id\n')
                 if subipalloc != "Dynamic":
                     fr.write('\t\t private_ip_address = "' + privip + '"\n')
                
@@ -2116,7 +2116,7 @@ def azurerm_network_interface(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
                     pubipnam=azr[i]["properties"]["ipConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[8].replace(".","-")
                     pubiprg=azr[i]["properties"]["ipConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[4].replace(".","-").lower()
                     if pubiprg[0].isdigit(): pubiprg="rg_"+pubiprg
-                    fr.write('\t\t public_ip_address_id = "${azurerm_public_ip.' + pubiprg + '__' + pubipnam + '.id}"\n')
+                    fr.write('\t\t public_ip_address_id = azurerm_public_ip.' + pubiprg + '__' + pubipnam + '.id\n')
                 except KeyError:
                     pass
 
@@ -2348,7 +2348,7 @@ def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                     subrg=azr[i]["properties"]["frontendIPConfigurations"][j]["subnet"]["id"].split("/")[4].replace(".","-").lower()
                     subname=azr[i]["properties"]["frontendIPConfigurations"][j]["subnet"]["id"].split("/")[10].replace(".","-")
                     if subrg[0].isdigit(): subrg="rg_"+subrg
-                    fr.write('\t\t subnet_id = "${azurerm_subnet.' + subrg + '__' + subname +'.id}"\n')
+                    fr.write('\t\t subnet_id = azurerm_subnet.' + subrg + '__' + subname +'.id\n')
                 except KeyError:
                     pass
                
@@ -2365,7 +2365,7 @@ def azurerm_lb(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                     pubrg=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicAddress"]["id"].split("/")[4].replace(".","-").lower()
                     pubname=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicAddress"]["id"].split("/")[8].replace(".","-")
                     if pubrg[0].isdigit(): pubrg="rg_"+pubrg
-                    fr.write('\t\t public_ip_address_id = "${azurerm_public_ip.' + pubrg + '__' + pubname + '.id}"\n')
+                    fr.write('\t\t public_ip_address_id = azurerm_public_ip.' + pubrg + '__' + pubname + '.id\n')
                 except KeyError:
                     pass
 
@@ -2474,7 +2474,7 @@ def azurerm_lb_nat_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
 
                     fr.write('\t\t name = "' +    name + '"\n')
                     fr.write('\t\t resource_group_name = "' +  rg + '"\n')
-                    fr.write('\t\t loadbalancer_id = "${azurerm_lb.' + lbrg + '__' + lbname + '.id}" \n')
+                    fr.write('\t\t loadbalancer_id = azurerm_lb.' + lbrg + '__' + lbname + '.id \n')
                     fr.write('\t\t frontend_ip_configuration_name = "' +    feipc + '"\n')
                     fr.write('\t\t protocol = "' + proto + '"\n')
                     fr.write('\t\t backend_port = "' + str(bep) + '"\n')
@@ -2593,7 +2593,7 @@ def azurerm_lb_nat_pool(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 lbrg=azr[i]["id"].split("/")[4].replace(".","-").lower()
                 lbname=azr[i]["id"].split("/")[8].replace(".","-")
                 if lbrg[0].isdigit(): lbrg="rg_"+lbrg 
-                fr.write('\t\t loadbalancer_id = "${azurerm_lb.' + lbrg + '__' + lbname + '.id}"\n')
+                fr.write('\t\t loadbalancer_id = azurerm_lb.' + lbrg + '__' + lbname + '.id\n')
                 fr.write('\t\t protocol = "' +    proto + '"\n')
                 fr.write('\t\t frontend_port_start = "' +    str(feps) + '"\n')
                 fr.write('\t\t frontend_port_end = "' +    str(fepe) + '"\n')
@@ -2690,7 +2690,7 @@ def azurerm_lb_backend_address_pool(crf,cde,crg,headers,requests,sub,json,az2tfm
                     lbrg=id.split("/")[4].replace(".","-").lower()
                     lbname=id.split("/")[8].replace(".","-")    
                     if lbrg[0].isdigit(): lbrg="rg_"+lbrg      
-                    fr.write('\t\t loadbalancer_id = "${azurerm_lb.' + lbrg + '__' + lbname + '.id}" \n')    
+                    fr.write('\t\t loadbalancer_id = azurerm_lb.' + lbrg + '__' + lbname + '.id \n')    
                 except KeyError:
                     pass
                 
@@ -2785,7 +2785,7 @@ def azurerm_lb_probe(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
              
 
                 if lbrg[0].isdigit(): lbrg="rg_"+lbrg 
-                fr.write('\t\t loadbalancer_id = "${azurerm_lb.' + lbrg  + '__' + lbname + '.id}" \n')
+                fr.write('\t\t loadbalancer_id = azurerm_lb.' + lbrg  + '__' + lbname + '.id \n')
                 fr.write('\t\t protocol = "' +    proto + '"\n')
                 fr.write('\t\t port = "' +    str(port) + '"\n')
                 try:
@@ -2884,7 +2884,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 ld=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["loadDistribution"]
                 itm=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["idleTimeoutInMinutes"]
                 if lbrg[0].isdigit(): lbrg="rg_"+lbrg 
-                fr.write('\t\t loadbalancer_id = "${azurerm_lb.' + lbrg + '__' + lbname + '.id}" \n')
+                fr.write('\t\t loadbalancer_id = azurerm_lb.' + lbrg + '__' + lbname + '.id \n')
                 fr.write('\t\t frontend_ip_configuration_name = "' + feipc + '"\n')
                 fr.write('\t\t protocol = "' + proto + '"\n')   
                 fr.write('\t\t frontend_port = "' + str(fep) + '"\n')
@@ -2894,7 +2894,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                     beadprg=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["backendAddressPool"]["id"].split("/")[4].replace(".","-").lower()
                     beadpid=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["backendAddressPool"]["id"].split("/")[10].replace(".","-")
                     if beadprg[0].isdigit(): beadprg="rg_"+beadprg
-                    fr.write('\t\t backend_address_pool_id = "${azurerm_lb_backend_address_pool.' + beadprg + '__' + lbname + '__' + beadpid + '.id}"\n')
+                    fr.write('\t\t backend_address_pool_id = azurerm_lb_backend_address_pool.' + beadprg + '__' + lbname + '__' + beadpid + '.id\n')
                 except KeyError:
                     pass
                 
@@ -2902,7 +2902,7 @@ def azurerm_lb_rule(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                     prg=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["probe"]["id"].split("/")[4].replace(".","-").lower()
                     pid=azr[i]["properties"]["loadBalancingRules"][j]["properties"]["probe"]["id"].split("/")[10].replace(".","-")
                     if prg[0].isdigit(): prg="rg_"+prg 
-                    fr.write('\t\t probe_id = "${azurerm_lb_probe.' + prg + '__' + lbname + '__' + pid + '.id}" \n')
+                    fr.write('\t\t probe_id = azurerm_lb_probe.' + prg + '__' + lbname + '__' + pid + '.id \n')
                 except KeyError:
                     pass
                 fr.write('\t\t enable_floating_ip = ' + efip + '\n')
@@ -3024,7 +3024,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
                     subrg=azr[i]["properties"]["gatewayIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-").lower()
                     subname=azr[i]["properties"]["gatewayIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[10].replace(".","-")
                     if subrg[0].isdigit(): subrg="rg_"+subrg
-                    fr.write('\t subnet_id = "${azurerm_subnet.' + subrg + '__' + subname + '.id}" \n')
+                    fr.write('\t subnet_id = azurerm_subnet.' + subrg + '__' + subname + '.id \n')
                 except KeyError:  
                     pass
                 fr.write('}\n')
@@ -3056,7 +3056,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
                         subrg=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-").lower()
                         subname=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[10].replace(".","-")                 
                         if subrg[0].isdigit(): subrg="rg_"+subrg
-                        fr.write('\t subnet_id = "${azurerm_subnet.' + subrg + '__'  + subname + '.id}" \n')
+                        fr.write('\t subnet_id = azurerm_subnet.' + subrg + '__'  + subname + '.id \n')
                     except KeyError:
                         pass
 
@@ -3076,7 +3076,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
                         pubrg=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[4].replace(".","-").lower()
                         pubname=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[8].replace(".","-")  
                         if pubrg[0].isdigit(): pubrg="rg_"+pubrg
-                        fr.write('\t public_ip_address_id = "${azurerm_public_ip.' + pubrg + '__' + pubname + '.id}" \n')
+                        fr.write('\t public_ip_address_id = azurerm_public_ip.' + pubrg + '__' + pubname + '.id \n')
                     except KeyError:
                         pass
                     
@@ -3607,7 +3607,7 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
                     pipnam= ipcpipid.split("/")[8].replace(".","-")
                     piprg= ipcpipid.split("/")[4].replace(".","-").lower()
                     if piprg[0].isdigit(): piprg="rg_"+piprg
-                    fr.write('\t\t public_ip_address_id = "${azurerm_public_ip.' + piprg + '__' + pipnam + '.id}"\n')
+                    fr.write('\t\t public_ip_address_id = azurerm_public_ip.' + piprg + '__' + pipnam + '.id\n')
                 except KeyError:
                     pass
 
@@ -3616,7 +3616,7 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
                     subnam= ipcsubid.split("/")[10].replace(".","-")
                     subrg= ipcsubid.split("/")[4].replace(".","-").lower()
                     if subrg[0].isdigit(): subrg="rg_"+subrg
-                    fr.write('\t\t subnet_id = "${azurerm_subnet.' + subrg + '__' + subnam + '.id}"\n')
+                    fr.write('\t\t subnet_id = azurerm_subnet.' + subrg + '__' + subnam + '.id\n')
                 except KeyError:
                     pass
                 fr.write('\t}\n')
@@ -3723,7 +3723,7 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
             
             fr.write('\t type = "' +  ctype + '"\n')
             if vngrg[0].isdigit(): vngrg="rg_"+vngrg
-            fr.write('\t\t virtual_network_gateway_id = "${azurerm_virtual_network_gateway.' + vngrg + '__' + vngnam + '.id}"\n')
+            fr.write('\t\t virtual_network_gateway_id = azurerm_virtual_network_gateway.' + vngrg + '__' + vngnam + '.id\n')
             try:
                 authkey=azr[i]["properties"]["authorizationKey"]
                 fr.write('\t authorization_key = "' +  authkey + '"\n')
@@ -3751,17 +3751,17 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
             if ctype == "ExpressRoute" :
                 peerid=azr[i]["properties"]["peer"]["id"]
                 fr.write('\t\t express_route_circuit_id = "' +  peerid + '"\n')
-                #fr.write('\t\t express_route_circuit_id = "${azurerm_virtual_network_gateway. + '__' + .id}'"' peerrg peernam + '"\n')
+                #fr.write('\t\t express_route_circuit_id = azurerm_virtual_network_gateway. + '__' + .id} peerrg peernam + '"\n')
                 peerid=azr[i]["properties"]["peer"]["id"]
                 peerrg=peerid.split("/")[4].replace(".","-").lower()
                 if peerrg[0].isdigit(): peerrg="rg_"+peerrg
                 peernam=peerid.split("/")[8].replace(".","-")
         
             if ctype == "Vnet2Vnet" :
-                fr.write('\t peer_virtual_network_gateway_id = "${azurerm_virtual_network_gateway.' + peerrg +'__' + peernam + '.id}"\n')
+                fr.write('\t peer_virtual_network_gateway_id = azurerm_virtual_network_gateway.' + peerrg +'__' + peernam + '.id\n')
         
             if ctype == "IPsec" :
-                fr.write('\t local_network_gateway_id = "${azurerm_local_network_gateway.' + peerrg + '__' + peernam + '.id}" \n')
+                fr.write('\t local_network_gateway_id = azurerm_local_network_gateway.' + peerrg + '__' + peernam + '.id \n')
         
             
             
@@ -4352,7 +4352,7 @@ def azurerm_kubernetes_cluster(crf,cde,crg,headers,requests,sub,json,az2tfmess,c
                     vnsrg=azr[i]["properties"]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[4].lower()
                     vnsid=azr[i]["properties"]["agentPoolProfiles"][0]["vnetSubnetId"].split("/")[10]
                     if vnsrg[0].isdigit(): vnsrg="rg_"+vnsrg
-                    fr.write('\t\t vnet_subnet_id = "${azurerm_subnet.' + vnsrg + '__' + vnsid + '.id}" \n')      
+                    fr.write('\t\t vnet_subnet_id = azurerm_subnet.' + vnsrg + '__' + vnsid + '.id \n')      
                 except KeyError:
                     pass
 
@@ -4551,7 +4551,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
                 avsid=azr[i]["properties"]["availabilitySet"]["id"].split("/")[8].replace(".","-").lower()
                 avsrg=azr[i]["properties"]["availabilitySet"]["id"].split("/")[4].replace(".","-").lower()
                 if avsrg[0].isdigit(): avsrg="rg_"+avsrg
-                fr.write('\t availability_set_id = "${azurerm_availability_set.' + avsrg + '__' +avsid + '.id}"\n')
+                fr.write('\t availability_set_id = azurerm_availability_set.' + avsrg + '__' +avsid + '.id\n')
             except KeyError:
                 pass
 
@@ -4577,12 +4577,12 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
                     if vmnetrg[0].isdigit(): vmnetrg="rg_"+vmnetrg
                     try:
                         vmnetpri=azr[i]["properties"]["networkProfile"]["networkInterfaces"][j]["properties"]["primary"]
-                        priif='\t primary_network_interface_id = "${azurerm_network_interface.' + vmnetrg + '__' +  vmnetid + '.id}"\n'
+                        priif='\t primary_network_interface_id = azurerm_network_interface.' + vmnetrg + '__' +  vmnetid + '.id\n'
                     except KeyError:
                         pass
-                    fr.write('\t "${azurerm_network_interface.' + vmnetrg + '__' + vmnetid + '.id}",')
+                    fr.write('\t azurerm_network_interface.' + vmnetrg + '__' + vmnetid + '.id,')
                     if vmnetpri :
-                        priif='\t primary_network_interface_id = "${azurerm_network_interface.' + vmnetrg + '__' +  vmnetid + '.id}"\n'
+                        priif='\t primary_network_interface_id = azurerm_network_interface.' + vmnetrg + '__' +  vmnetid + '.id\n'
                         #print "priif="+priif    
                 fr.write('\t]\n')
                 fr.write(priif) 
@@ -4787,7 +4787,7 @@ def azurerm_virtual_machine(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
                             #if not will have to get from terraform state - convert ddmdrg to lc and terraform state output
                             #
                             
-                            fr.write('\t managed_disk_id = "${azurerm_managed_disk.' + rg + '__' + ddmdid + '.id} \n')
+                            fr.write('\t managed_disk_id = azurerm_managed_disk.' + rg + '__' + ddmdid + '.id \n')
                         except KeyError:
                             pass
                 
@@ -5177,7 +5177,7 @@ def azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2t
                                 ipcsrg = azr[i]["properties"]["virtualMachineProfile"]["networkProfile"]["networkInterfaceConfigurations"][j]["properties"]["ipConfigurations"][k]["properties"]["subnet"]["id"].split("/")[4].replace(".", "-").lower()
                                 ipcsn = azr[i]["properties"]["virtualMachineProfile"]["networkProfile"]["networkInterfaceConfigurations"][j]["properties"]["ipConfigurations"][k]["properties"]["subnet"]["id"].split("/")[10].replace(".", "-")
                                 if ipcsrg[0].isdigit(): ipcsrg="rg_"+ipcsrg
-                                fr.write('\t\tsubnet_id = "${azurerm_subnet.' + ipcsrg + '__' + ipcsn + '.id}"\n')
+                                fr.write('\t\tsubnet_id = azurerm_subnet.' + ipcsrg + '__' + ipcsn + '.id\n')
                             except KeyError:
                                 pass
                             fr.write('\t}\n')
@@ -5258,7 +5258,7 @@ def azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2t
                             #
 
                             fr.write(
-                                '\t managed_disk_id = "${azurerm_managed_disk.' + rg + '__' + ddmdid + '.id}"\n')
+                                '\t managed_disk_id = azurerm_managed_disk.' + rg + '__' + ddmdid + '.id\n')
                         except KeyError:
                             pass
 
@@ -7496,7 +7496,7 @@ def azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 pass
 
             # case issues - so use resource id directly
-            # fr.write('\t app_service_plan_id = "${azurerm_app_service_plan. + '__' + .id}'"' prg pnam + '"\n')
+            # fr.write('\t app_service_plan_id = azurerm_app_service_plan. + '__' + '.id' prg pnam + '"\n')
             fr.write('\t app_service_plan_id = "' +  appplid + '"\n')
 
     # geo location block
@@ -7947,7 +7947,7 @@ def azurerm_logic_app_trigger_http_request(crf,cde,crg,headers,requests,sub,json
                 fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
                 fr.write('\t name = "' + name + '"\n')
 
-                fr.write('\t logic_app_id = "${azurerm_logic_app_workflow.' + rg + '__' + rname + '.id}"' + '\n')
+                fr.write('\t logic_app_id = azurerm_logic_app_workflow.' + rg + '__' + rname + '.id' + '\n')
 
         ###############
         # specific code start
@@ -8164,7 +8164,7 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
                                 fr.write('\t\tmetric_trigger {\n')
                                 fr.write('\t\t\tmetric_name = "' + mtn + '"\n')
                                 fr.write(
-                                    '\t\t\tmetric_resource_id = "${'+tftyp + '.' + mtrrg + '__' + mtrid + '.id}"\n')
+                                    '\t\t\tmetric_resource_id = '+tftyp + '.' + mtrrg + '__' + mtrid + '.id\n')
                                 fr.write('\t\t\toperator = "' + mtop + '"\n')
                                 fr.write('\t\t\tstatistic= "' + mtstat + '"\n')
                                 fr.write('\t\t\tthreshold = "' +
@@ -8389,7 +8389,7 @@ def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
             name=azr[i]["name"]
             #loc=azr[i]["location"]
             id=azr[i]["id"]
-            rg="policydefinitions"
+            rg="policyDefinitions"
             rgs=id.split("/")[4]
           
             if crg is not None:
@@ -8435,15 +8435,21 @@ def azurerm_policy_definition(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
                     pass   
      
                 #print(json.dumps(azr[i]["properties"]["metadata"], indent=4, separators=(',', ': ')))
-                
-                fr.write('metadata = jsonencode(\n') 
-                fr.write(json.dumps(azr[i]["properties"]["metadata"]))
-                fr.write(') \n') 
-
-                prules=str(ast.literal_eval(json.dumps(azr[i]["properties"]["policyRule"])))
-                fr.write('policy_rule = jsonencode( \n')
-                fr.write(json.dumps(azr[i]["properties"]["policyRule"]))  
-                fr.write(') \n') 
+                try:
+                    mtd=azr[i]["properties"]["metadata"]
+                    fr.write('metadata = jsonencode(\n') 
+                    fr.write(json.dumps(azr[i]["properties"]["metadata"]))
+                    fr.write(') \n') 
+                except KeyError:
+                    pass  
+                #prules=str(ast.literal_eval(json.dumps(azr[i]["properties"]["policyRule"])))
+                try:
+                    prs=azr[i]["properties"]["policyRule"]             
+                    fr.write('policy_rule = jsonencode( \n')
+                    fr.write(json.dumps(azr[i]["properties"]["policyRule"]))  
+                    fr.write(') \n') 
+                except KeyError:
+                    pass        
                 
                 try:
                     params=azr[i]["properties"]["parameters"]          
@@ -8651,7 +8657,7 @@ def azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
     ###############
     # specific code
            
-            dname=azr[i]["properties"]["displayName"]
+            
             rdid=azr[i]["name"]
            
             scope=azr[i]["properties"]["scope"]
@@ -8659,9 +8665,12 @@ def azurerm_policy_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess,cl
             id=azr[i]["id"]
 
             
+            try:
+                dname=azr[i]["properties"]["displayName"]
+                fr.write('display_name = "' + dname +'"\n') 
+            except KeyError:
+                pass      
 
-                
-            fr.write('display_name = "' + dname +'"\n') 
             fr.write('policy_definition_id = "' + pdid +'"\n') 
             fr.write('scope = "' +  scope +'"\n') 
             try :
@@ -8871,7 +8880,7 @@ def azurerm_role_assignment(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
             id=azr[i]["id"]
           
 
-            fr.write('role_definition_id = "${azurerm_role_definition.' + "roledefinitions" + '__' + roledefid + '.id}"' + '\n')
+            fr.write('role_definition_id = azurerm_role_definition.' + "roledefinitions" + '__' + roledefid + '.id' + '\n')
             
             fr.write('principal_id ="' +prid +'"\n') 
             fr.write('scope = "' + scope  +'"\n') 

@@ -90,7 +90,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
                     subrg=azr[i]["properties"]["gatewayIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-").lower()
                     subname=azr[i]["properties"]["gatewayIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[10].replace(".","-")
                     if subrg[0].isdigit(): subrg="rg_"+subrg
-                    fr.write('\t subnet_id = "${azurerm_subnet.' + subrg + '__' + subname + '.id}" \n')
+                    fr.write('\t subnet_id = azurerm_subnet.' + subrg + '__' + subname + '.id \n')
                 except KeyError:  
                     pass
                 fr.write('}\n')
@@ -122,7 +122,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
                         subrg=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[4].replace(".","-").lower()
                         subname=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["subnet"]["id"].split("/")[10].replace(".","-")                 
                         if subrg[0].isdigit(): subrg="rg_"+subrg
-                        fr.write('\t subnet_id = "${azurerm_subnet.' + subrg + '__'  + subname + '.id}" \n')
+                        fr.write('\t subnet_id = azurerm_subnet.' + subrg + '__'  + subname + '.id \n')
                     except KeyError:
                         pass
 
@@ -142,7 +142,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
                         pubrg=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[4].replace(".","-").lower()
                         pubname=azr[i]["properties"]["frontendIPConfigurations"][j]["properties"]["publicIPAddress"]["id"].split("/")[8].replace(".","-")  
                         if pubrg[0].isdigit(): pubrg="rg_"+pubrg
-                        fr.write('\t public_ip_address_id = "${azurerm_public_ip.' + pubrg + '__' + pubname + '.id}" \n')
+                        fr.write('\t public_ip_address_id = azurerm_public_ip.' + pubrg + '__' + pubname + '.id \n')
                     except KeyError:
                         pass
                     

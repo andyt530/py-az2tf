@@ -78,7 +78,7 @@ def azurerm_virtual_network(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
                     nsgnam=snnsgid.split("/")[8].replace(".","-")
                     nsgrg=snnsgid.split("/")[4].replace(".","-").lower() 
                     if nsgrg[0].isdigit(): nsgrg="rg_"+nsgrg        
-                    fr.write('\t\t security_group = "${azurerm_network_security_group.' + nsgrg + '__' + nsgnam + '.id}"' + '\n')
+                    fr.write('\t\t security_group = azurerm_network_security_group.' + nsgrg + '__' + nsgnam + '.id' + '\n')
                 except KeyError: 
                     pass
                 
