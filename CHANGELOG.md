@@ -1,4 +1,7 @@
 # az2tf (Python version) - changelog
+## (December 2019)
+* Updates for Terraform 12 Interpolation and other depreciations
+
 ## (November 2019)
 * Major change - now uses python3 ahead of depreciation of python2
 * Support multiple clouds AzureCloud, AzureChinaCloud, AzureGermanCloud & AzureUSGovernment
