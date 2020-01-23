@@ -239,10 +239,8 @@ def azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2t
                     nwh = nwh.replace("'", '"')
                     #fr.write('webhook =   '+nwh + '\n')
                     fr.write('}\n')
-            
-            except Exception as e: print(e)
-
-                #pass
+            except KeyError:
+                pass
 
     # tags block
             try:
