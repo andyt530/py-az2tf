@@ -48,7 +48,7 @@ def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2t
                         r2 = requests.get(url, headers=headers, params=params)
                         azr2= r2.json()["value"]
                         if cde:
-                            print(json.dumps(azr2[j], indent=4, separators=(',', ': ')))
+                            print(json.dumps(azr2, indent=4, separators=(',', ': ')))
                         ename=azr2[j]["name"]
                         ername=ename.replace(".","-")
                         id=azr2[j]["id"]
