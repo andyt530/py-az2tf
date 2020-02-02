@@ -123,6 +123,7 @@ Active Directory Resources
 App Service (Web Apps) Resources
 * azurerm_app_service
 * azurerm_app_service_plan
+* azurerm_app_service_slot
 * azurerm_function_app
 
 Automation Resources

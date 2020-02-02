@@ -1,4 +1,8 @@
 # az2tf (Python version) - changelog
+
+## (December 2020)
+* Added support for azure_app_service_slot
+
 ## (December 2019)
 * Updates for Terraform 12 Interpolation and other depreciations
 

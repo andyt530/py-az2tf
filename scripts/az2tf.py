@@ -83,6 +83,7 @@ import azurerm_sql_database
 import azurerm_databricks_workspace
 import azurerm_app_service_plan
 import azurerm_app_service
+import azurerm_app_service_slot
 import azurerm_function_app
 import azurerm_logic_app_workflow
 import azurerm_logic_app_trigger_http_request
@@ -422,7 +423,8 @@ if ccld != 'AzureChinaCloud':
 azurerm_app_service_plan.azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 610_azurerm_app_service
 azurerm_app_service.azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
-
+# 611_azurerm_app_service_slot
+azurerm_app_service_slot.azurerm_app_service_slot(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 620_azurerm_function_app
 azurerm_function_app.azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 

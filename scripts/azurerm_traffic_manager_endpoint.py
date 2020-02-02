@@ -73,6 +73,7 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
                         fr.write('\t target_resource_id = azurerm_public_ip.' + tgtrrg + '__' + tgtrid + '.id\n')
                     if "sites" in tgtrmin:
                         if "slots" in tgtid:
+                            tgtrid=azr2[j]["properties"]["targetResourceId"].split("/")[10].replace(".","-") 
                             fr.write('\t target_resource_id = azurerm_app_service_slot.' + tgtrrg + '__' + tgtrid + '.id\n')
                         else:
                             fr.write('\t target_resource_id = azurerm_app_service.' + tgtrrg + '__' + tgtrid + '.id\n')
