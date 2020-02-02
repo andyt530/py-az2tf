@@ -18,7 +18,7 @@ def azurerm_app_service_slot(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
         tfim=open(tfimf, 'a')
         print ("# " + tfp,)
         count=len(azr)
-        print (count)
+        #print (count)
         for i in range(0, count):
 
             kind=azr[i]["kind"]
@@ -54,14 +54,14 @@ def azurerm_app_service_slot(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
                 print(json.dumps(azr2, indent=4, separators=(',', ': ')))
 
             icount=len(azr2)
-            print("icount=",icount)
+            print(icount)
             if icount > 0 :
                 for j in range(0,icount):
                     id=azr2[j]["id"]
                     name=azr2[j]["id"].split("/")[10]
                     rname=name.replace(".","-")
                     prefix=tfp+"."+rg+'__'+rname
-                    print(prefix)
+                    #print(prefix)
                     rfilename=prefix+".tf"
                     fr=open(rfilename, 'w')
                     fr.write(az2tfmess)
@@ -69,7 +69,7 @@ def azurerm_app_service_slot(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
                     fr.write('\t name = "' + name + '"\n')
                     fr.write('\t location = "'+ loc + '"\n')
                     fr.write('\t resource_group_name = azurerm_resource_group.'+ rgs + '.name\n')
-                    fr.write('\t app_service_name = azurerm_app_service.'+ aname + '.name\n')
+                    fr.write('\t app_service_name = azurerm_app_service.'+ rgs+ '__'+aname + '.name\n')
 
             #azr=az webapp list -g rgsource -o json
             
