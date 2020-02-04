@@ -54,27 +54,7 @@ def azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2t
             op = azr[i]["properties"]["overprovision"]
             spg = azr[i]["properties"]["singlePlacementGroup"]
             # vmlic=azr[i]["properties"]["virtualMachineProfile"]["licenseType"]
-            # vmpri=azr[i]["properties"]["virtualMachineProfile"]["priority"]
-
-            # vmtype=azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["osDisk"]["osType"]
-            #datadisks = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["dataDisks"]
-
-
-            #vmoswa = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["osDisk"]["writeAcceleratorEnabled"]
-            #
-            osvhd = azr[i]["properties"]["virtualMachineProfile"]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys"][0]["keyData"]
-            #
-            #vmimid = azr[i]["properties"]["virtualMachineProfile"]["storageProfile"]["imageReference"]["id"]
-
-
-            #
-
-            #vmdispw = azr[i]["properties"]["virtualMachineProfile"]["osProfile"]["linuxConfiguration"]["disablePasswordAuthentication"]
-            #vmsshpath = azr[i]["properties"]["virtualMachineProfile"]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys"][0]["path"]
-            #vmsshkey = azr[i]["properties"]["virtualMachineProfile"]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys"][0]["keyData"]
-            #
   
-            #
 
     # sku block
             skun = azr[i]["sku"]["name"]
