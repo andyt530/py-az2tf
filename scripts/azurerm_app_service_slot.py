@@ -60,7 +60,7 @@ def azurerm_app_service_slot(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
                     id=azr2[j]["id"]
                     name=azr2[j]["id"].split("/")[10]
                     rname=name.replace(".","-")
-                    prefix=tfp+"."+rg+'__'+rname
+                    prefix=tfp+"."+rg+'__'+aname+'__'+rname
                     #print(prefix)
                     rfilename=prefix+".tf"
                     fr=open(rfilename, 'w')
