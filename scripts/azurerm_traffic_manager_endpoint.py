@@ -72,9 +72,10 @@ def azurerm_traffic_manager_endpoint(crf,cde,crg,headers,requests,sub,json,az2tf
                     if "publicIPAddresses" in tgtrmin:
                         fr.write('\t target_resource_id = azurerm_public_ip.' + tgtrrg + '__' + tgtrid + '.id\n')
                     if "sites" in tgtrmin:
+                        tgtrid=azr2[j]["properties"]["targetResourceId"].split("/")[8].replace(".","-") 
                         if "slots" in tgtid:
-                            tgtrid=azr2[j]["properties"]["targetResourceId"].split("/")[10].replace(".","-") 
-                            fr.write('\t target_resource_id = azurerm_app_service_slot.' + tgtrrg + '__' + tgtrid + '.id\n')
+                            tgtrsl=azr2[j]["properties"]["targetResourceId"].split("/")[10].replace(".","-")
+                            fr.write('\t target_resource_id = azurerm_app_service_slot.' + tgtrrg + '__' + tgtrid + '__' + tgtrsl+ '.id\n')
                         else:
                             fr.write('\t target_resource_id = azurerm_app_service.' + tgtrrg + '__' + tgtrid + '.id\n')
                 except KeyError:
