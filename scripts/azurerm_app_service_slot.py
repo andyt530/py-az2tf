@@ -65,7 +65,7 @@ def azurerm_app_service_slot(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
                     rfilename=prefix+".tf"
                     fr=open(rfilename, 'w')
                     fr.write(az2tfmess)
-                    fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
+                    fr.write('resource ' + tfp + ' ' + rg + '__'+aname+'__'+rname + ' {\n')
                     fr.write('\t name = "' + name + '"\n')
                     fr.write('\t location = "'+ loc + '"\n')
                     fr.write('\t resource_group_name = azurerm_resource_group.'+ rgs + '.name\n')
@@ -105,10 +105,10 @@ def azurerm_app_service_slot(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
                         with open(rfilename) as f: 
                             print (f.read())
 
-                    tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+rname + '\n')
+                    tfrm.write('terraform state rm '+tfp+'.'+rg+'__'+aname+'__'+rname + '\n')
 
                     tfim.write('echo "importing ' + str(i) + ' of ' + str(count-1) + '"' + '\n')
-                    tfcomm='terraform import '+tfp+'.'+rg+'__'+rname+' '+id+'\n'
+                    tfcomm='terraform import '+tfp+'.'+rg+'__'+aname+'__'+rname+' '+id+'\n'
                     tfim.write(tfcomm)  
 
         # end for i loop
