@@ -126,8 +126,7 @@ def azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2t
             try:  # linuxb" try :
                 linuxb = azr[i]["properties"]["virtualMachineProfile"]["osProfile"]["linuxConfiguration"]
                 vmdispw = azr[i]["properties"]["virtualMachineProfile"]["osProfile"]["linuxConfiguration"]["disablePasswordAuthentication"]
-                vmsshpath = azr[i]["properties"]["virtualMachineProfile"]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys"][0]["path"]
-                vmsshkey = azr[i]["properties"]["virtualMachineProfile"]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys"][0]["keyData"]
+
                 fr.write('os_profile_linux_config {\n')
                 if vmdispw == "null":
                     # osprofile can by null for vhd imported images - must make an artificial one.
@@ -135,10 +134,15 @@ def azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2t
 
                 fr.write('\tdisable_password_authentication = ' + str(vmdispw).lower() + '\n')
                 if vmdispw != "false":
-                    fr.write('\tssh_keys { \n')
-                    fr.write('\t\tpath = "' + vmsshpath + '"\n')
-                    fr.write('\t\tkey_data = "' +   vmsshkey.rstrip() + '"\n') 
-                    fr.write('\t}\n')
+                    try:
+                        vmsshpath = azr[i]["properties"]["virtualMachineProfile"]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys"][0]["path"]
+                        vmsshkey = azr[i]["properties"]["virtualMachineProfile"]["osProfile"]["linuxConfiguration"]["ssh"]["publicKeys"][0]["keyData"]
+                        fr.write('\tssh_keys { \n')
+                        fr.write('\t\tpath = "' + vmsshpath + '"\n')
+                        fr.write('\t\tkey_data = "' +   vmsshkey.rstrip() + '"\n') 
+                        fr.write('\t}\n')
+                    except KeyError:
+                        pass
 
                 fr.write('}\n')
             except KeyError:
