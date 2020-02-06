@@ -1,3 +1,4 @@
+import ast
 # azurerm_application_gateway
 def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
     tfp="azurerm_application_gateway"
@@ -60,7 +61,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
             httpl=azr[i]["properties"]["httpListeners"]
             probes=azr[i]["properties"]["probes"]
             rrrs=azr[i]["properties"]["requestRoutingRules"]
-            urlpm=azr[i]["properties"]["urlPathMaps"]
+            #urlpm=azr[i]["properties"]["urlPathMaps"]
             
             sslcerts=azr[i]["properties"]["sslCertificates"]
             #wafc=azr[i]["properties"]["webApplicationFirewallConfiguration"]
@@ -168,11 +169,20 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
                                 fr.write('\t ip_address ="' +  beadip + '"\n')
                             except KeyError:
                                 pass
+                            #try:
+                            #    beadfq=azr[i]["properties"]["backendAddressPools"][j]["properties"]["backendAddresses"][k]["fqdn"]
+                            #    fr.write('\t fqdns = ["' + beadfq + '"] \n')         
+                            #except KeyError:
+                            #    pass
+
                             try:
-                                beadfq=azr[i]["properties"]["backendAddressPools"][j]["properties"]["backendAddresses"][k]["fqdn"]
-                                fr.write('\t fqdns = ["' + beadfq + '"] \n')         
+                                beadfq=str(ast.literal_eval(json.dumps(azr[i]["properties"]["backendAddressPools"][j]["properties"]["backendAddresses"][k]["fqdn"])))
+                                beadfq=beadfq.replace("'",'"')
+                                if "[]" not in beadfq:
+                                    fr.write('\t fqdns =  ' + beadfq + '\n')
                             except KeyError:
-                                pass
+                                pass 
+
                     fr.write('}\n')
                 
 
@@ -399,7 +409,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
                     cdata=azr[i]["properties"]["authenticationCertificates"][j]["properties"]["data"]
                     fr.write('authentication_certificate {\n')
                     fr.write('\t name = "' + cname + '"\n')  
-                    fr.write('\t data = "' + '"\n') 
+                    fr.write('\t data = "' + cdata + '"\n') 
                     fr.write('\t }\n')
             except KeyError:
                 pass
