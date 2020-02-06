@@ -416,8 +416,9 @@ azurerm_eventhub_namespace_authorization_rule.azurerm_eventhub_namespace_authori
 azurerm_sql_server.azurerm_sql_server(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 541_azurerm_sql_database
 azurerm_sql_database.azurerm_sql_database(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
-if ccld != 'AzureChinaCloud':
+
 # 550_azurerm_databricks_workspace
+if ccld != 'AzureChinaCloud':
     azurerm_databricks_workspace.azurerm_databricks_workspace(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 600_azurerm_app_service_plan
 azurerm_app_service_plan.azurerm_app_service_plan(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
@@ -425,6 +426,7 @@ azurerm_app_service_plan.azurerm_app_service_plan(crf,cde,crg,headers,requests,s
 azurerm_app_service.azurerm_app_service(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 # 611_azurerm_app_service_slot
 azurerm_app_service_slot.azurerm_app_service_slot(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
+
 # 620_azurerm_function_app
 azurerm_function_app.azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
 
