@@ -84,7 +84,8 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
             
             try:
                 notes=azr[j]["properties"]["notes"]      
-                #notes=notes.encode('utf-8', 'ignore')          
+                #notes=notes.encode('utf-8', 'ignore')
+                notes=notes.replace('"','\\"')          
                 fr.write('\t notes = "'+ notes + '"\n') 
             except KeyError:
                 pass
