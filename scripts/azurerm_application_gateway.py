@@ -160,28 +160,24 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
                     bname=azr[i]["properties"]["backendAddressPools"][j]["name"]
                     fr.write('backend_address_pool {' + '\n')
                     fr.write('\t name = "' + bname + '"\n')
-                    beaddr=azr[i]["properties"]["backendAddressPools"][j]["properties"]["backendAddresses"]         
-                    kcount=len(beaddr)    
-                    if kcount > 0 :
-                        for k in range(0,kcount):       
-                            try :
-                                beadip=azr[i]["properties"]["backendAddressPools"][j]["properties"]["backendAddresses"][k]["IPAddress"]
-                                fr.write('\t ip_address ="' +  beadip + '"\n')
-                            except KeyError:
-                                pass
-                            #try:
-                            #    beadfq=azr[i]["properties"]["backendAddressPools"][j]["properties"]["backendAddresses"][k]["fqdn"]
-                            #    fr.write('\t fqdns = ["' + beadfq + '"] \n')         
-                            #except KeyError:
-                            #    pass
-
-                            try:
-                                beadfq=str(ast.literal_eval(json.dumps(azr[i]["properties"]["backendAddressPools"][j]["properties"]["backendAddresses"][k]["fqdn"])))
-                                beadfq=beadfq.replace("'",'"')
-                                if "[]" not in beadfq:
-                                    fr.write('\t fqdns =  ' + beadfq + '\n')
-                            except KeyError:
-                                pass 
+                    
+                    beaddr=azr[i]["properties"]["backendAddressPools"][j]["properties"]["backendAddresses"] 
+                    print(beaddr)
+                    if "fqdn" in beaddr:
+                        beaddr=beaddr.replace('{','')
+                        beaddr=beaddr.replace('}','')
+                        beaddr=beaddr.replace("'fqdn': ",'')
+                        beaddr=beaddr.replace("'",'"')
+                        print("beaddr=",beaddr)
+                        fr.write('\t fqdns =  ' + beaddr + '\n')
+                    
+                    if "ip_address" in beaddr:
+                        beaddr=beaddr.replace('{','')
+                        beaddr=beaddr.replace('}','')
+                        beaddr=beaddr.replace("'ip_address': ",'')
+                        beaddr=beaddr.replace("'",'"')
+                        print("beaddr=",beaddr)
+                        fr.write('\t ip_address =  ' + beaddr + '\n')
 
                     fr.write('}\n')
                 
@@ -203,6 +199,14 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
                     fr.write('\t protocol = "' + bproto + '"\n')
                     fr.write('\t cookie_based_affinity = "' + bcook + '"\n')
                     fr.write('\t request_timeout = "' + str(btimo) + '"\n')
+
+                    try:
+                        bhtpath=azr[i]["properties"]["backendHttpSettingsCollection"][j]["properties"]["path"]
+                        fr.write('\t path = "' + bhtpath + '"\n')
+                    except KeyError:
+                        pass
+
+
                     try :
                         pname=azr[i]["properties"]["backendHttpSettingsCollection"][j]["properties"]["probe"]["id"].split("/")[10]
                         fr.write('\t probe_name = "' + pname + '"\n')

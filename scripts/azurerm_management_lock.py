@@ -22,9 +22,9 @@ def azurerm_management_lock(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
         for j in range(0, count):
             
             name=azr[j]["name"]
-            print("name=",name)
+        
             #name=name.encode('utf-8', 'ignore')
-            print("name=",name)
+           
             #loc=azr[j]["location"]
             id=azr[j]["id"]
             rg=id.split("/")[4].replace(".","-").lower()
