@@ -82,11 +82,6 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
                 pass 
                     
             try:
-                vers=appset["properties"]["FUNCTIONS_EXTENSION_VERSION"]            
-            except KeyError:
-                pass
-                    
-            try:
                 aval=appset["properties"]["WEBSITE_NODE_DEFAULT_VERSION"]  
                 fr.write('\t WEBSITE_NODE_DEFAULT_VERSION = "' + aval + '"\n')     
             except KeyError:
@@ -139,8 +134,13 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
                 fr.write('\t storage_connection_string = "' + strcon + '" \n')
             else:
                 fr.write('\t storage_connection_string = ""\n')
-        
-            fr.write('\t version = "' + vers + '"\n')
+            
+            try:
+                vers=appset["properties"]["FUNCTIONS_EXTENSION_VERSION"]  
+                fr.write('\t version = "' + vers + '"\n')          
+            except KeyError:
+                pass
+            
             fr.write('\t enable_builtin_logging = ' + str(blog).lower() + '\n')
 
 
