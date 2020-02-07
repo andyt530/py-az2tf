@@ -244,8 +244,8 @@ def azurerm_virtual_machine_scale_set(crf,cde,crg,headers,requests,sub,json,az2t
                 dcount = len(datadisks)
                 for j in range(0, dcount):
 
-                    ddname = datadisks["name"]
-                    ddcreopt = datadisks["createOption"]
+                    ddname = datadisks[j]["name"]
+                    ddcreopt = datadisks[j]["createOption"]
                     ddlun = datadisks[j]["lun"]
                     ddvhd = datadisks[j]["vhd"]["uri"]
                     ddmd = datadisks[j]["managedDisk"]
