@@ -138,7 +138,7 @@ pyc9=" 2>&1 | tee -a import.log"
 pyc=`printf "%s %s %s %s %s %s %s" "$pyc1" "$pyc2" "$pyc3" "$pyc4" "$pyc5" "$pyc6" "$pyc9"`
 echo $pyc
 eval $pyc
-grep Error import.log
+grep Error: import.log
 if [ $? -eq 0 ]; then
     echo "Error in az2tf.py"
     exit
@@ -151,7 +151,7 @@ fi
 
 echo "terraform init"
 terraform init 2>&1 | tee -a import.log
-grep Error import.log
+grep Error: import.log
 if [ $? -eq 0 ]; then
     echo "Error with terraform init"
     exit

@@ -58,12 +58,18 @@ def azurerm_public_ip(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 #dnsfqdn=azr[i]["properties"]["dnsSettings"]["fqdn"]
             #except KeyError:
                 #pass
-            
+            havealloc=0
             try:
                 subipalloc=azr[i]["properties"]["publicAllocationMethod"]
                 fr.write('\t allocation_method = "' +    subipalloc + '"\n')
+                havealloc=1
             except KeyError:
                 pass
+            if havealloc == 0:
+                if "Standard" in sku:
+                    fr.write('\t allocation_method = "Static"\n')
+                else:
+                    fr.write('\t allocation_method = "Dynamic"\n')
 
     # tags block       
             try:

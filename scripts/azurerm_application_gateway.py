@@ -162,23 +162,43 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
                     fr.write('\t name = "' + bname + '"\n')
                     
                     beaddr=azr[i]["properties"]["backendAddressPools"][j]["properties"]["backendAddresses"] 
-                    print(beaddr)
-                    if "fqdn" in beaddr:
-                        beaddr=beaddr.replace('{','')
-                        beaddr=beaddr.replace('}','')
-                        beaddr=beaddr.replace("'fqdn': ",'')
-                        beaddr=beaddr.replace("'",'"')
-                        print("beaddr=",beaddr)
-                        fr.write('\t fqdns =  ' + beaddr + '\n')
+                    kcount=len(beaddr)
+                    print("len=",kcount)
+                    print(json.dumps(beaddr, indent=4, separators=(',', ': ')))
+                    tfqdn=""
+                    tips=""
+                    if kcount > 0:
+                        for k in range(0,kcount):
+                            fq=beaddr[k]
+                            print(json.dumps(fq, indent=4, separators=(',', ': ')))
+                            fq=str(fq)
+                            print(fq)
+               
+                            if "fqdn" in fq:
+                                tfq=fq.replace('{','')
+                                tfq=tfq.replace('}','')
+                                tfq=tfq.replace("'fqdn': ",'')
+                                tfq=tfq.replace("'",'"')
+                                tfq=tfq+','
+                                print("*****tfp=",tfq)
+                                tfqdn=tfqdn+tfq
+                                #fr.write('\t fqdns =  ' + beaddr + '\n')
                     
-                    if "ip_address" in beaddr:
-                        beaddr=beaddr.replace('{','')
-                        beaddr=beaddr.replace('}','')
-                        beaddr=beaddr.replace("'ip_address': ",'')
-                        beaddr=beaddr.replace("'",'"')
-                        print("beaddr=",beaddr)
-                        fr.write('\t ip_address =  ' + beaddr + '\n')
+                            if "ipAddress" in fq:
+                                tip=fq.replace('{','')
+                                tip=tip.replace('}','')
+                                tip=tip.replace("'ipAddress': ",'')
+                                tip=tip.replace("'",'"')
+                                print("*****tip=",tip)
+                                tip=tip+','
+                                tips=tips+tip
+                                #fr.write('\t ip_address =  ' + beaddr + '\n')
 
+                    if len(tfqdn)>1:
+                        fr.write('\t fqdns =  [' + tfqdn + ']\n')
+                    if len(tips)>1:
+                        fr.write('\t ip_addresses =  [' + tips + ']\n')
+                    #
                     fr.write('}\n')
                 
 
@@ -202,7 +222,11 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
 
                     try:
                         bhtpath=azr[i]["properties"]["backendHttpSettingsCollection"][j]["properties"]["path"]
-                        fr.write('\t path = "' + bhtpath + '"\n')
+                        try:
+                            fr.write('\t path = "' + bhtpath + '"\n')
+                        except TypeError:
+                            print("Problem with path bypassing")
+                            pass
                     except KeyError:
                         pass
 
