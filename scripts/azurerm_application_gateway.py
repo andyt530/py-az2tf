@@ -163,16 +163,16 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
                     
                     beaddr=azr[i]["properties"]["backendAddressPools"][j]["properties"]["backendAddresses"] 
                     kcount=len(beaddr)
-                    print("len=",kcount)
-                    print(json.dumps(beaddr, indent=4, separators=(',', ': ')))
+                    #print("len=",kcount)
+                    #print(json.dumps(beaddr, indent=4, separators=(',', ': ')))
                     tfqdn=""
                     tips=""
                     if kcount > 0:
                         for k in range(0,kcount):
                             fq=beaddr[k]
-                            print(json.dumps(fq, indent=4, separators=(',', ': ')))
+                            #print(json.dumps(fq, indent=4, separators=(',', ': ')))
                             fq=str(fq)
-                            print(fq)
+                            #print(fq)
                
                             if "fqdn" in fq:
                                 tfq=fq.replace('{','')
@@ -180,7 +180,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
                                 tfq=tfq.replace("'fqdn': ",'')
                                 tfq=tfq.replace("'",'"')
                                 tfq=tfq+','
-                                print("*****tfp=",tfq)
+                                #print("*****tfp=",tfq)
                                 tfqdn=tfqdn+tfq
                                 #fr.write('\t fqdns =  ' + beaddr + '\n')
                     
@@ -189,7 +189,7 @@ def azurerm_application_gateway(crf,cde,crg,headers,requests,sub,json,az2tfmess,
                                 tip=tip.replace('}','')
                                 tip=tip.replace("'ipAddress': ",'')
                                 tip=tip.replace("'",'"')
-                                print("*****tip=",tip)
+                                #print("*****tip=",tip)
                                 tip=tip+','
                                 tips=tips+tip
                                 #fr.write('\t ip_address =  ' + beaddr + '\n')
