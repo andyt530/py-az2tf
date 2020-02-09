@@ -68,9 +68,12 @@ def azurerm_app_service_slot(crf,cde,crg,headers,requests,sub,json,az2tfmess,cld
                     fr.write('resource ' + tfp + ' ' + rg + '__'+aname+'__'+rname + ' {\n')
                     fr.write('\t name = "' + name + '"\n')
                     fr.write('\t location = "'+ loc + '"\n')
-                    fr.write('\t resource_group_name = azurerm_resource_group.'+ rgs + '.name\n')
-                    fr.write('\t app_service_name = azurerm_app_service.'+ rg + '__'+aname + '.name\n')
-
+                    #fr.write('\t resource_group_name = azurerm_resource_group.'+ rgs + '.name\n')
+                    # revert
+                    fr.write('\t resource_group_name = "' + rgs + '"\n')
+                    # revert
+                    #fr.write('\t app_service_name = azurerm_app_service.'+ rg + '__'+aname + '.name\n')
+                    fr.write('\t app_service_name = "' + aname + '"\n')
             #azr=az webapp list -g rgsource -o json
             
                     appplid=azr[i]["properties"]["serverFarmId"]
