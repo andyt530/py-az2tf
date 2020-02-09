@@ -443,9 +443,7 @@ azurerm_api_management.azurerm_api_management(crf,cde,crg,headers,requests,sub,j
 
 if ccld != 'AzureChinaCloud':
 # 650_azurerm_monitor_autoscale_setting 
-    print("Calling azurerm_monitor_autoscale_setting")
     azurerm_monitor_autoscale_setting.azurerm_monitor_autoscale_setting(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
-    print("Exit azurerm_monitor_autoscale_setting")
 # ******************************************************************************************
 # RUNBOOK OFF
 print("Exit .....")

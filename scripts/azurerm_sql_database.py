@@ -80,11 +80,15 @@ def azurerm_sql_database(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
                         fr.write('\t collation= "' + col + '"\n')
                         fr.write('\t edition= "' + ed + '"\n')
                         fr.write('\t requested_service_objective_name= "' + rso + '"\n')
+                        crm=0
                         try:
                             cm = azr2[j]["properties"]["createMode"]
                             fr.write('\t create_mode= "' + cm + '"\n')
+                            crm=1
                         except KeyError:
                             pass
+                        if crm==0:
+                            fr.write('\t create_mode= "Default"\n')
 
             # tags block
                     try:
