@@ -50,15 +50,6 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
             vngrg=azr[i]["properties"]["virtualNetworkGateway1"]["id"].split("/")[4].replace(".","-").lower()
             vngnam=azr[i]["properties"]["virtualNetworkGateway1"]["id"].split("/")[8].replace(".","-")
             
-
-            
-            if ctype == "IPsec" :
-                
-                peerrg=azr[i]["properties"]["localNetworkGateway2"]["id"].split("/")[4].replace(".","-").lower()
-                peernam=azr[i]["properties"]["localNetworkGateway2"]["id"].split("/")[8].replace(".","-")
-    
-            
-
             enbgp=azr[i]["properties"]["enableBgp"]
             rw=azr[i]["properties"]["routingWeight"]
 
@@ -94,16 +85,24 @@ def azurerm_virtual_network_gateway_connection(crf,cde,crg,headers,requests,sub,
             if ctype == "ExpressRoute" :
                 peerid=azr[i]["properties"]["peer"]["id"]
                 fr.write('\t\t express_route_circuit_id = "' +  peerid + '"\n')
-                #fr.write('\t\t express_route_circuit_id = azurerm_virtual_network_gateway. + '__' + .id} peerrg peernam + '"\n')
+                
                 peerid=azr[i]["properties"]["peer"]["id"]
                 peerrg=peerid.split("/")[4].replace(".","-").lower()
                 if peerrg[0].isdigit(): peerrg="rg_"+peerrg
                 peernam=peerid.split("/")[8].replace(".","-")
+                #fr.write('\t\t express_route_circuit_id = azurerm_virtual_network_gateway. + '__' + .id} peerrg peernam + '"\n')
         
             if ctype == "Vnet2Vnet" :
+                peerid=azr[i]["properties"]["virtualNetworkGateway2"]["id"]
+                peerrg=peerid.split("/")[4].replace(".","-").lower()
+                if peerrg[0].isdigit(): peerrg="rg_"+peerrg
+                peernam=peerid.split("/")[8].replace(".","-")
                 fr.write('\t peer_virtual_network_gateway_id = azurerm_virtual_network_gateway.' + peerrg +'__' + peernam + '.id\n')
         
             if ctype == "IPsec" :
+                peerrg=azr[i]["properties"]["localNetworkGateway2"]["id"].split("/")[4].replace(".","-").lower()
+                if peerrg[0].isdigit(): peerrg="rg_"+peerrg
+                peernam=azr[i]["properties"]["localNetworkGateway2"]["id"].split("/")[8].replace(".","-")
                 fr.write('\t local_network_gateway_id = azurerm_local_network_gateway.' + peerrg + '__' + peernam + '.id \n')
         
             
