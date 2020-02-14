@@ -108,8 +108,8 @@ def azurerm_virtual_network_gateway(crf,cde,crg,headers,requests,sub,json,az2tfm
         
             
             ipc=azr[i]["properties"]["ipConfigurations"]
-            count= len(ipc)
-            for j in range(0,count):
+            jcount= len(ipc)
+            for j in range(0,jcount):
                 ipcname= ipc[j]["name"]
                 ipcpipa= ipc[j]["properties"]["privateIPAllocationMethod"]
                 
