@@ -68,11 +68,17 @@ def azurerm_virtual_machine_extension(crf,cde,crg,headers,requests,sub,json,az2t
 
                             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + '__'+ername +'{\n')
                             fr.write('\t name = "' + ename + '"\n')
-                            fr.write('\t location = "'+ loc + '"\n')
-                            fr.write('\t resource_group_name = "'+ rgs + '"\n')
+                            #fr.write('\t location = "'+ loc + '"\n')
+                            #fr.write('\t resource_group_name = "'+ rgs + '"\n')
+                            #fr.write('\t virtual_machine_name = "'+ name + '"\n')
                             fr.write('\t publisher = "'+ pub + '"\n')
                             fr.write('\t type_handler_version = "'+ thv + '"\n')
-                            fr.write('\t virtual_machine_name = "'+ name + '"\n')
+                            # case issues again on resource names - so write id directly and don't dereference
+                            #fr.write('\t virtual_machine_id = azurerm_virtual_machine.'+ rg +'__'+name + '.id\n')
+                            #print(id)
+                            theid=id.split("/extensions")[0]
+                            #print(theid)
+                            fr.write('\t virtual_machine_id = "'+theid+'"\n')
                             fr.write('\t type = "'+ typ + '"\n')
                             fr.write('\t auto_upgrade_minor_version = '+ str(auv).lower() + '\n')
 
