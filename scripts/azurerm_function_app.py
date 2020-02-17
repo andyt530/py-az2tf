@@ -43,82 +43,34 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
             fr=open(rfilename, 'w')
             fr.write(az2tfmess)
             fr.write('resource ' + tfp + ' ' + rg + '__' + rname + ' {\n')
-            fr.write('\t name = "' + name + '"\n')
-            fr.write('\t location = "'+ loc + '"\n')
-            fr.write('\t resource_group_name = "'+ rgs + '"\n')
+            fr.write('\tname = "' + name + '"\n')
+            fr.write('\tlocation = "'+ loc + '"\n')
+            fr.write('\tresource_group_name = "'+ rgs + '"\n')
 
             https=azr[i]["properties"]["httpsOnly"]
-    
-
-            #prg=azr[i]["properties"]["serverFarmId"].split("/")[4].lower()
-            #pnam=azr[i]["properties"]["serverFarmId"].split("/")[8]
-       
             appplid=azr[i]["properties"]["serverFarmId"]
     
-
-
             # case issues - so use resource id directly
             # fr.write('\t app_service_plan_id = "${azurerm_app_service_plan. + '__' + .id}'"' prg pnam + '"\n')
-            fr.write('\t app_service_plan_id = "' + appplid + '"\n')
-    # dummy entry
-
-            fr.write('\t https_only = ' + str(https).lower() + '\n')
+            fr.write('\tapp_service_plan_id = "' + appplid + '"\n')
+            fr.write('\thttps_only = ' + str(https).lower() + '\n')
             blog=False
             strcon=""
 
-
             url="https://management.azure.com/" + id + "/config/appsettings/list"
-            #print url
             params = {'api-version': '2018-02-01'}
             r = requests.post(url, headers=headers, params=params)       
             appset= r.json()
-            #print(json.dumps(appset, indent=4, separators=(',', ': ')))
             
-            fr.write('\t app_settings = { \n')
-                    
+            fr.write('\tapp_settings = { \n')
+
+            #app settings
             try:
-                strcon=appset["properties"]["AzureWebJobsStorage"]         
-            except KeyError:
-                pass 
-                    
-            try:
-                aval=appset["properties"]["WEBSITE_NODE_DEFAULT_VERSION"]  
-                fr.write('\t WEBSITE_NODE_DEFAULT_VERSION = "' + aval + '"\n')     
+                for setting in appset["properties"]:
+                    value=appset["properties"][setting]
+                    fr.write('\t\t'+ setting + ' = "' + value + '"\n')   
             except KeyError:
                 pass
-
-            try:
-                aval=appset["properties"]["FUNCTIONS_WORKER_RUNTIME"]  
-                fr.write('\t FUNCTIONS_WORKER_RUNTIME = "' + aval + '"\n')     
-            except KeyError:
-                pass  
-
-            try:
-                aval=appset["properties"]["APPINSIGHTS_INSTRUMENTATIONKEY"]  
-                fr.write('\t APPINSIGHTS_INSTRUMENTATIONKEY = "' + aval + '"\n')     
-            except KeyError:
-                pass  
-
-            try:
-                aval=appset["properties"]["mykey"]  
-                fr.write('\t mykey = "' + aval + '"\n')     
-            except KeyError:
-                pass
-
-            try:
-                aval=appset["properties"]["myten"]  
-                fr.write('\t myten = "' + aval + '"\n')     
-            except KeyError:
-                pass
-                        
-            try:
-                aval=appset["properties"]["usern"]  
-                fr.write('\t usern = "' + aval + '"\n')     
-            except KeyError:
-                pass              
-                    
-            #if aname == "WEBSITE_CONTENTSHARE" or aname == "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING":
-                        
                                       
             try:
                 aval=appset["properties"]["AzureWebJobsDashboard"] 
@@ -126,32 +78,35 @@ def azurerm_function_app(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl)
                     blog=True
             except KeyError:
                 pass
-                    
+
             fr.write('\t }'  + '\n')
 
-               
+            try:
+                strcon=appset["properties"]["AzureWebJobsStorage"]         
+            except KeyError:
+                pass 
+
             if len(strcon) >= 3 :
-                fr.write('\t storage_connection_string = "' + strcon + '" \n')
+                fr.write('\tstorage_connection_string = "' + strcon + '" \n')
             else:
-                fr.write('\t storage_connection_string = ""\n')
+                fr.write('\tstorage_connection_string = ""\n')
             
             try:
                 vers=appset["properties"]["FUNCTIONS_EXTENSION_VERSION"]  
-                fr.write('\t version = "' + vers + '"\n')          
+                fr.write('\tversion = "' + vers + '"\n')          
             except KeyError:
                 pass
             
-            fr.write('\t enable_builtin_logging = ' + str(blog).lower() + '\n')
+            fr.write('\tenable_builtin_logging = ' + str(blog).lower() + '\n')
 
-
-    # tags block       
+            # tags block       
             try:
                 mtags=azr[i]["tags"]
-                fr.write('tags = { \n')
+                fr.write('\ttags = { \n')
                 for key in mtags.keys():
                     tval=mtags[key]
                     fr.write(('\t "' + key + '"="' + tval + '"\n'))
-                fr.write('}\n')
+                fr.write('\t}\n')
             except KeyError:
                 pass
 
