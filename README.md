@@ -2,7 +2,7 @@
 
 ## This project has now been archived in favour of my new project http://github.com/awsandy/aws2tf
 
-### The Feb. 2020 release of the 2.0 azurerm provider would require some effort to support going forwards and as I am no longer employed by Microsoft I would like to switch my spare time efforts elsewhere.
+### The Feb. 2020 release of the 2.0 azurerm provider would require some effort to support going forwards and as I am no longer employed by Microsoft ...
 
 az2tf should continue to work albeit with the now legacy azurerm 1.44 provider.
 
