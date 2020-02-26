@@ -1,6 +1,10 @@
 # az2tf (Python3 version) - now supports Terraform v0.12 
 
-Work in progress - please report any issues you find.
+## This project has now been archived in favour of my new project [aws2tf](github.com/awsandy/aws2tf)
+
+### The Feb. 2020 release of the 2.0 azurerm provider would require a large anount of work to support going forwards and as I am no longer empolyed by Microsoft .... 
+
+---
 
 This utility 'Azure to Terraform' (az2tf) 
 reads an Azure Subscription and generates all the required terraform configuration files (.tf) from each of the composite Azure Resource Groups
