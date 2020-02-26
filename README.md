@@ -1,6 +1,6 @@
 # az2tf (Python3 version) - now supports Terraform v0.12 
 
-## This project has now been archived in favour of my new project [aws2tf](github.com/awsandy/aws2tf)
+## This project has now been archived in favour of my new project [aws2tf](http://github.com/awsandy/aws2tf)
 
 ### The Feb. 2020 release of the 2.0 azurerm provider would require some effort to support going forwards. And as I am no longer employed by Microsoft I can't relly justify spending my spare time supporting this tool.
 
