@@ -1,4 +1,4 @@
-# az2tf (Python3 version) - now supports Terraform v0.12 
+# az2tf 
 
 ## This project has now been archived in favour of my new project http://github.com/awsandy/aws2tf
 
