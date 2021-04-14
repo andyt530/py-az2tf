@@ -1,6 +1,6 @@
 # az2tf 
 
-## April 2021 a few folks have requested I unarchive this project so folks can continue to develop and enhance it.
+## April 2021:  I've had a few requests to unarchive this project so folks can continue to develop and enhance it.
 
 
 ### The 2.0 azurerm provider will require some effort to but in the meantime  az2tf should continue to work albeit with the now legacy azurerm 1.44 provider.
