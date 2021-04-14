@@ -2,8 +2,7 @@
 
 ## April 2021:  I've had a few requests to unarchive this project so folks can continue to develop and enhance it.
 
-
-### The 2.0 azurerm provider will require some effort to support but in the meantime az2tf should continue to work albeit with the now legacy azurerm 1.44 provider.
+## This development branch targets the version 2.xx azurerm provider 
 
 (There is a sister project for AWS here:  http://github.com/aws-samples/aws2tf)
 
@@ -23,11 +22,11 @@ There should hopefully be no subsequent additions or deletions reported by the t
 
 ## Requirements & Prerequisites
 + The tool is written for the bash shell script & Python2 and has been tested on macOS
-+ Azure cli2 **version 2.0.75 or higher** needs to be installed and you need a login with at least "Read" priviledges
-+ terraform **version v0.12.16 or higher** needs to be installed
-+ Python **version 3.6.1 or higher**
++ Azure cli2 **version 2.22.0 or higher** needs to be installed and you need a login with at least "Read" priviledges
++ terraform **version v0.14.7 or higher** needs to be installed (terraform v0.15+ testing tbc)
++ Python **version 3.8.0 or higher**
 
-### May also be required
+### May also be required:
 + pip install requests
 + pip install adal
 

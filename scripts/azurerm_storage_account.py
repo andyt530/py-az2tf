@@ -56,10 +56,10 @@ def azurerm_storage_account(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldu
             fr.write('\t account_tier = "' + satier + '"\n')
             fr.write('\t account_kind = "' + sakind + '"\n')
             fr.write('\t account_replication_type = "' +  sartype + '"\n')
-            fr.write('\t enable_blob_encryption = ' +  saencrypt + '\n')
-            fr.write('\t enable_file_encryption = ' +  fiencrypt + '\n')
+            #fr.write('\t enable_blob_encryption = ' +  saencrypt + '\n')
+            #fr.write('\t enable_file_encryption = ' +  fiencrypt + '\n')
             fr.write('\t enable_https_traffic_only = ' +  sahttps + '\n')
-            fr.write('\t account_encryption_source = "' +  saencs + '"\n')
+            #fr.write('\t account_encryption_source = "' +  saencs + '"\n')
             #fr.write('\t enable_advanced_threat_protection = ' +  'false' + '\n')
 
             try:
