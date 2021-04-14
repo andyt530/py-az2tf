@@ -1,10 +1,11 @@
 # az2tf 
 
-## This project has now been archived in favour of my new project http://github.com/awsandy/aws2tf
+## April 2021 a few folks have requested I unarchive this project so folks can continue to develop and enhance it.
 
-### The Feb. 2020 release of the 2.0 azurerm provider would require some effort to support going forwards and as I am no longer employed by Microsoft ...
 
-az2tf should continue to work albeit with the now legacy azurerm 1.44 provider.
+### The 2.0 azurerm provider will require some effort to but in the meantime  az2tf should continue to work albeit with the now legacy azurerm 1.44 provider.
+
+(There is a sister project for AWS here:  This project has now been archived in favour of my new project http://github.com/aws-samples/aws2tf)
 
 ---
 
