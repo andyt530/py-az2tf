@@ -5,6 +5,8 @@
 
 ### The 2.0 azurerm provider will require some effort to support but in the meantime az2tf should continue to work albeit with the now legacy azurerm 1.44 provider.
 
+### PLease use the development branch for PR's to support the latest azurerm provider
+
 (There is a sister project for AWS here:  http://github.com/aws-samples/aws2tf)
 
 ---
