@@ -50,7 +50,7 @@ def azurerm_subnet(crf,cde,crg,headers,requests,sub,json,az2tfmess,cldurl):
                 fr.write('\t resource_group_name = "' +  rgs + '"\n')
 
                 sprefix=subs[j]["properties"]["addressPrefix"]
-                fr.write('\t address_prefix = "' +  sprefix + '"\n')
+                fr.write('\t address_prefixes = ["' +  sprefix + '"]\n')
                 rtbid="null"
                 try:
                     seps=subs[j]["properties"]["serviceEndpoints"]
