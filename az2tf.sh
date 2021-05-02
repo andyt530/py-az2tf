@@ -47,6 +47,12 @@ if [ -z "${s}" ]; then
     usage
 fi
 
+echo "********"
+echo "Use the development branch for azurerm v2.x provider"
+echo "git clone -b development https://github.com/andyt530/py-az2tf.git"
+echo "This branch supports azurerm v1.44 and is depreciated" 
+echo "********"
+
 ## Uncomment below and remove second "AzureCloud" in line 57 to require -c parameter. With below, defaults to AzureCloud if not specified.
 if [[ "$c" == "AzureCloud" || "$c" == "AzureChinaCloud" || "$c" == "AzureGermanCloud" || "$c" == "AzureUSGovernment"  ]]; then
     mycld=$c
@@ -147,6 +153,7 @@ fi
 #
 # uncomment following line if you want to use an SPN login
 #../../setup-env.sh
+
 
 
 echo "terraform init"
